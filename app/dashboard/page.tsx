@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
+import { useRouter } from 'next/navigation';
 import { MedicalExamination, Organization, getExpiryStatus, getDaysUntilExpiry } from '@/lib/types';
 
 export default function DashboardPage() {
@@ -10,6 +11,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'valid' | 'expiring' | 'expired'>('all');
+  const router = useRouter();
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,15 +27,12 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
 
-      // Verifică autentificarea
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setError('Nu ești autentificat. Te rog să te loghezi.');
-        setLoading(false);
+        router.push('/login');
         return;
       }
 
-      // Ia prima organizație a consultantului (prin memberships + RLS)
       const { data: orgData, error: orgError } = await supabase
         .from('organizations')
         .select('*')
@@ -49,7 +48,6 @@ export default function DashboardPage() {
 
       setOrg(orgData);
 
-      // Ia fișele medicale pentru organizație
       const { data: medData, error: medError } = await supabase
         .from('medical_examinations')
         .select('*')
@@ -69,7 +67,6 @@ export default function DashboardPage() {
     }
   }
 
-  // Calcule statistici
   const expired = medicals.filter(m => getExpiryStatus(m.expiry_date) === 'expired');
   const expiring = medicals.filter(m => getExpiryStatus(m.expiry_date) === 'expiring');
   const valid = medicals.filter(m => getExpiryStatus(m.expiry_date) === 'valid');
@@ -77,7 +74,6 @@ export default function DashboardPage() {
   const filteredMedicals = filter === 'all' ? medicals
     : medicals.filter(m => getExpiryStatus(m.expiry_date) === filter);
 
-  // Loading
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="text-center">
@@ -87,7 +83,6 @@ export default function DashboardPage() {
     </div>
   );
 
-  // Eroare
   if (error) return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-md text-center">
@@ -102,7 +97,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
@@ -113,16 +107,18 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-400">Consultant</span>
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
-              D
-            </div>
+            <button
+              onClick={async () => { await supabase.auth.signOut(); router.push('/login'); }}
+              className="text-xs text-red-500 hover:underline"
+            >
+              Ieși
+            </button>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
 
-        {/* Scor Expunere la Control */}
         {org && (
           <div className={`rounded-xl p-4 border ${
             org.exposure_score === 'critic' ? 'bg-red-50 border-red-300' :
@@ -152,7 +148,6 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Counter badges */}
         <div className="grid grid-cols-3 gap-4">
           <button
             onClick={() => setFilter(filter === 'expired' ? 'all' : 'expired')}
@@ -185,16 +180,12 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Tabel Medicina Muncii */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h2 className="text-lg font-bold text-gray-900">Medicina Muncii</h2>
             <div className="flex items-center gap-2">
               {filter !== 'all' && (
-                <button
-                  onClick={() => setFilter('all')}
-                  className="text-xs text-blue-600 hover:underline"
-                >
+                <button onClick={() => setFilter('all')} className="text-xs text-blue-600 hover:underline">
                   Arată toate
                 </button>
               )}
@@ -275,7 +266,6 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Value Preview Cards (DOC1: funcții disabled cu „date lipsă: X") */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-xl p-5 border border-gray-200 opacity-60">
             <div className="flex items-center gap-3 mb-2">
@@ -317,14 +307,12 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Footer Ajutor Rapid */}
         <div className="flex gap-3 pt-4">
           <a href="mailto:daniel@s-s-m.ro"
              className="flex-1 text-center text-sm bg-white border border-gray-200 rounded-xl py-3 px-4 text-gray-600 hover:bg-gray-50 transition-colors">
             📧 Contactează consultantul
           </a>
-          <button
-            onClick={fetchData}
+          <button onClick={fetchData}
             className="flex-1 text-center text-sm bg-white border border-gray-200 rounded-xl py-3 px-4 text-gray-600 hover:bg-gray-50 transition-colors">
             🔄 Reîncarcă datele
           </button>
