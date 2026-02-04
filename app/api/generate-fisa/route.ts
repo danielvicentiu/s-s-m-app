@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
       .replace(/[^a-zA-Z0-9_]/g, '');
     const filename = `Fisa_Instruire_${workerSlug}_${session.session_date || 'nedatat'}.pdf`;
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(new Uint8Array(pdfBuffer), {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',

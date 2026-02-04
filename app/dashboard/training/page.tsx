@@ -84,7 +84,7 @@ export default function TrainingPage() {
   // DATA LOADING
   // ============================================================
   const loadData = useCallback(async () => {
-    if (!ORGANIZATION_ID || ORGANIZATION_ID === 'YOUR_ORGANIZATION_ID') {
+    if (!ORGANIZATION_ID) {
       setError('Organization ID nu e configurat. Deschide app/dashboard/training/page.tsx și setează ORGANIZATION_ID.');
       setLoading(false);
       return;
