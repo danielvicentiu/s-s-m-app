@@ -97,8 +97,7 @@ export async function GET(request: Request) {
           channel: 'email',
           status: emailError ? 'failed' : 'sent',
           details: { medical: medAlerts?.length || 0, equipment: equipAlerts?.length || 0, training: trainingAlerts?.length || 0 },
-        }).select().catch(() => {});
-      }
+        });     }
     }
 
     return NextResponse.json({
