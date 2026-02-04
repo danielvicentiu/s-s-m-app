@@ -1,21 +1,28 @@
 // ============================================================
 // S-S-M.RO — API Route: Alerte Zilnice Email
 // PUNE ACEST FIȘIER ÎN: app/api/alerts/route.ts
-// (Creează folderele app/api/alerts/ dacă nu există)
 // ============================================================
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization - se creează doar când se apelează funcția
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 export async function GET(request: Request) {
+  const resend = getResend();
+  const supabase = getSupabase();
+
   // Protecție opțională cu CRON_SECRET
   const authHeader = request.headers.get('authorization');
   if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -83,14 +90,14 @@ export async function GET(request: Request) {
           results.push({ org: org.name, status: 'sent', alerts: (medAlerts?.length || 0) + (equipAlerts?.length || 0) + (trainingAlerts?.length || 0) });
         }
 
-        // Salvează notificarea în DB
+        // Salvează notificarea în DB (ignoră erori)
         await supabase.from('notifications').insert({
           organization_id: org.id,
           type: 'daily_alert',
           channel: 'email',
           status: emailError ? 'failed' : 'sent',
           details: { medical: medAlerts?.length || 0, equipment: equipAlerts?.length || 0, training: trainingAlerts?.length || 0 },
-        }).select();
+        }).select().catch(() => {});
       }
     }
 

@@ -1,1 +1,0 @@
-Add-Content .env.local "ALERT_EMAIL_TO=daniel.vicentiu@gmail.com"

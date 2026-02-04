@@ -1,1 +1,1 @@
-Remove-Item .env.local
+git add .
