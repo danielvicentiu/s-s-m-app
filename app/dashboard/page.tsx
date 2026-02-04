@@ -453,13 +453,13 @@ export default function DashboardPage() {
             </div>
             <div className="mt-3 text-xs bg-gray-100 text-gray-500 px-3 py-2 rounded-lg">🔒 Se configurează cu n8n — în curând</div>
           </div>
-          <div className="bg-white rounded-xl p-5 border border-gray-200 opacity-60">
+          <a href="/dashboard/training" className="bg-white rounded-xl p-5 border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer block">
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">📚</span>
-              <div><p className="font-bold text-gray-700">Instruiri SSM</p><p className="text-xs text-gray-400">Module interactive + test</p></div>
+              <div><p className="font-bold text-gray-700">Instruiri SSM & PSI</p><p className="text-xs text-gray-400">Module interactive + test</p></div>
             </div>
-            <div className="mt-3 text-xs bg-gray-100 text-gray-500 px-3 py-2 rounded-lg">🔒 Conținut în pregătire — 3 module</div>
-          </div>
+            <div className="mt-3 text-xs bg-green-100 text-green-700 px-3 py-2 rounded-lg">✅ 9 module active — Click pentru acces</div>
+          </a>
         </div>
 
         {/* Footer */}
