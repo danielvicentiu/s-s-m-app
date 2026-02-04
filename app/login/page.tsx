@@ -38,6 +38,23 @@ export default function LoginPage() {
     router.push('/dashboard');
   }
 
+  async function handleDemoLogin() {
+    setLoading(true);
+    setError(null);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: 'daniel.vicentiu@gmail.com',
+      password: 'Test1234!',
+    });
+
+    if (error) {
+      setError('Eroare demo login: ' + error.message);
+      setLoading(false);
+    } else {
+      router.push('/dashboard');
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
@@ -83,6 +100,24 @@ export default function LoginPage() {
             className="w-full py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Se autentifică...' : 'Intră în platformă'}
+          </button>
+
+          <div className="relative my-2">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-2 bg-white text-gray-400">sau</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            disabled={loading}
+            onClick={handleDemoLogin}
+            className="w-full py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          >
+            👁️ Intră ca vizitator Demo
           </button>
         </form>
 
