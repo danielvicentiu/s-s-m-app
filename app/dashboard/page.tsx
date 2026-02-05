@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const [showAddMedical, setShowAddMedical] = useState(false);
   const [showAddEquipment, setShowAddEquipment] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const router = useRouter();
 
   const supabase = createBrowserClient(
@@ -98,6 +99,17 @@ export default function DashboardPage() {
 
       setMedicals(medData || []);
       setEquipment(eqData || []);
+
+      // Notificări recente
+      const { data: notifData } = await supabase
+        .from('notification_log')
+        .select('*')
+        .eq('organization_id', orgData.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      setNotifications(notifData || []);
+
     } catch (err) {
       setError('Eroare neașteptată. Verifică consola (F12).');
     } finally {
@@ -437,6 +449,62 @@ export default function DashboardPage() {
           </>
         )}
 
+        {/* ==================== ULTIMELE NOTIFICĂRI ==================== */}
+        {notifications.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-gray-900">📧 Ultimele Notificări</h2>
+              <span className="text-xs text-gray-400">{notifications.length} recente</span>
+            </div>
+            <div className="divide-y divide-gray-100">
+              {notifications.map((notif) => {
+                const meta = notif.metadata || {};
+                const date = new Date(notif.created_at).toLocaleString('ro-RO');
+                const hasExpired = (meta.expired || 0) > 0;
+                const hasCritical = (meta.critical || 0) > 0;
+                return (
+                  <div key={notif.id} className="px-6 py-3 flex items-center justify-between hover:bg-gray-50">
+                    <div className="flex items-center gap-3">
+                      <span className={`w-2 h-2 rounded-full ${
+                        notif.status === 'sent' ? 'bg-green-500' :
+                        notif.status === 'failed' ? 'bg-red-500' : 'bg-gray-400'
+                      }`}></span>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{notif.subject || 'Alertă SSM'}</p>
+                        <p className="text-xs text-gray-500">
+                          Către: {notif.recipient} · {date}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {hasExpired && (
+                        <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">
+                          {meta.expired} expirate
+                        </span>
+                      )}
+                      {hasCritical && (
+                        <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-bold">
+                          {meta.critical} critice
+                        </span>
+                      )}
+                      {(meta.warning || 0) > 0 && (
+                        <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-bold">
+                          {meta.warning} atenție
+                        </span>
+                      )}
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                        notif.status === 'sent' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {notif.status === 'sent' ? '✓ Trimis' : '✗ Eroare'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Value Preview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-xl p-5 border border-gray-200 opacity-60">
@@ -446,12 +514,12 @@ export default function DashboardPage() {
             </div>
             <div className="mt-3 text-xs bg-gray-100 text-gray-500 px-3 py-2 rounded-lg">🔒 Disponibil când completare date &gt; 80%</div>
           </div>
-          <div className="bg-white rounded-xl p-5 border border-gray-200 opacity-60">
+          <div className="bg-white rounded-xl p-5 border border-gray-200 opacity-100">
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">🔔</span>
               <div><p className="font-bold text-gray-700">Alerte Automate</p><p className="text-xs text-gray-400">Email, SMS, WhatsApp</p></div>
             </div>
-            <div className="mt-3 text-xs bg-gray-100 text-gray-500 px-3 py-2 rounded-lg">🔒 Se configurează cu n8n — în curând</div>
+            <div className="mt-3 text-xs bg-green-100 text-green-700 px-3 py-2 rounded-lg">✅ Activ — Email zilnic la 08:00 via Resend</div>
           </div>
           <a href="/dashboard/training" className="bg-white rounded-xl p-5 border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer block">
             <div className="flex items-center gap-3 mb-2">
