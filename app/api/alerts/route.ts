@@ -114,7 +114,7 @@ export async function GET(request: Request) {
           channel: 'email',
           status: emailError ? 'failed' : 'sent',
           details: { medical: medCount, equipment: equipCount, training: trainCount },
-        }).then(() => {}).catch(() => {});
+        });
       } else {
         results.push({ org: org.name, status: 'no_alerts', medical: medCount, equipment: equipCount, training: trainCount });
       }
