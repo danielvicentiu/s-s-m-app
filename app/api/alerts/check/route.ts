@@ -264,11 +264,13 @@ export async function GET(request: Request) {
           // 5. Log în notification_log
           await supabase.from('notification_log').insert({
             organization_id: org.id,
+            notification_type: 'alert_expiry',
             channel: 'email',
             recipient: org.contact_email,
-            subject: subject,
             status: 'sent',
+            sent_at: new Date().toISOString(),
             metadata: {
+              subject: subject,
               items_count: items.length,
               expired: items.filter(i => i.urgency === 'expired').length,
               critical: items.filter(i => i.urgency === 'critical').length,

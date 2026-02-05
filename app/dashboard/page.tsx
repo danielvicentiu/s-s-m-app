@@ -105,7 +105,7 @@ export default function DashboardPage() {
         .from('notification_log')
         .select('*')
         .eq('organization_id', orgData.id)
-        .order('created_at', { ascending: false })
+        .order('sent_at', { ascending: false })
         .limit(5);
 
       setNotifications(notifData || []);
@@ -459,7 +459,7 @@ export default function DashboardPage() {
             <div className="divide-y divide-gray-100">
               {notifications.map((notif) => {
                 const meta = notif.metadata || {};
-                const date = new Date(notif.created_at).toLocaleString('ro-RO');
+                const date = notif.sent_at ? new Date(notif.sent_at).toLocaleString('ro-RO') : '—';
                 const hasExpired = (meta.expired || 0) > 0;
                 const hasCritical = (meta.critical || 0) > 0;
                 return (
@@ -470,7 +470,7 @@ export default function DashboardPage() {
                         notif.status === 'failed' ? 'bg-red-500' : 'bg-gray-400'
                       }`}></span>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{notif.subject || 'Alertă SSM'}</p>
+                        <p className="text-sm font-medium text-gray-900">{meta.subject || 'Alertă SSM'}</p>
                         <p className="text-xs text-gray-500">
                           Către: {notif.recipient} · {date}
                         </p>
