@@ -31,13 +31,14 @@ export async function GET(request: Request) {
 
   try {
     const today = new Date();
-    const in7Days = new Date(today);
-    in7Days.setDate(today.getDate() + 7);
     const in30Days = new Date(today);
     in30Days.setDate(today.getDate() + 30);
 
     // Toate organizațiile
-    const { data: orgs } = await supabase.from('organizations').select('*');
+    const { data: orgs, error: orgsError } = await supabase.from('organizations').select('*');
+    if (orgsError) {
+      return NextResponse.json({ message: 'Eroare organizații', error: String(orgsError) }, { status: 500 });
+    }
     if (!orgs || orgs.length === 0) {
       return NextResponse.json({ message: 'Nicio organizație găsită', sent: 0 });
     }
@@ -47,57 +48,74 @@ export async function GET(request: Request) {
 
     for (const org of orgs) {
       // Fișe medicale expirate sau care expiră în 30 zile
-      const { data: medAlerts } = await supabase
+      const { data: medAlerts, error: medError } = await supabase
         .from('medical_examinations')
-        .select('*, profiles(full_name)')
+        .select('*')
         .eq('organization_id', org.id)
         .lte('expiry_date', in30Days.toISOString().split('T')[0])
         .order('expiry_date', { ascending: true });
 
+      if (medError) {
+        results.push({ org: org.name, table: 'medical_examinations', status: 'query_error', error: String(medError) });
+        continue;
+      }
+
       // Echipamente PSI expirate sau care expiră în 30 zile
-      const { data: equipAlerts } = await supabase
+      const { data: equipAlerts, error: equipError } = await supabase
         .from('psi_equipment')
         .select('*')
         .eq('organization_id', org.id)
         .lte('expiry_date', in30Days.toISOString().split('T')[0])
         .order('expiry_date', { ascending: true });
 
-      // Instruiri depășite
+      // Instruiri depășite (poate nu exista tabela încă — ignorăm eroarea)
       const { data: trainingAlerts } = await supabase
         .from('training_assignments')
-        .select('*, profiles!training_assignments_worker_id_fkey(full_name), training_modules(title)')
+        .select('*')
         .eq('organization_id', org.id)
         .in('status', ['assigned', 'overdue'])
         .lte('due_date', in30Days.toISOString().split('T')[0])
         .order('due_date', { ascending: true });
 
-      const hasAlerts = (medAlerts?.length || 0) + (equipAlerts?.length || 0) + (trainingAlerts?.length || 0) > 0;
+      const medCount = medAlerts?.length || 0;
+      const equipCount = equipAlerts?.length || 0;
+      const trainCount = trainingAlerts?.length || 0;
+      const hasAlerts = medCount + equipCount + trainCount > 0;
 
       if (hasAlerts) {
-        const emailHtml = buildAlertEmail(org.name, medAlerts || [], equipAlerts || [], trainingAlerts || [], today);
+        const emailHtml = buildAlertEmail(
+          org.name,
+          medAlerts || [],
+          equipAlerts || [],
+          trainingAlerts || [],
+          today
+        );
 
         const { error: emailError } = await resend.emails.send({
           from: 'SSM Alerte <onboarding@resend.dev>',
-          to: process.env.ALERT_EMAIL_TO || 'daniel@s-s-m.ro',
-          subject: `⚠️ [${org.name}] — Alerte SSM/PSI (${(medAlerts?.length || 0) + (equipAlerts?.length || 0) + (trainingAlerts?.length || 0)} elemente)`,
+          to: process.env.ALERT_EMAIL_TO || 'daniel.vicentiu@gmail.com',
+          subject: `⚠️ [${org.name}] — Alerte SSM/PSI (${medCount + equipCount + trainCount} elemente)`,
           html: emailHtml,
         });
 
         if (emailError) {
-          results.push({ org: org.name, status: 'error', error: emailError });
+          results.push({ org: org.name, status: 'email_error', error: String(emailError) });
         } else {
           totalSent++;
-          results.push({ org: org.name, status: 'sent', alerts: (medAlerts?.length || 0) + (equipAlerts?.length || 0) + (trainingAlerts?.length || 0) });
+          results.push({ org: org.name, status: 'sent', alerts: medCount + equipCount + trainCount });
         }
 
-        // Salvează notificarea în DB (ignoră erori)
+        // Salvează notificarea în DB (ignoră erori dacă tabela nu există)
         await supabase.from('notifications').insert({
           organization_id: org.id,
           type: 'daily_alert',
           channel: 'email',
           status: emailError ? 'failed' : 'sent',
-          details: { medical: medAlerts?.length || 0, equipment: equipAlerts?.length || 0, training: trainingAlerts?.length || 0 },
-        });     }
+          details: { medical: medCount, equipment: equipCount, training: trainCount },
+        });
+      } else {
+        results.push({ org: org.name, status: 'no_alerts', medical: medCount, equipment: equipCount, training: trainCount });
+      }
     }
 
     return NextResponse.json({
@@ -151,7 +169,7 @@ function buildAlertEmail(
     html += '<tr style="background:#F3F4F6"><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Angajat</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Expiră</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Status</th></tr>';
     for (const m of medAlerts) {
       const days = daysUntil(m.expiry_date);
-      html += `<tr><td style="padding:8px;border:1px solid #E5E7EB">${m.profiles?.full_name || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(m.expiry_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)} (${days} zile)</td></tr>`;
+      html += `<tr><td style="padding:8px;border:1px solid #E5E7EB">${m.employee_name || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(m.expiry_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)} (${days} zile)</td></tr>`;
     }
     html += '</table>';
   }
@@ -163,7 +181,7 @@ function buildAlertEmail(
     html += '<tr style="background:#F3F4F6"><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Echipament</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Locație</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Expiră</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Status</th></tr>';
     for (const e of equipAlerts) {
       const days = daysUntil(e.expiry_date);
-      html += `<tr><td style="padding:8px;border:1px solid #E5E7EB">${e.name || e.type}</td><td style="padding:8px;border:1px solid #E5E7EB">${e.location || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(e.expiry_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)}</td></tr>`;
+      html += `<tr><td style="padding:8px;border:1px solid #E5E7EB">${e.name || e.type || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${e.location || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(e.expiry_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)}</td></tr>`;
     }
     html += '</table>';
   }
@@ -175,7 +193,7 @@ function buildAlertEmail(
     html += '<tr style="background:#F3F4F6"><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Angajat</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Modul</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Termen</th><th style="padding:8px;text-align:left;border:1px solid #E5E7EB">Status</th></tr>';
     for (const t of trainingAlerts) {
       const days = daysUntil(t.due_date);
-      html += `<tr><td style="padding:8px;border:1px solid #E5E7EB">${t.profiles?.full_name || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${t.training_modules?.title || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(t.due_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)}</td></tr>`;
+      html += `<tr><td style="padding:8px;border:1px solid #E5E7EB">${t.worker_name || t.employee_name || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${t.module_title || t.title || 'N/A'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(t.due_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)}</td></tr>`;
     }
     html += '</table>';
   }
