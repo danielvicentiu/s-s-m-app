@@ -1,10 +1,11 @@
 // app/dashboard/DashboardClient.tsx
 // Design PIXEL-PERFECT identic cu versiunea aprobată de 9 clienți
-// Layout: Header → Risc ITM → Tabs → Counters → Tabel → Notificări → Features → Butoane
+// Layout: Header → Risc ITM → VALUE PREVIEW → Tabs → Counters → Tabel → Notificări → Features → Butoane
 
 'use client'
 
 import { useState } from 'react'
+import { ValuePreview } from '@/components/ui/ValuePreview'
 
 interface Props {
   user: { email: string }
@@ -12,9 +13,11 @@ interface Props {
   alerts: any[]
   medicalExams: any[]
   equipment: any[]
+  valuePreview?: any
+  isConsultant?: boolean
 }
 
-export default function DashboardClient({ user, overview, alerts, medicalExams, equipment }: Props) {
+export default function DashboardClient({ user, overview, alerts, medicalExams, equipment, valuePreview, isConsultant = false }: Props) {
   const [activeTab, setActiveTab] = useState<'medical' | 'equipment'>('medical')
 
   const org = overview[0] || {}
@@ -116,6 +119,13 @@ export default function DashboardClient({ user, overview, alerts, medicalExams, 
             <div className="text-4xl font-bold text-gray-900">{completeness}%</div>
           </div>
         </div>
+
+        {/* ============ VALUE PREVIEW ============ */}
+        <ValuePreview
+          data={valuePreview}
+          isConsultant={isConsultant}
+          showToClient={false}
+        />
 
         {/* ============ TABS ============ */}
         <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
