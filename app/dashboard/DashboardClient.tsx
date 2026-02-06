@@ -234,7 +234,7 @@ export default function DashboardClient({ user, overview, alerts, medicalExams, 
               <h2 className="text-lg font-bold text-gray-900">Echipamente PSI</h2>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-400">{equipment.length} înregistrări</span>
-                <button onClick={() => window.location.href = '/dashboard/medical'} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                <button onClick={() => window.location.href = '/dashboard/equipment'} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
                   + Adaugă echipament
                 </button>
               </div>
