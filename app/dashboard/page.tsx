@@ -2,6 +2,7 @@
 // Dashboard — design IDENTIC cu versiunea aprobată de 9 clienți
 // Conectat la date REALE din Supabase views
 // + Value Preview (risc financiar)
+// + User preferences (toggle-uri panouri)
 
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
@@ -53,15 +54,33 @@ export default async function DashboardPage() {
 
   const isConsultant = userMembership?.role === 'consultant'
 
+  // Fetch user preferences (toggle-uri dashboard)
+  const { data: prefsRows } = await supabase
+    .from('user_preferences')
+    .select('key, value')
+    .eq('user_id', user.id)
+
+  const initialPrefs: Record<string, boolean> = {}
+  if (prefsRows) {
+    for (const row of prefsRows) {
+      try {
+        initialPrefs[row.key] = JSON.parse(row.value)
+      } catch {
+        initialPrefs[row.key] = true
+      }
+    }
+  }
+
   return (
     <DashboardClient
-      user={{ email: user.email || '' }}
+      user={{ email: user.email || '', id: user.id }}
       overview={overview || []}
       alerts={alerts || []}
       medicalExams={medicalExams || []}
       equipment={equipment || []}
       valuePreview={valuePreview}
       isConsultant={isConsultant}
+      initialPrefs={initialPrefs}
     />
   )
 }

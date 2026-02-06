@@ -1,24 +1,55 @@
 // app/dashboard/DashboardClient.tsx
 // Design PIXEL-PERFECT identic cu versiunea aprobată de 9 clienți
 // Layout: Header → Risc ITM → VALUE PREVIEW → Tabs → Counters → Tabel → Notificări → Features → Butoane
+// + Toggle-uri panou risc (salvate în DB)
 
 'use client'
 
 import { useState } from 'react'
+import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { ValuePreview } from '@/components/ui/ValuePreview'
 
 interface Props {
-  user: { email: string }
+  user: { email: string; id: string }
   overview: any[]
   alerts: any[]
   medicalExams: any[]
   equipment: any[]
   valuePreview?: any
   isConsultant?: boolean
+  initialPrefs?: Record<string, boolean>
 }
 
-export default function DashboardClient({ user, overview, alerts, medicalExams, equipment, valuePreview, isConsultant = false }: Props) {
+export default function DashboardClient({
+  user, overview, alerts, medicalExams, equipment,
+  valuePreview, isConsultant = false, initialPrefs = {}
+}: Props) {
   const [activeTab, setActiveTab] = useState<'medical' | 'equipment'>('medical')
+
+  // Toggle-uri panouri (din DB sau default true = vizibil)
+  const [showRiskITM, setShowRiskITM] = useState(initialPrefs.show_risk_itm !== false)
+  const [showValuePreview, setShowValuePreview] = useState(initialPrefs.show_value_preview !== false)
+
+  // Salvează preferință în Supabase
+  async function savePreference(key: string, value: boolean) {
+    const supabase = createClient()
+    await supabase.from('user_preferences').upsert(
+      { user_id: user.id, key, value: JSON.stringify(value), updated_at: new Date().toISOString() },
+      { onConflict: 'user_id,key' }
+    )
+  }
+
+  function toggleRiskITM() {
+    const next = !showRiskITM
+    setShowRiskITM(next)
+    savePreference('show_risk_itm', next)
+  }
+
+  function toggleValuePreview() {
+    const next = !showValuePreview
+    setShowValuePreview(next)
+    savePreference('show_value_preview', next)
+  }
 
   const org = overview[0] || {}
   const orgName = org.organization_name || 'Organizație'
@@ -93,7 +124,28 @@ export default function DashboardClient({ user, overview, alerts, medicalExams, 
             <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
             <p className="text-sm text-gray-500">{orgName} • {orgCUI}</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-5">
+            {/* Toggle-uri panouri */}
+            <div className="flex items-center gap-4 border-r border-gray-200 pr-5">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wide">Risc ITM</span>
+                <button
+                  onClick={toggleRiskITM}
+                  className={`relative w-9 h-5 rounded-full transition-colors ${showRiskITM ? 'bg-blue-600' : 'bg-gray-300'}`}
+                >
+                  <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${showRiskITM ? 'left-[18px]' : 'left-0.5'}`} />
+                </button>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wide">Risc €</span>
+                <button
+                  onClick={toggleValuePreview}
+                  className={`relative w-9 h-5 rounded-full transition-colors ${showValuePreview ? 'bg-blue-600' : 'bg-gray-300'}`}
+                >
+                  <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${showValuePreview ? 'left-[18px]' : 'left-0.5'}`} />
+                </button>
+              </label>
+            </div>
             <span className="text-sm text-gray-400">Consultant</span>
             <form action="/api/auth/signout" method="POST">
               <button type="submit" className="text-sm text-red-400 hover:text-red-600 font-medium">
@@ -107,25 +159,29 @@ export default function DashboardClient({ user, overview, alerts, medicalExams, 
       <main className="max-w-6xl mx-auto px-8 py-6 space-y-5">
 
         {/* ============ RISC CONTROL ITM ============ */}
-        <div className="rounded-2xl border-2 border-blue-600 bg-white px-6 py-5 flex justify-between items-center">
-          <div>
-            <div className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
-              Risc Control ITM
+        {showRiskITM && (
+          <div className="rounded-2xl border-2 border-blue-600 bg-white px-6 py-5 flex justify-between items-center">
+            <div>
+              <div className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+                Risc Control ITM
+              </div>
+              <div className={`text-3xl font-black ${riskClass}`}>{riskLevel}</div>
             </div>
-            <div className={`text-3xl font-black ${riskClass}`}>{riskLevel}</div>
+            <div className="text-right">
+              <div className="text-[11px] text-gray-400">Completare date</div>
+              <div className="text-4xl font-bold text-gray-900">{completeness}%</div>
+            </div>
           </div>
-          <div className="text-right">
-            <div className="text-[11px] text-gray-400">Completare date</div>
-            <div className="text-4xl font-bold text-gray-900">{completeness}%</div>
-          </div>
-        </div>
+        )}
 
         {/* ============ VALUE PREVIEW ============ */}
-        <ValuePreview
-          data={valuePreview}
-          isConsultant={isConsultant}
-          showToClient={false}
-        />
+        {showValuePreview && (
+          <ValuePreview
+            data={valuePreview}
+            isConsultant={isConsultant}
+            showToClient={false}
+          />
+        )}
 
         {/* ============ TABS ============ */}
         <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
