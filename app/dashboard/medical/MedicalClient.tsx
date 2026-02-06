@@ -42,7 +42,7 @@ interface Employee {
   full_name: string
   job_title: string | null
   organization_id: string
-  organizations?: { name: string }
+  organizations?: { name: string } | { name: string }[]
 }
 
 interface Organization {

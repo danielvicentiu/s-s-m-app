@@ -9,34 +9,49 @@ import { useState } from 'react'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { ValuePreview } from '@/components/ui/ValuePreview'
 
+interface OrgOption {
+  id: string
+  name: string
+  cui: string | null
+}
+
 interface Props {
   user: { email: string; id: string }
   overview: any[]
   alerts: any[]
   medicalExams: any[]
   equipment: any[]
-  valuePreview?: any
+  valuePreviewMap?: Record<string, any>
   isConsultant?: boolean
-  initialPrefs?: Record<string, boolean>
+  initialPrefs?: Record<string, any>
+  organizations: OrgOption[]
+  savedSelectedOrg?: string
 }
 
 export default function DashboardClient({
   user, overview, alerts, medicalExams, equipment,
-  valuePreview, isConsultant = false, initialPrefs = {}
+  valuePreviewMap = {}, isConsultant = false, initialPrefs = {},
+  organizations, savedSelectedOrg = 'all'
 }: Props) {
   const [activeTab, setActiveTab] = useState<'medical' | 'equipment'>('medical')
+  const [selectedOrg, setSelectedOrg] = useState<string>(savedSelectedOrg)
 
   // Toggle-uri panouri (din DB sau default true = vizibil)
   const [showRiskITM, setShowRiskITM] = useState(initialPrefs.show_risk_itm !== false)
   const [showValuePreview, setShowValuePreview] = useState(initialPrefs.show_value_preview !== false)
 
   // Salvează preferință în Supabase
-  async function savePreference(key: string, value: boolean) {
+  async function savePreference(key: string, value: boolean | string) {
     const supabase = createClient()
     await supabase.from('user_preferences').upsert(
       { user_id: user.id, key, value: JSON.stringify(value), updated_at: new Date().toISOString() },
       { onConflict: 'user_id,key' }
     )
+  }
+
+  function handleOrgChange(orgId: string) {
+    setSelectedOrg(orgId)
+    savePreference('selected_org', orgId)
   }
 
   function toggleRiskITM() {
@@ -51,14 +66,30 @@ export default function DashboardClient({
     savePreference('show_value_preview', next)
   }
 
-  const org = overview[0] || {}
-  const orgName = org.organization_name || 'Organizație'
-  const orgCUI = (medicalExams[0]?.organizations?.cui) || 'RO12345678'
+  // === FILTRARE PER ORGANIZAȚIE ===
+  const filteredOverview = selectedOrg === 'all' ? overview
+    : overview.filter((o: any) => o.organization_id === selectedOrg)
+  const filteredMedicalExams = selectedOrg === 'all' ? medicalExams
+    : medicalExams.filter((m: any) => m.organization_id === selectedOrg)
+  const filteredEquipment = selectedOrg === 'all' ? equipment
+    : equipment.filter((e: any) => e.organization_id === selectedOrg)
+  const filteredAlerts = selectedOrg === 'all' ? alerts
+    : alerts.filter((a: any) => a.organization_id === selectedOrg)
+
+  const selectedOrgData = selectedOrg !== 'all'
+    ? organizations.find(o => o.id === selectedOrg)
+    : null
+  const orgName = selectedOrgData?.name || filteredOverview[0]?.organization_name || 'Toate organizațiile'
+  const orgCUI = selectedOrgData?.cui || filteredMedicalExams[0]?.organizations?.cui || ''
+
+  const activeValuePreview = selectedOrg === 'all'
+    ? Object.values(valuePreviewMap)[0] || null
+    : valuePreviewMap[selectedOrg] || null
 
   const now = new Date()
 
   // === MEDICINA MUNCII ===
-  const medWithStatus = medicalExams.map((m: any) => {
+  const medWithStatus = filteredMedicalExams.map((m: any) => {
     const expiry = new Date(m.expiry_date)
     const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     let status: 'expired' | 'expiring' | 'valid'
@@ -73,7 +104,7 @@ export default function DashboardClient({
   const medValid = medWithStatus.filter((m: any) => m.status === 'valid').length
 
   // === ECHIPAMENTE PSI ===
-  const eqWithStatus = equipment.map((e: any) => {
+  const eqWithStatus = filteredEquipment.map((e: any) => {
     const expiry = new Date(e.expiry_date)
     const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     let status: 'expired' | 'expiring' | 'valid'
@@ -112,7 +143,7 @@ export default function DashboardClient({
   const completeness = 86 // TODO: calculat din data_completeness
 
   // Notificări — din alerts ca proxy
-  const recentNotifCount = alerts.filter((a: any) => a.severity === 'expired').length
+  const recentNotifCount = filteredAlerts.filter((a: any) => a.severity === 'expired').length
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -122,7 +153,24 @@ export default function DashboardClient({
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
-            <p className="text-sm text-gray-500">{orgName} • {orgCUI}</p>
+            {organizations.length <= 1 ? (
+              <p className="text-sm text-gray-500">
+                {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` • ${organizations[0].cui}` : ''}
+              </p>
+            ) : (
+              <select
+                value={selectedOrg}
+                onChange={(e) => handleOrgChange(e.target.value)}
+                className="mt-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 max-w-xs"
+              >
+                <option value="all">Toate organizațiile ({organizations.length})</option>
+                {organizations.map((org) => (
+                  <option key={org.id} value={org.id}>
+                    {org.name}{org.cui ? ` • ${org.cui}` : ''}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
           <div className="flex items-center gap-5">
             {/* Toggle-uri panouri */}
@@ -177,7 +225,7 @@ export default function DashboardClient({
         {/* ============ VALUE PREVIEW ============ */}
         {showValuePreview && (
           <ValuePreview
-            data={valuePreview}
+            data={activeValuePreview}
             isConsultant={isConsultant}
             showToClient={false}
           />
@@ -243,7 +291,7 @@ export default function DashboardClient({
             <div className="px-6 py-4 flex justify-between items-center">
               <h2 className="text-lg font-bold text-gray-900">Medicina Muncii</h2>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-400">{medicalExams.length} înregistrări</span>
+                <span className="text-sm text-gray-400">{filteredMedicalExams.length} înregistrări</span>
                 <button onClick={() => window.location.href = '/dashboard/medical'} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
                   + Adaugă fișă
                 </button>
@@ -275,7 +323,7 @@ export default function DashboardClient({
                     <td className="px-6 py-4"><StatusPill status={m.status} days={m.diffDays} /></td>
                   </tr>
                 ))}
-                {medicalExams.length === 0 && (
+                {filteredMedicalExams.length === 0 && (
                   <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300">Nicio fișă medicală.</td></tr>
                 )}
               </tbody>
@@ -289,7 +337,7 @@ export default function DashboardClient({
             <div className="px-6 py-4 flex justify-between items-center">
               <h2 className="text-lg font-bold text-gray-900">Echipamente PSI</h2>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-400">{equipment.length} înregistrări</span>
+                <span className="text-sm text-gray-400">{filteredEquipment.length} înregistrări</span>
                 <button onClick={() => window.location.href = '/dashboard/equipment'} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
                   + Adaugă echipament
                 </button>
@@ -321,7 +369,7 @@ export default function DashboardClient({
                     <td className="px-6 py-4"><StatusPill status={e.status} days={e.diffDays} /></td>
                   </tr>
                 ))}
-                {equipment.length === 0 && (
+                {filteredEquipment.length === 0 && (
                   <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300">Niciun echipament.</td></tr>
                 )}
               </tbody>

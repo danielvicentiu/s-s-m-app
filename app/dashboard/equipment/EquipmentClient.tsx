@@ -359,7 +359,8 @@ export default function EquipmentClient({ user, organizations, equipment: initia
           <EmptyState
             title="Niciun echipament"
             description="Adaugă primul echipament PSI pentru a începe monitorizarea."
-            action={{ label: '+ Adaugă echipament', onClick: openAdd }}
+            actionLabel="+ Adaugă echipament"
+            onAction={openAdd}
           />
         ) : (
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -412,7 +413,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                         <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.last_check_date)}</td>
                         <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.expiry_date)}</td>
                         <td className="px-4 py-3">
-                          <StatusBadge status={status} days={days} />
+                          <StatusBadge status={status} label={status === 'expired' ? `Expirat ${days} zile` : status === 'expiring' ? `Expiră în ${days} zile` : `Valid ${days} zile`} />
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -626,7 +627,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
         confirmLabel="Șterge"
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
-        destructive
+        isDestructive
       />
     </div>
   )

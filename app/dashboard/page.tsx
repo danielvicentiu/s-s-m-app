@@ -30,18 +30,24 @@ export default async function DashboardPage() {
     .from('safety_equipment')
     .select('*, organizations(name, cui)')
 
-  // Fetch Value Preview pentru prima organizație
-  // TODO: când sunt mai multe org-uri, iterăm sau agregăm
-  let valuePreview = null
-  if (overview && overview.length > 0) {
-    const orgId = overview[0]?.organization_id || medicalExams?.[0]?.organization_id
-    if (orgId) {
-      const { data: vpData } = await supabase.rpc('calculate_value_preview', {
-        p_organization_id: orgId
-      })
-      valuePreview = vpData
-    }
-  }
+  // Extrage lista organizații din memberships
+  const organizations = (orgs || [])
+    .map((m: any) => m.organization)
+    .filter(Boolean)
+
+  // Fetch Value Preview pentru toate org-urile
+  const orgIds = [...new Set(
+    [...(overview || []), ...(medicalExams || []), ...(equipment || [])]
+      .map((r: any) => r.organization_id)
+      .filter(Boolean)
+  )]
+  const valuePreviewMap: Record<string, any> = {}
+  await Promise.all(orgIds.map(async (orgId: string) => {
+    const { data } = await supabase.rpc('calculate_value_preview', {
+      p_organization_id: orgId
+    })
+    if (data) valuePreviewMap[orgId] = data
+  }))
 
   // Verifică dacă user e consultant
   const { data: userMembership } = await supabase
@@ -60,7 +66,7 @@ export default async function DashboardPage() {
     .select('key, value')
     .eq('user_id', user.id)
 
-  const initialPrefs: Record<string, boolean> = {}
+  const initialPrefs: Record<string, any> = {}
   if (prefsRows) {
     for (const row of prefsRows) {
       try {
@@ -71,6 +77,15 @@ export default async function DashboardPage() {
     }
   }
 
+  // Citește preferința org selectată (validează că încă există)
+  let savedSelectedOrg = 'all'
+  if (initialPrefs.selected_org) {
+    const parsed = initialPrefs.selected_org
+    if (parsed === 'all' || organizations.some((o: any) => o.id === parsed)) {
+      savedSelectedOrg = parsed
+    }
+  }
+
   return (
     <DashboardClient
       user={{ email: user.email || '', id: user.id }}
@@ -78,9 +93,11 @@ export default async function DashboardPage() {
       alerts={alerts || []}
       medicalExams={medicalExams || []}
       equipment={equipment || []}
-      valuePreview={valuePreview}
+      valuePreviewMap={valuePreviewMap}
       isConsultant={isConsultant}
       initialPrefs={initialPrefs}
+      organizations={organizations}
+      savedSelectedOrg={savedSelectedOrg}
     />
   )
 }
