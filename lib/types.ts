@@ -11,6 +11,7 @@ export interface Organization {
   contact_email: string | null
   contact_phone: string | null
   data_completeness: number
+  employee_count?: number
   exposure_score: 'necalculat' | 'scazut' | 'mediu' | 'ridicat' | 'critic'
   preferred_channels: string[]
   cooperation_status: 'active' | 'warning' | 'uncooperative'

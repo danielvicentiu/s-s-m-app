@@ -6,6 +6,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { ValuePreview } from '@/components/ui/ValuePreview'
 
@@ -13,6 +14,7 @@ interface OrgOption {
   id: string
   name: string
   cui: string | null
+  employee_count?: number
 }
 
 interface Props {
@@ -35,6 +37,8 @@ export default function DashboardClient({
 }: Props) {
   const [activeTab, setActiveTab] = useState<'medical' | 'equipment'>('medical')
   const [selectedOrg, setSelectedOrg] = useState<string>(savedSelectedOrg)
+  const router = useRouter()
+  const pathname = usePathname()
 
   // Toggle-uri panouri (din DB sau default true = vizibil)
   const [showRiskITM, setShowRiskITM] = useState(initialPrefs.show_risk_itm !== false)
@@ -52,6 +56,13 @@ export default function DashboardClient({
   function handleOrgChange(orgId: string) {
     setSelectedOrg(orgId)
     savePreference('selected_org', orgId)
+
+    // Update URL: remove param for 'all', add param for specific org
+    const newUrl = orgId === 'all'
+      ? pathname
+      : `${pathname}?org=${orgId}`
+
+    router.push(newUrl, { scroll: false })
   }
 
   function toggleRiskITM() {
@@ -200,7 +211,7 @@ export default function DashboardClient({
                 <option value="all">Toate organizațiile ({organizations.length})</option>
                 {organizations.map((org) => (
                   <option key={org.id} value={org.id}>
-                    {org.name}{org.cui ? ` • ${org.cui}` : ''}
+                    {org.name} • {org.employee_count ?? 0} angajați
                   </option>
                 ))}
               </select>

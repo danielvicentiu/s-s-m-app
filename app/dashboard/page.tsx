@@ -8,7 +8,11 @@ import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import DashboardClient from './DashboardClient'
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams: { org?: string }
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
@@ -31,9 +35,43 @@ export default async function DashboardPage() {
     .select('*, organizations(name, cui)')
 
   // Extrage lista organizații din memberships
-  const organizations = (orgs || [])
+  const baseOrganizations = (orgs || [])
     .map((m: any) => m.organization)
     .filter(Boolean)
+
+  // Fetch employee counts for each organization
+  const organizationsWithCounts = await Promise.all(
+    baseOrganizations.map(async (org: any) => {
+      // Get latest snapshot date for this org
+      const { data: latestSnapshot } = await supabase
+        .from('reges_employee_snapshots')
+        .select('snapshot_date')
+        .eq('organization_id', org.id)
+        .order('snapshot_date', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      // Count active employees from latest snapshot
+      let employeeCount = 0
+      if (latestSnapshot) {
+        const { count } = await supabase
+          .from('reges_employee_snapshots')
+          .select('cnp', { count: 'exact', head: true })
+          .eq('organization_id', org.id)
+          .eq('employment_status', 'active')
+          .eq('snapshot_date', latestSnapshot.snapshot_date)
+
+        employeeCount = count || 0
+      }
+
+      return {
+        ...org,
+        employee_count: employeeCount
+      }
+    })
+  )
+
+  const organizations = organizationsWithCounts
 
   // Fetch Value Preview pentru toate org-urile
   const orgIds = [...new Set(
@@ -78,8 +116,15 @@ export default async function DashboardPage() {
   }
 
   // Citește preferința org selectată (validează că încă există)
+  // Priority: URL param > DB preference > default ('all')
+  const urlOrgParam = searchParams.org
   let savedSelectedOrg = 'all'
-  if (initialPrefs.selected_org) {
+
+  if (urlOrgParam && (urlOrgParam === 'all' || organizations.some((o: any) => o.id === urlOrgParam))) {
+    // URL param takes precedence if valid
+    savedSelectedOrg = urlOrgParam
+  } else if (initialPrefs.selected_org) {
+    // Fallback to DB preference
     const parsed = initialPrefs.selected_org
     if (parsed === 'all' || organizations.some((o: any) => o.id === parsed)) {
       savedSelectedOrg = parsed
