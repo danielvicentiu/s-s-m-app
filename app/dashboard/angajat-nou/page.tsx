@@ -1,10 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseBrowser } from '@/lib/supabase/client';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createSupabaseBrowser();
 
 export default function AngajatNou() {
   const [companies, setCompanies] = useState<any[]>([]);
@@ -22,7 +20,7 @@ export default function AngajatNou() {
 
   useEffect(() => {
     async function getCompanies() {
-      const { data, error } = await supabase.from('companies').select('id, name').order('name');
+      const { data, error } = await supabase.from('organizations').select('id, name').order('name');
       if (data) setCompanies(data);
     }
     getCompanies();

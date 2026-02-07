@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createBrowserClient } from '@supabase/ssr';
+import { createSupabaseBrowser } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -11,10 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createSupabaseBrowser();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
