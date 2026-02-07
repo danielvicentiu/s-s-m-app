@@ -86,6 +86,43 @@ export default function DashboardClient({
     ? Object.values(valuePreviewMap)[0] || null
     : valuePreviewMap[selectedOrg] || null
 
+  // === DATA COMPLETENESS CALCULATION ===
+  // Calculate completeness based on available data for selected org
+  const calculateCompleteness = () => {
+    if (selectedOrg === 'all') {
+      // For "all orgs" view, average completeness of all orgs
+      const completenessScores = organizations
+        .map(org => (org as any).data_completeness)
+        .filter(score => typeof score === 'number')
+
+      if (completenessScores.length > 0) {
+        return Math.round(completenessScores.reduce((sum, score) => sum + score, 0) / completenessScores.length)
+      }
+    } else {
+      // For single org, use its data_completeness if available
+      const org = organizations.find(o => o.id === selectedOrg) as any
+      if (org?.data_completeness && typeof org.data_completeness === 'number') {
+        return org.data_completeness
+      }
+    }
+
+    // Fallback: calculate based on data presence
+    const hasMedicalData = filteredMedicalExams.length > 0
+    const hasEquipmentData = filteredEquipment.length > 0
+    const hasOrgName = !!orgName && orgName !== 'Toate organizațiile'
+    const hasOrgCUI = !!orgCUI
+
+    let score = 20 // Base score
+    if (hasMedicalData) score += 30
+    if (hasEquipmentData) score += 30
+    if (hasOrgName) score += 10
+    if (hasOrgCUI) score += 10
+
+    return score
+  }
+
+  const completeness = calculateCompleteness()
+
   const now = new Date()
 
   // === MEDICINA MUNCII ===
@@ -138,9 +175,6 @@ export default function DashboardClient({
   if (riskScore > 10) { riskLevel = 'CRITIC'; riskClass = 'text-red-600' }
   else if (riskScore >= 5) { riskLevel = 'RIDICAT'; riskClass = 'text-orange-600' }
   else if (riskScore >= 2) { riskLevel = 'MEDIU'; riskClass = 'text-yellow-600' }
-
-  // Completare date
-  const completeness = 86 // TODO: calculat din data_completeness
 
   // Notificări — din alerts ca proxy
   const recentNotifCount = filteredAlerts.filter((a: any) => a.severity === 'expired').length
