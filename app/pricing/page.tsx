@@ -8,67 +8,98 @@ export default function PricingPage() {
 
   const plans = [
     {
-      name: 'Starter',
-      price: 'Gratuit',
-      period: '',
+      name: 'Basic',
+      price: '€200',
+      period: '/an',
+      employeeRange: '1-5 angajați',
       description: 'Perfect pentru firme mici care încep digitalizarea SSM',
       features: [
-        'Monitoring basic medicina muncii',
-        '1 organizație',
+        'Monitoring medicina muncii',
+        'Echipamente PSI — tracking basic',
         'Maxim 5 angajați',
-        'Alerte email (săptămânale)',
-        'Dashboard readonly',
-        'Suport email standard',
+        'Alerte email automate',
+        'Dashboard complet',
+        'Rapoarte PDF',
+        'Suport email',
       ],
-      cta: 'Începe gratuit',
+      cta: 'Începe acum',
       highlighted: false,
       color: 'gray',
     },
     {
-      name: 'Professional',
-      price: '€200',
+      name: 'Pro',
+      price: '€350',
       period: '/an',
-      description: 'Soluția completă pentru conformitate SSM & PSI',
+      employeeRange: '6-20 angajați',
+      description: 'Soluția optimă pentru firme în creștere',
       features: [
-        'Medicina Muncii — tracking nelimitat',
-        'Echipamente PSI — inventar complet',
-        'Angajați nelimitați',
-        'Alerte automate email zilnic',
+        'Toate din Basic',
+        'Până la 20 angajați',
         'Risc financiar — calcul amenzi ITM',
-        'Multi-organizație — firme nelimitate',
-        'Rapoarte PDF — generare automată',
-        'Dashboard complet cu filtre',
-        'Instruiri SSM & PSI (coming soon)',
-        'Suport tehnic prioritar',
-        'Backup automat zilnic',
-        'Actualizări gratuite',
+        'Multi-organizație',
+        'Instruiri SSM & PSI',
+        'Alerte SMS (opțional)',
+        'Suport prioritar',
+        'Export date Excel',
       ],
       cta: 'Începe acum',
       highlighted: true,
       color: 'blue',
     },
     {
+      name: 'Corporate',
+      price: '€1000',
+      period: '/an',
+      employeeRange: '21-100 angajați',
+      description: 'Pentru organizații cu echipe mari',
+      features: [
+        'Toate din Pro',
+        'Până la 100 angajați',
+        'REGES API integration',
+        'Rapoarte personalizate',
+        'Onboarding dedicat',
+        'Account manager',
+        'SLA 99.5% uptime',
+        'Training complet echipă',
+      ],
+      cta: 'Începe acum',
+      highlighted: false,
+      color: 'purple',
+    },
+    {
       name: 'Enterprise',
       price: 'Custom',
       period: '',
-      description: 'Pentru grupuri de firme și consultanți SSM cu portofoliu extins',
+      employeeRange: '100+ angajați',
+      description: 'Soluție la cheie pentru grupuri de firme și consultanți SSM',
       features: [
-        'Toate features din Professional',
-        'REGES API integration (ANRE)',
-        'Multi-tenant architecture',
+        'Toate din Corporate',
+        'Angajați nelimitați',
         'White-label dashboard',
-        'Dedicated account manager',
+        'Multi-tenant architecture',
+        'Integrare ERP/HR (SAP, Saga)',
+        'Workflows personalizate',
         'SLA 99.9% uptime',
-        'Onboarding dedicat',
-        'Training echipă complet',
-        'Custom workflows & automatizări',
-        'Integrare ERP/HR (SAP, Saga, FluxHR)',
-        'Audit trail complet',
-        'Conformitate GDPR avansată',
+        'Dedicated support 24/7',
       ],
       cta: 'Contactează-ne',
       highlighted: false,
-      color: 'purple',
+      color: 'indigo',
+    },
+  ]
+
+  const addOns = [
+    {
+      name: 'Conformitate NIS2',
+      price: '€200',
+      period: '/an',
+      description: 'Raportare automată și monitorizare conformitate Directiva NIS2',
+    },
+    {
+      name: 'Conformitate GDPR',
+      price: '€150',
+      period: '/an',
+      description: 'Gestiune consimțăminte, rapoarte privacy, tracking DPO',
     },
   ]
 
@@ -113,11 +144,11 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="pb-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {plans.map((plan, idx) => (
               <div
                 key={idx}
-                className={`rounded-2xl p-8 transition-all ${
+                className={`rounded-2xl p-6 transition-all ${
                   plan.highlighted
                     ? 'bg-blue-600 text-white shadow-2xl scale-105 border-4 border-blue-700'
                     : 'bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg'
@@ -126,19 +157,26 @@ export default function PricingPage() {
                 {/* Badge */}
                 {plan.highlighted && (
                   <div className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white mb-4 uppercase tracking-wider">
-                    Cel mai popular
+                    Popular
                   </div>
                 )}
 
                 {/* Header */}
-                <div className="mb-6">
+                <div className="mb-4">
                   <h3
-                    className={`text-2xl font-black mb-2 ${
+                    className={`text-2xl font-black mb-1 ${
                       plan.highlighted ? 'text-white' : 'text-gray-900'
                     }`}
                   >
                     {plan.name}
                   </h3>
+                  <p
+                    className={`text-xs font-semibold mb-2 ${
+                      plan.highlighted ? 'text-blue-100' : 'text-blue-600'
+                    }`}
+                  >
+                    {plan.employeeRange}
+                  </p>
                   <p
                     className={`text-sm leading-relaxed ${
                       plan.highlighted ? 'text-blue-100' : 'text-gray-600'
@@ -149,10 +187,10 @@ export default function PricingPage() {
                 </div>
 
                 {/* Price */}
-                <div className="mb-8">
+                <div className="mb-6">
                   <div className="flex items-baseline gap-2">
                     <span
-                      className={`text-5xl font-black ${
+                      className={`text-4xl font-black ${
                         plan.highlighted ? 'text-white' : 'text-gray-900'
                       }`}
                     >
@@ -160,7 +198,7 @@ export default function PricingPage() {
                     </span>
                     {plan.period && (
                       <span
-                        className={`text-lg ${
+                        className={`text-base ${
                           plan.highlighted ? 'text-blue-100' : 'text-gray-500'
                         }`}
                       >
@@ -168,28 +206,19 @@ export default function PricingPage() {
                       </span>
                     )}
                   </div>
-                  {plan.name === 'Professional' && (
-                    <p
-                      className={`text-xs mt-2 ${
-                        plan.highlighted ? 'text-blue-100' : 'text-gray-500'
-                      }`}
-                    >
-                      per organizație
-                    </p>
-                  )}
                 </div>
 
                 {/* Features */}
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-2 mb-6">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3">
+                    <li key={i} className="flex items-start gap-2">
                       <Check
-                        className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
+                        className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
                           plan.highlighted ? 'text-blue-200' : 'text-blue-600'
                         }`}
                       />
                       <span
-                        className={`text-sm ${
+                        className={`text-xs ${
                           plan.highlighted ? 'text-white' : 'text-gray-700'
                         }`}
                       >
@@ -205,10 +234,10 @@ export default function PricingPage() {
                     if (plan.name === 'Enterprise') {
                       window.location.href = 'mailto:contact@s-s-m.ro?subject=Solicitare plan Enterprise'
                     } else {
-                      router.push('/login')
+                      router.push('/onboarding')
                     }
                   }}
-                  className={`w-full py-4 rounded-xl font-bold text-base transition-all ${
+                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
                     plan.highlighted
                       ? 'bg-white text-blue-600 hover:bg-blue-50 shadow-lg'
                       : 'bg-blue-600 text-white hover:bg-blue-700'
@@ -218,16 +247,43 @@ export default function PricingPage() {
                 </button>
 
                 {/* Footer note */}
-                {plan.name === 'Starter' && (
-                  <p className="text-center text-xs text-gray-400 mt-4">
-                    Fără card necesar
-                  </p>
-                )}
-                {plan.name === 'Professional' && (
-                  <p className="text-center text-xs text-blue-100 mt-4">
+                {plan.highlighted && (
+                  <p className="text-center text-xs text-blue-100 mt-3">
                     Fără setup fee. Anulezi oricând.
                   </p>
                 )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Add-ons */}
+      <section className="pb-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-gray-900 mb-4">Module suplimentare (Add-ons)</h2>
+            <p className="text-gray-600 text-lg">Extinde funcționalitatea platformei cu module de conformitate</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {addOns.map((addon, idx) => (
+              <div
+                key={idx}
+                className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-blue-300 hover:shadow-lg transition-all"
+              >
+                <h3 className="text-2xl font-black text-gray-900 mb-2">{addon.name}</h3>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-3xl font-black text-blue-600">{addon.price}</span>
+                  <span className="text-gray-500">{addon.period}</span>
+                </div>
+                <p className="text-gray-600 mb-6">{addon.description}</p>
+                <button
+                  onClick={() => router.push('/onboarding')}
+                  className="w-full bg-gray-100 text-gray-900 px-6 py-3 rounded-xl font-bold hover:bg-gray-200 transition"
+                >
+                  Adaugă la plan
+                </button>
               </div>
             ))}
           </div>
@@ -248,29 +304,33 @@ export default function PricingPage() {
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     <th className="text-left px-6 py-4 text-sm font-bold text-gray-900">Funcționalitate</th>
-                    <th className="text-center px-6 py-4 text-sm font-bold text-gray-900">Starter</th>
-                    <th className="text-center px-6 py-4 text-sm font-bold text-blue-600 bg-blue-50">Professional</th>
-                    <th className="text-center px-6 py-4 text-sm font-bold text-gray-900">Enterprise</th>
+                    <th className="text-center px-4 py-4 text-sm font-bold text-gray-900">Basic</th>
+                    <th className="text-center px-4 py-4 text-sm font-bold text-blue-600 bg-blue-50">Pro</th>
+                    <th className="text-center px-4 py-4 text-sm font-bold text-gray-900">Corporate</th>
+                    <th className="text-center px-4 py-4 text-sm font-bold text-gray-900">Enterprise</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {[
-                    ['Medicina Muncii', 'Basic', '✓ Complet', '✓ Complet'],
-                    ['Echipamente PSI', '—', '✓ Complet', '✓ Complet'],
-                    ['Nr. organizații', '1', 'Nelimitat', 'Nelimitat'],
-                    ['Nr. angajați', '5', 'Nelimitat', 'Nelimitat'],
-                    ['Alerte email', 'Săptămânale', 'Zilnice', 'Zilnice + SMS'],
-                    ['Risc financiar', '—', '✓', '✓'],
-                    ['Rapoarte PDF', '—', '✓', '✓'],
-                    ['REGES API', '—', '—', '✓'],
-                    ['White-label', '—', '—', '✓'],
-                    ['Dedicated support', '—', 'Email', '24/7 Phone'],
+                    ['Medicina Muncii', '✓', '✓', '✓', '✓'],
+                    ['Echipamente PSI', '✓ Basic', '✓', '✓', '✓'],
+                    ['Nr. angajați', '1-5', '6-20', '21-100', 'Nelimitat'],
+                    ['Nr. organizații', '1', 'Multi', 'Multi', 'Nelimitat'],
+                    ['Alerte email', '✓', '✓', '✓', '✓'],
+                    ['Risc financiar ITM', '—', '✓', '✓', '✓'],
+                    ['Instruiri SSM', '—', '✓', '✓', '✓'],
+                    ['REGES API', '—', '—', '✓', '✓'],
+                    ['Rapoarte custom', '—', '—', '✓', '✓'],
+                    ['White-label', '—', '—', '—', '✓'],
+                    ['Account manager', '—', '—', '✓', '✓'],
+                    ['SLA uptime', '—', '—', '99.5%', '99.9%'],
                   ].map((row, i) => (
                     <tr key={i} className="hover:bg-gray-50 transition">
                       <td className="px-6 py-4 text-sm text-gray-700 font-medium">{row[0]}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600 text-center">{row[1]}</td>
-                      <td className="px-6 py-4 text-sm text-blue-600 text-center font-semibold bg-blue-50/30">{row[2]}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600 text-center">{row[3]}</td>
+                      <td className="px-4 py-4 text-sm text-gray-600 text-center">{row[1]}</td>
+                      <td className="px-4 py-4 text-sm text-blue-600 text-center font-semibold bg-blue-50/30">{row[2]}</td>
+                      <td className="px-4 py-4 text-sm text-gray-600 text-center">{row[3]}</td>
+                      <td className="px-4 py-4 text-sm text-gray-600 text-center">{row[4]}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -290,24 +350,24 @@ export default function PricingPage() {
           <div className="space-y-4">
             {[
               {
-                q: 'Pot trece de la Starter la Professional oricând?',
+                q: 'Pot trece de la Basic la Pro sau Corporate oricând?',
                 a: 'Da, poți face upgrade instant. Diferența de preț se calculează pro-rata pentru perioada rămasă.',
               },
               {
-                q: 'Ce înseamnă "angajați nelimitați"?',
-                a: 'Poți adăuga oricâți angajați în sistem, fără taxe suplimentare per utilizator. Prețul este fix per organizație.',
+                q: 'Ce se întâmplă dacă depășesc limita de angajați?',
+                a: 'Sistemul te va notifica automat să faci upgrade la planul următor. Datele tale rămân salvate și migrarea se face instant, fără pierdere de date.',
               },
               {
                 q: 'Ce include planul Enterprise?',
                 a: 'Integrare REGES API pentru raportare ANRE, white-label dashboard (logo și domeniu propriu), dedicated account manager, SLA 99.9%, onboarding personalizat și training complet echipă.',
               },
               {
-                q: 'Există discount pentru plata anuală?',
-                a: 'Prețul €200/an este deja rata anuală optimă. Pentru planuri multi-an (3+ ani) contactează-ne pentru ofertă personalizată.',
+                q: 'Ce sunt add-on-urile NIS2 și GDPR?',
+                a: 'Sunt module suplimentare pentru conformitate specifică: NIS2 pentru securitate cibernetică (obligatoriu pentru anumite sectoare) și GDPR pentru protecția datelor personale. Se pot adăuga la orice plan.',
               },
               {
-                q: 'Ce se întâmplă dacă depășesc 5 angajați pe Starter?',
-                a: 'Sistemul te va notifica automat să faci upgrade la Professional. Datele tale rămân salvate și migrarea se face instant.',
+                q: 'Există discount pentru plata anuală?',
+                a: 'Prețurile afișate sunt deja tarifeinclude anuale. Pentru planuri multi-an (3+ ani) sau multiple organizații, contactează-ne pentru ofertă personalizată.',
               },
               {
                 q: 'Pot anula abonamentul?',
