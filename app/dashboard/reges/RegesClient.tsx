@@ -24,36 +24,83 @@ export default function RegesClient({ user, connections, outbox, organizations }
     cui: '',
     regesUserId: '',
     regesEmployerId: '',
+    username: '',
+    password: '',
   })
 
+  // Sync state
+  const [syncResult, setSyncResult] = useState<any>(null)
+  const [syncing, setSyncing] = useState(false)
+
   async function handleCreateConnection() {
-    if (!connectionForm.organizationId || !connectionForm.cui || !connectionForm.regesUserId || !connectionForm.regesEmployerId) {
-      alert('Completează toate câmpurile')
+    if (!connectionForm.organizationId || !connectionForm.cui || !connectionForm.regesUserId || !connectionForm.regesEmployerId || !connectionForm.username || !connectionForm.password) {
+      alert('Completează toate câmpurile (inclusiv username și password REGES)')
       return
     }
 
     setLoading(true)
-    const supabase = createSupabaseBrowser()
 
     try {
-      const { error } = await supabase.from('reges_connections').insert({
-        organization_id: connectionForm.organizationId,
-        cui: connectionForm.cui,
-        reges_user_id: connectionForm.regesUserId,
-        reges_employer_id: connectionForm.regesEmployerId,
-        status: 'active',
+      // Call API route to encrypt + save credentials
+      const response = await fetch('/api/reges/connections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          organization_id: connectionForm.organizationId,
+          cui: connectionForm.cui,
+          reges_user_id: connectionForm.regesUserId,
+          reges_employer_id: connectionForm.regesEmployerId,
+          username: connectionForm.username,
+          password: connectionForm.password,
+        }),
       })
 
-      if (error) throw error
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create connection')
+      }
 
       setShowConnectionModal(false)
-      setConnectionForm({ organizationId: '', cui: '', regesUserId: '', regesEmployerId: '' })
+      setConnectionForm({ organizationId: '', cui: '', regesUserId: '', regesEmployerId: '', username: '', password: '' })
       router.refresh()
+      alert('Conexiune REGES creată cu succes!')
     } catch (error: any) {
       console.error('Error creating connection:', error)
       alert(`Eroare: ${error.message}`)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleSync() {
+    if (connections.length === 0) {
+      alert('Nicio conexiune REGES configurată. Adaugă o conexiune mai întâi.')
+      return
+    }
+
+    setSyncing(true)
+    setSyncResult(null)
+
+    try {
+      const response = await fetch('/api/reges/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ connection_id: connections[0].id }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Sync failed')
+      }
+
+      const result = await response.json()
+      setSyncResult(result)
+      router.refresh()
+    } catch (error: any) {
+      console.error('Sync error:', error)
+      alert(`Eroare la sincronizare: ${error.message}`)
+    } finally {
+      setSyncing(false)
     }
   }
 
@@ -391,13 +438,45 @@ export default function RegesClient({ user, connections, outbox, organizations }
                 />
                 <p className="text-xs text-gray-500 mt-1">Primit de la ANRE prin email</p>
               </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Username REGES <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={connectionForm.username}
+                  onChange={(e) =>
+                    setConnectionForm({ ...connectionForm, username: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="username din REGES"
+                />
+                <p className="text-xs text-gray-500 mt-1">Username din REGES Setări → Acces → Chei API</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  Password REGES <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={connectionForm.password}
+                  onChange={(e) =>
+                    setConnectionForm({ ...connectionForm, password: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="••••••••"
+                />
+                <p className="text-xs text-gray-500 mt-1">Password REGES (va fi criptat cu AES-256-GCM)</p>
+              </div>
             </div>
 
             <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
               <button
                 onClick={() => {
                   setShowConnectionModal(false)
-                  setConnectionForm({ organizationId: '', cui: '', regesUserId: '', regesEmployerId: '' })
+                  setConnectionForm({ organizationId: '', cui: '', regesUserId: '', regesEmployerId: '', username: '', password: '' })
                 }}
                 disabled={loading}
                 className="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition disabled:opacity-50"
