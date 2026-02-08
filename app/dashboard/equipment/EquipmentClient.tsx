@@ -1,6 +1,7 @@
 // app/dashboard/equipment/EquipmentClient.tsx
 // M5 Echipamente PSI — CRUD complet cu Component Kit
 // Pattern identic cu MedicalClient.tsx
+// RBAC: Verificare permisiuni pentru butoane CRUD
 
 'use client'
 
@@ -10,6 +11,8 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
+// RBAC: Import hook-uri client-side pentru verificare permisiuni
+import { useHasPermission } from '@/hooks/usePermission'
 
 interface Props {
   user: { email: string }
@@ -106,6 +109,11 @@ function getStatus(expiryDate: string): { status: 'expired' | 'expiring' | 'vali
 }
 
 export default function EquipmentClient({ user, organizations, equipment: initialEquipment }: Props) {
+  // RBAC: Verificare permisiuni pentru butoane CRUD
+  const canCreate = useHasPermission('equipment', 'create')
+  const canUpdate = useHasPermission('equipment', 'update')
+  const canDelete = useHasPermission('equipment', 'delete')
+
   const [equipment, setEquipment] = useState(initialEquipment)
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -278,12 +286,15 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               <p className="text-sm text-gray-500">Gestionare stingătoare, truse, hidranți, detectoare</p>
             </div>
           </div>
-          <button
-            onClick={openAdd}
-            className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" /> Adaugă echipament
-          </button>
+          {/* RBAC: Buton "Adaugă" vizibil doar dacă user are permisiune 'create' pe 'equipment' */}
+          {canCreate && (
+            <button
+              onClick={openAdd}
+              className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" /> Adaugă echipament
+            </button>
+          )}
         </div>
       </header>
 
@@ -417,12 +428,18 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-1">
-                            <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600" title="Editează">
-                              <Pencil className="w-4 h-4" />
-                            </button>
-                            <button onClick={() => setDeleteId(e.id)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-red-600" title="Șterge">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                            {/* RBAC: Buton "Editează" vizibil doar dacă user are permisiune 'update' pe 'equipment' */}
+                            {canUpdate && (
+                              <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600" title="Editează">
+                                <Pencil className="w-4 h-4" />
+                              </button>
+                            )}
+                            {/* RBAC: Buton "Șterge" vizibil doar dacă user are permisiune 'delete' pe 'equipment' */}
+                            {canDelete && (
+                              <button onClick={() => setDeleteId(e.id)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-red-600" title="Șterge">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>

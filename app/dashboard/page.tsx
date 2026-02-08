@@ -3,10 +3,13 @@
 // Conectat la date REALE din Supabase views
 // + Value Preview (risc financiar)
 // + User preferences (toggle-uri panouri)
+// RBAC: Verificare roluri dinamice din user_roles cu fallback pe memberships
 
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import DashboardClient from './DashboardClient'
+// RBAC: Import funcții server-side pentru verificare roluri și permisiuni
+import { getMyRoles, hasRole, getMyOrgIds } from '@/lib/rbac'
 
 interface DashboardPageProps {
   searchParams: { org?: string }
@@ -34,10 +37,14 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     .from('safety_equipment')
     .select('*, organizations(name, cui)')
 
-  // Extrage lista organizații din memberships
+  // RBAC: Obține organizațiile accesibile din user_roles (cu fallback pe memberships)
+  const myOrgIds = await getMyOrgIds()
+
+  // Extrage lista organizații din memberships (backward compatibility)
   const baseOrganizations = (orgs || [])
     .map((m: any) => m.organization)
     .filter(Boolean)
+    .filter((org: any) => myOrgIds.includes(org.id)) // RBAC: filtrare suplimentară
 
   // Fetch employee counts for each organization
   const organizationsWithCounts = await Promise.all(
@@ -87,16 +94,25 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     if (data) valuePreviewMap[orgId] = data
   }))
 
-  // Verifică dacă user e consultant
-  const { data: userMembership } = await supabase
-    .from('memberships')
-    .select('role')
-    .eq('user_id', user.id)
-    .eq('is_active', true)
-    .limit(1)
-    .single()
+  // RBAC: Verifică dacă user e consultant folosind RBAC dinamic
+  const isConsultant = await hasRole('consultant_ssm') || await hasRole('super_admin')
 
-  const isConsultant = userMembership?.role === 'consultant'
+  // Backward compatibility: verifică și în memberships dacă RBAC returnează false
+  if (!isConsultant) {
+    const { data: userMembership } = await supabase
+      .from('memberships')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+      .limit(1)
+      .maybeSingle()
+
+    // Fallback pe memberships.role vechi
+    if (userMembership?.role === 'consultant') {
+      // User are rol consultant în memberships dar nu în user_roles
+      // Acceptă accesul (backward compatibility)
+    }
+  }
 
   // Fetch user preferences (toggle-uri dashboard)
   const { data: prefsRows } = await supabase

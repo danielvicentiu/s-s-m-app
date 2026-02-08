@@ -1,6 +1,7 @@
 // app/dashboard/medical/MedicalClient.tsx
 // M2 Medicina Muncii — CRUD complet
 // Folosește Component Kit: DataTable, FormModal, StatusBadge, EmptyState, ConfirmDialog
+// RBAC: Verificare permisiuni pentru butoane CRUD
 
 'use client'
 
@@ -13,6 +14,8 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { ArrowLeft, Stethoscope, Plus, Pencil, Trash2, Download } from 'lucide-react'
+// RBAC: Import hook-uri client-side pentru verificare permisiuni
+import { useHasPermission } from '@/hooks/usePermission'
 
 // ========== TYPES ==========
 
@@ -80,6 +83,11 @@ const emptyForm = {
 export default function MedicalClient({ user, medicalExams, employees, organizations }: Props) {
   const router = useRouter()
   const supabase = createClient()
+
+  // RBAC: Verificare permisiuni pentru butoane CRUD
+  const canCreate = useHasPermission('medical', 'create')
+  const canUpdate = useHasPermission('medical', 'update')
+  const canDelete = useHasPermission('medical', 'delete')
 
   // State
   const [filterOrg, setFilterOrg] = useState<string>('all')
@@ -328,20 +336,26 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
       sortable: false,
       render: (row) => (
         <div className="flex items-center gap-1">
-          <button
-            onClick={() => openEdit(row)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600"
-            title="Editează"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setDeleteTarget(row)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-red-600"
-            title="Șterge"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {/* RBAC: Buton "Editează" vizibil doar dacă user are permisiune 'update' pe 'medical' */}
+          {canUpdate && (
+            <button
+              onClick={() => openEdit(row)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600"
+              title="Editează"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+          )}
+          {/* RBAC: Buton "Șterge" vizibil doar dacă user are permisiune 'delete' pe 'medical' */}
+          {canDelete && (
+            <button
+              onClick={() => setDeleteTarget(row)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-red-600"
+              title="Șterge"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       ),
     },
@@ -370,13 +384,16 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
               <p className="text-sm text-gray-400">Fișe de aptitudine — management complet</p>
             </div>
           </div>
-          <button
-            onClick={openAdd}
-            className="bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            Adaugă fișă
-          </button>
+          {/* RBAC: Buton "Adaugă" vizibil doar dacă user are permisiune 'create' pe 'medical' */}
+          {canCreate && (
+            <button
+              onClick={openAdd}
+              className="bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              Adaugă fișă
+            </button>
+          )}
         </div>
       </header>
 
