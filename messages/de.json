@@ -1,0 +1,183 @@
+{
+  "common": {
+    "appName": "s-s-m.ro",
+    "platform": "Digitale Plattform für Arbeitssicherheit und Brandschutz",
+    "consultant": "Berater",
+    "logout": "Abmelden",
+    "loading": "Wird geladen...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "or": "oder",
+    "all": "Alle",
+    "noData": "Keine Daten vorhanden.",
+    "records": "Einträge",
+    "days": "Tage",
+    "copyright": "© 2026 s-s-m.ro. Alle Rechte vorbehalten.",
+    "termsAndConditions": "Nutzungsbedingungen",
+    "privacy": "Datenschutz",
+    "gdpr": "DSGVO"
+  },
+  "nav": {
+    "features": "Funktionen",
+    "pricing": "Preise",
+    "login": "Zur Plattform",
+    "home": "Startseite",
+    "navigation": "Navigation",
+    "contact": "Kontakt"
+  },
+  "landing": {
+    "badge": "Digitale Plattform für Arbeitssicherheit und Brandschutz",
+    "title": "Arbeitssicherheit und Brandschutz Compliance",
+    "titleHighlight": "100% automatisiert",
+    "subtitle": "Verwalten Sie Arbeitsmedizin, Brandschutzausrüstung, Warnungen und Berichte von einer einzigen Plattform aus.",
+    "cta": "Jetzt starten →",
+    "featuresTitle": "Alles was Sie brauchen an einem Ort",
+    "featuresSubtitle": "6 integrierte Module für vollständige Arbeitssicherheits- und Brandschutz-Compliance",
+    "pricingTitle": "Transparente Preise",
+    "pricingSubtitle": "Ein Plan, alle Funktionen",
+    "planProfessional": "PROFESSIONELLER PLAN",
+    "perOrganization": "pro Organisation",
+    "perYear": "/Jahr",
+    "noSetupFee": "Keine Einrichtungsgebühr. Jederzeit kündbar.",
+    "features": {
+      "medicalTitle": "Arbeitsmedizin",
+      "medicalDesc": "Verfolgung medizinischer Unterlagen, automatische Ablaufwarnungen, vollständige Mitarbeiter-Übersicht in Echtzeit.",
+      "equipmentTitle": "Brandschutzausrüstung",
+      "equipmentDesc": "Inventar für Feuerlöscher, Hydranten, Rauchmelder. Prüfungsplanung, Wartungsprotokolle, QR-Code-Verfolgung.",
+      "alertsTitle": "Automatische Warnungen",
+      "alertsDesc": "Tägliche E-Mail mit bevorstehenden Ablaufterminen (30/15/7 Tage). Resend-Integration, WhatsApp-Benachrichtigungen (demnächst).",
+      "riskTitle": "Finanzielles Risiko",
+      "riskDesc": "Automatische Berechnung potenzieller Bußgelder. Aufschlüsselung nach Behörde, Min-Max-Schätzung.",
+      "multiOrgTitle": "Multi-Organisation",
+      "multiOrgDesc": "Verwalten Sie 100+ Unternehmen von einem Dashboard aus. Sofortige Filterung, gespeicherte Einstellungen.",
+      "reportsTitle": "PDF-Berichte",
+      "reportsDesc": "Automatische Berichtserstellung, SHA256-Hash für Unveränderlichkeit, Cloud-Archiv, 1-Klick-Export."
+    },
+    "pricingFeatures": [
+      "Arbeitsmedizin — unbegrenztes Tracking",
+      "Brandschutzausrüstung — vollständiges Inventar",
+      "Automatische tägliche E-Mail-Warnungen",
+      "Finanzielles Risiko — Bußgeldberechnung",
+      "Multi-Organisation — unbegrenzte Unternehmen",
+      "PDF-Berichte — automatische Erstellung",
+      "Prioritärer technischer Support",
+      "Automatisches tägliches Backup",
+      "Kostenlose Updates"
+    ]
+  },
+  "login": {
+    "title": "Arbeitssicherheitsplattform — Anmeldung",
+    "email": "E-Mail",
+    "emailPlaceholder": "email@beispiel.de",
+    "password": "Passwort",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Zur Plattform",
+    "submitting": "Anmeldung läuft...",
+    "demo": "Als Demo-Besucher eintreten",
+    "invalidCredentials": "Falsche E-Mail oder Passwort.",
+    "footer": "© 2026 s-s-m.ro — Arbeitssicherheitsplattform"
+  },
+  "dashboard": {
+    "allOrganizations": "Alle Organisationen",
+    "employees": "Mitarbeiter",
+    "toggleRiskITM": "ITM-Risiko",
+    "toggleRiskEuro": "Risiko €",
+    "riskControl": "ITM-Kontrollrisiko",
+    "dataCompleteness": "Datenvollständigkeit",
+    "riskLevels": {
+      "low": "Niedrig",
+      "medium": "MITTEL",
+      "high": "HOCH",
+      "critical": "KRITISCH"
+    },
+    "tabs": {
+      "medical": "Arbeitsmedizin",
+      "equipment": "Brandschutzausrüstung"
+    },
+    "counters": {
+      "expired": "Abgelaufen",
+      "expiring": "Läuft ab <30 Tage",
+      "valid": "Gültig"
+    },
+    "medical": {
+      "title": "Arbeitsmedizin",
+      "addRecord": "+ Eintrag hinzufügen",
+      "noRecords": "Keine medizinischen Einträge.",
+      "columns": {
+        "employee": "Mitarbeiter",
+        "position": "Position",
+        "type": "Typ",
+        "examDate": "Untersuchungsdatum",
+        "expiryDate": "Ablauf",
+        "status": "Status"
+      },
+      "examTypes": {
+        "periodic": "Periodisch",
+        "angajare": "Einstellung",
+        "reluare": "Wiederaufnahme",
+        "la_cerere": "Auf Anfrage"
+      }
+    },
+    "equipment": {
+      "title": "Brandschutzausrüstung",
+      "addRecord": "+ Ausrüstung hinzufügen",
+      "noRecords": "Keine Ausrüstung.",
+      "columns": {
+        "equipment": "Ausrüstung",
+        "type": "Typ",
+        "location": "Standort",
+        "lastCheck": "Letzte Prüfung",
+        "expiryDate": "Ablauf",
+        "status": "Status"
+      },
+      "types": {
+        "stingator": "Feuerlöscher",
+        "trusa_prim_ajutor": "Erste-Hilfe-Kasten",
+        "hidrant": "Hydrant",
+        "detector_fum": "Rauchmelder",
+        "iluminat_urgenta": "Notbeleuchtung"
+      }
+    },
+    "status": {
+      "expired": "Abgelaufen seit {days} Tagen",
+      "expiring": "Läuft in {days} Tagen ab",
+      "valid": "Gültig {days} Tage"
+    },
+    "notifications": {
+      "title": "Neueste Benachrichtigungen",
+      "recent": "{count} neueste",
+      "noNotifications": "Noch keine Benachrichtigungen gesendet.",
+      "expiredAlert": "ABGELAUFEN!",
+      "expired": "abgelaufen",
+      "sent": "Gesendet",
+      "to": "An"
+    },
+    "features": {
+      "pdfTitle": "PDF-Compliance",
+      "pdfSubtitle": "Automatische Berichtserstellung",
+      "pdfLocked": "Verfügbar bei Datenvollständigkeit > 80%",
+      "alertsTitle": "Automatische Warnungen",
+      "alertsSubtitle": "E-Mail, SMS, WhatsApp",
+      "alertsActive": "Aktiv — Tägliche E-Mail um 08:00 über Resend",
+      "trainingsTitle": "Arbeitssicherheits- und Brandschutzschulung",
+      "trainingsSubtitle": "Interaktive Module + Test",
+      "trainingsActive": "9 aktive Module — Klicken für Zugang"
+    },
+    "actions": {
+      "contactConsultant": "Berater kontaktieren",
+      "reloadData": "Daten neu laden",
+      "aboutPlatform": "Über die Plattform"
+    }
+  },
+  "footer": {
+    "description": "Digitale Plattform für Arbeitssicherheits- und Brandschutz-Compliance.",
+    "email": "contact@s-s-m.ro",
+    "phone": "+40 700 000 000",
+    "address": "Bukarest, Rumänien"
+  }
+}

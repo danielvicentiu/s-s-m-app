@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');

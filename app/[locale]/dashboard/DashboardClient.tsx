@@ -6,7 +6,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter, usePathname } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { ValuePreview } from '@/components/ui/ValuePreview'
 
@@ -337,7 +337,7 @@ export default function DashboardClient({
               <h2 className="text-lg font-bold text-gray-900">Medicina Muncii</h2>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-400">{filteredMedicalExams.length} înregistrări</span>
-                <button onClick={() => window.location.href = '/dashboard/medical'} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                <button onClick={() => router.push('/dashboard/medical')} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
                   + Adaugă fișă
                 </button>
               </div>
@@ -383,7 +383,7 @@ export default function DashboardClient({
               <h2 className="text-lg font-bold text-gray-900">Echipamente PSI</h2>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-400">{filteredEquipment.length} înregistrări</span>
-                <button onClick={() => window.location.href = '/dashboard/equipment'} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                <button onClick={() => router.push('/dashboard/equipment')} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
                   + Adaugă echipament
                 </button>
               </div>

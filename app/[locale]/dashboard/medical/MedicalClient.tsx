@@ -5,7 +5,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { DataTable, type Column } from '@/components/ui/DataTable'
 import { FormModal } from '@/components/ui/FormModal'
