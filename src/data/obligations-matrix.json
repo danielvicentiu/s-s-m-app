@@ -1,0 +1,253 @@
+{
+  "baseObligations": {
+    "ssm": [
+      {
+        "id": "eval_riscuri",
+        "name": "Evaluare riscuri SSM",
+        "frequency": "O dată la înființare + actualizare la modificări",
+        "costMin": 300,
+        "costMax": 1500,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, Art.11",
+        "description": "Identificare și evaluare riscuri la locul de muncă",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      },
+      {
+        "id": "plan_preventie",
+        "name": "Plan de prevenire și protecție",
+        "frequency": "Anual",
+        "costMin": 200,
+        "costMax": 800,
+        "fineMin": 5000,
+        "fineMax": 10000,
+        "law": "Legea 319/2006, Art.12",
+        "description": "Măsuri de prevenire a accidentelor de muncă",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      },
+      {
+        "id": "autorizare_ssm",
+        "name": "Autorizare funcționare SSM",
+        "frequency": "O dată (la înființare)",
+        "costMin": 500,
+        "costMax": 2000,
+        "fineMin": 5000,
+        "fineMax": 10000,
+        "law": "Legea 319/2006, Art.16",
+        "description": "Autorizație ITM pentru funcționare conform SSM",
+        "mandatory": true,
+        "appliesToZeroEmployees": false,
+        "riskBased": true
+      },
+      {
+        "id": "instruire_ssm",
+        "name": "Instruire periodică SSM",
+        "frequency": "Anual (6 luni pt. risc ridicat)",
+        "costMin": 50,
+        "costMax": 150,
+        "costPerEmployee": true,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, Art.21",
+        "description": "Instruire angajați privind riscurile și măsurile de protecție",
+        "mandatory": true,
+        "appliesToZeroEmployees": false
+      },
+      {
+        "id": "fise_post",
+        "name": "Fișe de post cu atribuții SSM",
+        "frequency": "La angajare + actualizare",
+        "costMin": 100,
+        "costMax": 500,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, Art.10",
+        "description": "Fișe de post cu sarcini și responsabilități SSM",
+        "mandatory": true,
+        "appliesToZeroEmployees": false
+      },
+      {
+        "id": "instructiuni_proprii",
+        "name": "Instrucțiuni proprii de SSM",
+        "frequency": "La nevoie",
+        "costMin": 200,
+        "costMax": 1000,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, Art.11",
+        "description": "Proceduri și instrucțiuni adaptate activității",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      },
+      {
+        "id": "eip",
+        "name": "Echipament Individual de Protecție (EIP)",
+        "frequency": "Permanent (înlocuire la uzură)",
+        "costMin": 100,
+        "costMax": 500,
+        "costPerEmployee": true,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, Art.30",
+        "description": "Echipament de protecție (cască, mănuși, ochelari etc.)",
+        "mandatory": false,
+        "appliesToZeroEmployees": false,
+        "riskBased": true
+      }
+    ],
+    "psi": [
+      {
+        "id": "autorizare_isu",
+        "name": "Autorizație ISU funcționare",
+        "frequency": "O dată (la înființare)",
+        "costMin": 1000,
+        "costMax": 5000,
+        "fineMin": 20000,
+        "fineMax": 50000,
+        "law": "Legea 307/2006, Art.8",
+        "description": "Autorizație pompieri pentru spații comerciale/producție",
+        "mandatory": true,
+        "appliesToZeroEmployees": true,
+        "spaceBased": true
+      },
+      {
+        "id": "stingatoare",
+        "name": "Stingătoare verificate tehnic",
+        "frequency": "Anual (verificare tehnică)",
+        "costMin": 150,
+        "costMax": 500,
+        "fineMin": 1000,
+        "fineMax": 2500,
+        "law": "Legea 307/2006, Art.6",
+        "description": "Stingătoare cu verificare tehnică la zi",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      },
+      {
+        "id": "instruire_psi",
+        "name": "Instruire PSI angajați",
+        "frequency": "Anual",
+        "costMin": 30,
+        "costMax": 100,
+        "costPerEmployee": true,
+        "fineMin": 1000,
+        "fineMax": 2500,
+        "law": "Legea 307/2006, Art.8",
+        "description": "Instruire prevenire și stingere incendii",
+        "mandatory": true,
+        "appliesToZeroEmployees": false
+      },
+      {
+        "id": "plan_evacuare",
+        "name": "Plan de evacuare afișat",
+        "frequency": "O dată + actualizare",
+        "costMin": 100,
+        "costMax": 300,
+        "fineMin": 1000,
+        "fineMax": 2500,
+        "law": "Legea 307/2006, Art.9",
+        "description": "Plan evacuare vizibil cu trasee și ieșiri de urgență",
+        "mandatory": true,
+        "appliesToZeroEmployees": true,
+        "spaceBased": true
+      },
+      {
+        "id": "cadru_tehnic_psi",
+        "name": "Cadru tehnic PSI desemnat",
+        "frequency": "Permanent",
+        "costMin": 200,
+        "costMax": 800,
+        "fineMin": 1000,
+        "fineMax": 2500,
+        "law": "Legea 307/2006, Art.12",
+        "description": "Persoană desemnată responsabil PSI",
+        "mandatory": false,
+        "appliesToZeroEmployees": false,
+        "employeeThreshold": 10
+      },
+      {
+        "id": "pram",
+        "name": "PRAM (Plan de evacuare și management criză)",
+        "frequency": "Anual",
+        "costMin": 300,
+        "costMax": 1000,
+        "fineMin": 1000,
+        "fineMax": 2500,
+        "law": "Legea 307/2006",
+        "description": "Plan Reacție la situații de Urgență verificat și aprobat",
+        "mandatory": false,
+        "appliesToZeroEmployees": true,
+        "riskBased": true
+      }
+    ],
+    "medicinaMuncii": [
+      {
+        "id": "examen_angajare",
+        "name": "Examen medical la angajare",
+        "frequency": "La fiecare angajare",
+        "costMin": 100,
+        "costMax": 300,
+        "costPerEmployee": true,
+        "fineMin": 5000,
+        "fineMax": 10000,
+        "law": "HG 355/2007",
+        "description": "Aviz medical apt de muncă pentru fiecare angajat",
+        "mandatory": true,
+        "appliesToZeroEmployees": false
+      },
+      {
+        "id": "examen_periodic",
+        "name": "Examen medical periodic",
+        "frequency": "Anual sau 6 luni (funcție de risc)",
+        "costMin": 100,
+        "costMax": 250,
+        "costPerEmployee": true,
+        "fineMin": 5000,
+        "fineMax": 10000,
+        "law": "HG 355/2007",
+        "description": "Control medical periodic pentru menținerea aptitudinii",
+        "mandatory": true,
+        "appliesToZeroEmployees": false
+      },
+      {
+        "id": "trusa_prim_ajutor",
+        "name": "Trusă prim ajutor",
+        "frequency": "Permanent (verificare lunară)",
+        "costMin": 100,
+        "costMax": 500,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "HG 857/2011",
+        "description": "Trusă completă prim ajutor la locul de muncă",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      }
+    ]
+  },
+  "riskModifiers": {
+    "ridicat": {
+      "categories": ["construction", "automotive", "transport"],
+      "multiplier": 1.5,
+      "extraObligations": [
+        {
+          "id": "consultant_ssm_extern",
+          "name": "Consultant SSM extern dedicat",
+          "costMin": 500,
+          "costMax": 1500,
+          "frequency": "Lunar",
+          "mandatory": true
+        }
+      ]
+    },
+    "mediu": {
+      "categories": ["horeca", "food", "beauty", "services"],
+      "multiplier": 1.0
+    },
+    "scazut": {
+      "categories": ["it", "retail", "education", "creative"],
+      "multiplier": 0.8
+    }
+  }
+}

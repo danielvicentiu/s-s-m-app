@@ -1,5 +1,6 @@
 # S-S-M.RO — Manual Complet al Platformei
-## Versiunea 1.0 — 6 Februarie 2026
+## Versiunea 2.0 — 8 Februarie 2026
+> **Changelog v2.0:** Secțiunea 3 (Roluri) rescrisă complet — de la 3 roluri hardcodate la RBAC Dinamic 17+ roluri. Secțiunea 4 adăugat tabele RBAC + REGES + authorities. Secțiunea 9 extinsă cu dashboard per rol.
 
 ---
 
@@ -72,62 +73,106 @@ Cron Job (zilnic 08:00) → verifică expirări → trimite email → logează �
 
 ---
 
-# 3. ROLURI ȘI ACCES
+# 3. ROLURI ȘI ACCES — SISTEM DINAMIC RBAC
 
-Platforma are 3 roluri. Fiecare vede DOAR ce are voie.
+## ⚠️ SCHIMBARE MAJORĂ (8 feb 2026)
+Platforma trece de la **3 roluri hardcodate** la un **sistem RBAC dinamic** cu 17+ roluri, extensibil per țară, fără cod. Secțiunea de mai jos descrie STAREA FINALĂ (după migrare). Până la implementare, sistemul curent funcționează cu cele 3 roluri originale.
 
-## 3.1 Consultant (`role = 'consultant'`)
+## 3.0 Principiu Fundamental
+Rolurile **NU mai sunt hardcodate** în memberships.role. Admin (Daniel) creează/șterge/modifică orice rol din Admin UI (/admin/roles), per țară, fără cod, fără deploy. Schema suportă orice rol viitor legislativ.
 
+## 3.1 Schema RBAC (tabele noi — DE IMPLEMENTAT P0)
+
+**`roles`** — Definește rolurile disponibile
+- id, role_key (UNIQUE), role_name, description
+- country_code (NULL = global, 'RO'/'BG' = specific țară)
+- is_system (true = nu poate fi șters: admin, consultant, angajat)
+- is_active (soft delete), created_by, created_at, metadata (JSONB)
+
+**`permissions`** — Ce poate face fiecare rol
+- role_id → roles
+- resource (tabel/modul: 'employees', 'equipment', 'trainings')
+- action ('create', 'read', 'update', 'delete', 'export', 'delegate')
+- field_restrictions (JSONB: {"cnp": "masked", "salary": "hidden"})
+- conditions (JSONB: {"own_company": true, "supplier_category": "psi"})
+- country_code (nullable), is_active
+
+**`user_roles`** — Asignare utilizator → rol
+- user_id → auth.users, role_id → roles
+- company_id → organizations (nullable — NULL = acces global)
+- location_id → locations (nullable — NULL = toate locațiile)
+- granted_by, granted_at, expires_at (nullable — NULL = permanent)
+
+## 3.2 TIER 1 — ROLURI LIVE (4 roluri, codate, funcționale)
+
+### Super Admin (Daniel) — `role_key: super_admin`
+**Cine:** Daniel. Contul unic cu acces total.
+**Ce vede:** TOT — toate firmele, toți utilizatorii, toate configurările.
+**Ce poate face:** Configurare sistem, facturare, management parteneri, CRUD roluri din Admin UI, acces la toate tabelele fără restricții.
+
+### Consultant SSM — `role_key: consultant_ssm`
 **Cine:** Daniel și viitorii colaboratori SSM.
+**Ce vede:** Dashboard cu TOATE firmele alocate. Fișe medicale, echipamente, instruiri, alerte agregate.
+**Ce poate face:** CRUD angajați, examene, echipamente, instruiri. Programează sesiuni. Generează documente PDF. Setează frecvențe.
+**Restricții:** Vede DOAR firmele la care e asociat (prin user_roles.company_id sau memberships).
 
-**Ce vede:**
-- Dashboard cu TOATE firmele
-- Toate fișele medicale, echipamentele, instruirile din toate firmele
-- Statistici agregate (câte expiră în total, risc ITM per firmă)
-- Alertele trimise, fraud alerts
+### Firma Admin — `role_key: firma_admin`
+**Cine:** Administratorul sau HR-ul firmei client.
+**Ce vede:** Dashboard DOAR cu firma lui. Fișe, echipamente, instruiri, alerte.
+**Ce poate face:** Vizualizare, adaugă angajați, vede rapoarte conformitate.
+**Restricții:** conditions: {"own_company": true}. NU vede alte firme.
 
-**Ce poate face:**
-- Adaugă/editează/șterge firme, angajați, fișe, echipamente
-- Programează instruiri (organized_training_sessions)
-- Setează frecvențe de examinare (la nivel de firmă, loc de muncă, sau angajat)
-- Generează documente PDF
-- Gestionează modulele de training
-
-**Restricții:** Poate vedea DOAR firmele la care este asociat prin tabelul `memberships`.
-
-## 3.2 Administrator firmă (`role = 'firma_admin'`)
-
-**Cine:** Administratorul sau persoana de HR a firmei client.
-
-**Ce vede:**
-- Dashboard DOAR cu firma lui
-- Fișele medicale ale angajaților lui
-- Echipamentele PSI ale firmei
-- Statusul instruirilor angajaților
-- Alertele primite
-
-**Ce poate face:**
-- Vizualizează tot ce ține de firma lui
-- Adaugă angajați noi (dacă i se permite)
-- Vede rapoartele de conformitate
-
-**Restricții:** NU vede alte firme. NU poate modifica setările consultantului.
-
-## 3.3 Angajat (`role = 'angajat'`)
-
+### Angajat — `role_key: angajat`
 **Cine:** Angajatul firmei client.
+**Ce vede:** Propriile date — instruiri, teste, fișă medicală.
+**Ce poate face:** Completează instruiri, dă teste, vede status propriu.
+**Restricții:** conditions: {"own_user": true}. NU vede datele altor angajați sau firmei.
 
-**Ce vede:**
-- Propriile date (fișă medicală, instruiri completate)
-- Modulele de training asignate lui
-- Testele de verificare
+## 3.3 TIER 2 — ROLURI PLANIFICATE (13 roluri, schema definită, necodate)
 
-**Ce poate face:**
-- Completează instruiri
-- Dă teste de verificare
-- Vede propriul status
+| # | Rol | role_key | Ce vede | Valoare business |
+|---|-----|----------|---------|-----------------|
+| 5 | **Partener Contabil** | partener_contabil | Read-only firme afiliate: scor, expirări, alerte | Cross-sell: contabilul devine early warning |
+| 6 | **Furnizor PSI** | furnizor_psi | Echipamente din categoria lui la firmele selectate | Lead generation automat din expirări |
+| 7 | **Furnizor ISCIR/RSVTI** | furnizor_iscir | Echipamente sub supraveghere ISCIR | Lifturi, compresoare, recipiente |
+| 8 | **Medic Medicina Muncii** | medic_mm | Programări examene, fișe aptitudine | Confirmare examene direct în platformă |
+| 9 | **Auditor Extern** | auditor_extern | Read-only TEMPORAR (expires_at!), scor + documente | Audit ISO — acces limitat timp |
+| 10 | **Inspector ITM** | inspector_itm | Dashboard special: rapoarte, status conformitate | DIFERENȚIATOR UNIC — controlul devine formalitate |
+| 11 | **Inspector IGSU (PSI)** | inspector_igsu | Doar PSI: stingătoare, PRAM, evacuare | Specializat incendii |
+| 12 | **Inspector ANSPDCP** | inspector_anspdcp | Doar GDPR: registre, DPO | Modulul GDPR add-on |
+| 13 | **Lucrător Desemnat** | lucrator_desemnat | Mai mult decât angajat, mai puțin decât consultant | Obligatoriu legal: firme <50 ang. fără serviciu extern |
+| 14 | **White-Label / STM** | white_label_stm | DOAR clienții lui, sub brandul lui | Scalare: partener plătește licență lunară |
+| 15 | **Responsabil SSM Intern** | responsabil_ssm_intern | Firma lui + raportare către consultant | Firmă mare cu dept. SSM intern |
+| 16 | **Training Provider** | training_provider | Module instruire proprii + statistici | Marketplace cursuri specializate |
+| 17 | **Responsabil NIS2** | responsabil_nis2 | Modul NIS2: audit, plan conformitate | Apărut recent legislativ! |
 
-**Restricții:** NU vede datele altor angajați. NU vede datele firmei.
+## 3.4 TIER 3 — SPECIFICE PER ȚARĂ
+
+| Țară | Rol | role_key | Echivalent RO |
+|------|-----|----------|---------------|
+| 🇧🇬 Bulgaria | Consultant ЗБУТ | zbut_consultant_bg | Consultant SSM |
+| 🇧🇬 Bulgaria | Inspector ГИТ | inspector_git_bg | Inspector ITM |
+| 🇧🇬 Bulgaria | STM Partner | stm_partner_bg | White-Label STM |
+| 🇭🇺 Ungaria | Munkavédelmi szakember | munkavedelmi_hu | Consultant SSM |
+| 🇭🇺 Ungaria | Inspector OMMF | inspector_ommf_hu | Inspector ITM |
+| 🇩🇪 Germania | Sicherheitsingenieur | sicherheitsingenieur_de | Consultant SSM |
+| 🇩🇪 Germania | Betriebsarzt | betriebsarzt_de | Medic MM |
+| 🇩🇪 Germania | Berufsgenossenschaft | berufsgenossenschaft_de | Auditor/Inspector |
+| 🇵🇱 Polonia | Specjalista BHP | specjalista_bhp_pl | Consultant SSM |
+| 🇵🇱 Polonia | Inspector PIP | inspector_pip_pl | Inspector ITM |
+
+## 3.5 TIER 4 — VIITOARE
+Orice rol nou creat din Admin UI. Exemplu: UE introduce mâine directivă cu rol obligatoriu → Daniel creează în 5 minute din /admin/roles.
+
+## 3.6 Plan Migrare (de la 3 roluri → RBAC dinamic)
+1. Creează tabele roles, permissions, user_roles
+2. Populează cu 17+ roluri
+3. Migrează date din memberships.role → user_roles
+4. Actualizează RLS → verifică permissions, nu memberships
+5. Actualizează middleware Next.js
+6. Păstrează memberships.role backup 30 zile
+
+Autentificare: Magic link + parolă (neschimbat)
 
 ---
 
@@ -621,7 +666,67 @@ Aceste date sunt esențiale la un control ITM care pune la îndoială veridicita
 
 ---
 
-# 5. LOGICA PERIODICITATE — CASCADĂ
+## 4.18 AUTHORITIES (Autorități de control)
+
+**Ce stochează:** ITM, IGSU, ANSPDCP și alte autorități de control.
+
+| Câmp | Tip | Explicație |
+|------|-----|------------|
+| `id` | UUID | Identificator unic |
+| `name` | Text | Numele autorității (ex: "ITM Bihor") |
+| `type` | Text | 'itm', 'igsu', 'anspdcp', 'iscir' |
+| `jurisdiction` | Text | Zona de competență |
+| `contact_info` | JSONB | Date contact |
+| `is_active` | Boolean | |
+
+---
+
+## 4.19 PENALTY_RULES (Reguli amenzi per autoritate)
+
+**Ce stochează:** Amenzile posibile per tip neconformitate.
+
+| Câmp | Tip | Explicație |
+|------|-----|------------|
+| `id` | UUID | |
+| `authority_id` | UUID | Autoritatea competentă |
+| `violation_type` | Text | Tip neconformitate |
+| `min_fine` | Numeric | Amenda minimă (RON) |
+| `max_fine` | Numeric | Amenda maximă (RON) |
+| `legal_basis` | Text | Baza legală |
+
+---
+
+## 4.20 PENALTY_VISIBILITY (Value Preview amenzi)
+
+**Ce stochează:** Vizualizare amenzi potențiale per firmă — funcționalitate "cât te costă neconformitatea".
+
+---
+
+## 4.21-4.25 TABELE REGES
+
+| # | Tabel | Scop |
+|---|-------|------|
+| 4.21 | `reges_connections` | Conexiuni REGES per organizație |
+| 4.22 | `reges_transmissions` | Log transmisii API REGES |
+| 4.23 | `reges_nomenclatures` | Nomenclatoare REGES locale |
+| 4.24 | `reges_employee_snapshots` | Snapshot angajați importați din REGES |
+| 4.25 | `reges_audit_log` | Audit trail operațiuni REGES |
+
+**REGES = Registrul Electronic de Evidență a Salariaților** — înlocuiește REVISAL. Integrarea API e DIFERENȚIATOR UNIC (niciun competitor o are).
+
+---
+
+## 4.26-4.28 TABELE RBAC DINAMIC (NOI — P0, DE IMPLEMENTAT)
+
+| # | Tabel | Scop | Status |
+|---|-------|------|--------|
+| 4.26 | `roles` | Roluri dinamice per țară (role_key, country_code, is_system, metadata JSONB) | 🔴 DE CREAT |
+| 4.27 | `permissions` | Permisiuni per rol: resource × action × field_restrictions × conditions (JSONB) | 🔴 DE CREAT |
+| 4.28 | `user_roles` | Asignare user → rol (cu company_id, location_id, expires_at) | 🔴 DE CREAT |
+
+Detalii schema completă — vezi DOC1_CONSOLIDARE secțiunea 5.2.
+
+--- — CASCADĂ
 
 **Principiu:** Cel mai specific câștigă.
 
@@ -732,16 +837,21 @@ Ziua 15: Nicio acțiune → status: 'ignored'
 
 # 9. DASHBOARD — CE VEDE FIECARE ROL
 
-## Consultant
-- **Risc Control ITM** — scor agregat pe toate firmele
+## Super Admin (Daniel)
+- **Admin Panel complet** — toți utilizatorii, toate firmele, logs, facturare, configurare
+- **CRUD Roluri** — /admin/roles: creare/editare/ștergere roluri, asignare permisiuni
+- Acces la TOATE tabelele fără restricții
+
+## Consultant SSM
+- **Risc Control ITM** — scor agregat pe toate firmele alocate
 - **Tabs:** Medicina Muncii | Echipamente PSI
 - **Countere:** Expirate (roșu) | Expiră <30 zile (portocaliu) | Valide (verde)
 - **Tabel:** Toate fișele/echipamentele, sortate după urgență
 - **Notificări:** Ultimele alerte trimise
-- **Link-uri:** Medicina Muncii (pagina dedicată), Instruiri, PDF Conformitate
+- **Link-uri:** Medicina Muncii, Instruiri, PDF Conformitate
 
-## Firma (firma_admin)
-- Același layout, dar DOAR datele firmei
+## Firma Admin
+- Același layout ca consultant, dar **DOAR datele firmei lui**
 - Buton "Contactează consultantul"
 - Vede periodicitatea fiecărui angajat
 
@@ -749,6 +859,39 @@ Ziua 15: Nicio acțiune → status: 'ignored'
 - Propriile instruiri + teste
 - Status fișă medicală
 - Module de training asignate
+
+## Partener Contabil (TIER 2 — planificat)
+- **Read-only** firme afiliate: scor conformitate, expirări, alerte
+- NU poate modifica nimic — doar vizualizare
+
+## Furnizor PSI (TIER 2 — planificat)
+- **Pipeline echipamente** din categoria lui la firmele selectate
+- Ce expiră, la cine, contact direct → lead generation automat
+
+## Medic Medicina Muncii (TIER 2 — planificat)
+- **Calendar examene** — programări, fișe de completat, statistici
+- Confirmare examene direct în platformă
+
+## Inspector ITM (TIER 2 — planificat)
+- **Dashboard special** — rapoarte status conformitate per firmă/județ
+- DIFERENȚIATOR UNIC — controlul devine formalitate
+
+## Auditor Extern (TIER 2 — planificat)
+- **Read-only temporar** — acces cu expires_at automat
+- Scor conformitate + documente → audit ISO
+
+## White-Label / STM (TIER 2 — planificat)
+- **Dashboard rebranded** — ca Consultant SSM, dar sub brandul partenerului
+- DOAR clienții lui vizibili
+
+## Lucrător Desemnat (TIER 2 — planificat)
+- **Dashboard simplificat** — ca Firma Admin + raportare către consultant
+
+## Responsabil NIS2 (TIER 2 — planificat)
+- **Modul NIS2 dedicat** — evaluare risc cyber, raportare incidente, măsuri, audit trail
+
+## Roluri per țară (TIER 3)
+- Echivalentele locale ale rolurilor RO — aceleași dashboarduri, adaptate legislativ
 
 ---
 
@@ -872,6 +1015,7 @@ Similar cu Medicina Muncii. Câmpuri specifice:
 
 ---
 
-*Document generat pentru s-s-m.ro — Versiunea 1.0*
-*Actualizat: 6 Februarie 2026*
+*Document generat pentru s-s-m.ro — Versiunea 2.0*
+*Actualizat: 8 Februarie 2026*
 *Autor: Daniel + Claude AI*
+*Changelog v2.0: Secțiunea 3 rescrisă (RBAC Dinamic 17+ roluri), Secțiunea 4 extinsă (tabele 4.18-4.28), Secțiunea 9 extinsă (dashboard per rol)*

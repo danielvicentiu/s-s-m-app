@@ -1,0 +1,193 @@
+{
+  "organizationTypes": [
+    {
+      "id": "srl",
+      "name": "SRL",
+      "fullName": "Societate cu Răspundere Limitată",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": true,
+      "description": "Forma juridică cea mai răspândită în România"
+    },
+    {
+      "id": "srl_d",
+      "name": "SRL-D",
+      "fullName": "SRL Debutant",
+      "maxEmployees": null,
+      "maxCAEN": 5,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "SRL pentru antreprenori la început",
+      "note": "Maxim 5 coduri CAEN"
+    },
+    {
+      "id": "sa",
+      "name": "SA",
+      "fullName": "Societate pe Acțiuni",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Minim 2 acționari",
+      "note": "Minim 2 acționari"
+    },
+    {
+      "id": "snc",
+      "name": "SNC",
+      "fullName": "Societate în Nume Colectiv",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Răspundere nelimitată și solidară"
+    },
+    {
+      "id": "scs",
+      "name": "SCS",
+      "fullName": "Societate în Comandită Simplă",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Comanditați + comanditari"
+    },
+    {
+      "id": "sca",
+      "name": "SCA",
+      "fullName": "Societate în Comandită pe Acțiuni",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Formă mixtă SCS + SA"
+    },
+    {
+      "id": "pfa",
+      "name": "PFA",
+      "fullName": "Persoană Fizică Autorizată",
+      "maxEmployees": 3,
+      "maxCAEN": 5,
+      "legalPersonality": false,
+      "isDefault": false,
+      "description": "Cel mai simplu mod de a începe",
+      "note": "Maxim 3 angajați conform legii",
+      "restriction": "PFA: maxim 3 angajați conform legii"
+    },
+    {
+      "id": "ii",
+      "name": "II",
+      "fullName": "Întreprindere Individuală",
+      "maxEmployees": 8,
+      "maxCAEN": 10,
+      "legalPersonality": false,
+      "isDefault": false,
+      "description": "Formă intermediară între PFA și SRL",
+      "note": "Maxim 8 angajați",
+      "restriction": "II: maxim 8 angajați"
+    },
+    {
+      "id": "if",
+      "name": "IF",
+      "fullName": "Întreprindere Familială",
+      "maxEmployees": 0,
+      "maxCAEN": null,
+      "legalPersonality": false,
+      "isDefault": false,
+      "description": "Doar membri de familie",
+      "note": "Doar membri familie, fără salariați terți",
+      "restriction": "IF: doar membri familie, fără salariați terți"
+    },
+    {
+      "id": "ong",
+      "name": "ONG/Asociație",
+      "fullName": "Organizație Non-Guvernamentală",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Scop non-profit"
+    },
+    {
+      "id": "fundatie",
+      "name": "Fundație",
+      "fullName": "Fundație",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Scop non-profit, patrimoniu alocat"
+    },
+    {
+      "id": "cooperativa",
+      "name": "Cooperativă",
+      "fullName": "Cooperativă",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Formă asociativă"
+    },
+    {
+      "id": "cmi",
+      "name": "CMI",
+      "fullName": "Cabinet Medical Individual",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": false,
+      "isDefault": false,
+      "description": "Pentru medici",
+      "note": "Cabinet Medical Individual"
+    },
+    {
+      "id": "cabinet_avocat",
+      "name": "Cabinet avocat",
+      "fullName": "Cabinet Individual de Avocat",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": false,
+      "isDefault": false,
+      "description": "Pentru avocați"
+    },
+    {
+      "id": "birou_notar",
+      "name": "Birou Notar",
+      "fullName": "Birou Notarial",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": false,
+      "isDefault": false,
+      "description": "Pentru notari"
+    },
+    {
+      "id": "bif",
+      "name": "BIF",
+      "fullName": "Birou Individual Farmacist",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": false,
+      "isDefault": false,
+      "description": "Pentru farmaciști"
+    },
+    {
+      "id": "ra",
+      "name": "RA",
+      "fullName": "Regie Autonomă",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Unitate publică"
+    },
+    {
+      "id": "institutie_publica",
+      "name": "Instituție publică",
+      "fullName": "Instituție Publică",
+      "maxEmployees": null,
+      "maxCAEN": null,
+      "legalPersonality": true,
+      "isDefault": false,
+      "description": "Administrație publică"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "rolesByCategory": {
+    "construction": [
+      { "name": "Muncitor necalificat", "cor": "931101", "risk": "ridicat" },
+      { "name": "Zidar", "cor": "711201", "risk": "ridicat" },
+      { "name": "Electrician", "cor": "742101", "risk": "ridicat" },
+      { "name": "Instalator", "cor": "742201", "risk": "ridicat" },
+      { "name": "Sudor", "cor": "721301", "risk": "ridicat" },
+      { "name": "Macaragiu", "cor": "834102", "risk": "ridicat" },
+      { "name": "Fierar betonist", "cor": "721101", "risk": "ridicat" },
+      { "name": "Zugrav", "cor": "713202", "risk": "mediu" },
+      { "name": "Dulgher", "cor": "712101", "risk": "mediu" },
+      { "name": "Tâmplar", "cor": "752101", "risk": "mediu" },
+      { "name": "Faianțar", "cor": "713301", "risk": "mediu" },
+      { "name": "Parchetar", "cor": "713104", "risk": "mediu" },
+      { "name": "Șef șantier", "cor": "312201", "risk": "mediu" },
+      { "name": "Inginer constructor", "cor": "214201", "risk": "scazut" },
+      { "name": "Arhitect", "cor": "216101", "risk": "scazut" },
+      { "name": "Operator excavator", "cor": "834101", "risk": "ridicat" }
+    ],
+    "horeca": [
+      { "name": "Bucătar", "cor": "512001", "risk": "mediu", "synonyms": ["chef", "cook"] },
+      { "name": "Ajutor bucătar", "cor": "941201", "risk": "mediu" },
+      { "name": "Ospătar", "cor": "513101", "risk": "scazut", "synonyms": ["chelner", "waiter"] },
+      { "name": "Barman", "cor": "513201", "risk": "scazut", "synonyms": ["barista"] },
+      { "name": "Casier", "cor": "523101", "risk": "scazut" },
+      { "name": "Manager restaurant", "cor": "141204", "risk": "scazut" },
+      { "name": "Șef bucătar", "cor": "512002", "risk": "mediu", "synonyms": ["head chef"] },
+      { "name": "Pizzar", "cor": "512001", "risk": "mediu" },
+      { "name": "Cameristă", "cor": "513402", "risk": "scazut" }
+    ],
+    "food": [
+      { "name": "Patiser", "cor": "512004", "risk": "mediu", "synonyms": ["cofetar", "pastry chef"] },
+      { "name": "Brutar", "cor": "512003", "risk": "mediu" },
+      { "name": "Confecționer produse zaharoase", "cor": "751302", "risk": "mediu" },
+      { "name": "Ajutor brutărie", "cor": "941201", "risk": "mediu" }
+    ],
+    "automotive": [
+      { "name": "Mecanic auto", "cor": "723101", "risk": "mediu" },
+      { "name": "Electrician auto", "cor": "723202", "risk": "mediu" },
+      { "name": "Tinichigiu auto", "cor": "723301", "risk": "mediu" },
+      { "name": "Vopsitor auto", "cor": "713205", "risk": "mediu" },
+      { "name": "Vulcanizator", "cor": "723501", "risk": "mediu" },
+      { "name": "Recepționer service", "cor": "432101", "risk": "scazut" },
+      { "name": "Șef service", "cor": "132302", "risk": "scazut" }
+    ],
+    "retail": [
+      { "name": "Vânzător", "cor": "522101", "risk": "scazut" },
+      { "name": "Casier", "cor": "523101", "risk": "scazut" },
+      { "name": "Manager magazin", "cor": "142001", "risk": "scazut" },
+      { "name": "Merchandiser", "cor": "333305", "risk": "scazut" },
+      { "name": "Agent comercial", "cor": "332201", "risk": "scazut" },
+      { "name": "Gestionar", "cor": "432202", "risk": "scazut" }
+    ],
+    "beauty": [
+      { "name": "Coafor", "cor": "514101", "risk": "scazut", "synonyms": ["frizer", "hairstylist"] },
+      { "name": "Cosmetician", "cor": "514102", "risk": "scazut" },
+      { "name": "Manichiurist", "cor": "514103", "risk": "scazut" },
+      { "name": "Maseur", "cor": "325901", "risk": "scazut" },
+      { "name": "Stilist", "cor": "514104", "risk": "scazut" }
+    ],
+    "it": [
+      { "name": "Programator", "cor": "251201", "risk": "scazut", "synonyms": ["developer", "software engineer"] },
+      { "name": "Web developer", "cor": "251202", "risk": "scazut" },
+      { "name": "Analist", "cor": "251101", "risk": "scazut" },
+      { "name": "Administrator rețea", "cor": "252101", "risk": "scazut", "synonyms": ["sys admin"] },
+      { "name": "Tester software", "cor": "251203", "risk": "scazut", "synonyms": ["QA"] },
+      { "name": "Project manager IT", "cor": "121301", "risk": "scazut" }
+    ],
+    "services": [
+      { "name": "Contabil", "cor": "241101", "risk": "scazut" },
+      { "name": "Expert contabil", "cor": "241102", "risk": "scazut" },
+      { "name": "Consultant", "cor": "242201", "risk": "scazut" },
+      { "name": "Avocat", "cor": "261101", "risk": "scazut" },
+      { "name": "Notar", "cor": "261102", "risk": "scazut" },
+      { "name": "Agent curățenie", "cor": "911201", "risk": "mediu" },
+      { "name": "Grădinar", "cor": "612001", "risk": "mediu" },
+      { "name": "Îngrijitor copii", "cor": "531101", "risk": "scazut", "synonyms": ["bonă", "babysitter"] }
+    ],
+    "transport": [
+      { "name": "Șofer", "cor": "833101", "risk": "mediu", "synonyms": ["driver", "conducător auto"] },
+      { "name": "Șofer TIR", "cor": "833102", "risk": "ridicat" },
+      { "name": "Taximetrist", "cor": "833201", "risk": "mediu", "synonyms": ["uber driver"] },
+      { "name": "Curier", "cor": "962101", "risk": "mediu" },
+      { "name": "Dispatcher", "cor": "432301", "risk": "scazut" }
+    ],
+    "medical": [
+      { "name": "Medic", "cor": "221101", "risk": "mediu" },
+      { "name": "Asistent medical", "cor": "222101", "risk": "mediu" },
+      { "name": "Medic dentist", "cor": "226101", "risk": "mediu" },
+      { "name": "Igienist dentar", "cor": "226102", "risk": "mediu" },
+      { "name": "Farmacist", "cor": "227101", "risk": "scazut" },
+      { "name": "Recepționer cabinet", "cor": "422101", "risk": "scazut" }
+    ],
+    "education": [
+      { "name": "Profesor", "cor": "233101", "risk": "scazut", "synonyms": ["învățător", "educator"] },
+      { "name": "Educator", "cor": "234101", "risk": "scazut" },
+      { "name": "Instructor fitness", "cor": "342201", "risk": "mediu" },
+      { "name": "Antrenor sportiv", "cor": "342202", "risk": "mediu" }
+    ],
+    "sports": [
+      { "name": "Instructor fitness", "cor": "342201", "risk": "mediu" },
+      { "name": "Antrenor", "cor": "342202", "risk": "mediu" },
+      { "name": "Kinetoterapeut", "cor": "226301", "risk": "mediu" },
+      { "name": "Recepționer", "cor": "422101", "risk": "scazut" }
+    ],
+    "textile": [
+      { "name": "Croitor", "cor": "753201", "risk": "scazut" },
+      { "name": "Cusător", "cor": "753202", "risk": "scazut" },
+      { "name": "Muncitor confecții", "cor": "753299", "risk": "scazut" }
+    ],
+    "creative": [
+      { "name": "Designer grafic", "cor": "216601", "risk": "scazut" },
+      { "name": "Fotograf", "cor": "343101", "risk": "scazut" },
+      { "name": "Copywriter", "cor": "264301", "risk": "scazut" },
+      { "name": "Social media manager", "cor": "243501", "risk": "scazut" }
+    ],
+    "social": [
+      { "name": "Asistent social", "cor": "263401", "risk": "scazut" },
+      { "name": "Îngrijitor copii", "cor": "531101", "risk": "scazut" },
+      { "name": "Îngrijitor persoane vârstnice", "cor": "532101", "risk": "mediu" }
+    ]
+  }
+}

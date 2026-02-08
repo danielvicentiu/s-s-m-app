@@ -1,0 +1,444 @@
+{
+  "activities": [
+    {
+      "id": "caen_4520",
+      "caen": "4520",
+      "name": "Întreținere și reparare autovehicule",
+      "synonyms": ["mecanic auto", "service auto", "atelier mecanic", "reparații auto", "vulcanizare"],
+      "riskLevel": "mediu",
+      "category": "automotive"
+    },
+    {
+      "id": "caen_5610",
+      "caen": "5610",
+      "name": "Restaurante",
+      "synonyms": ["restaurant", "local mâncare", "alimentație publică", "terasă", "bistro"],
+      "riskLevel": "mediu",
+      "category": "horeca"
+    },
+    {
+      "id": "caen_5630",
+      "caen": "5630",
+      "name": "Baruri și alte activități de servire a băuturilor",
+      "synonyms": ["bar", "pub", "cafenea", "coffee shop", "ceainărie"],
+      "riskLevel": "scazut",
+      "category": "horeca"
+    },
+    {
+      "id": "caen_1071",
+      "caen": "1071",
+      "name": "Fabricare produse de patiserie și produse făinoase",
+      "synonyms": ["cofetărie", "patiserie", "brutărie", "patiser", "cofetar", "brutar"],
+      "riskLevel": "mediu",
+      "category": "food"
+    },
+    {
+      "id": "caen_4120",
+      "caen": "4120",
+      "name": "Construcții de clădiri rezidențiale și nere­zi­den­ți­ale",
+      "synonyms": ["construcții", "construcții civile", "antreprenor construcții", "dezvoltator imobiliar"],
+      "riskLevel": "ridicat",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4399",
+      "caen": "4399",
+      "name": "Alte lucrări speciale de construcții",
+      "synonyms": ["construcții speciale", "lucrări speciale"],
+      "riskLevel": "ridicat",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4321",
+      "caen": "4321",
+      "name": "Lucrări de instalații electrice",
+      "synonyms": ["electrician", "instalații electrice", "electricitate", "instalator electric"],
+      "riskLevel": "ridicat",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4322",
+      "caen": "4322",
+      "name": "Lucrări de instalaţii sanitare, de încălzire şi de aer condiţionat",
+      "synonyms": ["instalator", "instalații sanitare", "termopane", "instalații încălzire", "climatizare"],
+      "riskLevel": "mediu",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4334",
+      "caen": "4334",
+      "name": "Lucrări de vopsitorie şi zugrăveli, de montare a sticlei de ferestre şi uşi",
+      "synonyms": ["zugrav", "zugrăvit", "vopsitor", "vopsitorie", "glazurar"],
+      "riskLevel": "mediu",
+      "category": "construction"
+    },
+    {
+      "id": "caen_1413",
+      "caen": "1413",
+      "name": "Fabricare a altor articole de îmbrăcăminte",
+      "synonyms": ["croitor", "croitorie", "atelier cusut", "confecții textile"],
+      "riskLevel": "scazut",
+      "category": "textile"
+    },
+    {
+      "id": "caen_9602",
+      "caen": "9602",
+      "name": "Coafură şi alte activităţi de înfrumuseţare",
+      "synonyms": ["frizerie", "coafor", "salon beauty", "salon înfrumusețare", "hairstyle", "frizer"],
+      "riskLevel": "scazut",
+      "category": "beauty"
+    },
+    {
+      "id": "caen_8130",
+      "caen": "8130",
+      "name": "Activităţi de întreţinere peisagistică",
+      "synonyms": ["grădinar", "grădinărit", "peisagistică", "întreținere spații verzi", "amenajări grădini"],
+      "riskLevel": "mediu",
+      "category": "services"
+    },
+    {
+      "id": "caen_8891",
+      "caen": "8891",
+      "name": "Activităţi de îngrijire zilnică a copiilor",
+      "synonyms": ["babysitter", "bonă", "creșă", "îngrijire copii", "after school"],
+      "riskLevel": "scazut",
+      "category": "social"
+    },
+    {
+      "id": "caen_4932",
+      "caen": "4932",
+      "name": "Transporturi cu taxiuri",
+      "synonyms": ["taximetrist", "taxi", "uber", "bolt", "transport persoane"],
+      "riskLevel": "mediu",
+      "category": "transport"
+    },
+    {
+      "id": "caen_6920",
+      "caen": "6920",
+      "name": "Activităţi de contabilitate şi audit financiar; consultanţă în domeniul fiscal",
+      "synonyms": ["contabilitate", "contabil", "expert contabil", "consultanță fiscală", "audit"],
+      "riskLevel": "scazut",
+      "category": "services"
+    },
+    {
+      "id": "caen_7022",
+      "caen": "7022",
+      "name": "Activităţi de consultanţă pentru afaceri şi management",
+      "synonyms": ["consultanță management", "consultant business", "consultanță afaceri"],
+      "riskLevel": "scazut",
+      "category": "services"
+    },
+    {
+      "id": "caen_4711",
+      "caen": "4711",
+      "name": "Comerţ cu amănuntul în magazine nespecializate, cu vânzare predominantă de produse alimentare, băuturi şi tutun",
+      "synonyms": ["magazin alimentar", "minimarket", "shop", "alimentară", "ABC"],
+      "riskLevel": "scazut",
+      "category": "retail"
+    },
+    {
+      "id": "caen_4719",
+      "caen": "4719",
+      "name": "Comerţ cu amănuntul în magazine nespecializate, cu vânzare predominantă de produse nealimentare",
+      "synonyms": ["magazin mixt", "bazar", "comercial"],
+      "riskLevel": "scazut",
+      "category": "retail"
+    },
+    {
+      "id": "caen_4778",
+      "caen": "4778",
+      "name": "Comerţ cu amănuntul cu alte bunuri, în magazine specializate",
+      "synonyms": ["magazin specializat", "boutique", "shop"],
+      "riskLevel": "scazut",
+      "category": "retail"
+    },
+    {
+      "id": "caen_6201",
+      "caen": "6201",
+      "name": "Activităţi de realizare a soft-ului la comandă (software orientat client)",
+      "synonyms": ["software development", "programare", "IT", "developer", "web development"],
+      "riskLevel": "scazut",
+      "category": "it"
+    },
+    {
+      "id": "caen_6202",
+      "caen": "6202",
+      "name": "Activităţi de consultanţă în tehnologia informaţiei",
+      "synonyms": ["consultanță IT", "IT consultant", "tech consulting"],
+      "riskLevel": "scazut",
+      "category": "it"
+    },
+    {
+      "id": "caen_8621",
+      "caen": "8621",
+      "name": "Activităţi de asistenţă medicală generală",
+      "synonyms": ["cabinet medical", "medic de familie", "clinică", "CMI"],
+      "riskLevel": "mediu",
+      "category": "medical"
+    },
+    {
+      "id": "caen_8622",
+      "caen": "8622",
+      "name": "Activităţi de asistenţă medicală specializată",
+      "synonyms": ["cabinet stomatologic", "dentist", "medicină specializată"],
+      "riskLevel": "mediu",
+      "category": "medical"
+    },
+    {
+      "id": "caen_8623",
+      "caen": "8623",
+      "name": "Activităţi de asistenţă stomatologică",
+      "synonyms": ["stomatologie", "cabinet dentar", "ortodonție"],
+      "riskLevel": "mediu",
+      "category": "medical"
+    },
+    {
+      "id": "caen_4941",
+      "caen": "4941",
+      "name": "Transporturi rutiere de mărfuri",
+      "synonyms": ["transport marfă", "curierat", "logistică", "TIR", "camion"],
+      "riskLevel": "ridicat",
+      "category": "transport"
+    },
+    {
+      "id": "caen_8110",
+      "caen": "8110",
+      "name": "Activităţi combinatede servicii pentru clădiri",
+      "synonyms": ["curățenie", "servicii curățenie", "menaj", "întreținere clădiri"],
+      "riskLevel": "mediu",
+      "category": "services"
+    },
+    {
+      "id": "caen_6910",
+      "caen": "6910",
+      "name": "Activităţi juridice",
+      "synonyms": ["cabinet avocat", "avocat", "juridic", "consultanță juridică"],
+      "riskLevel": "scazut",
+      "category": "services"
+    },
+    {
+      "id": "caen_4751",
+      "caen": "4751",
+      "name": "Comerţ cu amănuntul al produselor textile, în magazine specializate",
+      "synonyms": ["magazin textile", "stofe", "mercerie"],
+      "riskLevel": "scazut",
+      "category": "retail"
+    },
+    {
+      "id": "caen_4771",
+      "caen": "4771",
+      "name": "Comerţ cu amănuntul al îmbrăcămintei, în magazine specializate",
+      "synonyms": ["magazin haine", "boutique îmbrăcăminte", "fashion"],
+      "riskLevel": "scazut",
+      "category": "retail"
+    },
+    {
+      "id": "caen_4772",
+      "caen": "4772",
+      "name": "Comerţ cu amănuntul al încălţămintei şi articolelor din piele, în magazine specializate",
+      "synonyms": ["magazin încălțăminte", "papucărie", "magazin pantofi"],
+      "riskLevel": "scazut",
+      "category": "retail"
+    },
+    {
+      "id": "caen_5510",
+      "caen": "5510",
+      "name": "Hoteluri şi alte facilităţi de cazare similare",
+      "synonyms": ["hotel", "pensiune", "motel", "hostel", "cazare"],
+      "riskLevel": "mediu",
+      "category": "horeca"
+    },
+    {
+      "id": "caen_5520",
+      "caen": "5520",
+      "name": "Facilităţi de cazare pentru vacanţă şi perioade de scurtă durată",
+      "synonyms": ["apartamente", "airbnb", "cazare scurtă durată", "camping"],
+      "riskLevel": "scazut",
+      "category": "horeca"
+    },
+    {
+      "id": "caen_9311",
+      "caen": "9311",
+      "name": "Activităţi ale bazelor sportive",
+      "synonyms": ["sală fitness", "gym", "fitness", "centru sportiv"],
+      "riskLevel": "mediu",
+      "category": "sports"
+    },
+    {
+      "id": "caen_8510",
+      "caen": "8510",
+      "name": "Învăţământ preşcolar",
+      "synonyms": ["grădiniță", "preșcolar", "educație copii"],
+      "riskLevel": "scazut",
+      "category": "education"
+    },
+    {
+      "id": "caen_8520",
+      "caen": "8520",
+      "name": "Învăţământ primar",
+      "synonyms": ["școală primară", "școală generală"],
+      "riskLevel": "scazut",
+      "category": "education"
+    },
+    {
+      "id": "caen_8532",
+      "caen": "8532",
+      "name": "Învăţământ profesional - tehnic",
+      "synonyms": ["școală profesională", "liceu tehnic"],
+      "riskLevel": "mediu",
+      "category": "education"
+    },
+    {
+      "id": "caen_8542",
+      "caen": "8542",
+      "name": "Învăţământ superior",
+      "synonyms": ["universitate", "facultate", "studii superioare"],
+      "riskLevel": "scazut",
+      "category": "education"
+    },
+    {
+      "id": "caen_8551",
+      "caen": "8551",
+      "name": "Învăţământ în domeniul sportului şi recreaţional",
+      "synonyms": ["școală dans", "antrenor sportiv", "instructor fitness"],
+      "riskLevel": "mediu",
+      "category": "education"
+    },
+    {
+      "id": "caen_8552",
+      "caen": "8552",
+      "name": "Învăţământ în domeniul culturii (limbi străine, muzică, teatru, dans, arte plastice ş.a.)",
+      "synonyms": ["școală muzică", "profesor limbi străine", "școală arte"],
+      "riskLevel": "scazut",
+      "category": "education"
+    },
+    {
+      "id": "caen_4722",
+      "caen": "4722",
+      "name": "Comerţ cu amănuntul al cărnii şi al produselor din carne, în magazine specializate",
+      "synonyms": ["măcelărie", "carmangerie", "butchery"],
+      "riskLevel": "mediu",
+      "category": "retail"
+    },
+    {
+      "id": "caen_4724",
+      "caen": "4724",
+      "name": "Comerţ cu amănuntul al pâinii, produselor de patiserie şi produselor zaharoase, în magazine specializate",
+      "synonyms": ["brutărie", "patiserie comercială", "cofetărie comercială"],
+      "riskLevel": "scazut",
+      "category": "retail"
+    },
+    {
+      "id": "caen_4730",
+      "caen": "4730",
+      "name": "Comerţ cu amănuntul al carburanţilor pentru autovehicule în magazine specializate",
+      "synonyms": ["benzinărie", "stație carburanți", "pompă benzină"],
+      "riskLevel": "ridicat",
+      "category": "retail"
+    },
+    {
+      "id": "caen_9523",
+      "caen": "9523",
+      "name": "Repararea încălţămintei şi a articolelor din piele",
+      "synonyms": ["cizmărie", "reparații pantofi"],
+      "riskLevel": "scazut",
+      "category": "services"
+    },
+    {
+      "id": "caen_9529",
+      "caen": "9529",
+      "name": "Repararea altor bunuri de uz personal şi gospodăresc",
+      "synonyms": ["reparații diverse", "service reparații"],
+      "riskLevel": "scazut",
+      "category": "services"
+    },
+    {
+      "id": "caen_4332",
+      "caen": "4332",
+      "name": "Lucrări de dulgherie şi tâmplărie",
+      "synonyms": ["tâmplărie", "dulgherie", "tâmplar", "dulgher", "lemn"],
+      "riskLevel": "mediu",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4333",
+      "caen": "4333",
+      "name": "Lucrări de pardosire şi placare a pereţilor",
+      "synonyms": ["parchetar", "faianțar", "gresie faianță"],
+      "riskLevel": "mediu",
+      "category": "construction"
+    },
+    {
+      "id": "caen_9604",
+      "caen": "9604",
+      "name": "Activităţi de întreţinere corporală",
+      "synonyms": ["spa", "masaj", "salon masaj", "wellness"],
+      "riskLevel": "scazut",
+      "category": "beauty"
+    },
+    {
+      "id": "caen_9601",
+      "caen": "9601",
+      "name": "Spălarea şi curăţarea (uscată) articolelor textile şi a produselor din blană",
+      "synonyms": ["spălătorie", "curățătorie", "pressing"],
+      "riskLevel": "scazut",
+      "category": "services"
+    },
+    {
+      "id": "caen_4778_foto",
+      "caen": "4778",
+      "name": "Comerţ cu amănuntul cu bunuri de uz casnic, în magazine specializate",
+      "synonyms": ["fotograf", "studio foto", "fotografie"],
+      "riskLevel": "scazut",
+      "category": "services"
+    },
+    {
+      "id": "caen_7410",
+      "caen": "7410",
+      "name": "Activităţi de design specializat",
+      "synonyms": ["design grafic", "designer", "grafică", "web design"],
+      "riskLevel": "scazut",
+      "category": "creative"
+    },
+    {
+      "id": "caen_7311",
+      "caen": "7311",
+      "name": "Activităţi ale agenţiilor de publicitate",
+      "synonyms": ["agenție publicitate", "marketing", "reclamă"],
+      "riskLevel": "scazut",
+      "category": "creative"
+    },
+    {
+      "id": "caen_4329",
+      "caen": "4329",
+      "name": "Alte lucrări de instalaţii pentru construcţii",
+      "synonyms": ["instalații diverse", "meșter instalații"],
+      "riskLevel": "mediu",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4312",
+      "caen": "4312",
+      "name": "Lucrări de pregătire a terenului",
+      "synonyms": ["excavații", "terasamente", "buldoexcavator"],
+      "riskLevel": "ridicat",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4313",
+      "caen": "4313",
+      "name": "Lucrări de foraj şi sondaj pentru construcţii",
+      "synonyms": ["foraje", "sondaje", "puțuri"],
+      "riskLevel": "ridicat",
+      "category": "construction"
+    },
+    {
+      "id": "caen_4331",
+      "caen": "4331",
+      "name": "Lucrări de ipsoserie",
+      "synonyms": ["ipsos", "gips-carton", "rigips"],
+      "riskLevel": "mediu",
+      "category": "construction"
+    }
+  ]
+}
