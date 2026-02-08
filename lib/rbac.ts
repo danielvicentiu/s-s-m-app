@@ -166,7 +166,12 @@ export const getMyOrgIds = cache(async (): Promise<string[]> => {
   const roles = await getMyRoles();
   if (roles.some(r => r.role_key === 'super_admin')) {
     const supabase = await createSupabaseServer();
-    const { data } = await supabase.from('organizations').select('id');
+    const { data, error } = await supabase.from('organizations').select('id');
+    if (error) {
+      console.error('getMyOrgIds: RLS error for super_admin querying organizations:', error);
+      // Returnează array gol dar logăm eroarea — componenta apelantă ar trebui să verifice isSuperAdmin() separat
+      return [];
+    }
     return data?.map(o => o.id) ?? [];
   }
   return [...new Set(roles.map(r => r.company_id).filter(Boolean) as string[])];

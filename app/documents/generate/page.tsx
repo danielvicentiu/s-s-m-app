@@ -27,27 +27,54 @@ export default async function DocumentGeneratePage() {
   }
 
   // Fetch organizații accesibile
-  const myOrgIds = await getMyOrgIds()
+  let organizations, employees
 
-  const { data: organizations, error: orgError } = await supabase
-    .from('organizations')
-    .select('id, name, cui, address, county')
-    .in('id', myOrgIds)
-    .order('name', { ascending: true })
+  if (isSuperAdmin) {
+    // Super admin: fetch TOATE organizațiile și angajații (fără filtru RLS)
+    const { data: orgsData, error: orgError } = await supabase
+      .from('organizations')
+      .select('id, name, cui, address, county')
+      .order('name', { ascending: true })
 
-  if (orgError) {
-    console.error('Error fetching organizations:', orgError)
-  }
+    if (orgError) {
+      console.error('Error fetching organizations:', orgError)
+    }
+    organizations = orgsData
 
-  // Fetch angajați din organizațiile accesibile
-  const { data: employees, error: empError } = await supabase
-    .from('employees')
-    .select('id, full_name, job_title, cor_code, organization_id, organizations (name)')
-    .in('organization_id', myOrgIds)
-    .order('full_name', { ascending: true })
+    const { data: empsData, error: empError } = await supabase
+      .from('employees')
+      .select('id, full_name, job_title, cor_code, organization_id, organizations (name)')
+      .order('full_name', { ascending: true })
 
-  if (empError) {
-    console.error('Error fetching employees:', empError)
+    if (empError) {
+      console.error('Error fetching employees:', empError)
+    }
+    employees = empsData
+  } else {
+    // Non-super-admin: filtrează după organizațiile accesibile
+    const myOrgIds = await getMyOrgIds()
+
+    const { data: orgsData, error: orgError } = await supabase
+      .from('organizations')
+      .select('id, name, cui, address, county')
+      .in('id', myOrgIds)
+      .order('name', { ascending: true })
+
+    if (orgError) {
+      console.error('Error fetching organizations:', orgError)
+    }
+    organizations = orgsData
+
+    const { data: empsData, error: empError } = await supabase
+      .from('employees')
+      .select('id, full_name, job_title, cor_code, organization_id, organizations (name)')
+      .in('organization_id', myOrgIds)
+      .order('full_name', { ascending: true })
+
+    if (empError) {
+      console.error('Error fetching employees:', empError)
+    }
+    employees = empsData
   }
 
   return (
