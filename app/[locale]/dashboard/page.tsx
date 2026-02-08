@@ -22,6 +22,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   if (!user) redirect('/login')
 
+  // RBAC: Verifică dacă user e super_admin (înainte de fetch date)
+  const isSuperAdmin = await hasRole('super_admin')
+
   // Fetch date reale
   const { data: overview } = await supabase.from('v_dashboard_overview').select('*')
   const { data: alerts } = await supabase
@@ -38,14 +41,29 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     .from('safety_equipment')
     .select('*, organizations(name, cui)')
 
-  // RBAC: Obține organizațiile accesibile din user_roles (cu fallback pe memberships)
-  const myOrgIds = await getMyOrgIds()
+  // RBAC: Obține organizațiile accesibile
+  let baseOrganizations
 
-  // Extrage lista organizații din memberships (backward compatibility)
-  const baseOrganizations = (orgs || [])
-    .map((m: any) => m.organization)
-    .filter(Boolean)
-    .filter((org: any) => myOrgIds.includes(org.id)) // RBAC: filtrare suplimentară
+  if (isSuperAdmin) {
+    // Super admin: fetch TOATE organizațiile direct
+    const { data: allOrgs, error: orgError } = await supabase
+      .from('organizations')
+      .select('id, name, cui, data_completeness, cooperation_status')
+      .order('name', { ascending: true })
+
+    if (orgError) {
+      console.error('Error fetching all organizations for super_admin:', orgError)
+    }
+    baseOrganizations = allOrgs || []
+  } else {
+    // Non-super-admin: folosește organizațiile din memberships
+    const myOrgIds = await getMyOrgIds()
+
+    baseOrganizations = (orgs || [])
+      .map((m: any) => m.organization)
+      .filter(Boolean)
+      .filter((org: any) => myOrgIds.includes(org.id))
+  }
 
   // Fetch employee counts for each organization
   const organizationsWithCounts = await Promise.all(
