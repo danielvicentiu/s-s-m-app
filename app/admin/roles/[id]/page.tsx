@@ -8,7 +8,7 @@ import { isSuperAdmin } from '@/lib/rbac'
 import EditRoleForm from './EditRoleForm'
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function EditRolePage({ params }: Props) {
@@ -17,6 +17,9 @@ export default async function EditRolePage({ params }: Props) {
   if (!admin) redirect('/unauthorized')
 
   const supabase = await createSupabaseServer()
+
+  // Await params pentru Next.js App Router
+  const { id } = await params
 
   // Fetch rol cu permisiuni
   const { data: role, error } = await supabase
@@ -32,7 +35,7 @@ export default async function EditRolePage({ params }: Props) {
         is_active
       )
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !role) {
