@@ -12,10 +12,11 @@ import DashboardClient from './DashboardClient'
 import { getMyRoles, hasRole, getMyOrgIds } from '@/lib/rbac'
 
 interface DashboardPageProps {
-  searchParams: { org?: string }
+  searchParams: Promise<{ org?: string }>
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  const resolvedSearchParams = await searchParams
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
@@ -133,7 +134,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   // Citește preferința org selectată (validează că încă există)
   // Priority: URL param > DB preference > default ('all')
-  const urlOrgParam = searchParams.org
+  const urlOrgParam = resolvedSearchParams.org
   let savedSelectedOrg = 'all'
 
   if (urlOrgParam && (urlOrgParam === 'all' || organizations.some((o: any) => o.id === urlOrgParam))) {

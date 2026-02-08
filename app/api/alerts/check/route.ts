@@ -9,13 +9,17 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-// Inițializare clienți
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-init clienți (avoid module-level crash at build time)
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role = bypass RLS
-);
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role = bypass RLS
+  );
+}
 
 // Praguri alerte (zile înainte de expirare)
 const ALERT_THRESHOLDS = [30, 7, 3, 0] as const;
@@ -157,6 +161,9 @@ export async function GET(request: Request) {
   }
 
   try {
+    const supabase = getSupabase();
+    const resend = getResend();
+
     const today = new Date();
     const in30Days = new Date(today);
     in30Days.setDate(today.getDate() + 30);

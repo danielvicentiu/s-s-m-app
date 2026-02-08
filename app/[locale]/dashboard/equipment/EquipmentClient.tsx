@@ -6,6 +6,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -114,6 +115,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
   const canUpdate = useHasPermission('equipment', 'update')
   const canDelete = useHasPermission('equipment', 'delete')
 
+  const router = useRouter()
   const [equipment, setEquipment] = useState(initialEquipment)
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -278,7 +280,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
       <header className="bg-white px-8 py-4 border-b border-gray-200">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <button onClick={() => window.location.href = '/dashboard'} className="text-gray-400 hover:text-gray-600">
+            <button onClick={() => router.push('/dashboard')} className="text-gray-400 hover:text-gray-600">
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>

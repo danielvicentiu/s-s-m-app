@@ -1,11 +1,15 @@
-// middleware.ts (în RĂDĂCINA proiectului, NU în app/)
-// Redirect la /login dacă userul nu e autentificat
-// Protejează /dashboard și toate sub-rutele
-// RBAC: Verificare dinamică roluri din user_roles cu fallback pe memberships
+// middleware.ts
+// 1) next-intl: detectează/redirectează locale (ro, bg, en, hu, de)
+// 2) Supabase Auth: redirect la /login dacă userul nu e autentificat
+// 3) RBAC: Verificare dinamică roluri din user_roles cu fallback pe memberships
 
+import createMiddleware from 'next-intl/middleware'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { routing } from './i18n/routing'
+
+const intlMiddleware = createMiddleware(routing)
 
 // RBAC: Helper pentru obținerea rolurilor userului din user_roles cu fallback pe memberships
 async function getRolesFromSupabase(supabase: SupabaseClient, userId: string): Promise<string[]> {
@@ -65,71 +69,91 @@ function hasAnyRole(userRoles: string[], requiredRoles: string[]): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          )
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Dacă nu e autentificat și încearcă pagină protejată → /login
-  const protectedPaths = ['/dashboard', '/onboarding', '/admin', '/consultant', '/firma', '/angajat', '/inspector']
-  const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
-
-  if (!user && isProtected) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
+  // Skip API routes — they don't need locale or auth redirect
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    return NextResponse.next()
   }
 
-  // RBAC: Verificare roluri pentru rute protejate
-  if (user && isProtected) {
-    const userRoles = await getRolesFromSupabase(supabase, user.id)
-    const pathname = request.nextUrl.pathname
+  // Step 1: Run next-intl middleware (handles locale detection + redirect)
+  const intlResponse = intlMiddleware(request)
 
-    // Definire roluri necesare per rută
+  // Step 2: Extract locale from the URL (first segment after /)
+  const pathname = request.nextUrl.pathname
+  const localeMatch = pathname.match(/^\/(ro|bg|en|hu|de)\//)
+  const locale = localeMatch ? localeMatch[1] : routing.defaultLocale
+
+  // Strip locale prefix for path matching
+  const pathWithoutLocale = localeMatch
+    ? pathname.replace(/^\/(ro|bg|en|hu|de)/, '')
+    : pathname
+
+  // Protected paths that need auth + optional RBAC
+  const protectedSegments = ['/dashboard', '/onboarding', '/admin', '/consultant', '/firma', '/angajat', '/inspector']
+  const isProtected = protectedSegments.some(segment =>
+    pathWithoutLocale.startsWith(segment)
+  )
+
+  if (isProtected) {
+    // Create a Supabase client to check auth
+    let supabaseResponse = intlResponse
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            )
+            // Copy cookies to the intl response
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            )
+          },
+        },
+      }
+    )
+
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // Dacă nu e autentificat → redirect la /login
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = `/${locale}/login`
+      return NextResponse.redirect(url)
+    }
+
+    // RBAC: Verificare roluri pentru rute protejate
+    const userRoles = await getRolesFromSupabase(supabase, user.id)
+
     let requiredRoles: string[] = []
     let needsRoleCheck = true
 
-    if (pathname.startsWith('/admin')) {
+    if (pathWithoutLocale.startsWith('/admin')) {
       requiredRoles = ['super_admin']
-    } else if (pathname.startsWith('/consultant')) {
+    } else if (pathWithoutLocale.startsWith('/consultant')) {
       requiredRoles = [
         'consultant_ssm', 'super_admin',
         'zbut_consultant_bg', 'munkavedelmi_hu',
         'sicherheitsingenieur_de', 'specjalista_bhp_pl'
       ]
-    } else if (pathname.startsWith('/firma')) {
+    } else if (pathWithoutLocale.startsWith('/firma')) {
       requiredRoles = [
         'firma_admin', 'super_admin',
         'lucrator_desemnat', 'responsabil_ssm_intern'
       ]
-    } else if (pathname.startsWith('/inspector')) {
+    } else if (pathWithoutLocale.startsWith('/inspector')) {
       requiredRoles = [
         'inspector_itm', 'inspector_igsu', 'inspector_anspdcp', 'super_admin',
         'inspector_git_bg', 'inspector_ommf_hu', 'berufsgenossenschaft_de', 'inspector_pip_pl'
       ]
-    } else if (pathname.startsWith('/angajat')) {
+    } else if (pathWithoutLocale.startsWith('/angajat')) {
       requiredRoles = ['angajat', 'super_admin', 'firma_admin', 'consultant_ssm']
-    } else if (pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding')) {
+    } else if (pathWithoutLocale.startsWith('/dashboard') || pathWithoutLocale.startsWith('/onboarding')) {
       // Dashboard și onboarding: orice user autentificat
       needsRoleCheck = false
     }
@@ -138,23 +162,18 @@ export async function middleware(request: NextRequest) {
     if (needsRoleCheck && requiredRoles.length > 0) {
       if (!hasAnyRole(userRoles, requiredRoles)) {
         const url = request.nextUrl.clone()
-        url.pathname = '/unauthorized'
+        url.pathname = `/${locale}/unauthorized`
         return NextResponse.redirect(url)
       }
     }
   }
 
-  return supabaseResponse
+  return intlResponse
 }
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/onboarding/:path*',
-    '/admin/:path*',
-    '/consultant/:path*',
-    '/firma/:path*',
-    '/angajat/:path*',
-    '/inspector/:path*'
+    // Match all pathnames except: _next, api, static files
+    '/((?!api|_next|_vercel|.*\\..*).*)',
   ],
 }

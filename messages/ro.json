@@ -1,0 +1,183 @@
+{
+  "common": {
+    "appName": "s-s-m.ro",
+    "platform": "Platformă digitală SSM & PSI",
+    "consultant": "Consultant",
+    "logout": "Ieși",
+    "loading": "Se încarcă...",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "add": "Adaugă",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "or": "sau",
+    "all": "Toate",
+    "noData": "Nu există date.",
+    "records": "înregistrări",
+    "days": "zile",
+    "copyright": "© 2026 s-s-m.ro. Toate drepturile rezervate.",
+    "termsAndConditions": "Termeni și condiții",
+    "privacy": "Confidențialitate",
+    "gdpr": "GDPR"
+  },
+  "nav": {
+    "features": "Funcționalități",
+    "pricing": "Preț",
+    "login": "Intră în platformă",
+    "home": "Acasă",
+    "navigation": "Navigare",
+    "contact": "Contact"
+  },
+  "landing": {
+    "badge": "Platformă digitală SSM & PSI",
+    "title": "Conformitate SSM & PSI",
+    "titleHighlight": "100% automată",
+    "subtitle": "Gestionează medicina muncii, echipamentele PSI, alertele și rapoartele dintr-o singură platformă. Zero birocrație, zero amenzi ITM.",
+    "cta": "Începe acum →",
+    "featuresTitle": "Tot ce ai nevoie într-un singur loc",
+    "featuresSubtitle": "6 module integrate pentru conformitate completă SSM & PSI",
+    "pricingTitle": "Preț transparent",
+    "pricingSubtitle": "Un singur plan, toate funcționalitățile",
+    "planProfessional": "PLAN PROFESIONAL",
+    "perOrganization": "per organizație",
+    "perYear": "/an",
+    "noSetupFee": "Fără setup fee. Anulezi oricând.",
+    "features": {
+      "medicalTitle": "Medicina Muncii",
+      "medicalDesc": "Tracking fișe medicale, alerte expirare automată, evidență completă per angajat cu status real-time.",
+      "equipmentTitle": "Echipamente PSI",
+      "equipmentDesc": "Inventar stingătoare, hidranți, detectoare fum. Programare verificări, log-uri mentenanță, QR code tracking.",
+      "alertsTitle": "Alerte Automate",
+      "alertsDesc": "Email zilnic cu expirări iminente (30/15/7 zile). Integrare Resend, notificări WhatsApp (coming soon).",
+      "riskTitle": "Risc Financiar",
+      "riskDesc": "Calcul automat amenzi potențiale ITM/ISU/ISCIR. Breakdown per autoritate, estimare min-max în RON.",
+      "multiOrgTitle": "Multi-Organizație",
+      "multiOrgDesc": "Gestionează 100+ firme dintr-un singur dashboard. Filtrare instant, preferințe salvate, arhitectură tenant.",
+      "reportsTitle": "Rapoarte PDF",
+      "reportsDesc": "Generare automată rapoarte ITM, hash SHA256 pentru imutabilitate, arhivare cloud, export 1-click."
+    },
+    "pricingFeatures": [
+      "Medicina Muncii — tracking nelimitat",
+      "Echipamente PSI — inventar complet",
+      "Alerte automate email zilnic",
+      "Risc financiar — calcul amenzi ITM",
+      "Multi-organizație — firme nelimitate",
+      "Rapoarte PDF — generare automată",
+      "Suport tehnic prioritar",
+      "Backup automat zilnic",
+      "Actualizări gratuite"
+    ]
+  },
+  "login": {
+    "title": "Platformă SSM — Autentificare",
+    "email": "Email",
+    "emailPlaceholder": "email@exemplu.ro",
+    "password": "Parolă",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Intră în platformă",
+    "submitting": "Se autentifică...",
+    "demo": "Intră ca vizitator Demo",
+    "invalidCredentials": "Email sau parolă incorectă.",
+    "footer": "© 2026 s-s-m.ro — Platformă SSM"
+  },
+  "dashboard": {
+    "allOrganizations": "Toate organizațiile",
+    "employees": "angajați",
+    "toggleRiskITM": "Risc ITM",
+    "toggleRiskEuro": "Risc €",
+    "riskControl": "Risc Control ITM",
+    "dataCompleteness": "Completare date",
+    "riskLevels": {
+      "low": "Scăzut",
+      "medium": "MEDIU",
+      "high": "RIDICAT",
+      "critical": "CRITIC"
+    },
+    "tabs": {
+      "medical": "Medicina Muncii",
+      "equipment": "Echipamente PSI"
+    },
+    "counters": {
+      "expired": "Expirate",
+      "expiring": "Expiră <30 zile",
+      "valid": "Valide"
+    },
+    "medical": {
+      "title": "Medicina Muncii",
+      "addRecord": "+ Adaugă fișă",
+      "noRecords": "Nicio fișă medicală.",
+      "columns": {
+        "employee": "Angajat",
+        "position": "Funcție",
+        "type": "Tip",
+        "examDate": "Data examinare",
+        "expiryDate": "Expiră",
+        "status": "Status"
+      },
+      "examTypes": {
+        "periodic": "Periodic",
+        "angajare": "Angajare",
+        "reluare": "Reluare",
+        "la_cerere": "La cerere"
+      }
+    },
+    "equipment": {
+      "title": "Echipamente PSI",
+      "addRecord": "+ Adaugă echipament",
+      "noRecords": "Niciun echipament.",
+      "columns": {
+        "equipment": "Echipament",
+        "type": "Tip",
+        "location": "Locație",
+        "lastCheck": "Verificat",
+        "expiryDate": "Expiră",
+        "status": "Status"
+      },
+      "types": {
+        "stingator": "Stingător",
+        "trusa_prim_ajutor": "Trusă prim ajutor",
+        "hidrant": "Hidrant",
+        "detector_fum": "Detector fum",
+        "iluminat_urgenta": "Iluminat urgență"
+      }
+    },
+    "status": {
+      "expired": "Expirat {days} zile",
+      "expiring": "Expiră în {days} zile",
+      "valid": "Valid {days} zile"
+    },
+    "notifications": {
+      "title": "Ultimele Notificări",
+      "recent": "{count} recente",
+      "noNotifications": "Nicio notificare trimisă încă.",
+      "expiredAlert": "EXPIRATE!",
+      "expired": "expirate",
+      "sent": "Trimis",
+      "to": "Către"
+    },
+    "features": {
+      "pdfTitle": "PDF Conformitate",
+      "pdfSubtitle": "Generare automată raport",
+      "pdfLocked": "Disponibil când completare date > 80%",
+      "alertsTitle": "Alerte Automate",
+      "alertsSubtitle": "Email, SMS, WhatsApp",
+      "alertsActive": "Activ — Email zilnic la 08:00 via Resend",
+      "trainingsTitle": "Instruiri SSM & PSI",
+      "trainingsSubtitle": "Module interactive + test",
+      "trainingsActive": "9 module active — Click pentru acces"
+    },
+    "actions": {
+      "contactConsultant": "Contactează consultantul",
+      "reloadData": "Reîncarcă datele",
+      "aboutPlatform": "Despre platformă"
+    }
+  },
+  "footer": {
+    "description": "Platformă digitală pentru conformitate SSM & PSI. Medicina muncii, echipamente PSI, alerte automate.",
+    "email": "contact@s-s-m.ro",
+    "phone": "+40 700 000 000",
+    "address": "București, România"
+  }
+}

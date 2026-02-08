@@ -6,10 +6,14 @@
 // ============================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
-// Import generator
-const { generateFisaPDF } = require('@/lib/generate-fisa');
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 // Language labels
 const LANGUAGE_LABELS: Record<string, string> = {
@@ -24,6 +28,9 @@ const LANGUAGE_LABELS: Record<string, string> = {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabase();
+    const { generateFisaPDF } = require('@/lib/generate-fisa');
+
     const body = await request.json();
     const { session_id, organization_id } = body;
 

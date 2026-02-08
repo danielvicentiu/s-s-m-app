@@ -35,7 +35,7 @@
     {
       "id": "caen_4120",
       "caen": "4120",
-      "name": "Construcții de clădiri rezidențiale și nere­zi­den­ți­ale",
+      "name": "Construcții de clădiri rezidențiale și nerezidențiale",
       "synonyms": ["construcții", "construcții civile", "antreprenor construcții", "dezvoltator imobiliar"],
       "riskLevel": "ridicat",
       "category": "construction"
@@ -203,7 +203,7 @@
     {
       "id": "caen_8110",
       "caen": "8110",
-      "name": "Activităţi combinatede servicii pentru clădiri",
+      "name": "Activităţi combinate de servicii pentru clădiri",
       "synonyms": ["curățenie", "servicii curățenie", "menaj", "întreținere clădiri"],
       "riskLevel": "mediu",
       "category": "services"
