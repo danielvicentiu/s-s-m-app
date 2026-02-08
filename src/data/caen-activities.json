@@ -1,0 +1,84 @@
+{
+  "activities": [
+    {
+      "id": "4711",
+      "caen": "4711",
+      "name": "Comerț cu amănuntul în magazine nespecializate, cu vânzare predominantă de produse alimentare, băuturi și tutun",
+      "synonyms": ["magazin alimentar", "supermarket", "minimarket", "alimentară", "grocery"],
+      "riskLevel": "mediu",
+      "category": "comert"
+    },
+    {
+      "id": "4120",
+      "caen": "4120",
+      "name": "Lucrări de construcții a clădirilor rezidențiale și nerezidențiale",
+      "synonyms": ["construcții", "constructor", "building", "antreprenor"],
+      "riskLevel": "ridicat",
+      "category": "constructii"
+    },
+    {
+      "id": "6201",
+      "caen": "6201",
+      "name": "Activități de realizare a software-ului la comandă",
+      "synonyms": ["IT", "software", "programare", "development", "web"],
+      "riskLevel": "scăzut",
+      "category": "it"
+    },
+    {
+      "id": "5610",
+      "caen": "5610",
+      "name": "Restaurante",
+      "synonyms": ["restaurant", "HoReCa", "bucătar", "ospătar"],
+      "riskLevel": "mediu",
+      "category": "horeca"
+    },
+    {
+      "id": "8621",
+      "caen": "8621",
+      "name": "Activități de asistență medicală generală",
+      "synonyms": ["cabinet medical", "medic de familie", "clinică", "doctor"],
+      "riskLevel": "ridicat",
+      "category": "medical"
+    },
+    {
+      "id": "2910",
+      "caen": "2910",
+      "name": "Fabricarea autovehiculelor de transport rutier",
+      "synonyms": ["fabrică auto", "producție mașini", "automotive"],
+      "riskLevel": "ridicat",
+      "category": "industrie"
+    },
+    {
+      "id": "4941",
+      "caen": "4941",
+      "name": "Transporturi rutiere de mărfuri",
+      "synonyms": ["transport", "TIR", "logistică", "camion", "expediție"],
+      "riskLevel": "ridicat",
+      "category": "transport"
+    },
+    {
+      "id": "8559",
+      "caen": "8559",
+      "name": "Alte forme de învățământ n.c.a.",
+      "synonyms": ["educație", "cursuri", "training", "formare profesională", "școală"],
+      "riskLevel": "scăzut",
+      "category": "educatie"
+    },
+    {
+      "id": "0111",
+      "caen": "0111",
+      "name": "Cultivarea cerealelor (exclusiv orez), plantelor leguminoase și a plantelor producătoare de semințe oleaginoase",
+      "synonyms": ["agricultură", "fermă", "cereale", "câmp", "culturi"],
+      "riskLevel": "mediu",
+      "category": "agricultura"
+    },
+    {
+      "id": "9602",
+      "caen": "9602",
+      "name": "Coafură și alte activități de înfrumusețare",
+      "synonyms": ["frizerie", "salon", "coafor", "cosmetică", "beauty"],
+      "riskLevel": "scăzut",
+      "category": "servicii"
+    }
+  ]
+}

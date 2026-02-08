@@ -1,0 +1,67 @@
+{
+  "rolesByCategory": {
+    "comert": [
+      { "name": "Casier", "cor": "523003", "risk": "scăzut" },
+      { "name": "Lucrător comercial", "cor": "522001", "risk": "scăzut" },
+      { "name": "Gestionar", "cor": "432101", "risk": "scăzut" },
+      { "name": "Magaziner", "cor": "432102", "risk": "scăzut" },
+      { "name": "Șef raion", "cor": "522004", "risk": "scăzut" }
+    ],
+    "constructii": [
+      { "name": "Muncitor necalificat", "cor": "931301", "risk": "ridicat" },
+      { "name": "Zidar", "cor": "711401", "risk": "ridicat" },
+      { "name": "Electrician", "cor": "741101", "risk": "ridicat" },
+      { "name": "Instalator", "cor": "712601", "risk": "mediu" },
+      { "name": "Dulgher", "cor": "711501", "risk": "ridicat" },
+      { "name": "Macaragiu", "cor": "834101", "risk": "ridicat" },
+      { "name": "Șef de șantier", "cor": "132301", "risk": "mediu" }
+    ],
+    "it": [
+      { "name": "Programator", "cor": "251201", "risk": "scăzut" },
+      { "name": "Analist", "cor": "251101", "risk": "scăzut" },
+      { "name": "Administrator baze de date", "cor": "252101", "risk": "scăzut" },
+      { "name": "Administrator rețea", "cor": "252301", "risk": "scăzut" },
+      { "name": "Project Manager", "cor": "242101", "risk": "scăzut" }
+    ],
+    "horeca": [
+      { "name": "Bucătar", "cor": "512001", "risk": "mediu" },
+      { "name": "Ospătar", "cor": "513101", "risk": "scăzut" },
+      { "name": "Barman", "cor": "513201", "risk": "scăzut" },
+      { "name": "Ajutor bucătar", "cor": "941201", "risk": "mediu" },
+      { "name": "Patiser", "cor": "751201", "risk": "mediu" }
+    ],
+    "medical": [
+      { "name": "Medic", "cor": "221101", "risk": "ridicat" },
+      { "name": "Asistent medical", "cor": "222101", "risk": "ridicat" },
+      { "name": "Infirmier", "cor": "532201", "risk": "mediu" },
+      { "name": "Brancardier", "cor": "532301", "risk": "mediu" }
+    ],
+    "industrie": [
+      { "name": "Operator CNC", "cor": "722301", "risk": "ridicat" },
+      { "name": "Sudor", "cor": "721201", "risk": "ridicat" },
+      { "name": "Lăcătuș mecanic", "cor": "721401", "risk": "ridicat" },
+      { "name": "Strungar", "cor": "722201", "risk": "ridicat" },
+      { "name": "Muncitor necalificat", "cor": "931301", "risk": "ridicat" }
+    ],
+    "transport": [
+      { "name": "Șofer", "cor": "832201", "risk": "ridicat" },
+      { "name": "Dispecer", "cor": "432301", "risk": "scăzut" },
+      { "name": "Mecanic auto", "cor": "723301", "risk": "mediu" }
+    ],
+    "educatie": [
+      { "name": "Profesor", "cor": "233001", "risk": "scăzut" },
+      { "name": "Formator", "cor": "235901", "risk": "scăzut" },
+      { "name": "Instructor", "cor": "516901", "risk": "scăzut" }
+    ],
+    "agricultura": [
+      { "name": "Muncitor agricol", "cor": "921101", "risk": "mediu" },
+      { "name": "Tractorist", "cor": "834201", "risk": "ridicat" },
+      { "name": "Inginer agronom", "cor": "213201", "risk": "scăzut" }
+    ],
+    "servicii": [
+      { "name": "Frizer", "cor": "514101", "risk": "scăzut" },
+      { "name": "Cosmetician", "cor": "514201", "risk": "scăzut" },
+      { "name": "Manichiurist", "cor": "514301", "risk": "scăzut" }
+    ]
+  }
+}

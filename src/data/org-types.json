@@ -1,0 +1,73 @@
+{
+  "organizationTypes": [
+    {
+      "id": "srl",
+      "name": "SRL",
+      "fullName": "Societate cu Răspundere Limitată",
+      "maxEmployees": null,
+      "legalPersonality": true,
+      "isDefault": true,
+      "description": "Cea mai frecventă formă juridică pentru afaceri în România"
+    },
+    {
+      "id": "sa",
+      "name": "SA",
+      "fullName": "Societate pe Acțiuni",
+      "maxEmployees": null,
+      "legalPersonality": true,
+      "description": "Formă juridică pentru companii mari cu capital social minim 90.000 RON"
+    },
+    {
+      "id": "pfa",
+      "name": "PFA",
+      "fullName": "Persoană Fizică Autorizată",
+      "maxEmployees": 3,
+      "legalPersonality": false,
+      "description": "Activitate independentă desfășurată de o persoană fizică autorizată",
+      "restriction": "Maxim 3 angajați cu contract individual de muncă"
+    },
+    {
+      "id": "ii",
+      "name": "II",
+      "fullName": "Întreprindere Individuală",
+      "maxEmployees": 8,
+      "legalPersonality": false,
+      "description": "Activitate economică desfășurată de un întreprinzător individual",
+      "restriction": "Maxim 8 angajați — soț/soție + rude/afini grad IV"
+    },
+    {
+      "id": "if",
+      "name": "IF",
+      "fullName": "Întreprindere Familială",
+      "maxEmployees": 0,
+      "legalPersonality": false,
+      "description": "Activitate desfășurată de membrii unei familii",
+      "note": "Fără angajați — doar membri de familie",
+      "restriction": "Doar membri de familie, fără contract individual de muncă"
+    },
+    {
+      "id": "srl-d",
+      "name": "SRL-D",
+      "fullName": "Societate cu Răspundere Limitată — Debutant",
+      "maxEmployees": null,
+      "legalPersonality": true,
+      "description": "SRL cu facilități fiscale pentru tineri antreprenori (18–35 ani)"
+    },
+    {
+      "id": "scs",
+      "name": "SCS",
+      "fullName": "Societate în Comandită Simplă",
+      "maxEmployees": null,
+      "legalPersonality": true,
+      "description": "Societate cu asociați comanditari și comanditați"
+    },
+    {
+      "id": "snc",
+      "name": "SNC",
+      "fullName": "Societate în Nume Colectiv",
+      "maxEmployees": null,
+      "legalPersonality": true,
+      "description": "Societate în care asociații răspund solidar și nelimitat"
+    }
+  ]
+}

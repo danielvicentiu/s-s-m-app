@@ -1,0 +1,142 @@
+{
+  "baseObligations": {
+    "ssm": [
+      {
+        "id": "ssm-01",
+        "name": "Evaluare riscuri SSM",
+        "frequency": "anual + la modificări",
+        "costMin": 300,
+        "costMax": 1500,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, art. 12",
+        "description": "Evaluarea riscurilor de accidentare și îmbolnăvire profesională pentru fiecare loc de muncă",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      },
+      {
+        "id": "ssm-02",
+        "name": "Plan de prevenire și protecție",
+        "frequency": "anual",
+        "costMin": 200,
+        "costMax": 800,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, art. 13",
+        "description": "Planul de prevenire și protecție cu măsuri tehnice și organizatorice",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      },
+      {
+        "id": "ssm-03",
+        "name": "Instruire SSM (introductiv-generală + la locul de muncă + periodică)",
+        "frequency": "la angajare + periodic (6 luni)",
+        "costMin": 50,
+        "costMax": 150,
+        "costPerEmployee": true,
+        "fineMin": 4000,
+        "fineMax": 8000,
+        "law": "Legea 319/2006, art. 20",
+        "description": "Instruirea lucrătorilor în domeniul SSM: introductiv-generală, la locul de muncă, periodică",
+        "mandatory": true
+      },
+      {
+        "id": "ssm-04",
+        "name": "Serviciu extern SSM (consultant)",
+        "frequency": "permanent",
+        "costMin": 100,
+        "costMax": 500,
+        "fineMin": 5000,
+        "fineMax": 10000,
+        "law": "Legea 319/2006, art. 8",
+        "description": "Organizarea activității de prevenire și protecție prin serviciu extern de prevenire și protecție",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      }
+    ],
+    "psi": [
+      {
+        "id": "psi-01",
+        "name": "Autorizație ISU / Aviz PSI",
+        "frequency": "la deschidere + modificări",
+        "costMin": 500,
+        "costMax": 3000,
+        "fineMin": 2500,
+        "fineMax": 5000,
+        "law": "Legea 307/2006, art. 30",
+        "description": "Obținerea autorizației de securitate la incendiu de la ISU",
+        "mandatory": true,
+        "appliesToZeroEmployees": true,
+        "spaceBased": true
+      },
+      {
+        "id": "psi-02",
+        "name": "Stingătoare verificate",
+        "frequency": "anual (verificare) + la 5 ani (înlocuire)",
+        "costMin": 50,
+        "costMax": 200,
+        "fineMin": 1000,
+        "fineMax": 2500,
+        "law": "Legea 307/2006, OMAI 163/2007",
+        "description": "Dotarea și verificarea periodică a stingătoarelor de incendiu",
+        "mandatory": true,
+        "appliesToZeroEmployees": true,
+        "spaceBased": true
+      },
+      {
+        "id": "psi-03",
+        "name": "Instruire PSI periodică",
+        "frequency": "la angajare + semestrial",
+        "costMin": 30,
+        "costMax": 100,
+        "costPerEmployee": true,
+        "fineMin": 2500,
+        "fineMax": 5000,
+        "law": "Legea 307/2006, OMAI 712/2005",
+        "description": "Instruirea angajaților în domeniul situațiilor de urgență",
+        "mandatory": true
+      }
+    ],
+    "medicinaMuncii": [
+      {
+        "id": "med-01",
+        "name": "Examen medical la angajare",
+        "frequency": "la angajare",
+        "costMin": 80,
+        "costMax": 250,
+        "costPerEmployee": true,
+        "fineMin": 2500,
+        "fineMax": 5000,
+        "law": "HG 355/2007, art. 8",
+        "description": "Examenul medical la angajare — fișa de aptitudine",
+        "mandatory": true
+      },
+      {
+        "id": "med-02",
+        "name": "Control medical periodic",
+        "frequency": "anual (sau conform riscului)",
+        "costMin": 60,
+        "costMax": 200,
+        "costPerEmployee": true,
+        "fineMin": 2500,
+        "fineMax": 5000,
+        "law": "HG 355/2007, art. 25",
+        "description": "Controlul medical periodic conform fișei de expunere la riscuri",
+        "mandatory": true
+      },
+      {
+        "id": "med-03",
+        "name": "Contract medicina muncii",
+        "frequency": "permanent",
+        "costMin": 50,
+        "costMax": 300,
+        "fineMin": 2500,
+        "fineMax": 5000,
+        "law": "HG 355/2007, art. 6",
+        "description": "Contract cu un medic de medicina muncii abilitat",
+        "mandatory": true,
+        "appliesToZeroEmployees": true
+      }
+    ]
+  }
+}
