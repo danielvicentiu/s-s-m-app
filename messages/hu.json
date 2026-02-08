@@ -34,13 +34,14 @@
     "badge": "Digitális munkavédelmi és tűzvédelmi platform",
     "title": "Munkavédelmi és tűzvédelmi megfelelés",
     "titleHighlight": "100% automatizált",
-    "subtitle": "Kezelje a munkaegészségügyet, tűzvédelmi berendezéseket, riasztásokat és jelentéseket egyetlen platformról.",
+    "subtitle": "Kezelje a munkaegészségügyet, tűzvédelmi berendezéseket, riasztásokat és jelentéseket egyetlen platformról. Nulla bürokrácia, nulla bírság az OMMF-től.",
     "cta": "Kezdje most →",
     "featuresTitle": "Minden, amire szüksége van egy helyen",
     "featuresSubtitle": "6 integrált modul a teljes munkavédelmi és tűzvédelmi megfeleléshez",
     "pricingTitle": "Átlátható árazás",
     "pricingSubtitle": "Egy csomag, minden funkcióval",
     "planProfessional": "PROFESSZIONÁLIS CSOMAG",
+    "price": "80 000 Ft",
     "perOrganization": "szervezetenként",
     "perYear": "/év",
     "noSetupFee": "Nincs beállítási díj. Bármikor lemondható.",
@@ -52,7 +53,7 @@
       "alertsTitle": "Automatikus riasztások",
       "alertsDesc": "Napi e-mail a közelgő lejáratokról (30/15/7 nap). Resend integráció, WhatsApp értesítések (hamarosan).",
       "riskTitle": "Pénzügyi kockázat",
-      "riskDesc": "Automatikus bírságszámítás. Hatóságonkénti lebontás, min-max becslés.",
+      "riskDesc": "Automatikus bírságszámítás OMMF/OKF. Hatóságonkénti lebontás, min-max becslés Ft-ban.",
       "multiOrgTitle": "Több szervezet",
       "multiOrgDesc": "Kezeljen 100+ céget egyetlen irányítópultról. Azonnali szűrés, mentett beállítások.",
       "reportsTitle": "PDF Jelentések",
@@ -62,7 +63,7 @@
       "Munkaegészségügy — korlátlan követés",
       "Tűzvédelmi berendezések — teljes leltár",
       "Automatikus napi e-mail riasztások",
-      "Pénzügyi kockázat — bírságszámítás",
+      "Pénzügyi kockázat — OMMF bírságszámítás",
       "Több szervezet — korlátlan cégek",
       "PDF Jelentések — automatikus generálás",
       "Prioritásos technikai támogatás",
@@ -177,7 +178,7 @@
   "footer": {
     "description": "Digitális platform munkavédelmi és tűzvédelmi megfeleléshez.",
     "email": "contact@s-s-m.ro",
-    "phone": "+40 700 000 000",
-    "address": "Bukarest, Románia"
+    "phone": "+36 1 000 0000",
+    "address": "Budapest, Magyarország"
   }
 }
