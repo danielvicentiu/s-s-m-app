@@ -9,6 +9,8 @@ import { useState } from 'react'
 import { useRouter, usePathname } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { ValuePreview } from '@/components/ui/ValuePreview'
+import Link from 'next/link'
+import { UserPlus, FileText } from 'lucide-react'
 
 interface OrgOption {
   id: string
@@ -218,6 +220,23 @@ export default function DashboardClient({
             )}
           </div>
           <div className="flex items-center gap-5">
+            {/* Action buttons */}
+            <div className="flex items-center gap-3 border-r border-gray-200 pr-5">
+              <Link
+                href="/dashboard/angajat-nou"
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition flex items-center gap-2"
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>Angajat Nou</span>
+              </Link>
+              <Link
+                href="/documents/generate"
+                className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition flex items-center gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                <span>Documente</span>
+              </Link>
+            </div>
             {/* Toggle-uri panouri */}
             <div className="flex items-center gap-4 border-r border-gray-200 pr-5">
               <label className="flex items-center gap-2 cursor-pointer select-none">
