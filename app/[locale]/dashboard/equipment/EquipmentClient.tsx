@@ -19,9 +19,11 @@ interface Props {
   user: { email: string }
   organizations: any[]
   equipment: any[]
+  equipmentTypes: any[]
 }
 
-const EQUIPMENT_TYPES = [
+// Hardcoded fallback pentru backward compatibility (dacă DB e gol)
+const FALLBACK_EQUIPMENT_TYPES = [
   { value: 'stingator', label: 'Stingător' },
   { value: 'trusa_prim_ajutor', label: 'Trusă prim ajutor' },
   { value: 'hidrant', label: 'Hidrant' },
@@ -91,8 +93,13 @@ function getModelInfo(modelValue: string) {
   return null
 }
 
-function fmtEquipType(t: string): string {
-  return EQUIPMENT_TYPES.find(et => et.value === t)?.label || t
+function fmtEquipType(t: string, equipmentTypes: any[]): string {
+  // Încearcă să găsească în equipment_types din DB (prin ID sau name)
+  const found = equipmentTypes.find(et => et.id === t || et.name.toLowerCase() === t.toLowerCase())
+  if (found) return found.name
+
+  // Fallback pe lista hardcodată
+  return FALLBACK_EQUIPMENT_TYPES.find(et => et.value === t)?.label || t
 }
 
 function fmtDate(d: string | null): string {
@@ -109,7 +116,11 @@ function getStatus(expiryDate: string): { status: 'expired' | 'expiring' | 'vali
   return { status: 'valid', days: diffDays }
 }
 
-export default function EquipmentClient({ user, organizations, equipment: initialEquipment }: Props) {
+export default function EquipmentClient({ user, organizations, equipment: initialEquipment, equipmentTypes }: Props) {
+  // Convertește equipment_types din DB la format { value, label } pentru dropdown-uri
+  const EQUIPMENT_TYPES = equipmentTypes.length > 0
+    ? equipmentTypes.map(et => ({ value: et.id, label: et.name }))
+    : FALLBACK_EQUIPMENT_TYPES
   // RBAC: Verificare permisiuni pentru butoane CRUD
   const canCreate = useHasPermission('equipment', 'create')
   const canUpdate = useHasPermission('equipment', 'update')
@@ -172,7 +183,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
           (e.model || '').toLowerCase().includes(term) ||
           (e.location || '').toLowerCase().includes(term) ||
           (e.serial_number || '').toLowerCase().includes(term) ||
-          fmtEquipType(e.equipment_type).toLowerCase().includes(term)
+          fmtEquipType(e.equipment_type, equipmentTypes).toLowerCase().includes(term)
         )
       }
       return true
@@ -205,7 +216,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
     setEditingId(null)
     setForm({
       organization_id: organizations[0]?.id || '',
-      equipment_type: 'stingator',
+      equipment_type: EQUIPMENT_TYPES[0]?.value || 'stingator',
       model: '',
       description: '',
       location: '',
@@ -220,7 +231,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
     setEditingId(e.id)
     setForm({
       organization_id: e.organization_id,
-      equipment_type: e.equipment_type || 'stingator',
+      equipment_type: e.equipment_type || EQUIPMENT_TYPES[0]?.value || 'stingator',
       model: e.model || '',
       description: e.description || '',
       location: e.location || '',
@@ -408,7 +419,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                       <tr key={e.id} className="hover:bg-gray-50 transition">
                         <td className="px-4 py-3">
                           <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">
-                            {fmtEquipType(e.equipment_type)}
+                            {fmtEquipType(e.equipment_type, equipmentTypes)}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-sm font-medium text-gray-900">
