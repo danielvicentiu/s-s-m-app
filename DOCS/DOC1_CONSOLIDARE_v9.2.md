@@ -1,6 +1,6 @@
 # DOC1_CONSOLIDARE — S-S-M.RO
-> **Versiune:** 9.1 | **Data:** 9 Februarie 2026
-> **Changelog v9.1:** Toate 5 fazele multi-tenant COMPLETATE, 31 funcționalități LIVE, prețuri locale, penalties calculator
+> **Versiune:** 9.2 | **Data:** 9 Februarie 2026
+> **Changelog v9.2:** Fix versiune Next.js (16.1.4, nu 14). Language selector refactorizat: dropdown compact SVG flags. Encoding diacritice corectat.
 
 ---
 
@@ -13,7 +13,7 @@ Platformă digitală SaaS de management SSM/PSI pentru firme mici și mijlocii. 
 - Conformitate SSM/PSI simplificată — un singur loc
 - Acces 24/7 din orice loc (cloud)
 - Instruiri de urgență instant (angajat nou → test în 30 min)
-- Multilingv (RO, EN, NE, VI — MVP; apoi BG, HU, DE, PL)
+- Multilingv (RO, BG, HU, DE, PL — LIVE; EN planificat)
 - 20+ ani experiență consultanță → digitalizat în platformă
 
 ## 1.3 Audiențe (4 segmente)
@@ -35,7 +35,8 @@ Platformă digitală SaaS de management SSM/PSI pentru firme mici și mijlocii. 
 ## 2.1 Tech Stack
 | Component | Tehnologie | Status |
 |-----------|-----------|--------|
-| Frontend | Next.js 14 (App Router) + Tailwind CSS | ✅ LIVE |
+| Frontend | Next.js 16.1.4 (App Router, Turbopack) + Tailwind CSS 4 | ✅ LIVE |
+| Runtime | React 19.2.3 | ✅ LIVE |
 | Backend | Supabase (PostgreSQL + Auth + Storage + RLS) | ✅ LIVE |
 | Hosting | Vercel (Edge Network) | ✅ LIVE |
 | Email | Resend (alerte@s-s-m.ro, DKIM+SPF+DMARC) | ✅ LIVE |
@@ -44,13 +45,53 @@ Platformă digitală SaaS de management SSM/PSI pentru firme mici și mijlocii. 
 | IDE | Cursor + Claude Code | ✅ Activ |
 | Repo | GitHub (danielvicentiu/s-s-m-app) | ✅ Activ |
 | i18n | next-intl v4.8.2 (path-based routing) | ✅ LIVE |
+| PDF | jsPDF + jspdf-autotable | ✅ LIVE |
 
 ## 2.2 Supabase Project
 - **URL:** uhccxfyvhjeudkexcgiq.supabase.co
 - **Folder local:** C:\Dev\s-s-m-app
 - **Dashboard:** https://app.s-s-m.ro
 
-## 2.3 Database Schema — 28+ tabele
+## 2.3 Structură Proiect (File System)
+```
+s-s-m-app/
+├── app/
+│   ├── [locale]/              # Path-based i18n routing
+│   │   ├── admin/             # Admin pages (roles, obligations, etc.)
+│   │   ├── dashboard/         # Dashboard + DashboardClient.tsx
+│   │   ├── documents/
+│   │   ├── estimare/
+│   │   ├── login/
+│   │   ├── onboarding/
+│   │   ├── pricing/
+│   │   ├── unauthorized/
+│   │   ├── LandingClient.tsx  # Landing page client component
+│   │   ├── layout.tsx         # Root layout cu NextIntlClientProvider
+│   │   └── page.tsx           # Landing page server component
+│   ├── api/                   # API routes
+│   └── favicon.ico
+├── components/                # Componente reutilizabile (root level)
+│   ├── admin/                 # Admin-specific components
+│   ├── ui/                    # UI components (DataTable, FormModal, etc.)
+│   ├── LanguageSelector.tsx   # 🆕 Dropdown compact SVG flags
+│   ├── ActivitySearch.tsx
+│   ├── EmployeeCount.tsx
+│   ├── EstimateResult.tsx
+│   ├── OfferLink.tsx
+│   ├── OrgTypeSelector.tsx
+│   └── RoleSelector.tsx
+├── DOCS/                      # Documentație (DOC1, DOC3, MANUAL)
+├── hooks/                     # Custom hooks (usePermission, etc.)
+├── i18n/                      # next-intl config (routing.ts, request.ts)
+├── lib/                       # Utilities (supabase client, rbac.ts)
+├── messages/                  # Traduceri JSON (ro, bg, hu, de, pl)
+├── public/                    # Static assets
+├── scripts/                   # DB scripts
+├── src/                       # Types
+└── supabase/                  # Supabase config
+```
+
+## 2.4 Database Schema — 28+ tabele
 
 ### Tabele CORE (existente, cu RLS):
 | Tabel | Scop | RLS |
@@ -93,13 +134,13 @@ reges_outbox, reges_receipts, reges_results SAU reges_transmissions, reges_nomen
 | alert_categories | Categorii alerte per țară | ✅ | ~60 |
 | equipment_types | Tipuri echipamente per țară (stingătoare, ISCIR, etc.) | ✅ | ~103 |
 
-## 2.4 Views și Funcții
+## 2.5 Views și Funcții
 - **5 views dashboard:** v_dashboard_overview, v_active_alerts, v_medical_status, v_equipment_status, v_training_progress
 - **41 indexuri** performanță
 - **7 funcții RBAC:** rbac_has_role(), rbac_has_role_in_org(), rbac_get_my_org_ids(), rbac_is_super_admin(), rbac_has_permission(), etc.
 - **Fallback:** Funcțiile RBAC au fallback pe memberships (zero downtime la migrare)
 
-## 2.5 🆕 Arhitectură Multi-Tenant (LIVE din 9 feb 2026)
+## 2.6 🆕 Arhitectură Multi-Tenant (LIVE din 9 feb 2026)
 
 ```
 ROUTING: Path-based (next-intl v4.8.2) — LIVE
@@ -123,6 +164,8 @@ PREȚURI LOCALE:
   RO: 990 LEI/an | BG: 199 EUR/an | HU: 74.900 HUF/an
   DE: 399 EUR/an | PL: 1.690 PLN/an
 ```
+
+⚠️ **Notă Next.js 16:** middleware.ts funcționează dar e marcat deprecated. Next.js 16 recomandă `proxy.ts`. Migrare planificată Sprint 6+.
 
 ---
 
@@ -166,7 +209,7 @@ partener_contabil, furnizor_psi, furnizor_iscir_rsvti, medic_medicina_muncii, au
 
 # 4. FUNCȚIONALITĂȚI — STATUS
 
-## 4.1 LIVE (14/107 + RBAC)
+## 4.1 LIVE (31/107 + RBAC)
 | # | Funcționalitate | Status |
 |---|----------------|--------|
 | 1 | Landing page | ✅ LIVE |
@@ -196,7 +239,7 @@ partener_contabil, furnizor_psi, furnizor_iscir_rsvti, medic_medicina_muncii, au
 | 🆕25 | Landing pages 5 țări cu prețuri locale | ✅ LIVE |
 | 🆕26 | Penalties Calculator dinamic (din obligation_types) | ✅ LIVE |
 | 🆕27 | Traduceri complete 5 limbi (129 chei × 5) | ✅ LIVE |
-| 🆕28 | Selector limbă (steaguri emoji) | ✅ LIVE |
+| 🆕28 | Selector limbă dropdown compact (SVG flags) | ✅ LIVE |
 | 🆕29 | CountryFilter component reutilizabil | ✅ LIVE |
 | 🆕30 | DOMAIN_CONFIG pregătit (middleware) | ✅ LIVE |
 | 🆕31 | Server/Client component split (landing) | ✅ LIVE |
@@ -204,14 +247,14 @@ partener_contabil, furnizor_psi, furnizor_iscir_rsvti, medic_medicina_muncii, au
 ## 4.2 PLANIFICAT PRIORITAR
 | # | Funcționalitate | Prioritate |
 |---|----------------|-----------|
-| 22 | CRUD forms complete (înlocuiește placeholders) | P1 |
-| 23 | Onboarding wizard client ("Adaugă firma ta") | P1 |
-| 24 | Fișă instruire PDF conformă ITM | P0 — MONEY MAKER |
-| 25 | Conținut instruire RO (4 module text) | P1 |
-| 26 | Quiz bank (85 întrebări cu referințe legale) | P1 |
-| 27 | WhatsApp alerts (Green API) | P2 |
-| 28 | Audio instruire (ElevenLabs) | P3 |
-| 29 | Multilingv angajați străini (EN, NE, VI) | P2 |
+| 32 | CRUD forms complete (înlocuiește placeholders) | P1 |
+| 33 | Onboarding wizard client ("Adaugă firma ta") | P1 |
+| 34 | Fișă instruire PDF conformă ITM | P0 — MONEY MAKER |
+| 35 | Conținut instruire RO (4 module text) | P1 |
+| 36 | Quiz bank (85 întrebări cu referințe legale) | P1 |
+| 37 | WhatsApp alerts (Green API) | P2 |
+| 38 | Audio instruire (ElevenLabs) | P3 |
+| 39 | Multilingv angajați străini (EN, NE, VI) | P2 |
 
 ## 4.3 BACKLOG (93 funcționalități rămase din 107)
 [Vezi DOC3 pentru lista completă cu sprint-uri]
@@ -250,7 +293,7 @@ partener_contabil, furnizor_psi, furnizor_iscir_rsvti, medic_medicina_muncii, au
 | Instruiri online | ❌ | ✅ | ❌ | ✅ Video/Audio |
 | Semnătură digitală | ❌ | ✅ OTP | ❌ | ✅ OTP+eIDAS |
 | Marketplace consultanți | ❌ | ⚠️ | ✅ Hartă | ✅ Hartă+Ratings |
-| Multilingv | ❌ | ❌ | ❌ | ✅ 6+ limbi |
+| Multilingv | ❌ | ❌ | ❌ | ✅ 5+ limbi |
 | AI Assistant | ❌ | ❌ | ❌ | ✅ Planificat |
 | Multi-country | ❌ | ❌ | ❌ | 🆕 ✅ 27 țări |
 | RBAC dinamic | ❌ | ❌ | ❌ | 🆕 ✅ 27 roluri |
@@ -288,6 +331,7 @@ Firme separate autorizate: SSM (ITM), PSI, GDPR, Fiscal.
 | 9 Feb 2026 | 🆕 Path-based routing (Opțiunea C) | SEO nu e prioritate acum, simplitate maximă |
 | 9 Feb 2026 | 🆕 Obligații identice RO inițial per toate țările | Rapid deployment, diferențiere ulterior |
 | 9 Feb 2026 | 🆕 Un Supabase + country_code (nu DB separate) | Cost, complexitate, RLS deja funcțional |
+| 9 Feb 2026 | 🆕 SVG flags (nu emoji) pentru selector limbă | Emoji rendering inconsistent cross-browser |
 
 ---
 
@@ -300,6 +344,7 @@ Firme separate autorizate: SSM (ITM), PSI, GDPR, Fiscal.
 | Competiție gossm.ro | 🟡 MEDIUM | Multi-country = diferențiator unic |
 | Timeline comprimat | 🟡 MEDIUM | Path-based routing = rapid deployment |
 | REGES API instabilitate | 🟡 MEDIUM | Fallback manual import |
+| Next.js 16 middleware deprecation | 🟢 LOW | Warning only, migrare proxy.ts Sprint 6+ |
 
 ---
 

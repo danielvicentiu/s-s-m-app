@@ -1,6 +1,6 @@
 # DOC3_PLAN_EXECUTIE — S-S-M.RO
-> **Versiune:** 4.2 | **Data:** 9 Februarie 2026
-> **Changelog v4.2:** Fuziune v4.0 + v4.1. Toate 5 fazele multi-tenant COMPLETATE + backlog detaliat + metrici + riscuri din v4.1. Features LIVE actualizat de la 14 la 31.
+> **Versiune:** 4.3 | **Data:** 9 Februarie 2026
+> **Changelog v4.3:** Fix encoding diacritice. Language selector refactorizat (dropdown SVG flags). Next.js 16.1.4 confirmat. Structură proiect documentată.
 
 ---
 
@@ -8,7 +8,7 @@
 
 ## ✅ Sprint 0 — Fundație (Ian 2026)
 - [x] Supabase project setup + 25 tabele
-- [x] Next.js 14 PWA + Tailwind
+- [x] Next.js 16 PWA + Tailwind CSS 4
 - [x] Vercel deploy + DNS (app.s-s-m.ro)
 - [x] Auth (email+parolă + magic link)
 - [x] Landing page
@@ -60,7 +60,7 @@
 - [x] DOMAIN_CONFIG pregătit (bzr24.bg, sst24.hu, as-dig.de, bhp24.pl)
 - [x] 5 fișiere traducere complete (129 chei × 5 limbi = 645 traduceri)
 - [x] Layout wrapped cu NextIntlClientProvider
-- [x] Selector limbă cu steaguri emoji (LanguageSelector component)
+- [x] Selector limbă dropdown compact cu SVG flags (refactorizat din inline emoji)
 - [x] Build: 90 rute, 0 erori
 
 ### ✅ Faza 3 — Admin UI Configurabil
@@ -95,6 +95,14 @@
 - [x] RO_INSTRUCTAJ_PERIODIC.md (6 capitole, 15 quiz)
 - [x] RO_QUIZ_BANK.json (85 întrebări, 0 duplicate, referințe legale exacte)
 
+### ✅ Fix UI — Language Selector (9 Feb 2026, seara)
+- [x] LanguageSelector refactorizat: inline buttons → dropdown compact
+- [x] SVG flags (nu emoji) — rezolvă "RO RO" pe browsere fără emoji support
+- [x] Click outside close + Escape close
+- [x] LandingClient.tsx: eliminat 40 linii hardcoded locale links → componentă reutilizabilă
+- [x] DashboardClient.tsx: eliminat variant="inline"
+- [x] Deploy Vercel confirmat
+
 ---
 
 # 2. SPRINT-URI VIITOARE
@@ -109,6 +117,7 @@
 - [ ] Onboarding wizard client ("Adaugă firma ta")
 - [ ] CRUD forms complete (înlocuiește placeholders admin)
 - [ ] Dashboard cu date reale per client (nu demo)
+- [ ] ⚠️ Migrare middleware.ts → proxy.ts (Next.js 16 deprecation)
 
 ## Sprint 7 — WhatsApp Alerts (P2)
 - [ ] Green API integrare
@@ -156,7 +165,7 @@
 | 3 | CRUD forms admin complete | P1 | 2-3 zile |
 | 4 | Testare completă multi-tenant | P1 | 1 zi |
 | 5 | Email-uri beta DE (4 prieteni) + HU (2) | P1 | 1h |
-| 6 | Polița RCP — contactează broker | P0 | 1h |
+| 6 | Poliță RCP — contactează broker | P0 | 1h |
 
 ## Martie 2026
 | # | Feature | Prioritate | Estimare |
@@ -210,10 +219,11 @@
 - ✅ Landing BG/HU/DE/PL live (9 feb)
 - ✅ Validare piață DE+HU (8 feb)
 - ✅ Conținut instruire RO 4 module + 85 quiz (9 feb)
+- ✅ Language selector dropdown SVG (9 feb seara)
 - 🔴 Fișă instruire PDF conformă ITM
 - 🔴 Primele contacte BG (Mediko, Building Week)
 - 🔴 Eur.Erg. dosar depus
-- 🔴 Polița RCP activă
+- 🔴 Poliță RCP activă
 - 🔴 Email-uri beta DE + HU
 
 ## Q2 2026 (Apr-Jun) — "Revenue Export + Certificări"
@@ -264,8 +274,9 @@
 | Bulgaria adoptare lentă | MEDIU | MARE | Freemium + pilot gratuit 3 luni |
 | Competitor copiază | SCĂZUT | MEDIU | Moat-uri: 20 ani experiență + MABS-VA + multi-tenant 5 țări |
 | RLS breach (date expuse) | SCĂZUT | CRITIC | RBAC complet + testare manuală |
-| Polița RCP lipsă | CERT | MARE | Sună broker ASAP |
+| Poliță RCP lipsă | CERT | MARE | Sună broker ASAP |
 | Traduceri inexacte (BG/HU/DE/PL) | MEDIU | MEDIU | Validare cu native speakers + parteneri locali |
+| Next.js 16 middleware deprecation | SCĂZUT | SCĂZUT | Warning only, proxy.ts la Sprint 6 |
 
 ---
 
@@ -289,4 +300,5 @@
 | v3.0 | 3 Feb 2026 | Consolidare 70+ chaturi |
 | v4.0 | 8 Feb 2026 | RBAC P0.0 BLOCANT adăugat |
 | v4.1 | 8 Feb 2026 | Restaurat P2 revenue, Sprint 3 BG detaliat, backlog complet, certificări |
-| **v4.2** | **9 Feb 2026** | **Multi-tenant 5 faze COMPLETAT. Features LIVE: 14→31. Conținut instruire RO 4 module + 85 quiz. Fuziune v4.0+v4.1. Metrici actualizate. Sprint-uri viitoare reordonat (PDF+Onboarding prioritare).** |
+| v4.2 | 9 Feb 2026 | Multi-tenant 5 faze COMPLETAT. Features LIVE: 14→31. Conținut instruire RO 4 module + 85 quiz. Fuziune v4.0+v4.1. Metrici actualizate. |
+| **v4.3** | **9 Feb 2026** | **Fix encoding diacritice. Language selector: dropdown SVG flags (eliminat inline + hardcoded). Next.js 16.1.4 confirmat. Structură proiect documentată.** |

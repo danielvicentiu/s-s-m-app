@@ -16,6 +16,7 @@ const LANGUAGES: LanguageOption[] = [
   { code: 'hu', label: 'Magyar', country: 'Magyarország' },
   { code: 'de', label: 'Deutsch', country: 'Deutschland' },
   { code: 'pl', label: 'Polski', country: 'Polska' },
+  { code: 'en', label: 'English', country: 'International' },
 ]
 
 // SVG Flag components — crisp at any size, no emoji rendering issues
@@ -68,12 +69,25 @@ function FlagPL({ className = 'w-5 h-4' }: { className?: string }) {
   )
 }
 
+function FlagEN({ className = 'w-5 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <rect width="640" height="480" fill="#012169" />
+      <path d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z" fill="#fff" />
+      <path d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z" fill="#C8102E" />
+      <path d="M241 0v480h160V0H241zM0 160v160h640V160H0z" fill="#fff" />
+      <path d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z" fill="#C8102E" />
+    </svg>
+  )
+}
+
 const FLAG_COMPONENTS: Record<string, React.FC<{ className?: string }>> = {
   ro: FlagRO,
   bg: FlagBG,
   hu: FlagHU,
   de: FlagDE,
   pl: FlagPL,
+  en: FlagEN,
 }
 
 function Flag({ code, className = 'w-5 h-4' }: { code: string; className?: string }) {
@@ -136,7 +150,7 @@ export default function LanguageSelector({ className = '' }: Props) {
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
         aria-expanded={open}
         aria-haspopup="listbox"
-        title="Selectează limba / Select language"
+
       >
         <Flag code={currentLanguage.code} />
         <span className="font-semibold">{currentLanguage.code.toUpperCase()}</span>

@@ -1,5 +1,5 @@
 # MANUAL PLATFORMA S-S-M.RO
-> **Versiune:** 9.1 | **Data:** 9 Februarie 2026 | **31 funcționalități LIVE**
+> **Versiune:** 9.2 | **Data:** 9 Februarie 2026 | **31 funcționalități LIVE**
 
 ---
 
@@ -123,7 +123,7 @@ Overview: 5 țări cu stats (nr obligații, alerte, echipamente per țară). Lin
 - Server/Client component split (SSR + interactivitate)
 - Prețuri locale din messages/*.json
 - Penalties Calculator dinamic (citește obligation_types din DB)
-- Selector limbă cu steaguri emoji
+- Selector limbă dropdown compact cu SVG flags (click outside close, Escape close)
 - Intl.NumberFormat per locale
 
 ## 7.2 Penalties Calculator
@@ -154,9 +154,11 @@ Checkbox interactiv per obligație legală. Calcul real-time risc financiar (pen
 # 10. DEPLOYMENT
 
 - **Vercel:** Auto-deploy din GitHub main branch
+- **Next.js:** 16.1.4 (Turbopack) + React 19.2.3
 - **125 rute generate** (5 limbi × ~25 pagini)
 - **Build time:** ~20-30 secunde
 - **Zero erori TypeScript**
+- **⚠️ Warning:** middleware.ts deprecated în Next.js 16 (funcționează, migrare proxy.ts planificată)
 
 ---
 
@@ -175,16 +177,55 @@ git push origin main             # deploy automat
 
 # Supabase types (dacă schema se schimbă)
 npx supabase gen types typescript --project-id uhccxfyvhjeudkexcgiq > src/types/database.types.ts
+
+# Ștergere cache Next.js (Windows PowerShell)
+Remove-Item -Recurse -Force .next
 ```
 
 ---
 
-# 12. CRONOLOGIE DEZVOLTARE
+# 12. STRUCTURA PROIECT (FILE SYSTEM)
+
+```
+C:\Dev\s-s-m-app\
+├── app\
+│   ├── [locale]\              # Path-based i18n routing
+│   │   ├── admin\             # Admin pages
+│   │   ├── dashboard\         # DashboardClient.tsx + page.tsx
+│   │   ├── documents\
+│   │   ├── estimare\
+│   │   ├── login\
+│   │   ├── onboarding\
+│   │   ├── pricing\
+│   │   ├── unauthorized\
+│   │   ├── LandingClient.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── api\
+│   └── favicon.ico
+├── components\                # Root level components
+│   ├── admin\
+│   ├── ui\
+│   └── LanguageSelector.tsx   # Dropdown SVG flags
+├── DOCS\                      # DOC1, DOC3, MANUAL
+├── hooks\
+├── i18n\                      # routing.ts, request.ts
+├── lib\                       # supabase client, rbac.ts
+├── messages\                  # ro.json, bg.json, hu.json, de.json, pl.json
+├── public\
+├── scripts\
+├── src\
+└── supabase\
+```
+
+---
+
+# 13. CRONOLOGIE DEZVOLTARE
 
 | Data | Ce s-a făcut |
 |------|-------------|
 | Ian 2026 | Fundație: Supabase + Next.js + Vercel + Auth + Landing + Dashboard |
 | Feb săpt 1 | Alerte email Resend + Training modules + Equipment management |
 | 8 Feb | RBAC dinamic: 27 roluri, 210 permisiuni, admin UI, RLS 25+ tabele |
-| 9 Feb | MULTI-TENANT COMPLET: 5 faze în ~2 ore |
-| 9 Feb | Tabele configurabile + next-intl + Admin UI + Refactor dashboard + Landing 5 țări |
+| 9 Feb (zi) | MULTI-TENANT COMPLET: 5 faze în ~2 ore. Tabele configurabile + next-intl + Admin UI + Refactor dashboard + Landing 5 țări |
+| 9 Feb (seară) | Fix language selector: dropdown compact SVG flags. Deploy Vercel. Docs v9.2/v4.3 cu encoding corect. |

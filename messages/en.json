@@ -1,0 +1,190 @@
+{
+  "common": {
+    "appName": "s-s-m.ro",
+    "platform": "Digital OHS & Fire Safety Platform",
+    "consultant": "Consultant",
+    "logout": "Sign out",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "next": "Next",
+    "or": "or",
+    "all": "All",
+    "noData": "No data available.",
+    "records": "records",
+    "days": "days",
+    "copyright": "© 2026 s-s-m.ro. All rights reserved.",
+    "termsAndConditions": "Terms & Conditions",
+    "privacy": "Privacy",
+    "gdpr": "GDPR"
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "login": "Enter platform",
+    "home": "Home",
+    "navigation": "Navigation",
+    "contact": "Contact"
+  },
+  "landing": {
+    "badge": "Digital OHS & Fire Safety Platform",
+    "title": "OHS & Fire Safety Compliance",
+    "titleHighlight": "100% automated",
+    "subtitle": "Manage occupational health, fire safety equipment, alerts and reports from a single platform. Zero paperwork, zero fines.",
+    "cta": "Get started →",
+    "featuresTitle": "Everything you need in one place",
+    "featuresSubtitle": "6 integrated modules for complete OHS & Fire Safety compliance",
+    "pricingTitle": "Transparent pricing",
+    "pricingSubtitle": "One plan, all features included",
+    "planProfessional": "PROFESSIONAL PLAN",
+    "price": "€200",
+    "perOrganization": "per organization",
+    "perYear": "/year",
+    "noSetupFee": "No setup fee. Cancel anytime.",
+    "features": {
+      "medicalTitle": "Occupational Health",
+      "medicalDesc": "Medical record tracking, automatic expiry alerts, complete employee records with real-time status.",
+      "equipmentTitle": "Fire Safety Equipment",
+      "equipmentDesc": "Fire extinguisher inventory, hydrants, smoke detectors. Scheduled inspections, maintenance logs, QR code tracking.",
+      "alertsTitle": "Automated Alerts",
+      "alertsDesc": "Daily email with imminent expirations (30/15/7 days). Resend integration, WhatsApp notifications (coming soon).",
+      "riskTitle": "Financial Risk",
+      "riskDesc": "Automatic calculation of potential fines from labor and fire safety authorities. Min-max breakdown per authority.",
+      "multiOrgTitle": "Multi-Organization",
+      "multiOrgDesc": "Manage 100+ companies from a single dashboard. Instant filtering, saved preferences, tenant architecture.",
+      "reportsTitle": "PDF Reports",
+      "reportsDesc": "Automatic report generation, SHA256 hash for immutability, cloud archiving, 1-click export."
+    },
+    "pricingFeatures": [
+      "Occupational Health — unlimited tracking",
+      "Fire Safety Equipment — complete inventory",
+      "Automated daily email alerts",
+      "Financial risk — fine calculation",
+      "Multi-organization — unlimited companies",
+      "PDF Reports — automatic generation",
+      "Priority technical support",
+      "Daily automatic backup",
+      "Free updates"
+    ],
+    "penaltiesTitle": "Fines without OHS compliance",
+    "penaltiesSubtitle": "Calculate your financial risk if mandatory documents are missing",
+    "penaltiesIntro": "Control authorities can impose fines between:",
+    "penaltiesCalculator": "Check what you DON'T have in order:",
+    "penaltiesTotal": "Total fine risk:",
+    "penaltiesDisclaimer": "Estimated values according to current legislation. Actual fines may vary."
+  },
+  "login": {
+    "title": "OHS Platform — Authentication",
+    "email": "Email",
+    "emailPlaceholder": "email@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Enter platform",
+    "submitting": "Authenticating...",
+    "demo": "Enter as Demo visitor",
+    "invalidCredentials": "Incorrect email or password.",
+    "footer": "© 2026 s-s-m.ro — OHS Platform"
+  },
+  "dashboard": {
+    "allOrganizations": "All organizations",
+    "employees": "employees",
+    "toggleRiskITM": "Inspection Risk",
+    "toggleRiskEuro": "Risk €",
+    "riskControl": "Inspection Risk Control",
+    "dataCompleteness": "Data completeness",
+    "riskLevels": {
+      "low": "Low",
+      "medium": "MEDIUM",
+      "high": "HIGH",
+      "critical": "CRITICAL"
+    },
+    "tabs": {
+      "medical": "Occupational Health",
+      "equipment": "Fire Safety Equipment"
+    },
+    "counters": {
+      "expired": "Expired",
+      "expiring": "Expires <30 days",
+      "valid": "Valid"
+    },
+    "medical": {
+      "title": "Occupational Health",
+      "addRecord": "+ Add record",
+      "noRecords": "No medical records.",
+      "columns": {
+        "employee": "Employee",
+        "position": "Position",
+        "type": "Type",
+        "examDate": "Exam date",
+        "expiryDate": "Expires",
+        "status": "Status"
+      },
+      "examTypes": {
+        "periodic": "Periodic",
+        "angajare": "Pre-employment",
+        "reluare": "Return to work",
+        "la_cerere": "On request"
+      }
+    },
+    "equipment": {
+      "title": "Fire Safety Equipment",
+      "addRecord": "+ Add equipment",
+      "noRecords": "No equipment.",
+      "columns": {
+        "equipment": "Equipment",
+        "type": "Type",
+        "location": "Location",
+        "lastCheck": "Last check",
+        "expiryDate": "Expires",
+        "status": "Status"
+      },
+      "types": {
+        "stingator": "Fire extinguisher",
+        "trusa_prim_ajutor": "First aid kit",
+        "hidrant": "Hydrant",
+        "detector_fum": "Smoke detector",
+        "iluminat_urgenta": "Emergency lighting"
+      }
+    },
+    "status": {
+      "expired": "Expired {days} days",
+      "expiring": "Expires in {days} days",
+      "valid": "Valid {days} days"
+    },
+    "notifications": {
+      "title": "Recent Notifications",
+      "recent": "{count} recent",
+      "noNotifications": "No notifications sent yet.",
+      "expiredAlert": "EXPIRED!",
+      "expired": "expired",
+      "sent": "Sent",
+      "to": "To"
+    },
+    "features": {
+      "pdfTitle": "Compliance PDF",
+      "pdfSubtitle": "Automatic report generation",
+      "pdfLocked": "Available when data completeness > 80%",
+      "alertsTitle": "Automated Alerts",
+      "alertsSubtitle": "Email, SMS, WhatsApp",
+      "alertsActive": "Active — Daily email at 08:00 via Resend",
+      "trainingsTitle": "OHS & Fire Safety Training",
+      "trainingsSubtitle": "Interactive modules + quiz",
+      "trainingsActive": "9 active modules — Click to access"
+    },
+    "actions": {
+      "contactConsultant": "Contact consultant",
+      "reloadData": "Reload data",
+      "aboutPlatform": "About platform"
+    }
+  },
+  "footer": {
+    "description": "Digital platform for OHS & Fire Safety compliance. Occupational health, fire safety equipment, automated alerts.",
+    "email": "contact@s-s-m.ro",
+    "phone": "+40 700 000 000",
+    "address": "Bucharest, Romania"
+  }
+}
