@@ -1,0 +1,806 @@
+{
+  "version": "1.0",
+  "language": "ro",
+  "country": "RO",
+  "totalQuestions": 85,
+  "passingScore": 0.8,
+  "modules": [
+    {
+      "module": "instructaj_general",
+      "title": "Instruire Introductiv-Generală SSM",
+      "legalBasis": "Art. 82–86, HG 1425/2006",
+      "questionCount": 30,
+      "questions": [
+        {
+          "id": "IG001",
+          "text": "Care este legea principală privind securitatea și sănătatea în muncă în România?",
+          "options": ["Legea 319/2006", "Legea 307/2006", "HG 355/2007", "Legea 53/2003"],
+          "correct": 0,
+          "explanation": "Legea 319/2006 este legea securității și sănătății în muncă, transpunând Directiva-cadru 89/391/CEE.",
+          "difficulty": "easy",
+          "legalReference": "Legea 319/2006"
+        },
+        {
+          "id": "IG002",
+          "text": "Ce reglementează HG 1425/2006?",
+          "options": ["Normele PSI", "Codul Muncii", "Normele metodologice de aplicare a Legii 319/2006", "Regulamentul de ordine interioară"],
+          "correct": 2,
+          "explanation": "HG 1425/2006 aprobă Normele metodologice de aplicare a prevederilor Legii securității și sănătății în muncă nr. 319/2006.",
+          "difficulty": "easy",
+          "legalReference": "HG 1425/2006"
+        },
+        {
+          "id": "IG003",
+          "text": "Care sunt tipurile de instruire SSM obligatorii?",
+          "options": ["Doar instruire la angajare", "Introductiv-generală, la locul de muncă și periodică", "Doar instruire periodică", "Instruire anuală și bianuală"],
+          "correct": 1,
+          "explanation": "Conform Art. 74, HG 1425/2006, instruirea lucrătorilor cuprinde trei faze: introductiv-generală, la locul de muncă și periodică.",
+          "difficulty": "easy",
+          "legalReference": "Art. 74, HG 1425/2006"
+        },
+        {
+          "id": "IG004",
+          "text": "Cine are obligația de a asigura securitatea și sănătatea lucrătorilor?",
+          "options": ["Lucrătorul", "Inspectoratul de muncă", "Angajatorul", "Medicul de medicina muncii"],
+          "correct": 2,
+          "explanation": "Conform Art. 6, alin. 1, Legea 319/2006, angajatorul are obligația de a asigura securitatea și sănătatea lucrătorilor în toate aspectele legate de muncă.",
+          "difficulty": "easy",
+          "legalReference": "Art. 6, alin. 1, Legea 319/2006"
+        },
+        {
+          "id": "IG005",
+          "text": "În caz de pericol grav și iminent, lucrătorul are dreptul să:",
+          "options": ["Continue lucrul sub supraveghere", "Refuze sau oprească lucrul și să părăsească zona de pericol", "Sune la poliție", "Aștepte instrucțiuni de la angajator"],
+          "correct": 1,
+          "explanation": "Art. 19, Legea 319/2006 prevede dreptul lucrătorului de a refuza sau opri lucrul în caz de pericol grav și iminent, fără consecințe negative.",
+          "difficulty": "medium",
+          "legalReference": "Art. 19, Legea 319/2006"
+        },
+        {
+          "id": "IG006",
+          "text": "Ce obligație are lucrătorul privind echipamentul individual de protecție?",
+          "options": ["Să și-l cumpere singur", "Să-l utilizeze corect și să-l păstreze conform instrucțiunilor", "Să-l împrumute colegilor", "Să-l depoziteze acasă"],
+          "correct": 1,
+          "explanation": "Conform Art. 22, alin. 2, Legea 319/2006, lucrătorul are obligația de a utiliza corect EIP și de a-l înapoia sau depozita conform instrucțiunilor.",
+          "difficulty": "easy",
+          "legalReference": "Art. 22, alin. 2, Legea 319/2006"
+        },
+        {
+          "id": "IG007",
+          "text": "Care este durata minimă a instruirii introductiv-generale?",
+          "options": ["2 ore", "4 ore", "8 ore", "16 ore"],
+          "correct": 2,
+          "explanation": "Conform Art. 82, HG 1425/2006, durata minimă a instruirii introductiv-generale este de 8 ore.",
+          "difficulty": "easy",
+          "legalReference": "Art. 82, HG 1425/2006"
+        },
+        {
+          "id": "IG008",
+          "text": "Ce este un accident de muncă?",
+          "options": ["Orice vătămare la locul de muncă", "Vătămarea violentă a organismului care provoacă incapacitate de cel puțin 3 zile, invaliditate sau deces", "Doar accidentele cu deces", "Doar accidentele colective"],
+          "correct": 1,
+          "explanation": "Art. 5, lit. g, Legea 319/2006 definește accidentul de muncă ca vătămarea violentă a organismului care provoacă incapacitate temporară de cel puțin 3 zile calendaristice, invaliditate sau deces.",
+          "difficulty": "medium",
+          "legalReference": "Art. 5, lit. g, Legea 319/2006"
+        },
+        {
+          "id": "IG009",
+          "text": "Cui se comunică imediat un accident de muncă?",
+          "options": ["Medicului de familie", "Sindicatului", "Inspectoratului Teritorial de Muncă", "Primăriei"],
+          "correct": 2,
+          "explanation": "Conform Art. 27, Legea 319/2006, angajatorul comunică imediat accidentul de muncă la ITM-ul județean.",
+          "difficulty": "medium",
+          "legalReference": "Art. 27, Legea 319/2006"
+        },
+        {
+          "id": "IG010",
+          "text": "Ce număr de telefon se apelează în cazul urgențelor?",
+          "options": ["021 9511", "021 961", "112", "0800 800 800"],
+          "correct": 2,
+          "explanation": "112 este numărul unic de urgență în România și în UE, valabil pentru ambulanță, pompieri și poliție.",
+          "difficulty": "easy",
+          "legalReference": "Decizia Consiliului 91/396/CEE"
+        },
+        {
+          "id": "IG011",
+          "text": "Culoarea roșie pe un panou de semnalizare indică:",
+          "options": ["Obligație", "Interdicție sau pericol de incendiu", "Informație de prim ajutor", "Avertizare"],
+          "correct": 1,
+          "explanation": "Conform HG 971/2006, culoarea roșie pe panourile de semnalizare indică interdicție, pericol sau echipamente de stingere a incendiilor.",
+          "difficulty": "easy",
+          "legalReference": "HG 971/2006"
+        },
+        {
+          "id": "IG012",
+          "text": "Ce formă au panourile de avertizare?",
+          "options": ["Cerc", "Pătrat", "Triunghi", "Dreptunghi"],
+          "correct": 2,
+          "explanation": "Conform HG 971/2006, panourile de avertizare au formă triunghiulară, cu fond galben și bordură neagră.",
+          "difficulty": "easy",
+          "legalReference": "HG 971/2006"
+        },
+        {
+          "id": "IG013",
+          "text": "La ce înălțime începe obligația de protecție împotriva căderii de la înălțime?",
+          "options": ["1 metru", "1,5 metri", "2 metri", "3 metri"],
+          "correct": 2,
+          "explanation": "Conform HG 1146/2006, lucrul la înălțime se definește pentru activitățile desfășurate la peste 2 metri deasupra solului sau a unei suprafețe de referință.",
+          "difficulty": "medium",
+          "legalReference": "HG 1146/2006"
+        },
+        {
+          "id": "IG014",
+          "text": "Ce face angajatorul dacă EIP-ul este deteriorat?",
+          "options": ["Impută costul lucrătorului", "Înlocuiește gratuit EIP-ul deteriorat", "Solicită repararea de către lucrător", "Retrage EIP-ul fără înlocuire"],
+          "correct": 1,
+          "explanation": "Conform Art. 13, lit. r, Legea 319/2006 și HG 1048/2006, angajatorul asigură gratuit EIP corespunzător, inclusiv înlocuirea celui deteriorat.",
+          "difficulty": "easy",
+          "legalReference": "Art. 13, lit. r, Legea 319/2006"
+        },
+        {
+          "id": "IG015",
+          "text": "Cine cercetează accidentele de muncă mortale?",
+          "options": ["Angajatorul", "Poliția", "Inspectoratul Teritorial de Muncă", "Medicul legist"],
+          "correct": 2,
+          "explanation": "Conform Art. 29, alin. 1, Legea 319/2006, accidentele mortale, colective și cele care produc invaliditate sunt cercetate de ITM.",
+          "difficulty": "medium",
+          "legalReference": "Art. 29, alin. 1, Legea 319/2006"
+        },
+        {
+          "id": "IG016",
+          "text": "Care este limita maximă de greutate pentru manipulare manuală de către bărbați?",
+          "options": ["15 kg", "20 kg", "25 kg", "50 kg"],
+          "correct": 2,
+          "explanation": "Conform HG 1051/2006, limita maximă pentru manipularea manuală de mase de către bărbați este de 25 kg.",
+          "difficulty": "medium",
+          "legalReference": "HG 1051/2006"
+        },
+        {
+          "id": "IG017",
+          "text": "Care este limita maximă de greutate pentru manipulare manuală de către femei?",
+          "options": ["10 kg", "15 kg", "20 kg", "25 kg"],
+          "correct": 1,
+          "explanation": "Conform HG 1051/2006, limita maximă pentru manipularea manuală de mase de către femei este de 15 kg.",
+          "difficulty": "medium",
+          "legalReference": "HG 1051/2006"
+        },
+        {
+          "id": "IG018",
+          "text": "Ce trebuie să facă lucrătorul imediat după un accident de muncă?",
+          "options": ["Să meargă acasă", "Să sune un avocat", "Să informeze conducătorul locului de muncă", "Să posteze pe rețelele sociale"],
+          "correct": 2,
+          "explanation": "Conform Art. 22, alin. 1, lit. c, Legea 319/2006, lucrătorul are obligația de a informa imediat conducătorul locului de muncă despre orice situație periculoasă sau accident.",
+          "difficulty": "easy",
+          "legalReference": "Art. 22, alin. 1, lit. c, Legea 319/2006"
+        },
+        {
+          "id": "IG019",
+          "text": "Accidentul colectiv de muncă implică minimum:",
+          "options": ["2 persoane", "3 persoane", "5 persoane", "10 persoane"],
+          "correct": 1,
+          "explanation": "Conform Art. 30, alin. 1, lit. d, Legea 319/2006, accidentul colectiv este cel produs în același timp și din aceeași cauză la cel puțin 3 persoane.",
+          "difficulty": "medium",
+          "legalReference": "Art. 30, alin. 1, lit. d, Legea 319/2006"
+        },
+        {
+          "id": "IG020",
+          "text": "Ce culoare au panourile de obligație?",
+          "options": ["Roșu", "Galben", "Verde", "Albastru"],
+          "correct": 3,
+          "explanation": "Conform HG 971/2006, panourile de obligație sunt circulare, cu fond albastru și simbol alb.",
+          "difficulty": "easy",
+          "legalReference": "HG 971/2006"
+        },
+        {
+          "id": "IG021",
+          "text": "Ce este evaluarea riscurilor?",
+          "options": ["Un control al ITM", "Procesul de identificare a pericolelor și evaluare a riscurilor de accidentare și îmbolnăvire profesională", "O asigurare", "Un certificat medical"],
+          "correct": 1,
+          "explanation": "Evaluarea riscurilor este procesul prin care se identifică pericolele și se evaluează riscurile pentru securitatea și sănătatea lucrătorilor, conform Art. 12, alin. 1, lit. a, Legea 319/2006.",
+          "difficulty": "medium",
+          "legalReference": "Art. 12, alin. 1, lit. a, Legea 319/2006"
+        },
+        {
+          "id": "IG022",
+          "text": "Fișa cu date de securitate (FDS) este obligatorie pentru:",
+          "options": ["Echipamente electrice", "Substanțe și amestecuri chimice periculoase", "Materiale textile", "Alimente"],
+          "correct": 1,
+          "explanation": "Conform Regulamentului REACH (CE) 1907/2006, FDS-ul este obligatoriu pentru substanțele și amestecurile clasificate ca periculoase.",
+          "difficulty": "medium",
+          "legalReference": "Regulament REACH 1907/2006, Art. 31"
+        },
+        {
+          "id": "IG023",
+          "text": "Pictogramele GHS sunt utilizate pentru:",
+          "options": ["Semnalizare rutieră", "Identificarea pericolelor substanțelor chimice", "Etichetarea alimentelor", "Marcarea căilor de evacuare"],
+          "correct": 1,
+          "explanation": "Pictogramele GHS (Globally Harmonized System) sunt utilizate conform Regulamentului CLP (CE) 1272/2008 pentru identificarea și comunicarea pericolelor substanțelor chimice.",
+          "difficulty": "medium",
+          "legalReference": "Regulament CLP (CE) 1272/2008"
+        },
+        {
+          "id": "IG024",
+          "text": "Câte exerciții de evacuare sunt obligatorii anual?",
+          "options": ["1", "Cel puțin 2", "4", "6"],
+          "correct": 1,
+          "explanation": "Conform OMAI 163/2007, Art. 31, sunt obligatorii cel puțin 2 exerciții de evacuare pe an.",
+          "difficulty": "easy",
+          "legalReference": "OMAI 163/2007, Art. 31"
+        },
+        {
+          "id": "IG025",
+          "text": "Categoria III de EIP protejează împotriva:",
+          "options": ["Riscurilor minime", "Riscurilor intermediare", "Riscurilor grave, ireversibile sau mortale", "Condițiilor meteo nefavorabile"],
+          "correct": 2,
+          "explanation": "Conform Regulamentului UE 2016/425, Categoria III include EIP conceput pentru a proteja împotriva riscurilor care pot cauza consecințe foarte grave, inclusiv deces sau daune ireversibile sănătății.",
+          "difficulty": "medium",
+          "legalReference": "Regulament UE 2016/425"
+        },
+        {
+          "id": "IG026",
+          "text": "La un stop cardiorespirator, ritmul de RCP este:",
+          "options": ["15 compresii / 1 ventilație", "20 compresii / 2 ventilații", "30 compresii / 2 ventilații", "50 compresii / 5 ventilații"],
+          "correct": 2,
+          "explanation": "Conform ghidurilor ERC (European Resuscitation Council), ritmul de resuscitare cardiopulmonară pentru adulți este de 30 compresii toracice urmate de 2 ventilații.",
+          "difficulty": "medium",
+          "legalReference": "Ghiduri ERC 2021"
+        },
+        {
+          "id": "IG027",
+          "text": "În timpul evacuării, este interzis să:",
+          "options": ["Ajutați colegii", "Folosiți ascensorul", "Mergeți pe scări", "Vă duceți la punctul de întâlnire"],
+          "correct": 1,
+          "explanation": "În timpul evacuării, ascensorul nu se folosește deoarece poate rămâne blocat, se poate umple cu fum sau poate opri la etajul afectat de incendiu.",
+          "difficulty": "easy",
+          "legalReference": "OMAI 163/2007"
+        },
+        {
+          "id": "IG028",
+          "text": "Ce document însoțește fiecare substanță chimică periculoasă?",
+          "options": ["Certificat de conformitate", "Bon fiscal", "Fișa cu date de securitate (FDS)", "Deviz estimativ"],
+          "correct": 2,
+          "explanation": "Fișa cu date de securitate (FDS) este documentul care conține informațiile esențiale despre pericole, manipulare, depozitare și măsuri de protecție pentru substanțele chimice periculoase.",
+          "difficulty": "easy",
+          "legalReference": "Regulament REACH 1907/2006, Art. 31"
+        },
+        {
+          "id": "IG029",
+          "text": "Angajatorul poate imputa lucrătorilor costurile măsurilor SSM?",
+          "options": ["Da, dacă sunt costisitoare", "Da, pe bază de reținere din salariu", "Nu, conform Art. 6, alin. 3 din Legea 319/2006", "Da, doar pentru EIP"],
+          "correct": 2,
+          "explanation": "Art. 6, alin. 3, Legea 319/2006 prevede explicit: măsurile privind securitatea și sănătatea în muncă nu pot să implice în niciun caz obligații financiare pentru lucrători.",
+          "difficulty": "medium",
+          "legalReference": "Art. 6, alin. 3, Legea 319/2006"
+        },
+        {
+          "id": "IG030",
+          "text": "Ce trebuie să conțină comunicarea la 112 în caz de accident?",
+          "options": ["Doar numele victimei", "Doar locația", "Locația exactă, ce s-a întâmplat, numărul victimelor și starea lor", "Datele de identificare ale angajatorului"],
+          "correct": 2,
+          "explanation": "La apelarea 112 trebuie comunicate: locația exactă, natura evenimentului, numărul victimelor, starea acestora și orice alte informații relevante pentru intervenție.",
+          "difficulty": "easy",
+          "legalReference": "Protocol apel 112"
+        }
+      ]
+    },
+    {
+      "module": "instructaj_psi",
+      "title": "Instruire PSI (Pază și Stingere Incendii)",
+      "legalBasis": "OMAI 163/2007, Legea 307/2006",
+      "questionCount": 20,
+      "questions": [
+        {
+          "id": "PSI001",
+          "text": "Care este legea principală privind apărarea împotriva incendiilor?",
+          "options": ["Legea 319/2006", "Legea 307/2006", "HG 1425/2006", "OMAI 166/2010"],
+          "correct": 1,
+          "explanation": "Legea 307/2006 este legea privind apărarea împotriva incendiilor în România.",
+          "difficulty": "easy",
+          "legalReference": "Legea 307/2006"
+        },
+        {
+          "id": "PSI002",
+          "text": "Care sunt cele trei elemente ale triunghiului focului?",
+          "options": ["Apă, oxigen, sursă de aprindere", "Combustibil, azot, căldură", "Combustibil, comburant (oxigen), sursă de aprindere", "Gaz, lichid, solid"],
+          "correct": 2,
+          "explanation": "Triunghiul focului (arderii) este format din: combustibil, comburant (de regulă oxigenul din aer) și sursa de aprindere. Eliminarea oricărui element stinge incendiul.",
+          "difficulty": "easy",
+          "legalReference": "Noțiuni fundamentale PSI"
+        },
+        {
+          "id": "PSI003",
+          "text": "Incendiile de clasă B implică:",
+          "options": ["Materiale solide", "Lichide inflamabile", "Gaze inflamabile", "Metale combustibile"],
+          "correct": 1,
+          "explanation": "Conform SR EN 2, clasa B cuprinde incendiile de lichide sau solide lichefiabile (benzină, motorină, alcool, vopsele).",
+          "difficulty": "easy",
+          "legalReference": "SR EN 2"
+        },
+        {
+          "id": "PSI004",
+          "text": "Ce tip de stingător este cel mai versatil (clase A, B, C)?",
+          "options": ["Cu apă", "Cu CO₂", "Cu pulbere ABC", "Cu spumă"],
+          "correct": 2,
+          "explanation": "Stingătorul cu pulbere ABC este cel mai versatil, acoperind clasele de incendiu A (solide), B (lichide) și C (gaze).",
+          "difficulty": "easy",
+          "legalReference": "SR EN 3"
+        },
+        {
+          "id": "PSI005",
+          "text": "Ce stingător se recomandă pentru echipamente electrice?",
+          "options": ["Cu apă", "Cu spumă", "Cu CO₂", "Clasa F"],
+          "correct": 2,
+          "explanation": "Stingătorul cu CO₂ este recomandat pentru echipamente electrice deoarece nu conduce curentul electric și nu lasă reziduuri care ar deteriora echipamentele.",
+          "difficulty": "easy",
+          "legalReference": "Instrucțiuni tehnice PSI"
+        },
+        {
+          "id": "PSI006",
+          "text": "Care este regula mnemotehnică pentru utilizarea stingătorului?",
+          "options": ["STOP", "FATA", "PATS (Prinde, Asigurare, Țintește, Stoarce)", "ALRM"],
+          "correct": 2,
+          "explanation": "Regula PATS: Prinde stingătorul, scoate Asigurarea (siguranța), Țintește spre baza focului, Stoarce maneta efectuând baleiaj.",
+          "difficulty": "easy",
+          "legalReference": "Instrucțiuni tehnice PSI"
+        },
+        {
+          "id": "PSI007",
+          "text": "La ce distanță de incendiu se operează stingătorul?",
+          "options": ["5–10 metri", "Cât mai aproape posibil", "10–15 metri", "2–3 metri"],
+          "correct": 3,
+          "explanation": "Distanța optimă de operare a stingătorului portabil este de 2–3 metri de la baza focului, cu vântul în spate.",
+          "difficulty": "medium",
+          "legalReference": "Instrucțiuni tehnice PSI"
+        },
+        {
+          "id": "PSI008",
+          "text": "Câte exerciții de evacuare sunt obligatorii anual?",
+          "options": ["1", "Minimum 2", "4", "6"],
+          "correct": 1,
+          "explanation": "Conform OMAI 163/2007, Art. 31, sunt obligatorii minimum 2 exerciții de evacuare pe an.",
+          "difficulty": "easy",
+          "legalReference": "OMAI 163/2007, Art. 31"
+        },
+        {
+          "id": "PSI009",
+          "text": "În timpul evacuării, este interzis să folosiți:",
+          "options": ["Scările", "Ascensorul", "Ieșirea de urgență", "Extinctorul"],
+          "correct": 1,
+          "explanation": "Ascensorul nu se folosește în timpul evacuării deoarece poate rămâne blocat între etaje, se poate umple cu fum toxic sau poate opri la etajul afectat de incendiu.",
+          "difficulty": "easy",
+          "legalReference": "OMAI 163/2007"
+        },
+        {
+          "id": "PSI010",
+          "text": "Dacă ușa este fierbinte la atingere, ce faceți?",
+          "options": ["O deschideți rapid", "O spargeți", "Nu o deschideți — căutați altă cale de evacuare", "Turnați apă pe ea"],
+          "correct": 2,
+          "explanation": "O ușă fierbinte indică prezența incendiului de cealaltă parte. Deschiderea ar permite intrarea fumului toxic și a flăcărilor. Căutați o cale alternativă de evacuare.",
+          "difficulty": "medium",
+          "legalReference": "Proceduri de evacuare PSI"
+        },
+        {
+          "id": "PSI011",
+          "text": "De ce se închid ușile în urma dumneavoastră la evacuare?",
+          "options": ["Pentru intimitate", "Pentru a limita propagarea fumului și focului", "Este o regulă de politețe", "Pentru a economisi energie"],
+          "correct": 1,
+          "explanation": "Închiderea ușilor (fără încuiere) limitează propagarea fumului și a flăcărilor, oferind timp suplimentar pentru evacuarea celorlalte persoane.",
+          "difficulty": "easy",
+          "legalReference": "Proceduri de evacuare PSI"
+        },
+        {
+          "id": "PSI012",
+          "text": "Unde se îndreaptă jetul stingătorului?",
+          "options": ["Spre vârful flăcărilor", "Deasupra focului", "Spre baza flăcărilor", "Spre fum"],
+          "correct": 2,
+          "explanation": "Jetul stingătorului se îndreaptă spre baza flăcărilor, unde se află combustibilul care alimentează incendiul, nu spre flacără.",
+          "difficulty": "easy",
+          "legalReference": "Instrucțiuni tehnice PSI"
+        },
+        {
+          "id": "PSI013",
+          "text": "Ce cauză este cea mai frecventă a incendiilor?",
+          "options": ["Trăsnetul", "Fumatul", "Instalații electrice defecte sau suprasolicitate", "Substanțe chimice"],
+          "correct": 2,
+          "explanation": "Instalațiile electrice defecte sau suprasolicitate reprezintă aproximativ 30% din cauzele incendiilor, fiind cea mai frecventă cauză de incendiu.",
+          "difficulty": "medium",
+          "legalReference": "Statistici IGSU"
+        },
+        {
+          "id": "PSI014",
+          "text": "Incendiile de clasă F implică:",
+          "options": ["Gaze inflamabile", "Metale", "Solide organice", "Uleiuri și grăsimi de gătit"],
+          "correct": 3,
+          "explanation": "Clasa F cuprinde incendii de uleiuri și grăsimi de gătit. Nu se folosește apă (risc de explozie de vapori) — se folosesc stingătoare speciale clasa F.",
+          "difficulty": "medium",
+          "legalReference": "SR EN 2"
+        },
+        {
+          "id": "PSI015",
+          "text": "Planul de evacuare trebuie să conțină:",
+          "options": ["Lista angajaților", "Schema nivelului cu căile de evacuare, stingătoare și punctul de adunare", "Organigrama firmei", "Programul de lucru"],
+          "correct": 1,
+          "explanation": "Conform OMAI 163/2007, Art. 24, planul de evacuare conține schema nivelului cu căile de evacuare, amplasarea mijloacelor de stingere, hidranți, butoane de alarmare și punctul de adunare.",
+          "difficulty": "easy",
+          "legalReference": "OMAI 163/2007, Art. 24"
+        },
+        {
+          "id": "PSI016",
+          "text": "Ce se face PRIMA DATĂ dacă descoperiți un incendiu?",
+          "options": ["Încercați să-l stingeți singur", "Fotografiați incendiul", "Dați alarma și alertați colegii", "Adunați bunurile personale"],
+          "correct": 2,
+          "explanation": "Prima acțiune la descoperirea unui incendiu este darea alarmei și alertarea colegilor pentru asigurarea evacuării, apoi apelarea 112.",
+          "difficulty": "easy",
+          "legalReference": "Proceduri de urgență PSI"
+        },
+        {
+          "id": "PSI017",
+          "text": "Este permis fumatul la locul de muncă?",
+          "options": ["Da, oriunde", "Da, doar cu geamul deschis", "Da, doar în pauze", "Doar în locurile special amenajate și semnalizate"],
+          "correct": 3,
+          "explanation": "Fumatul este permis doar în locurile special amenajate și semnalizate, conform Legii 349/2002 modificată și regulamentului intern al unității.",
+          "difficulty": "easy",
+          "legalReference": "Legea 349/2002, OMAI 163/2007"
+        },
+        {
+          "id": "PSI018",
+          "text": "Ce este permisul de lucru cu foc deschis?",
+          "options": ["Un certificat de pompier", "Un document care autorizează efectuarea lucrărilor cu foc deschis", "O poliță de asigurare", "Un aviz ISU"],
+          "correct": 1,
+          "explanation": "Permisul de lucru cu foc deschis este documentul scris prin care se autorizează executarea lucrărilor cu foc deschis (sudură, tăiere, lipire) în locuri cu pericol de incendiu, conform OMAI 163/2007, Art. 40–48.",
+          "difficulty": "medium",
+          "legalReference": "OMAI 163/2007, Art. 40–48"
+        },
+        {
+          "id": "PSI019",
+          "text": "Dacă sunteți blocat într-o cameră în caz de incendiu, ce faceți?",
+          "options": ["Deschideți ușa și fugiți prin fum", "Săriți pe fereastră", "Astupați crăpăturile ușii, semnalizați la fereastră și sunați 112", "Așteptați în liniște"],
+          "correct": 2,
+          "explanation": "Dacă evacuarea nu este posibilă: rămâneți în cameră, astupați crăpăturile ușii cu materiale ude, semnalizați prezența la fereastră și apelați 112 pentru a indica locația.",
+          "difficulty": "medium",
+          "legalReference": "Proceduri de evacuare PSI"
+        },
+        {
+          "id": "PSI020",
+          "text": "Care este frecvența verificării tehnice a stingătoarelor de către firma autorizată?",
+          "options": ["Lunară", "Trimestrială", "Anuală", "O dată la 5 ani"],
+          "correct": 2,
+          "explanation": "Verificarea tehnică a stingătoarelor de incendiu de către o firmă autorizată IGSU se efectuează anual, conform normelor PSI în vigoare.",
+          "difficulty": "medium",
+          "legalReference": "OMAI 163/2007"
+        }
+      ]
+    },
+    {
+      "module": "instructaj_loc_munca",
+      "title": "Instruire la Locul de Muncă",
+      "legalBasis": "Art. 90–94, HG 1425/2006",
+      "questionCount": 20,
+      "questions": [
+        {
+          "id": "ILM001",
+          "text": "Când se efectuează instruirea la locul de muncă?",
+          "options": ["Doar la angajare", "La angajare, la schimbarea postului, la introducerea unui nou echipament și la reluarea activității după 30+ zile", "Doar la cererea lucrătorului", "O dată pe an"],
+          "correct": 1,
+          "explanation": "Conform Art. 90, HG 1425/2006, instruirea la locul de muncă se efectuează la angajare, la schimbarea postului, la introducerea echipamentelor noi și la reluarea activității după 30+ zile lucrătoare.",
+          "difficulty": "medium",
+          "legalReference": "Art. 90, HG 1425/2006"
+        },
+        {
+          "id": "ILM002",
+          "text": "Cine efectuează instruirea la locul de muncă?",
+          "options": ["Serviciul extern SSM", "Medicul de medicina muncii", "Conducătorul direct al locului de muncă", "Inspectorul ITM"],
+          "correct": 2,
+          "explanation": "Conform Art. 90, alin. 2, HG 1425/2006, instruirea la locul de muncă se efectuează de conducătorul direct al locului de muncă.",
+          "difficulty": "easy",
+          "legalReference": "Art. 90, alin. 2, HG 1425/2006"
+        },
+        {
+          "id": "ILM003",
+          "text": "Care este durata minimă a instruirii la locul de muncă?",
+          "options": ["2 ore", "4 ore", "8 ore", "16 ore"],
+          "correct": 2,
+          "explanation": "Conform Art. 91, alin. 1, HG 1425/2006, durata minimă a instruirii la locul de muncă este de 8 ore.",
+          "difficulty": "easy",
+          "legalReference": "Art. 91, alin. 1, HG 1425/2006"
+        },
+        {
+          "id": "ILM004",
+          "text": "Lucrătorul poate fi admis la lucru:",
+          "options": ["Imediat după semnarea contractului", "După completarea fișei medicale", "Doar după verificarea cunoștințelor dobândite la instruire", "După o perioadă de probă de 30 zile"],
+          "correct": 2,
+          "explanation": "Conform Art. 94, HG 1425/2006, lucrătorul poate fi admis la lucru numai după verificarea cunoștințelor de către conducătorul locului de muncă.",
+          "difficulty": "medium",
+          "legalReference": "Art. 94, HG 1425/2006"
+        },
+        {
+          "id": "ILM005",
+          "text": "Ce sunt instrucțiunile proprii SSM?",
+          "options": ["Legile publicate în Monitorul Oficial", "Regulile de ordine interioară", "Documente interne adaptate specificului activității și riscurilor din unitate", "Instrucțiuni ale ITM"],
+          "correct": 2,
+          "explanation": "Instrucțiunile proprii SSM sunt documente interne elaborate de angajator, adaptate specificului activității și riscurilor evaluate, conform Art. 13, lit. e, Legea 319/2006.",
+          "difficulty": "easy",
+          "legalReference": "Art. 13, lit. e, Legea 319/2006"
+        },
+        {
+          "id": "ILM006",
+          "text": "Tehnica corectă de ridicare a unei sarcini presupune:",
+          "options": ["Aplecarea din spate cu genunchii drepți", "Spatele drept, flexia genunchilor, sarcina aproape de corp", "Ridicarea rapidă prin impuls", "Răsucirea trunchiului pentru a poziționa sarcina"],
+          "correct": 1,
+          "explanation": "Tehnica corectă de ridicare: spatele drept, flexia genunchilor, sarcina cât mai aproape de corp, fără răsucirea trunchiului, conform HG 1051/2006.",
+          "difficulty": "easy",
+          "legalReference": "HG 1051/2006"
+        },
+        {
+          "id": "ILM007",
+          "text": "La lucrul la calculator, distanța recomandată față de monitor este:",
+          "options": ["20–30 cm", "30–40 cm", "50–70 cm", "100–120 cm"],
+          "correct": 2,
+          "explanation": "Conform HG 1028/2006, distanța recomandată între ochi și ecranul monitorului este de 50–70 cm, cu marginea superioară la nivelul ochilor.",
+          "difficulty": "easy",
+          "legalReference": "HG 1028/2006"
+        },
+        {
+          "id": "ILM008",
+          "text": "Ce document trebuie accesibil la locul de utilizare a unei substanțe chimice?",
+          "options": ["Certificat de garanție", "Factura de achiziție", "Fișa cu date de securitate (FDS)", "Procesul-verbal de recepție"],
+          "correct": 2,
+          "explanation": "Fișa cu date de securitate (FDS) trebuie să fie accesibilă la locul de utilizare a substanței chimice, conform Regulamentului REACH 1907/2006.",
+          "difficulty": "easy",
+          "legalReference": "Regulament REACH 1907/2006"
+        },
+        {
+          "id": "ILM009",
+          "text": "Ordinea corectă de prioritate a măsurilor de prevenire este:",
+          "options": ["EIP → măsuri tehnice → eliminare", "Măsuri organizatorice → EIP → eliminare", "Eliminare → substituție → măsuri tehnice → măsuri organizatorice → EIP", "EIP → eliminare → substituție"],
+          "correct": 2,
+          "explanation": "Ierarhia măsurilor de prevenire (conform principiilor generale de prevenire, Art. 7, Legea 319/2006): eliminare → substituție → măsuri tehnice → măsuri organizatorice → EIP.",
+          "difficulty": "hard",
+          "legalReference": "Art. 7, Legea 319/2006"
+        },
+        {
+          "id": "ILM010",
+          "text": "Un lucrător descoperă o defecțiune la un echipament de muncă. Ce trebuie să facă?",
+          "options": ["Să continue lucrul cu atenție", "Să repare singur defecțiunea", "Să oprească echipamentul și să informeze conducătorul locului de muncă", "Să aștepte până la sfârșitul programului"],
+          "correct": 2,
+          "explanation": "Conform Art. 22, alin. 1, lit. c, Legea 319/2006, lucrătorul are obligația de a opri echipamentul defect și de a informa imediat conducătorul locului de muncă.",
+          "difficulty": "easy",
+          "legalReference": "Art. 22, alin. 1, lit. c, Legea 319/2006"
+        },
+        {
+          "id": "ILM011",
+          "text": "Regula 20-20-20 pentru protecția vederii presupune:",
+          "options": ["20 minute pauză la fiecare 20 de ore", "La fiecare 20 minute, privire la 6m distanță timp de 20 secunde", "20 clipiri pe minut", "Reglarea luminozității la 20%"],
+          "correct": 1,
+          "explanation": "Regula 20-20-20: la fiecare 20 minute de lucru la ecran, priviți la un obiect aflat la 20 picioare (aprox. 6 metri) distanță, timp de 20 secunde.",
+          "difficulty": "medium",
+          "legalReference": "HG 1028/2006, recomandări ergonomice"
+        },
+        {
+          "id": "ILM012",
+          "text": "Ce este marcajul CE pe un echipament de muncă?",
+          "options": ["Marca producătorului", "Declarația de conformitate cu cerințele UE de securitate", "Certificat de garanție", "Indicativ de țară de origine"],
+          "correct": 1,
+          "explanation": "Marcajul CE (Conformité Européenne) indică faptul că echipamentul respectă cerințele esențiale de securitate și sănătate prevăzute de directivele UE aplicabile.",
+          "difficulty": "medium",
+          "legalReference": "Regulament UE 765/2008"
+        },
+        {
+          "id": "ILM013",
+          "text": "Pictograma GHS06 (cap de mort) indică:",
+          "options": ["Pericol de explozie", "Substanță corozivă", "Toxicitate acută", "Pericol pentru mediu"],
+          "correct": 2,
+          "explanation": "Pictograma GHS06 (cap de mort cu oase încrucișate) indică toxicitate acută — substanța poate provoca efecte grave sau deces prin inhalare, ingestie sau contact cutanat.",
+          "difficulty": "medium",
+          "legalReference": "Regulament CLP (CE) 1272/2008"
+        },
+        {
+          "id": "ILM014",
+          "text": "La reluarea activității după ce întrerupere se repetă instruirea la locul de muncă?",
+          "options": ["7 zile", "15 zile", "30 zile lucrătoare", "90 zile"],
+          "correct": 2,
+          "explanation": "Conform Art. 90, lit. f, HG 1425/2006, instruirea la locul de muncă se repetă la reluarea activității după o întrerupere mai mare de 30 de zile lucrătoare.",
+          "difficulty": "medium",
+          "legalReference": "Art. 90, lit. f, HG 1425/2006"
+        },
+        {
+          "id": "ILM015",
+          "text": "Cine verifică cunoștințele lucrătorului la finalul instruirii la locul de muncă?",
+          "options": ["Inspectorul ITM", "Serviciul extern SSM", "Conducătorul locului de muncă", "Directorul general"],
+          "correct": 2,
+          "explanation": "Conform Art. 94, HG 1425/2006, verificarea cunoștințelor se face de conducătorul locului de muncă, iar rezultatul se consemnează în fișa individuală de instruire.",
+          "difficulty": "easy",
+          "legalReference": "Art. 94, HG 1425/2006"
+        },
+        {
+          "id": "ILM016",
+          "text": "Este permisă demontarea dispozitivelor de protecție de pe echipamente?",
+          "options": ["Da, dacă împiedică lucrul", "Da, temporar", "Nu, este strict interzis", "Da, cu acordul verbal al șefului"],
+          "correct": 2,
+          "explanation": "Conform Art. 22, alin. 2, lit. b, Legea 319/2006, lucrătorul are obligația de a nu deconecta, schimba sau muta arbitrar dispozitivele de securitate ale echipamentelor.",
+          "difficulty": "easy",
+          "legalReference": "Art. 22, alin. 2, lit. b, Legea 319/2006"
+        },
+        {
+          "id": "ILM017",
+          "text": "Ce informații conține FDS-ul în secțiunea 8?",
+          "options": ["Proprietățile fizice", "Condiții de depozitare", "Controlul expunerii și protecția personală (EIP recomandat)", "Compoziție"],
+          "correct": 2,
+          "explanation": "Secțiunea 8 a FDS-ului conține informații despre controlul expunerii profesionale (valori limită) și echipamentul individual de protecție recomandat.",
+          "difficulty": "hard",
+          "legalReference": "Regulament REACH 1907/2006, Anexa II"
+        },
+        {
+          "id": "ILM018",
+          "text": "Stivuitorul poate fi operat de:",
+          "options": ["Orice angajat cu permis auto", "Orice angajat instruit", "Doar de operatori autorizați ISCIR", "Doar de conducătorul locului de muncă"],
+          "correct": 2,
+          "explanation": "Stivuitoarele sunt echipamente supuse regimului ISCIR și pot fi operate doar de persoane autorizate ISCIR, conform Prescripțiilor tehnice ISCIR.",
+          "difficulty": "medium",
+          "legalReference": "Prescripții tehnice ISCIR"
+        },
+        {
+          "id": "ILM019",
+          "text": "Unde se consemnează rezultatul instruirii la locul de muncă?",
+          "options": ["În contractul de muncă", "În registrul general de evidență", "În fișa individuală de instruire SSM", "În caietul de sarcini"],
+          "correct": 2,
+          "explanation": "Conform Art. 16, HG 1425/2006, rezultatele instruirilor se consemnează în fișa individuală de instruire SSM, document obligatoriu pentru fiecare lucrător.",
+          "difficulty": "easy",
+          "legalReference": "Art. 16, HG 1425/2006"
+        },
+        {
+          "id": "ILM020",
+          "text": "Ce trebuie să facă lucrătorul dacă nu a înțeles o instrucțiune SSM?",
+          "options": ["Să ignore și să continue lucrul", "Să caute pe internet", "Să solicite explicații suplimentare conducătorului locului de muncă", "Să întrebe colegii"],
+          "correct": 2,
+          "explanation": "Lucrătorul are dreptul și obligația de a solicita explicații suplimentare conducătorului locului de muncă pentru a înțelege complet instrucțiunile SSM înainte de a începe lucrul.",
+          "difficulty": "easy",
+          "legalReference": "Art. 17, Legea 319/2006"
+        }
+      ]
+    },
+    {
+      "module": "instructaj_periodic",
+      "title": "Instruire Periodică SSM",
+      "legalBasis": "Art. 95–99, HG 1425/2006",
+      "questionCount": 15,
+      "questions": [
+        {
+          "id": "IP001",
+          "text": "Care este frecvența maximă a instruirii periodice SSM pentru activități obișnuite?",
+          "options": ["Lunar", "Trimestrial", "La 6 luni", "Anual"],
+          "correct": 2,
+          "explanation": "Conform Art. 95, alin. 1, HG 1425/2006, instruirea periodică se efectuează la intervale de cel mult 6 luni pentru activitățile obișnuite.",
+          "difficulty": "easy",
+          "legalReference": "Art. 95, alin. 1, HG 1425/2006"
+        },
+        {
+          "id": "IP002",
+          "text": "Pentru activități cu riscuri deosebite, instruirea periodică se face la:",
+          "options": ["1 lună", "3 luni", "6 luni", "12 luni"],
+          "correct": 1,
+          "explanation": "Conform Art. 95, alin. 2, HG 1425/2006, pentru activitățile cu riscuri deosebite, instruirea periodică se efectuează la intervale de cel mult 3 luni.",
+          "difficulty": "easy",
+          "legalReference": "Art. 95, alin. 2, HG 1425/2006"
+        },
+        {
+          "id": "IP003",
+          "text": "Cine efectuează instruirea periodică SSM?",
+          "options": ["Inspectorul ITM", "Medicul de medicina muncii", "Conducătorul direct al locului de muncă", "Directorul de resurse umane"],
+          "correct": 2,
+          "explanation": "Conform Art. 96, HG 1425/2006, instruirea periodică se efectuează de conducătorul direct al locului de muncă.",
+          "difficulty": "easy",
+          "legalReference": "Art. 96, HG 1425/2006"
+        },
+        {
+          "id": "IP004",
+          "text": "Ce se întâmplă dacă un lucrător nu promovează verificarea cunoștințelor?",
+          "options": ["Este concediat imediat", "Este reinstruit și reverificat", "Continuă lucrul normal", "Primește avertisment scris"],
+          "correct": 1,
+          "explanation": "Conform Art. 99, HG 1425/2006, lucrătorii care nu promovează verificarea cunoștințelor vor fi reinstruiți și reverificați. Nu pot fi admiși la lucru până la promovare.",
+          "difficulty": "medium",
+          "legalReference": "Art. 99, HG 1425/2006"
+        },
+        {
+          "id": "IP005",
+          "text": "Piramida lui Heinrich arată proporția:",
+          "options": ["1 accident = 10 incidente", "1 accident grav = 29 ușoare = 300 incidente", "1 accident = 100 incidente", "Nu există această proporție"],
+          "correct": 1,
+          "explanation": "Piramida lui Heinrich (1931) stabilește proporția statistică: pentru fiecare accident grav, există aproximativ 29 accidente ușoare și 300 incidente (aproape-accidente).",
+          "difficulty": "medium",
+          "legalReference": "Teoria Heinrich — principii SSM"
+        },
+        {
+          "id": "IP006",
+          "text": "Când se efectuează instruire periodică suplimentară?",
+          "options": ["Doar la cererea lucrătorului", "Doar la cererea ITM", "După un accident de muncă, incident periculos sau la modificarea procesului tehnologic", "Doar la schimbarea angajatorului"],
+          "correct": 2,
+          "explanation": "Conform Art. 98, HG 1425/2006, instruirea periodică suplimentară se efectuează după accidente, incidente, modificări tehnologice, introducerea de echipamente noi sau apariția unor riscuri noi.",
+          "difficulty": "medium",
+          "legalReference": "Art. 98, HG 1425/2006"
+        },
+        {
+          "id": "IP007",
+          "text": "Ce trebuie prezentat la instruirea periodică privind modificările legislative?",
+          "options": ["Toate legile din Monitorul Oficial", "Modificări ale legislației SSM relevante pentru activitatea unității", "Doar legile noi, nu modificările", "Legislația altor țări UE"],
+          "correct": 1,
+          "explanation": "La instruirea periodică se prezintă modificările legislației SSM relevante pentru activitatea specifică a unității, nu toate actele normative publicate.",
+          "difficulty": "easy",
+          "legalReference": "HG 1425/2006, tematica instruirii periodice"
+        },
+        {
+          "id": "IP008",
+          "text": "Ce este un incident periculos?",
+          "options": ["Un accident de muncă ușor", "Un eveniment care ar fi putut produce un accident de muncă", "O boală profesională", "O amendă de la ITM"],
+          "correct": 1,
+          "explanation": "Incidentul periculos (aproape-accident) este un eveniment care, deși nu a produs vătămări, ar fi putut produce un accident de muncă în alte circumstanțe.",
+          "difficulty": "medium",
+          "legalReference": "Art. 5, lit. f, Legea 319/2006"
+        },
+        {
+          "id": "IP009",
+          "text": "Raportarea incidentelor periculoase este:",
+          "options": ["Inutilă", "La alegerea lucrătorului", "Importantă pentru prevenirea accidentelor viitoare", "Obligatorie doar pentru conducătorul locului de muncă"],
+          "correct": 2,
+          "explanation": "Raportarea incidentelor este esențială pentru prevenire. Conform Piramidei lui Heinrich, analiza incidentelor previne accidentele grave viitoare.",
+          "difficulty": "easy",
+          "legalReference": "Art. 22, Legea 319/2006"
+        },
+        {
+          "id": "IP010",
+          "text": "Unde se consemnează rezultatul instruirii periodice?",
+          "options": ["În contractul de muncă", "În registrul de corespondență", "În fișa individuală de instruire SSM", "În condica de prezență"],
+          "correct": 2,
+          "explanation": "Conform Art. 16, HG 1425/2006, toate instruirile (inclusiv cea periodică) se consemnează în fișa individuală de instruire SSM a fiecărui lucrător.",
+          "difficulty": "easy",
+          "legalReference": "Art. 16, HG 1425/2006"
+        },
+        {
+          "id": "IP011",
+          "text": "Ce trebuie verificat la EIP în cadrul instruirii periodice?",
+          "options": ["Doar aspectul estetic", "Starea de funcționalitate și integritatea", "Doar data de achiziție", "Doar culoarea"],
+          "correct": 1,
+          "explanation": "La fiecare instruire periodică se verifică starea de funcționalitate și integritatea EIP-urilor distribuite, precum și necesitatea de înlocuire.",
+          "difficulty": "easy",
+          "legalReference": "HG 1048/2006"
+        },
+        {
+          "id": "IP012",
+          "text": "Lucrul la înălțime (peste 2 m) necesită instruire periodică la:",
+          "options": ["6 luni", "3 luni (activitate cu risc deosebit)", "12 luni", "1 lună"],
+          "correct": 1,
+          "explanation": "Lucrul la înălțime este clasificat ca activitate cu risc deosebit, necesitând instruire periodică la intervale de cel mult 3 luni, conform Art. 95, alin. 2, HG 1425/2006.",
+          "difficulty": "medium",
+          "legalReference": "Art. 95, alin. 2, HG 1425/2006"
+        },
+        {
+          "id": "IP013",
+          "text": "Riscurile sezoniere trebuie discutate la instruire periodică?",
+          "options": ["Nu, nu sunt relevante", "Doar dacă ITM-ul cere", "Da, trebuie adaptate la perioada anului", "Doar iarna"],
+          "correct": 2,
+          "explanation": "Tematica instruirii periodice trebuie adaptată la condițiile actuale, inclusiv riscuri sezoniere (stres termic vara, alunecare pe gheață iarna, etc.).",
+          "difficulty": "easy",
+          "legalReference": "HG 1425/2006, principii generale"
+        },
+        {
+          "id": "IP014",
+          "text": "Ce trebuie făcut după un accident de muncă în unitate, privind instruirea?",
+          "options": ["Nimic special", "Se suspendă activitatea definitiv", "Se efectuează instruire periodică suplimentară cu analiza cauzelor accidentului", "Se schimbă conducătorul locului de muncă"],
+          "correct": 2,
+          "explanation": "Conform Art. 98, HG 1425/2006, după un accident de muncă se efectuează instruire periodică suplimentară, care include analiza cauzelor și măsurile de prevenire adoptate.",
+          "difficulty": "medium",
+          "legalReference": "Art. 98, HG 1425/2006"
+        },
+        {
+          "id": "IP015",
+          "text": "Care este durata minimă a instruirii periodice?",
+          "options": ["30 minute", "1 oră", "2 ore", "8 ore"],
+          "correct": 2,
+          "explanation": "Conform Art. 97, HG 1425/2006, durata minimă a instruirii periodice este de 2 ore.",
+          "difficulty": "easy",
+          "legalReference": "Art. 97, HG 1425/2006"
+        }
+      ]
+    }
+  ]
+}
