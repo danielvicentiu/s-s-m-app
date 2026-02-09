@@ -22,6 +22,13 @@ export default async function DocumentGeneratePage() {
   const isFirmaAdmin = await hasRole('firma_admin')
   const isSuperAdmin = await hasRole('super_admin')
 
+  console.log('🔍 [DocumentGenerate] User roles:', {
+    isConsultant,
+    isFirmaAdmin,
+    isSuperAdmin,
+    userId: user.id
+  })
+
   if (!isConsultant && !isFirmaAdmin && !isSuperAdmin) {
     redirect('/unauthorized')
   }
@@ -37,23 +44,40 @@ export default async function DocumentGeneratePage() {
       .order('name', { ascending: true })
 
     if (orgError) {
-      console.error('Error fetching organizations:', orgError)
+      console.error('❌ [DocumentGenerate] Error fetching organizations:', orgError)
     }
     organizations = orgsData
 
+    console.log('🔍 [DocumentGenerate] Organizations (super_admin):', {
+      count: organizations?.length || 0,
+      sample: organizations?.[0]
+    })
+
     const { data: empsData, error: empError } = await supabase
       .from('employees')
-      .select('id, full_name, job_title, cor_code, organization_id, organizations (name)')
+      .select('id, full_name, job_title, cor_code, organization_id, is_active, organizations (name)')
       .eq('is_active', true)
       .order('full_name', { ascending: true })
 
     if (empError) {
-      console.error('Error fetching employees:', empError)
+      console.error('❌ [DocumentGenerate] Error fetching employees:', empError)
     }
     employees = empsData
+
+    console.log('🔍 [DocumentGenerate] Employees query (super_admin):', {
+      count: employees?.length || 0,
+      error: empError,
+      sample: employees?.[0],
+      allData: employees
+    })
   } else {
     // Non-super-admin: filtrează după organizațiile accesibile
     const myOrgIds = await getMyOrgIds()
+
+    console.log('🔍 [DocumentGenerate] My org IDs:', {
+      myOrgIds,
+      count: myOrgIds?.length || 0
+    })
 
     const { data: orgsData, error: orgError } = await supabase
       .from('organizations')
@@ -62,21 +86,34 @@ export default async function DocumentGeneratePage() {
       .order('name', { ascending: true })
 
     if (orgError) {
-      console.error('Error fetching organizations:', orgError)
+      console.error('❌ [DocumentGenerate] Error fetching organizations:', orgError)
     }
     organizations = orgsData
 
+    console.log('🔍 [DocumentGenerate] Organizations (non-admin):', {
+      count: organizations?.length || 0,
+      sample: organizations?.[0]
+    })
+
     const { data: empsData, error: empError } = await supabase
       .from('employees')
-      .select('id, full_name, job_title, cor_code, organization_id, organizations (name)')
+      .select('id, full_name, job_title, cor_code, organization_id, is_active, organizations (name)')
       .in('organization_id', myOrgIds)
       .eq('is_active', true)
       .order('full_name', { ascending: true })
 
     if (empError) {
-      console.error('Error fetching employees:', empError)
+      console.error('❌ [DocumentGenerate] Error fetching employees:', empError)
     }
     employees = empsData
+
+    console.log('🔍 [DocumentGenerate] Employees query (non-admin):', {
+      count: employees?.length || 0,
+      error: empError,
+      sample: employees?.[0],
+      allData: employees,
+      filterOrgIds: myOrgIds
+    })
   }
 
   return (
