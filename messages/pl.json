@@ -41,7 +41,7 @@
     "pricingTitle": "Przejrzysta cena",
     "pricingSubtitle": "Jeden plan, wszystkie funkcje",
     "planProfessional": "PLAN PROFESJONALNY",
-    "price": "800 zł",
+    "price": "1.690 PLN",
     "perOrganization": "za organizację",
     "perYear": "/rok",
     "noSetupFee": "Bez opłaty wstępnej. Anuluj w każdej chwili.",
@@ -69,7 +69,13 @@
       "Priorytetowe wsparcie techniczne",
       "Automatyczne codzienne kopie zapasowe",
       "Darmowe aktualizacje"
-    ]
+    ],
+    "penaltiesTitle": "Kary za brak zgodności BHP",
+    "penaltiesSubtitle": "Oblicz swoje ryzyko finansowe jeśli brakuje obowiązkowych dokumentów",
+    "penaltiesIntro": "Organy kontrolne mogą nałożyć kary między:",
+    "penaltiesCalculator": "Zaznacz czego NIE masz w porządku:",
+    "penaltiesTotal": "Całkowite ryzyko kar:",
+    "penaltiesDisclaimer": "Wartości szacunkowe według aktualnego prawodawstwa. Rzeczywiste kary mogą się różnić."
   },
   "login": {
     "title": "Platforma BHP — Logowanie",

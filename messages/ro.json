@@ -41,7 +41,7 @@
     "pricingTitle": "Preț transparent",
     "pricingSubtitle": "Un singur plan, toate funcționalitățile",
     "planProfessional": "PLAN PROFESIONAL",
-    "price": "1000 lei",
+    "price": "990 LEI",
     "perOrganization": "per organizație",
     "perYear": "/an",
     "noSetupFee": "Fără setup fee. Anulezi oricând.",
@@ -69,7 +69,13 @@
       "Suport tehnic prioritar",
       "Backup automat zilnic",
       "Actualizări gratuite"
-    ]
+    ],
+    "penaltiesTitle": "Amenzi fără conformitate SSM",
+    "penaltiesSubtitle": "Calculează riscul tău financiar dacă lipsesc documentele obligatorii",
+    "penaltiesIntro": "Autoritățile de control pot aplica amenzi între:",
+    "penaltiesCalculator": "Bifează ce NU ai în regulă:",
+    "penaltiesTotal": "Risc total amenzi:",
+    "penaltiesDisclaimer": "Valori estimative conform legislației actuale. Amenzi reale pot varia."
   },
   "login": {
     "title": "Platformă SSM — Autentificare",

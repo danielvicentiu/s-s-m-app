@@ -41,7 +41,7 @@
     "pricingTitle": "Átlátható árazás",
     "pricingSubtitle": "Egy csomag, minden funkcióval",
     "planProfessional": "PROFESSZIONÁLIS CSOMAG",
-    "price": "80 000 Ft",
+    "price": "74.900 HUF",
     "perOrganization": "szervezetenként",
     "perYear": "/év",
     "noSetupFee": "Nincs beállítási díj. Bármikor lemondható.",
@@ -69,7 +69,13 @@
       "Prioritásos technikai támogatás",
       "Automatikus napi mentés",
       "Ingyenes frissítések"
-    ]
+    ],
+    "penaltiesTitle": "Bírságok munkavédelmi hiányosságokért",
+    "penaltiesSubtitle": "Számítsa ki pénzügyi kockázatát ha hiányoznak kötelező dokumentumok",
+    "penaltiesIntro": "Az ellenőrző hatóságok bírságokat szabhatnak ki:",
+    "penaltiesCalculator": "Jelölje be, mi NINCS rendben:",
+    "penaltiesTotal": "Teljes bírság kockázat:",
+    "penaltiesDisclaimer": "Becsült értékek a hatályos jogszabályok szerint. A tényleges bírságok eltérhetnek."
   },
   "login": {
     "title": "Munkavédelmi platform — Bejelentkezés",

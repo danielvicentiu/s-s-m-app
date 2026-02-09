@@ -41,7 +41,7 @@
     "pricingTitle": "Transparente Preise",
     "pricingSubtitle": "Ein Plan, alle Funktionen",
     "planProfessional": "PROFESSIONELLER PLAN",
-    "price": "€200",
+    "price": "399 EUR",
     "perOrganization": "pro Organisation",
     "perYear": "/Jahr",
     "noSetupFee": "Keine Einrichtungsgebühr. Jederzeit kündbar.",
@@ -69,7 +69,13 @@
       "Prioritärer technischer Support",
       "Automatisches tägliches Backup",
       "Kostenlose Updates"
-    ]
+    ],
+    "penaltiesTitle": "Bußgelder ohne Arbeitssicherheits-Compliance",
+    "penaltiesSubtitle": "Berechnen Sie Ihr finanzielles Risiko wenn Pflichtdokumente fehlen",
+    "penaltiesIntro": "Aufsichtsbehörden können Bußgelder verhängen zwischen:",
+    "penaltiesCalculator": "Markieren Sie was NICHT in Ordnung ist:",
+    "penaltiesTotal": "Gesamtes Bußgeldrisiko:",
+    "penaltiesDisclaimer": "Schätzwerte gemäß geltendem Recht. Tatsächliche Bußgelder können variieren."
   },
   "login": {
     "title": "Arbeitssicherheitsplattform — Anmeldung",
