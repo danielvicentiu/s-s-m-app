@@ -11,6 +11,7 @@ import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { ValuePreview } from '@/components/ui/ValuePreview'
 import Link from 'next/link'
 import { UserPlus, FileText } from 'lucide-react'
+import LanguageSelector from '@/components/LanguageSelector'
 
 interface OrgOption {
   id: string
@@ -276,6 +277,8 @@ export default function DashboardClient({
                 </button>
               </label>
             </div>
+            {/* Language Selector */}
+            <LanguageSelector variant="inline" />
             <span className="text-sm text-gray-400">Consultant</span>
             <form action="/api/auth/signout" method="POST">
               <button type="submit" className="text-sm text-red-400 hover:text-red-600 font-medium">

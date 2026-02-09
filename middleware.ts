@@ -1,13 +1,24 @@
 // middleware.ts
-// 1) next-intl: detectează/redirectează locale (ro, bg, en, hu, de)
+// 1) next-intl: detectează/redirectează locale (ro, bg, hu, de, pl)
 // 2) Supabase Auth: redirect la /login dacă userul nu e autentificat
 // 3) RBAC: Verificare dinamică roluri din user_roles cu fallback pe memberships
+// 4) Domain-based locale detection: DOMAIN_CONFIG pentru viitor
 
 import createMiddleware from 'next-intl/middleware'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { routing } from './i18n/routing'
+
+// DOMAIN_CONFIG: Mapare domenii viitoare → locale
+// Când se cumpără domeniile, middleware-ul va detecta automat limba bazată pe domeniu
+const DOMAIN_CONFIG: Record<string, string> = {
+  'bzr24.bg': 'bg',      // Bulgaria - ZBUT (Zakon za Bezopasnost i Usloviya na Trud)
+  'sst24.hu': 'hu',      // Hungary - Munkavédelem
+  'as-dig.de': 'de',     // Germany - Arbeitssicherheit
+  'bhp24.pl': 'pl',      // Poland - BHP (Bezpieczeństwo i Higiena Pracy)
+  's-s-m.ro': 'ro',      // Romania - SSM (Securitate și Sănătate în Muncă)
+}
 
 const intlMiddleware = createMiddleware(routing)
 
@@ -78,14 +89,28 @@ export async function middleware(request: NextRequest) {
   const intlResponse = intlMiddleware(request)
 
   // Step 2: Extract locale from the URL (first segment after /)
+  // Also detect from domain if configured
   const pathname = request.nextUrl.pathname
-  const localeMatch = pathname.match(/^\/(ro|bg|en|hu|de)\//)
-  const locale = localeMatch ? localeMatch[1] : routing.defaultLocale
+  const hostname = request.headers.get('host') || ''
+  const domainLocale = DOMAIN_CONFIG[hostname]
+
+  const localeMatch = pathname.match(/^\/(ro|bg|hu|de|pl)\//)
+  const locale = localeMatch ? localeMatch[1] : (domainLocale || routing.defaultLocale)
 
   // Strip locale prefix for path matching
   const pathWithoutLocale = localeMatch
-    ? pathname.replace(/^\/(ro|bg|en|hu|de)/, '')
+    ? pathname.replace(/^\/(ro|bg|hu|de|pl)/, '')
     : pathname
+
+  // Set x-country-code header for downstream API routes and components
+  const countryCodeMap: Record<string, string> = {
+    'ro': 'RO',
+    'bg': 'BG',
+    'hu': 'HU',
+    'de': 'DE',
+    'pl': 'PL',
+  }
+  const countryCode = countryCodeMap[locale] || 'RO'
 
   // Protected paths that need auth + optional RBAC
   const protectedSegments = ['/dashboard', '/onboarding', '/admin', '/consultant', '/firma', '/angajat', '/inspector']
@@ -168,7 +193,25 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return intlResponse
+  // Add x-country-code header to response
+  const response = NextResponse.next({
+    request: {
+      headers: new Headers(request.headers),
+    },
+  })
+  response.headers.set('x-country-code', countryCode)
+
+  // Copy intlResponse cookies and headers to our response
+  intlResponse.cookies.getAll().forEach(cookie => {
+    response.cookies.set(cookie.name, cookie.value, cookie)
+  })
+  intlResponse.headers.forEach((value, key) => {
+    if (!response.headers.has(key)) {
+      response.headers.set(key, value)
+    }
+  })
+
+  return response
 }
 
 export const config = {

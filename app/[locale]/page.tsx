@@ -44,7 +44,7 @@ export default function LandingPage() {
                 locale="ro"
                 className={`px-2 py-1 rounded transition-colors ${locale === 'ro' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
               >
-                RO
+                🇷🇴 RO
               </Link>
               <span className="text-gray-300">|</span>
               <Link
@@ -52,7 +52,7 @@ export default function LandingPage() {
                 locale="bg"
                 className={`px-2 py-1 rounded transition-colors ${locale === 'bg' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
               >
-                BG
+                🇧🇬 BG
               </Link>
               <span className="text-gray-300">|</span>
               <Link
@@ -60,7 +60,7 @@ export default function LandingPage() {
                 locale="hu"
                 className={`px-2 py-1 rounded transition-colors ${locale === 'hu' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
               >
-                HU
+                🇭🇺 HU
               </Link>
               <span className="text-gray-300">|</span>
               <Link
@@ -68,15 +68,15 @@ export default function LandingPage() {
                 locale="de"
                 className={`px-2 py-1 rounded transition-colors ${locale === 'de' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
               >
-                DE
+                🇩🇪 DE
               </Link>
               <span className="text-gray-300">|</span>
               <Link
                 href="/"
-                locale="en"
-                className={`px-2 py-1 rounded transition-colors ${locale === 'en' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
+                locale="pl"
+                className={`px-2 py-1 rounded transition-colors ${locale === 'pl' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
               >
-                EN
+                🇵🇱 PL
               </Link>
             </div>
 
