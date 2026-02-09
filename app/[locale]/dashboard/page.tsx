@@ -42,11 +42,19 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     .select('*, organizations(name, cui)')
 
   // Fetch employees pentru tab Angajați
-  const { data: employees } = await supabase
+  const { data: employees, error: employeesError } = await supabase
     .from('employees')
     .select('*, organizations(name, cui)')
     .eq('is_active', true)
     .order('hire_date', { ascending: false })
+
+  // DEBUG: Log employees data
+  console.log('🔍 [Dashboard] Employees query:', {
+    count: employees?.length || 0,
+    error: employeesError,
+    sample: employees?.[0],
+    isSuperAdmin
+  })
 
   // RBAC: Obține organizațiile accesibile
   let baseOrganizations

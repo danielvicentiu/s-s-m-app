@@ -38,6 +38,13 @@ export default function DashboardClient({
   valuePreviewMap = {}, isConsultant = false, initialPrefs = {},
   organizations, savedSelectedOrg = 'all'
 }: Props) {
+  // DEBUG: Log employees prop
+  console.log('🔍 [DashboardClient] Employees prop:', {
+    count: employees?.length || 0,
+    data: employees,
+    isArray: Array.isArray(employees)
+  })
+
   const [activeTab, setActiveTab] = useState<'medical' | 'equipment' | 'employees'>('medical')
   const [selectedOrg, setSelectedOrg] = useState<string>(savedSelectedOrg)
   const router = useRouter()
@@ -91,6 +98,14 @@ export default function DashboardClient({
     : employees.filter((e: any) => e.organization_id === selectedOrg)
   const filteredAlerts = selectedOrg === 'all' ? alerts
     : alerts.filter((a: any) => a.organization_id === selectedOrg)
+
+  // DEBUG: Log filtered employees
+  console.log('🔍 [DashboardClient] Filtered employees:', {
+    selectedOrg,
+    totalEmployees: employees?.length || 0,
+    filteredCount: filteredEmployees?.length || 0,
+    filteredData: filteredEmployees
+  })
 
   const selectedOrgData = selectedOrg !== 'all'
     ? organizations.find(o => o.id === selectedOrg)

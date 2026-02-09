@@ -167,6 +167,7 @@ export default function AngajatNou() {
           phone: formData.phone || null,
           hire_date: hireDateISO,
           organization_id: formData.organization_id,
+          is_active: true, // CRITICAL: Altfel nu apar în dashboard
         },
       ])
 
@@ -184,9 +185,9 @@ export default function AngajatNou() {
         organization_id: '',
       })
 
-      // Redirect after 2 seconds
+      // Redirect after 2 seconds to localized dashboard
       setTimeout(() => {
-        router.push('/dashboard')
+        router.push('/ro/dashboard')
       }, 2000)
     } catch (err: any) {
       setError(err.message || 'Eroare la salvare angajat')
