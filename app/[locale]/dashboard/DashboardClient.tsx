@@ -25,6 +25,7 @@ interface Props {
   alerts: any[]
   medicalExams: any[]
   equipment: any[]
+  employees: any[]
   valuePreviewMap?: Record<string, any>
   isConsultant?: boolean
   initialPrefs?: Record<string, any>
@@ -33,11 +34,11 @@ interface Props {
 }
 
 export default function DashboardClient({
-  user, overview, alerts, medicalExams, equipment,
+  user, overview, alerts, medicalExams, equipment, employees,
   valuePreviewMap = {}, isConsultant = false, initialPrefs = {},
   organizations, savedSelectedOrg = 'all'
 }: Props) {
-  const [activeTab, setActiveTab] = useState<'medical' | 'equipment'>('medical')
+  const [activeTab, setActiveTab] = useState<'medical' | 'equipment' | 'employees'>('medical')
   const [selectedOrg, setSelectedOrg] = useState<string>(savedSelectedOrg)
   const router = useRouter()
   const pathname = usePathname()
@@ -86,6 +87,8 @@ export default function DashboardClient({
     : medicalExams.filter((m: any) => m.organization_id === selectedOrg)
   const filteredEquipment = selectedOrg === 'all' ? equipment
     : equipment.filter((e: any) => e.organization_id === selectedOrg)
+  const filteredEmployees = selectedOrg === 'all' ? employees
+    : employees.filter((e: any) => e.organization_id === selectedOrg)
   const filteredAlerts = selectedOrg === 'all' ? alerts
     : alerts.filter((a: any) => a.organization_id === selectedOrg)
 
@@ -230,11 +233,11 @@ export default function DashboardClient({
                 <span>Angajat Nou</span>
               </Link>
               <Link
-                href="/documents/generate"
+                href="/ro/documents/generate"
                 className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition flex items-center gap-2"
               >
                 <FileText className="h-4 w-4" />
-                <span>Documente</span>
+                <span>Generează Documente</span>
               </Link>
             </div>
             {/* Toggle-uri panouri */}
@@ -329,6 +332,18 @@ export default function DashboardClient({
                   {eqBadge}
                 </span>
               )}
+            </button>
+            {/* Tab Angajați */}
+            <button
+              onClick={() => setActiveTab('employees')}
+              className={`flex-1 py-3.5 text-center text-[15px] font-semibold transition-all flex items-center justify-center gap-2 ${
+                activeTab === 'employees'
+                  ? 'bg-white text-gray-900 border-b-[3px] border-blue-600'
+                  : 'bg-gray-50 text-gray-400 border-b border-gray-200'
+              }`}
+            >
+              👥 Angajați
+              <span className="text-[11px] text-gray-400">({filteredEmployees.length})</span>
             </button>
           </div>
 
@@ -435,6 +450,52 @@ export default function DashboardClient({
                 ))}
                 {filteredEquipment.length === 0 && (
                   <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300">Niciun echipament.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* ============ TABEL ANGAJAȚI ============ */}
+        {activeTab === 'employees' && (
+          <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+            <div className="px-6 py-4 flex justify-between items-center">
+              <h2 className="text-lg font-bold text-gray-900">Angajați</h2>
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-400">{filteredEmployees.length} angajați</span>
+                <button onClick={() => router.push('/dashboard/angajat-nou')} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                  + Angajat nou
+                </button>
+              </div>
+            </div>
+            <table className="w-full">
+              <thead>
+                <tr className="text-left text-[11px] font-bold text-gray-400 uppercase tracking-wider border-t border-gray-100">
+                  <th className="px-6 py-3">Nume complet</th>
+                  <th className="px-6 py-3">Funcție</th>
+                  <th className="px-6 py-3">Cod COR</th>
+                  <th className="px-6 py-3">Naționalitate</th>
+                  <th className="px-6 py-3">Data angajării</th>
+                  <th className="px-6 py-3">Organizație</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filteredEmployees.map((emp: any) => (
+                  <tr key={emp.id} className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 font-medium text-gray-900">{emp.full_name || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{emp.job_title || '—'}</td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">
+                        {emp.cor_code || '—'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{emp.nationality || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{fmtDate(emp.hire_date)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{emp.organizations?.name || '—'}</td>
+                  </tr>
+                ))}
+                {filteredEmployees.length === 0 && (
+                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300">Niciun angajat adăugat.</td></tr>
                 )}
               </tbody>
             </table>
