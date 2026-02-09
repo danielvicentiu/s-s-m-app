@@ -62,6 +62,14 @@ export default function LandingPage() {
               >
                 HU
               </Link>
+              <span className="text-gray-300">|</span>
+              <Link
+                href="/"
+                locale="de"
+                className={`px-2 py-1 rounded transition-colors ${locale === 'de' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
+              >
+                DE
+              </Link>
             </div>
 
             <button

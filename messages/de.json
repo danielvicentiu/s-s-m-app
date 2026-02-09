@@ -34,13 +34,14 @@
     "badge": "Digitale Plattform für Arbeitssicherheit und Brandschutz",
     "title": "Arbeitssicherheit und Brandschutz Compliance",
     "titleHighlight": "100% automatisiert",
-    "subtitle": "Verwalten Sie Arbeitsmedizin, Brandschutzausrüstung, Warnungen und Berichte von einer einzigen Plattform aus.",
+    "subtitle": "Verwalten Sie Arbeitsmedizin, Brandschutzausrüstung, Warnungen und Berichte von einer einzigen Plattform aus. Null Bürokratie, null Bußgelder.",
     "cta": "Jetzt starten →",
     "featuresTitle": "Alles was Sie brauchen an einem Ort",
     "featuresSubtitle": "6 integrierte Module für vollständige Arbeitssicherheits- und Brandschutz-Compliance",
     "pricingTitle": "Transparente Preise",
     "pricingSubtitle": "Ein Plan, alle Funktionen",
     "planProfessional": "PROFESSIONELLER PLAN",
+    "price": "€200",
     "perOrganization": "pro Organisation",
     "perYear": "/Jahr",
     "noSetupFee": "Keine Einrichtungsgebühr. Jederzeit kündbar.",
@@ -52,7 +53,7 @@
       "alertsTitle": "Automatische Warnungen",
       "alertsDesc": "Tägliche E-Mail mit bevorstehenden Ablaufterminen (30/15/7 Tage). Resend-Integration, WhatsApp-Benachrichtigungen (demnächst).",
       "riskTitle": "Finanzielles Risiko",
-      "riskDesc": "Automatische Berechnung potenzieller Bußgelder. Aufschlüsselung nach Behörde, Min-Max-Schätzung.",
+      "riskDesc": "Automatische Berechnung potenzieller Bußgelder (Gewerbeaufsicht/Berufsgenossenschaft). Aufschlüsselung nach Behörde, Min-Max-Schätzung in €.",
       "multiOrgTitle": "Multi-Organisation",
       "multiOrgDesc": "Verwalten Sie 100+ Unternehmen von einem Dashboard aus. Sofortige Filterung, gespeicherte Einstellungen.",
       "reportsTitle": "PDF-Berichte",
@@ -177,7 +178,7 @@
   "footer": {
     "description": "Digitale Plattform für Arbeitssicherheits- und Brandschutz-Compliance.",
     "email": "contact@s-s-m.ro",
-    "phone": "+40 700 000 000",
-    "address": "Bukarest, Rumänien"
+    "phone": "+49 30 000 0000",
+    "address": "Berlin, Deutschland"
   }
 }
