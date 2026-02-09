@@ -70,6 +70,14 @@ export default function LandingPage() {
               >
                 DE
               </Link>
+              <span className="text-gray-300">|</span>
+              <Link
+                href="/"
+                locale="en"
+                className={`px-2 py-1 rounded transition-colors ${locale === 'en' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
+              >
+                EN
+              </Link>
             </div>
 
             <button
