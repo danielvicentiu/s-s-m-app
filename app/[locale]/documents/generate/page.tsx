@@ -60,13 +60,19 @@ export default async function DocumentGeneratePage() {
       .order('full_name', { ascending: true })
 
     if (empError) {
-      console.error('❌ [DocumentGenerate] Error fetching employees:', empError)
+      console.error('❌ [DocumentGenerate] Error fetching employees (super_admin):', empError)
+      console.error('❌ [DocumentGenerate] Error details:', JSON.stringify(empError, null, 2))
+      console.error('❌ [DocumentGenerate] Error code:', empError?.code)
+      console.error('❌ [DocumentGenerate] Error message:', empError?.message)
+      console.error('❌ [DocumentGenerate] Error hint:', empError?.hint)
+      console.error('❌ [DocumentGenerate] Error details obj:', empError?.details)
     }
     employees = empsData
 
     console.log('🔍 [DocumentGenerate] Employees query (super_admin):', {
       count: employees?.length || 0,
-      error: empError,
+      hasError: !!empError,
+      errorCode: empError?.code,
       sample: employees?.[0],
       allData: employees
     })
@@ -103,13 +109,19 @@ export default async function DocumentGeneratePage() {
       .order('full_name', { ascending: true })
 
     if (empError) {
-      console.error('❌ [DocumentGenerate] Error fetching employees:', empError)
+      console.error('❌ [DocumentGenerate] Error fetching employees (non-admin):', empError)
+      console.error('❌ [DocumentGenerate] Error details:', JSON.stringify(empError, null, 2))
+      console.error('❌ [DocumentGenerate] Error code:', empError?.code)
+      console.error('❌ [DocumentGenerate] Error message:', empError?.message)
+      console.error('❌ [DocumentGenerate] Error hint:', empError?.hint)
+      console.error('❌ [DocumentGenerate] Error details obj:', empError?.details)
     }
     employees = empsData
 
     console.log('🔍 [DocumentGenerate] Employees query (non-admin):', {
       count: employees?.length || 0,
-      error: empError,
+      hasError: !!empError,
+      errorCode: empError?.code,
       sample: employees?.[0],
       allData: employees,
       filterOrgIds: myOrgIds
