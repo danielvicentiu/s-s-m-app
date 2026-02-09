@@ -8,7 +8,11 @@ const { generateTematicaPDF } = require('@/lib/generate-tematica')
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔍 [API/generate-tematica] Request received')
+
     const body = await request.json()
+    console.log('🔍 [API/generate-tematica] Request body:', JSON.stringify(body, null, 2))
+
     const {
       employee_id,
       employee_name,
@@ -20,6 +24,7 @@ export async function POST(request: NextRequest) {
     } = body
 
     if (!employee_name || !organization_id) {
+      console.error('❌ [API/generate-tematica] Missing required fields:', { employee_name, organization_id })
       return NextResponse.json(
         { error: 'employee_name and organization_id are required' },
         { status: 400 }
@@ -68,7 +73,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate PDF
+    console.log('🔍 [API/generate-tematica] Generating PDF with data:', JSON.stringify(pdfData, null, 2))
     const pdfBuffer: Buffer = await generateTematicaPDF(pdfData)
+    console.log('✅ [API/generate-tematica] PDF generated successfully, buffer size:', pdfBuffer.length)
 
     // Return PDF
     const filename = `Tematica_Instruire_${employee_name.replace(/\s+/g, '_')}_${new Date().getFullYear()}.pdf`
@@ -82,9 +89,11 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('PDF generation error:', error)
+    console.error('❌ [API/generate-tematica] PDF generation error:', error)
+    console.error('❌ [API/generate-tematica] Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('❌ [API/generate-tematica] Error message:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
-      { error: 'Failed to generate PDF', details: String(error) },
+      { error: 'Failed to generate PDF', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

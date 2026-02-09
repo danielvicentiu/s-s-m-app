@@ -8,7 +8,11 @@ const { generateFisaPostPDF } = require('@/lib/generate-fisa-post')
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔍 [API/generate-fisa-post] Request received')
+
     const body = await request.json()
+    console.log('🔍 [API/generate-fisa-post] Request body:', JSON.stringify(body, null, 2))
+
     const {
       employee_id,
       employee_name,
@@ -22,6 +26,7 @@ export async function POST(request: NextRequest) {
     } = body
 
     if (!employee_name || !job_title || !organization_id) {
+      console.error('❌ [API/generate-fisa-post] Missing required fields:', { employee_name, job_title, organization_id })
       return NextResponse.json(
         { error: 'employee_name, job_title, and organization_id are required' },
         { status: 400 }
@@ -60,7 +65,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate PDF
+    console.log('🔍 [API/generate-fisa-post] Generating PDF with data:', JSON.stringify(pdfData, null, 2))
     const pdfBuffer: Buffer = await generateFisaPostPDF(pdfData)
+    console.log('✅ [API/generate-fisa-post] PDF generated successfully, buffer size:', pdfBuffer.length)
 
     // Return PDF
     const filename = `Fisa_Post_${job_title.replace(/\s+/g, '_')}_${employee_name.replace(/\s+/g, '_')}.pdf`
@@ -74,9 +81,11 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('PDF generation error:', error)
+    console.error('❌ [API/generate-fisa-post] PDF generation error:', error)
+    console.error('❌ [API/generate-fisa-post] Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('❌ [API/generate-fisa-post] Error message:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
-      { error: 'Failed to generate PDF', details: String(error) },
+      { error: 'Failed to generate PDF', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
