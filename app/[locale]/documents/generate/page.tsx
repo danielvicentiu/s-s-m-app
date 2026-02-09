@@ -44,6 +44,7 @@ export default async function DocumentGeneratePage() {
     const { data: empsData, error: empError } = await supabase
       .from('employees')
       .select('id, full_name, job_title, cor_code, organization_id, organizations (name)')
+      .eq('is_active', true)
       .order('full_name', { ascending: true })
 
     if (empError) {
@@ -69,6 +70,7 @@ export default async function DocumentGeneratePage() {
       .from('employees')
       .select('id, full_name, job_title, cor_code, organization_id, organizations (name)')
       .in('organization_id', myOrgIds)
+      .eq('is_active', true)
       .order('full_name', { ascending: true })
 
     if (empError) {
