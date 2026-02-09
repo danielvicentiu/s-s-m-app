@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useRef, useEffect } from 'react'
 import { useLocale } from 'next-intl'
 import { useRouter, usePathname } from '@/i18n/navigation'
 
@@ -19,69 +20,104 @@ const LANGUAGES: LanguageOption[] = [
 ]
 
 interface Props {
-  variant?: 'dropdown' | 'inline'
   className?: string
 }
 
-export default function LanguageSelector({ variant = 'dropdown', className = '' }: Props) {
+export default function LanguageSelector({ className = '' }: Props) {
   const locale = useLocale()
   const router = useRouter()
   const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
 
   const currentLanguage = LANGUAGES.find(lang => lang.code === locale) || LANGUAGES[0]
 
   const handleLanguageChange = (newLocale: string) => {
+    setOpen(false)
     router.replace(pathname, { locale: newLocale })
   }
 
-  if (variant === 'inline') {
-    return (
-      <div className={`flex items-center gap-1 text-sm ${className}`}>
-        {LANGUAGES.map((lang, index) => (
-          <div key={lang.code} className="flex items-center gap-1">
-            {index > 0 && <span className="text-gray-400 mx-1">|</span>}
-            <button
-              onClick={() => handleLanguageChange(lang.code)}
-              className={`px-2 py-1 rounded transition-colors ${
-                locale === lang.code
-                  ? 'font-bold text-blue-600 bg-blue-50'
-                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-              title={lang.country}
-            >
-              <span className="mr-1">{lang.flag}</span>
-              <span className="hidden sm:inline">{lang.code.toUpperCase()}</span>
-            </button>
-          </div>
-        ))}
-      </div>
-    )
-  }
+  // Close on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [open])
 
-  // Dropdown variant
+  // Close on Escape
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    if (open) {
+      document.addEventListener('keydown', handleEscape)
+      return () => document.removeEventListener('keydown', handleEscape)
+    }
+  }, [open])
+
   return (
-    <div className={`relative ${className}`}>
-      <select
-        value={locale}
-        onChange={(e) => handleLanguageChange(e.target.value)}
-        className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg pl-3 pr-8 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-colors"
+    <div className={`relative ${className}`} ref={ref}>
+      {/* Trigger button */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
+        aria-expanded={open}
+        aria-haspopup="listbox"
         title="Selectează limba / Select language"
       >
-        {LANGUAGES.map((lang) => (
-          <option key={lang.code} value={lang.code}>
-            {lang.flag} {lang.label}
-          </option>
-        ))}
-      </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
+        <span className="text-base leading-none">{currentLanguage.flag}</span>
+        <span className="font-semibold">{currentLanguage.code.toUpperCase()}</span>
+        <svg
+          className={`h-3.5 w-3.5 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
-      </div>
+      </button>
+
+      {/* Dropdown popover */}
+      {open && (
+        <div
+          className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50 min-w-[180px]"
+          role="listbox"
+          aria-label="Select language"
+        >
+          {LANGUAGES.map((lang) => {
+            const isActive = locale === lang.code
+            return (
+              <button
+                key={lang.code}
+                onClick={() => handleLanguageChange(lang.code)}
+                role="option"
+                aria-selected={isActive}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-700 font-semibold'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-lg leading-none">{lang.flag}</span>
+                <div className="flex flex-col items-start">
+                  <span className={isActive ? 'font-semibold' : 'font-medium'}>{lang.label}</span>
+                  <span className="text-[11px] text-gray-400">{lang.country}</span>
+                </div>
+                {isActive && (
+                  <svg className="ml-auto h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
