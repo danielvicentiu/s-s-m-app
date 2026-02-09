@@ -7,6 +7,94 @@ import Link from 'next/link'
 
 const supabase = createSupabaseBrowser()
 
+// Coduri COR (Clasificarea Ocupațiilor din România) - selecție comuni
+const COR_CODES = [
+  { code: '1120', name: 'Director general' },
+  { code: '1210', name: 'Director financiar-contabil' },
+  { code: '1330', name: 'Director IT' },
+  { code: '1420', name: 'Director comercial' },
+  { code: '2141', name: 'Inginer industrial' },
+  { code: '2142', name: 'Inginer civil' },
+  { code: '2143', name: 'Inginer agronom' },
+  { code: '2144', name: 'Inginer mecanic' },
+  { code: '2145', name: 'Inginer chimist' },
+  { code: '2149', name: 'Inginer în alte domenii' },
+  { code: '2221', name: 'Asistent medical generalist' },
+  { code: '2230', name: 'Medic medicina muncii' },
+  { code: '2411', name: 'Contabil' },
+  { code: '2412', name: 'Consilier financiar' },
+  { code: '2511', name: 'Analist de sistem informatic' },
+  { code: '2512', name: 'Dezvoltator de software' },
+  { code: '2513', name: 'Programator web' },
+  { code: '3119', name: 'Tehnician' },
+  { code: '3311', name: 'Expert în domeniul protecției muncii' },
+  { code: '3312', name: 'Expert prevenire și stingere incendii' },
+  { code: '3324', name: 'Agent de securitate' },
+  { code: '4110', name: 'Secretar' },
+  { code: '4120', name: 'Operator introducere, validare și prelucrare date' },
+  { code: '4211', name: 'Casier' },
+  { code: '4321', name: 'Gestionar depozit' },
+  { code: '5120', name: 'Bucătar' },
+  { code: '5223', name: 'Vânzător' },
+  { code: '7111', name: 'Zidar' },
+  { code: '7112', name: 'Tencuitor' },
+  { code: '7115', name: 'Dulgher' },
+  { code: '7121', name: 'Acoperitor' },
+  { code: '7131', name: 'Zugrav' },
+  { code: '7211', name: 'Sudor' },
+  { code: '7233', name: 'Lăcătuș mecanic' },
+  { code: '7411', name: 'Electrician' },
+  { code: '7421', name: 'Electronist' },
+  { code: '8111', name: 'Miner' },
+  { code: '8157', name: 'Operator mașini de curățare' },
+  { code: '8322', name: 'Șofer auto' },
+  { code: '9111', name: 'Îngrijitor clădiri' },
+  { code: '9112', name: 'Muncitor necalificat' },
+  { code: '9329', name: 'Muncitor auxiliar' },
+]
+
+// Țări pentru naționalitate
+const COUNTRIES = [
+  { code: 'RO', name: 'România' },
+  { code: 'BG', name: 'Bulgaria' },
+  { code: 'HU', name: 'Ungaria' },
+  { code: 'DE', name: 'Germania' },
+  { code: 'PL', name: 'Polonia' },
+  { code: 'MD', name: 'Republica Moldova' },
+  { code: 'UA', name: 'Ucraina' },
+  { code: 'IT', name: 'Italia' },
+  { code: 'ES', name: 'Spania' },
+  { code: 'FR', name: 'Franța' },
+  { code: 'GB', name: 'Marea Britanie' },
+  { code: 'NL', name: 'Olanda' },
+  { code: 'BE', name: 'Belgia' },
+  { code: 'AT', name: 'Austria' },
+  { code: 'CH', name: 'Elveția' },
+  { code: 'TR', name: 'Turcia' },
+  { code: 'GR', name: 'Grecia' },
+  { code: 'RS', name: 'Serbia' },
+  { code: 'OTHER', name: 'Altă țară' },
+]
+
+// Format date to DD/MM/YYYY
+function formatDateToRO(date: Date): string {
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
+// Convert DD/MM/YYYY to YYYY-MM-DD for database
+function convertRODateToISO(roDate: string): string {
+  const [day, month, year] = roDate.split('/')
+  return `${year}-${month}-${day}`
+}
+
+// Get today's date in DD/MM/YYYY format
+function getTodayRO(): string {
+  return formatDateToRO(new Date())
+}
+
 export default function AngajatNou() {
   const router = useRouter()
   const [organizations, setOrganizations] = useState<any[]>([])
@@ -16,11 +104,12 @@ export default function AngajatNou() {
 
   const [formData, setFormData] = useState({
     full_name: '',
+    cor_code: '',
     job_title: '',
     nationality: 'RO',
     email: '',
     phone: '',
-    hire_date: '',
+    hire_date: getTodayRO(), // Default: astăzi
     organization_id: '',
   })
 
@@ -37,6 +126,16 @@ export default function AngajatNou() {
     getOrganizations()
   }, [])
 
+  // Update job_title when COR code is selected
+  function handleCORChange(code: string) {
+    const cor = COR_CODES.find((c) => c.code === code)
+    setFormData({
+      ...formData,
+      cor_code: code,
+      job_title: cor?.name || formData.job_title,
+    })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -48,14 +147,25 @@ export default function AngajatNou() {
         throw new Error('Nume și organizație sunt obligatorii')
       }
 
+      // Validate and convert hire_date
+      let hireDateISO = null
+      if (formData.hire_date) {
+        try {
+          hireDateISO = convertRODateToISO(formData.hire_date)
+        } catch {
+          throw new Error('Format dată incorect. Folosește ZZ/LL/AAAA (ex: 15/01/2024)')
+        }
+      }
+
       const { error: insertError } = await supabase.from('employees').insert([
         {
           full_name: formData.full_name,
+          cor_code: formData.cor_code || null,
           job_title: formData.job_title || null,
           nationality: formData.nationality || 'RO',
           email: formData.email || null,
           phone: formData.phone || null,
-          hire_date: formData.hire_date || null,
+          hire_date: hireDateISO,
           organization_id: formData.organization_id,
         },
       ])
@@ -65,11 +175,12 @@ export default function AngajatNou() {
       setSuccess(true)
       setFormData({
         full_name: '',
+        cor_code: '',
         job_title: '',
         nationality: 'RO',
         email: '',
         phone: '',
-        hire_date: '',
+        hire_date: getTodayRO(),
         organization_id: '',
       })
 
@@ -166,20 +277,44 @@ export default function AngajatNou() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Job Title */}
+            {/* COR Code */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Funcția
+                Cod COR (Clasificarea Ocupațiilor)
+              </label>
+              <select
+                value={formData.cor_code}
+                onChange={(e) => handleCORChange(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Selectează ocupația</option>
+                {COR_CODES.map((cor) => (
+                  <option key={cor.code} value={cor.code}>
+                    {cor.code} — {cor.name}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                Selectează din listă sau lasă gol pentru funcție personalizată
+              </p>
+            </div>
+
+            {/* Job Title (auto-filled or custom) */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Funcția (titlul postului)
               </label>
               <input
                 type="text"
                 value={formData.job_title}
                 onChange={(e) => setFormData({ ...formData, job_title: e.target.value })}
-                placeholder="ex: Inginer, Muncitor, Contabil"
+                placeholder="Se completează automat din COR sau editează manual"
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Nationality */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -190,15 +325,29 @@ export default function AngajatNou() {
                 onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="RO">România</option>
-                <option value="BG">Bulgaria</option>
-                <option value="HU">Ungaria</option>
-                <option value="DE">Germania</option>
-                <option value="PL">Polonia</option>
-                <option value="MD">Moldova</option>
-                <option value="UA">Ucraina</option>
-                <option value="OTHER">Altă țară</option>
+                {COUNTRIES.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.name}
+                  </option>
+                ))}
               </select>
+            </div>
+
+            {/* Hire Date */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Data Angajării
+              </label>
+              <input
+                type="text"
+                value={formData.hire_date}
+                onChange={(e) => setFormData({ ...formData, hire_date: e.target.value })}
+                placeholder="ZZ/LL/AAAA (ex: 15/01/2024)"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Format: ZZ/LL/AAAA (ex: 15/01/2024) — Default: astăzi
+              </p>
             </div>
           </div>
 
@@ -226,22 +375,6 @@ export default function AngajatNou() {
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-          </div>
-
-          {/* Hire Date */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Data Angajării
-            </label>
-            <input
-              type="date"
-              value={formData.hire_date}
-              onChange={(e) => setFormData({ ...formData, hire_date: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Opțional — data începerii activității în organizație
-            </p>
           </div>
 
           {/* Submit */}

@@ -41,6 +41,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     .from('safety_equipment')
     .select('*, organizations(name, cui)')
 
+  // Fetch employees pentru tab Angajați
+  const { data: employees } = await supabase
+    .from('employees')
+    .select('*, organizations(name, cui)')
+    .eq('is_active', true)
+    .order('hire_date', { ascending: false })
+
   // RBAC: Obține organizațiile accesibile
   let baseOrganizations
 
@@ -173,6 +180,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       alerts={alerts || []}
       medicalExams={medicalExams || []}
       equipment={equipment || []}
+      employees={employees || []}
       valuePreviewMap={valuePreviewMap}
       isConsultant={isConsultant}
       initialPrefs={initialPrefs}
