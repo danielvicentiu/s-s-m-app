@@ -7,17 +7,84 @@ import { useRouter, usePathname } from '@/i18n/navigation'
 interface LanguageOption {
   code: string
   label: string
-  flag: string
   country: string
 }
 
 const LANGUAGES: LanguageOption[] = [
-  { code: 'ro', label: 'Română', flag: '🇷🇴', country: 'România' },
-  { code: 'bg', label: 'Български', flag: '🇧🇬', country: 'България' },
-  { code: 'hu', label: 'Magyar', flag: '🇭🇺', country: 'Magyarország' },
-  { code: 'de', label: 'Deutsch', flag: '🇩🇪', country: 'Deutschland' },
-  { code: 'pl', label: 'Polski', flag: '🇵🇱', country: 'Polska' },
+  { code: 'ro', label: 'Română', country: 'România' },
+  { code: 'bg', label: 'Български', country: 'България' },
+  { code: 'hu', label: 'Magyar', country: 'Magyarország' },
+  { code: 'de', label: 'Deutsch', country: 'Deutschland' },
+  { code: 'pl', label: 'Polski', country: 'Polska' },
 ]
+
+// SVG Flag components — crisp at any size, no emoji rendering issues
+function FlagRO({ className = 'w-5 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <rect width="213.3" height="480" fill="#002B7F" />
+      <rect width="213.3" height="480" x="213.3" fill="#FCD116" />
+      <rect width="213.3" height="480" x="426.6" fill="#CE1126" />
+    </svg>
+  )
+}
+
+function FlagBG({ className = 'w-5 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <rect width="640" height="160" fill="#fff" />
+      <rect width="640" height="160" y="160" fill="#00966E" />
+      <rect width="640" height="160" y="320" fill="#D62612" />
+    </svg>
+  )
+}
+
+function FlagHU({ className = 'w-5 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <rect width="640" height="160" fill="#CE2939" />
+      <rect width="640" height="160" y="160" fill="#fff" />
+      <rect width="640" height="160" y="320" fill="#477050" />
+    </svg>
+  )
+}
+
+function FlagDE({ className = 'w-5 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <rect width="640" height="160" fill="#000" />
+      <rect width="640" height="160" y="160" fill="#D00" />
+      <rect width="640" height="160" y="320" fill="#FFCE00" />
+    </svg>
+  )
+}
+
+function FlagPL({ className = 'w-5 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <rect width="640" height="240" fill="#fff" />
+      <rect width="640" height="240" y="240" fill="#DC143C" />
+    </svg>
+  )
+}
+
+const FLAG_COMPONENTS: Record<string, React.FC<{ className?: string }>> = {
+  ro: FlagRO,
+  bg: FlagBG,
+  hu: FlagHU,
+  de: FlagDE,
+  pl: FlagPL,
+}
+
+function Flag({ code, className = 'w-5 h-4' }: { code: string; className?: string }) {
+  const FlagComponent = FLAG_COMPONENTS[code]
+  if (!FlagComponent) return null
+  return (
+    <span className="inline-flex items-center rounded-sm overflow-hidden shadow-sm border border-gray-200/50">
+      <FlagComponent className={className} />
+    </span>
+  )
+}
 
 interface Props {
   className?: string
@@ -66,12 +133,12 @@ export default function LanguageSelector({ className = '' }: Props) {
       {/* Trigger button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
         aria-expanded={open}
         aria-haspopup="listbox"
         title="Selectează limba / Select language"
       >
-        <span className="text-base leading-none">{currentLanguage.flag}</span>
+        <Flag code={currentLanguage.code} />
         <span className="font-semibold">{currentLanguage.code.toUpperCase()}</span>
         <svg
           className={`h-3.5 w-3.5 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
@@ -85,7 +152,7 @@ export default function LanguageSelector({ className = '' }: Props) {
       {/* Dropdown popover */}
       {open && (
         <div
-          className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50 min-w-[180px]"
+          className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50 min-w-[200px]"
           role="listbox"
           aria-label="Select language"
         >
@@ -103,7 +170,7 @@ export default function LanguageSelector({ className = '' }: Props) {
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                <span className="text-lg leading-none">{lang.flag}</span>
+                <Flag code={lang.code} className="w-6 h-4" />
                 <div className="flex flex-col items-start">
                   <span className={isActive ? 'font-semibold' : 'font-medium'}>{lang.label}</span>
                   <span className="text-[11px] text-gray-400">{lang.country}</span>
