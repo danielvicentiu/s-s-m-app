@@ -143,3 +143,105 @@ export function getDaysUntilExpiry(expiryDate: string): number {
   const expiry = new Date(expiryDate)
   return Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 }
+
+// ── ADMIN CONFIGURABIL: Tabele master date per țară ──
+
+export type CountryCode = 'RO' | 'BG' | 'HU' | 'DE' | 'PL'
+export type Currency = 'RON' | 'BGN' | 'HUF' | 'EUR' | 'PLN'
+export type ObligationFrequency = 'annual' | 'biannual' | 'monthly' | 'quarterly' | 'on_demand' | 'once'
+export type AlertSeverity = 'info' | 'warning' | 'critical' | 'expired'
+export type NotificationChannel = 'email' | 'whatsapp' | 'sms' | 'push'
+export type EquipmentCategory =
+  | 'fire_safety'
+  | 'first_aid'
+  | 'ppe'
+  | 'emergency_exit'
+  | 'detection'
+  | 'pressure_equipment'
+  | 'lifting_equipment'
+  | 'other'
+
+export interface ObligationType {
+  id: string
+  country_code: CountryCode
+  name: string
+  description: string | null
+  frequency: ObligationFrequency
+  authority_name: string
+  legal_reference: string | null
+  penalty_min: number | null
+  penalty_max: number | null
+  currency: Currency
+  is_active: boolean
+  is_system: boolean
+  display_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface AlertCategory {
+  id: string
+  country_code: CountryCode
+  name: string
+  description: string | null
+  severity: AlertSeverity
+  warning_days_before: number
+  critical_days_before: number
+  obligation_id: string | null
+  notify_channels: NotificationChannel[]
+  is_active: boolean
+  is_system: boolean
+  display_order: number
+  created_at: string
+  updated_at: string
+  // Relație
+  obligation_types?: ObligationType
+}
+
+export interface EquipmentType {
+  id: string
+  country_code: CountryCode
+  name: string
+  description: string | null
+  category: EquipmentCategory
+  subcategory: string | null
+  inspection_frequency: ObligationFrequency
+  legal_standard: string | null
+  obligation_id: string | null
+  max_lifespan_years: number | null
+  requires_certification: boolean
+  certification_authority: string | null
+  is_active: boolean
+  is_system: boolean
+  display_order: number
+  created_at: string
+  updated_at: string
+  // Relație
+  obligation_types?: ObligationType
+}
+
+// Helper: Steaguri emoji per țară
+export const COUNTRY_FLAGS: Record<CountryCode | 'ALL', string> = {
+  'RO': '🇷🇴',
+  'BG': '🇧🇬',
+  'HU': '🇭🇺',
+  'DE': '🇩🇪',
+  'PL': '🇵🇱',
+  'ALL': '🌍'
+}
+
+export const COUNTRY_NAMES: Record<CountryCode, string> = {
+  'RO': 'România',
+  'BG': 'Bulgaria',
+  'HU': 'Ungaria',
+  'DE': 'Germania',
+  'PL': 'Polonia'
+}
+
+export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
+  'RO': 'RON',
+  'BG': 'BGN',
+  'HU': 'HUF',
+  'DE': 'EUR',
+  'PL': 'PLN'
+}
