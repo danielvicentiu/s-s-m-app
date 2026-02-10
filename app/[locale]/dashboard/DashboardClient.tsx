@@ -278,7 +278,7 @@ export default function DashboardClient({
               </label>
             </div>
             {/* Language Selector */}
-            <LanguageSelector variant="inline" />
+            <LanguageSelector />
             <span className="text-sm text-gray-400">Consultant</span>
             <form action="/api/auth/signout" method="POST">
               <button type="submit" className="text-sm text-red-400 hover:text-red-600 font-medium">

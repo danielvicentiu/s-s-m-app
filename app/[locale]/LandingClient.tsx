@@ -1,9 +1,10 @@
 'use client'
 
 import { useTranslations, useLocale } from 'next-intl'
-import { useRouter, Link } from '@/i18n/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { useState } from 'react'
 import type { ObligationType } from '@/lib/types'
+import LanguageSelector from '@/components/LanguageSelector'
 
 interface Props {
   obligations: ObligationType[]
@@ -77,47 +78,7 @@ export default function LandingClient({ obligations }: Props) {
             </a>
 
             {/* Locale switcher */}
-            <div className="flex items-center gap-1 text-sm">
-              <Link
-                href="/"
-                locale="ro"
-                className={`px-2 py-1 rounded transition-colors ${locale === 'ro' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
-              >
-                🇷🇴 RO
-              </Link>
-              <span className="text-gray-300">|</span>
-              <Link
-                href="/"
-                locale="bg"
-                className={`px-2 py-1 rounded transition-colors ${locale === 'bg' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
-              >
-                🇧🇬 BG
-              </Link>
-              <span className="text-gray-300">|</span>
-              <Link
-                href="/"
-                locale="hu"
-                className={`px-2 py-1 rounded transition-colors ${locale === 'hu' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
-              >
-                🇭🇺 HU
-              </Link>
-              <span className="text-gray-300">|</span>
-              <Link
-                href="/"
-                locale="de"
-                className={`px-2 py-1 rounded transition-colors ${locale === 'de' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
-              >
-                🇩🇪 DE
-              </Link>
-              <span className="text-gray-300">|</span>
-              <Link
-                href="/"
-                locale="pl"
-                className={`px-2 py-1 rounded transition-colors ${locale === 'pl' ? 'font-bold text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
-              >
-                🇵🇱 PL
-              </Link>
-            </div>
+            <LanguageSelector />
 
             <button
               onClick={() => router.push('/login')}
