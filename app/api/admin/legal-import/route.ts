@@ -24,14 +24,14 @@ const PATTERNS = {
   // sau: ORDONANȚĂ DE URGENȚĂ nr. 36 din 2021
   actType: /^(HOTĂRÂRE|LEGE|ORDONANȚĂ DE URGENȚĂ|ORDONANȚĂ|ORDIN|DECIZIE|REGULAMENT|NORMĂ|INSTRUCȚIUNE)/im,
 
-  actNumber: /nr\.\s*(\d+)/i,
+  actNumber: /nr\.\s*([\d.]+)/i,
 
   actYear: /din\s+\d{1,2}\s+\w+\s+(\d{4})/i,
   actYearAlt: /\/(\d{4})/,  // fallback: 1425/2006
 
   // Monitorul Oficial nr. 882 din 30 octombrie 2006
   // sau: Publicat în MONITORUL OFICIAL nr. 882 din 30.10.2006
-  officialJournal: /MONITORUL\s+OFICIAL\s+(?:AL\s+ROMÂNIEI\s+)?(?:,\s*PARTEA\s+I\s*,?\s*)?nr\.\s*(\d+)\s+din\s+([\d\w\s.]+\d{4})/i,
+  officialJournal: /MONITORUL\s+OFICIAL\s+(?:AL\s+ROMÂNIEI\s+)?(?:,\s*PARTEA\s+I\s*,?\s*)?nr\.\s*([\d.]+)\s+din\s+([\d\w\s.]+\d{4})/i,
 
   // Directiva 89/391/CEE sau Directiva 2003/88/CE
   euDirective: /Directiv[aă]\s+([\d\/]+\/CE[E]?)/gi,
@@ -69,18 +69,31 @@ export function extractMetadata(text: string) {
   const rawType = typeMatch ? typeMatch[1].toUpperCase() : null
   const actType = rawType ? (ACT_TYPE_MAP[rawType] || rawType) : null
 
-  // Număr act
-  const numberMatch = firstLines.match(PATTERNS.actNumber)
-  const actNumber = numberMatch ? numberMatch[1] : null
+  // Număr act (suportă punct separator de mii: "nr. 1.425" → "1425")
+  // Fix special: Norme Metodologice nu au nr. propriu — preiau de la HG-ul părinte
+  let actNumber: string | null = null
+  const isNorme = /^(NORME?\s+METODOLOGIC[EĂ]|NORME?\s+GENERALE|NORME?\s+TEHNICE|NORME?\s+DE\s+APLICARE)/im.test(firstLines)
+  
+  if (isNorme) {
+    const hgParentMatch = firstLines.match(/(?:Hotărâr(?:ii|ea)\s+Guvernului|H\.?G\.?)\s+nr\.\s*([\d.]+)/i)
+    if (hgParentMatch) {
+      actNumber = hgParentMatch[1].replace(/\./g, '')
+    }
+  }
+  
+  if (!actNumber) {
+    const numberMatch = firstLines.match(PATTERNS.actNumber)
+    actNumber = numberMatch ? numberMatch[1].replace(/\./g, '') : null
+  }
 
   // An act
   const yearMatch = firstLines.match(PATTERNS.actYear)
   const actYearAlt = firstLines.match(PATTERNS.actYearAlt)
   const actYear = yearMatch ? parseInt(yearMatch[1]) : (actYearAlt ? parseInt(actYearAlt[1]) : null)
 
-  // Monitorul Oficial
+  // Monitorul Oficial (strip punct separator de mii)
   const mojMatch = firstLines.match(PATTERNS.officialJournal)
-  const officialJournal = mojMatch ? `M.Of. nr. ${mojMatch[1]} din ${mojMatch[2].trim()}` : null
+  const officialJournal = mojMatch ? `M.Of. nr. ${mojMatch[1].replace(/\./g, '')} din ${mojMatch[2].trim()}` : null
 
   // Directive UE
   const euDirectives: string[] = []
@@ -89,10 +102,9 @@ export function extractMetadata(text: string) {
     euDirectives.push(euMatch[1])
   }
 
-  // Titlu complet — prima propoziție semnificativă
-  // Caută pattern "privind..." sau "pentru aprobarea..."
-  const titleMatch = firstLines.match(/(privind|pentru aprobarea|referitoare la)[^.]*\./i)
-  const titleSuffix = titleMatch ? titleMatch[0].trim() : ''
+  // Titlu complet — caută până la newline dublu, EMITENT, Publicat sau MONITORUL
+  const titleMatch = firstLines.match(/(privind|pentru aprobarea|referitoare la)([\s\S]*?)(?=\n\s*\n|\n\s*EMITENT|\n\s*Publicat|\n\s*MONITORUL|$)/i)
+  const titleSuffix = titleMatch ? (titleMatch[1] + titleMatch[2]).replace(/\s+/g, ' ').trim() : ''
 
   const actFullName = actType && actNumber && actYear
     ? `${actType} ${actNumber}/${actYear} ${titleSuffix}`
