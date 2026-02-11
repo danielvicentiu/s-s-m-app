@@ -153,7 +153,7 @@ export async function middleware(request: NextRequest) {
   let needsRoleCheck = true
 
   if (pathWithoutLocale.startsWith('/admin')) {
-    requiredRoles = ['super_admin']
+    requiredRoles = ['super_admin', 'consultant_ssm']
   } else if (pathWithoutLocale.startsWith('/consultant')) {
     requiredRoles = [
       'consultant_ssm', 'super_admin',
