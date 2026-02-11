@@ -19,6 +19,7 @@ import {
   Filter,
   Link,
   X,
+  Eye,
 } from 'lucide-react'
 
 // ==========================================
@@ -91,7 +92,7 @@ interface TaxonomyItem {
 }
 
 // ==========================================
-// CONSTANTE — TRADUCERI RO
+// CONSTANTE + TRADUCERI RO
 // ==========================================
 
 /** Traduceri check names EN → RO */
@@ -160,12 +161,18 @@ function getActPipelineStatus(act: LegalAct): PipelineStatus {
 }
 
 function getActDomains(act: LegalAct): string[] {
-  // Preferă domains (JSONB array nou), fallback pe domain (text vechi)
   if (act.domains && Array.isArray(act.domains) && act.domains.length > 0) {
     return act.domains
   }
   if (act.domain) return [act.domain.toUpperCase()]
   return ['ALTELE']
+}
+
+/** Extrage locale din URL curent */
+function getCurrentLocale(): string {
+  if (typeof window === 'undefined') return 'ro'
+  const parts = window.location.pathname.split('/')
+  return parts[1] || 'ro'
 }
 
 // ==========================================
@@ -222,7 +229,6 @@ export default function LegalActsListClient() {
 
       if (actsData.acts) {
         setActs(actsData.acts)
-        // Pre-populate validation results from DB
         const vr: Record<string, ValidationResult> = {}
         for (const act of actsData.acts) {
           if (act.validation_result) {
@@ -246,7 +252,6 @@ export default function LegalActsListClient() {
   // FILTRARE — COMPUTED
   // ==========================================
 
-  /** Domenii disponibile din taxonomie sau fallback din acte */
   const availableDomains = useMemo(() => {
     if (taxonomy.length > 0) {
       const domains = new Map<string, { code: string; name: string; count: number }>()
@@ -255,7 +260,6 @@ export default function LegalActsListClient() {
           domains.set(t.domain_code, { code: t.domain_code, name: t.domain_name, count: 0 })
         }
       }
-      // Numără acte per domeniu
       for (const act of acts) {
         for (const d of getActDomains(act)) {
           const domain = domains.get(d)
@@ -267,7 +271,6 @@ export default function LegalActsListClient() {
         return order.indexOf(a.code) - order.indexOf(b.code)
       })
     }
-    // Fallback: extrage din acte
     const domainSet = new Map<string, number>()
     for (const act of acts) {
       for (const d of getActDomains(act)) {
@@ -281,7 +284,6 @@ export default function LegalActsListClient() {
     }))
   }, [acts, taxonomy])
 
-  /** Subdomenii pentru domeniul selectat */
   const availableSubdomains = useMemo(() => {
     if (!selectedDomain || taxonomy.length === 0) return []
     return taxonomy
@@ -289,7 +291,6 @@ export default function LegalActsListClient() {
       .sort((a, b) => a.sort_order - b.sort_order)
   }, [selectedDomain, taxonomy])
 
-  /** Tipuri act existente */
   const availableActTypes = useMemo(() => {
     const types = new Set<string>()
     for (const act of acts) {
@@ -302,16 +303,13 @@ export default function LegalActsListClient() {
     })
   }, [acts])
 
-  /** Acte filtrate */
   const filteredActs = useMemo(() => {
     let result = [...acts]
 
-    // Filtru domeniu
     if (selectedDomain) {
       result = result.filter((act) => getActDomains(act).includes(selectedDomain))
     }
 
-    // Filtru subdomenii
     if (selectedSubdomains.length > 0) {
       result = result.filter((act) => {
         const actSubs = act.subdomains || []
@@ -319,19 +317,16 @@ export default function LegalActsListClient() {
       })
     }
 
-    // Filtru tip act
     if (selectedActTypes.length > 0) {
       result = result.filter((act) =>
         selectedActTypes.includes(act.act_type?.toUpperCase())
       )
     }
 
-    // Filtru status pipeline
     if (selectedStatuses.length > 0) {
       result = result.filter((act) => selectedStatuses.includes(getActPipelineStatus(act)))
     }
 
-    // Search
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim()
       result = result.filter(
@@ -345,7 +340,6 @@ export default function LegalActsListClient() {
     return result
   }, [acts, selectedDomain, selectedSubdomains, selectedActTypes, selectedStatuses, searchQuery])
 
-  /** Statistici pentru header */
   const stats = useMemo(() => {
     const total = acts.length
     const withText = acts.filter((a) => a.full_text_metadata?.characters > 0).length
@@ -508,9 +502,9 @@ export default function LegalActsListClient() {
 
   function getCheckIcon(status: 'ok' | 'warning' | 'error') {
     switch (status) {
-      case 'ok': return <span className="text-emerald-500">🟢</span>
-      case 'warning': return <span className="text-amber-500">🟡</span>
-      case 'error': return <span className="text-red-500">🔴</span>
+      case 'ok': return <span className="text-emerald-500">✅</span>
+      case 'warning': return <span className="text-amber-500">⚠️</span>
+      case 'error': return <span className="text-red-500">❌</span>
     }
   }
 
@@ -520,7 +514,6 @@ export default function LegalActsListClient() {
 
     return (
       <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm space-y-3">
-        {/* Score bar */}
         <div className="flex items-center gap-3">
           <span className="text-slate-600 font-medium">Scor validare:</span>
           <div className="flex-1 bg-slate-200 rounded-full h-3 max-w-xs">
@@ -538,7 +531,6 @@ export default function LegalActsListClient() {
           </span>
         </div>
 
-        {/* Checks list — CU TRADUCERI RO */}
         <div className="space-y-2">
           {vr.checks.map((check, idx) => (
             <div key={idx} className="flex items-start gap-2 p-2 bg-white rounded border">
@@ -554,7 +546,6 @@ export default function LegalActsListClient() {
                 </div>
                 <p className="text-slate-600 text-xs mt-0.5">{check.message}</p>
 
-                {/* Detalii specifice per check */}
                 {check.name === 'article_coverage' && check.details?.missing_total > 0 && (
                   <details className="mt-1">
                     <summary className="text-xs text-slate-400 cursor-pointer hover:text-slate-600">
@@ -592,7 +583,7 @@ export default function LegalActsListClient() {
                     <div className="text-xs text-slate-400 mt-1 space-y-0.5">
                       {check.details.missing_acts.map((ma: any, i: number) => (
                         <div key={i} className="font-mono">
-                          {ma.target} ← {ma.source_article} ({ma.type})
+                          {ma.target} → {ma.source_article} ({ma.type})
                         </div>
                       ))}
                     </div>
@@ -617,7 +608,6 @@ export default function LegalActsListClient() {
   function renderSidebar() {
     return (
       <div className="space-y-5">
-        {/* Search */}
         <div>
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-slate-400" />
@@ -639,7 +629,6 @@ export default function LegalActsListClient() {
           </div>
         </div>
 
-        {/* Domenii */}
         <div>
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
             Domenii
@@ -684,7 +673,6 @@ export default function LegalActsListClient() {
           </div>
         </div>
 
-        {/* Subdomenii — doar dacă e selectat un domeniu */}
         {selectedDomain && availableSubdomains.length > 0 && (
           <div>
             <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
@@ -718,7 +706,6 @@ export default function LegalActsListClient() {
           </div>
         )}
 
-        {/* Tip act */}
         <div>
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
             Tip act
@@ -748,7 +735,6 @@ export default function LegalActsListClient() {
           </div>
         </div>
 
-        {/* Status pipeline */}
         <div>
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
             Status pipeline
@@ -780,7 +766,6 @@ export default function LegalActsListClient() {
           </div>
         </div>
 
-        {/* Resetare filtre */}
         {hasActiveFilters && (
           <button
             onClick={clearAllFilters}
@@ -806,6 +791,8 @@ export default function LegalActsListClient() {
     const isValidationExpanded = expandedValidation === act.id
     const hasText = act.full_text_metadata?.characters > 0
     const hasAI = !!act.ai_extraction_date
+    const locale = getCurrentLocale()
+    const detailUrl = `/${locale}/admin/legal-acts/${act.id}`
 
     return (
       <div
@@ -815,7 +802,12 @@ export default function LegalActsListClient() {
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className="font-semibold text-slate-800">{act.act_short_name}</span>
+              <a
+                href={detailUrl}
+                className="font-semibold text-teal-700 hover:text-teal-900 hover:underline cursor-pointer"
+              >
+                {act.act_short_name}
+              </a>
               {getDomainBadges(act)}
               {getStatusBadge(act)}
               {getValidationBadge(act.id)}
@@ -838,6 +830,18 @@ export default function LegalActsListClient() {
           </div>
 
           <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+            {/* Buton M4 Preview */}
+            {hasAI && (
+              <a
+                href={detailUrl}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-violet-100 text-violet-700 hover:bg-violet-200 transition"
+                title="Preview M4 — obligații, sancțiuni, approve/reject"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                Preview
+              </a>
+            )}
+
             {/* Buton Validare M3 */}
             {hasAI && (
               <button
@@ -870,7 +874,6 @@ export default function LegalActsListClient() {
               </button>
             )}
 
-            {/* Expand/Collapse extracție */}
             {act.ai_extraction_result && (
               <button
                 onClick={() => {
@@ -884,7 +887,6 @@ export default function LegalActsListClient() {
               </button>
             )}
 
-            {/* Buton Extract */}
             {hasText && (
               <button
                 onClick={() => handleExtract(act.id)}
@@ -917,7 +919,6 @@ export default function LegalActsListClient() {
           </div>
         </div>
 
-        {/* Rezultat extracție inline */}
         {result && (
           <div
             className={`mt-3 p-3 rounded-lg text-sm ${
@@ -949,10 +950,8 @@ export default function LegalActsListClient() {
           </div>
         )}
 
-        {/* M3: Validation panel */}
         {isValidationExpanded && renderValidationPanel(act.id)}
 
-        {/* Expanded view — detalii extracție */}
         {isExpanded && act.ai_extraction_result && (
           <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm space-y-3">
             <p className="text-slate-600">{act.ai_extraction_result.summary}</p>
@@ -976,7 +975,6 @@ export default function LegalActsListClient() {
               </div>
             </div>
 
-            {/* Lista obligații */}
             {act.ai_extraction_result.obligations?.length > 0 && (
               <div>
                 <h4 className="font-semibold text-slate-700 mb-2">
@@ -1046,7 +1044,6 @@ export default function LegalActsListClient() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {/* Buton Import URL */}
           <button
             onClick={() => setImportModalOpen(true)}
             className="flex items-center gap-1.5 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow transition font-medium"
@@ -1055,7 +1052,6 @@ export default function LegalActsListClient() {
             Import URL
           </button>
 
-          {/* Buton: Validează toate */}
           {actsExtracted.length > 0 && (
             <button
               onClick={handleValidateBatch}
@@ -1082,7 +1078,6 @@ export default function LegalActsListClient() {
             </button>
           )}
 
-          {/* Mobile filter toggle */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="md:hidden flex items-center gap-1.5 px-3 py-2 text-sm bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition"
@@ -1102,12 +1097,10 @@ export default function LegalActsListClient() {
 
       {/* LAYOUT: Sidebar + Content */}
       <div className="flex gap-6">
-        {/* SIDEBAR — desktop: always visible (md = 768px+) */}
         <aside className="hidden md:block w-64 flex-shrink-0">
           {renderSidebar()}
         </aside>
 
-        {/* SIDEBAR — mobile: fullscreen overlay */}
         {sidebarOpen && (
           <div className="md:hidden fixed inset-0 z-50 bg-white p-6 overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
@@ -1120,7 +1113,6 @@ export default function LegalActsListClient() {
           </div>
         )}
 
-        {/* CONTENT */}
         <main className="flex-1 min-w-0">
           {filteredActs.length === 0 ? (
             <div className="text-center py-16 text-slate-400">
@@ -1148,7 +1140,7 @@ export default function LegalActsListClient() {
         </main>
       </div>
 
-      {/* MODAL — Import URL (placeholder, va fi implementat complet în Task 3) */}
+      {/* MODAL — Import URL */}
       {importModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 p-6">
@@ -1162,25 +1154,21 @@ export default function LegalActsListClient() {
               </button>
             </div>
             <p className="text-sm text-slate-500 mb-4">
-              Se va implementa în sesiunea următoare — input URL legislatie.just.ro → auto-fetch text → selector domenii la import.
+              Funcționalitate disponibilă pe pagina dedicată de import.
             </p>
-            <div className="bg-slate-50 rounded-lg p-4 text-sm text-slate-600 space-y-2">
-              <p>Funcționalități planificate:</p>
-              <ul className="list-disc list-inside space-y-1 text-xs text-slate-500">
-                <li>Input URL de pe legislatie.just.ro</li>
-                <li>Auto-fetch și parsare text legislativ</li>
-                <li>Selector domenii + subdomenii (din taxonomie)</li>
-                <li>Previzualizare text importat</li>
-                <li>Validare automată post-import</li>
-              </ul>
-            </div>
-            <div className="mt-4 flex justify-end">
+            <div className="mt-4 flex justify-end gap-2">
               <button
                 onClick={() => setImportModalOpen(false)}
                 className="px-4 py-2 text-sm font-medium bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition"
               >
                 Închide
               </button>
+              <a
+                href={`/${getCurrentLocale()}/admin/legal-import`}
+                className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Mergi la Import
+              </a>
             </div>
           </div>
         </div>
