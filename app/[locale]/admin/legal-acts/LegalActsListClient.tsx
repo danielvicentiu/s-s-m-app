@@ -1085,7 +1085,7 @@ export default function LegalActsListClient() {
           {/* Mobile filter toggle */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden flex items-center gap-1.5 px-3 py-2 text-sm bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition"
+            className="md:hidden flex items-center gap-1.5 px-3 py-2 text-sm bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition"
           >
             <Filter className="w-4 h-4" />
             Filtre
@@ -1102,25 +1102,23 @@ export default function LegalActsListClient() {
 
       {/* LAYOUT: Sidebar + Content */}
       <div className="flex gap-6">
-        {/* SIDEBAR — desktop: always visible, mobile: toggle */}
-        <aside
-          className={`
-            w-64 flex-shrink-0
-            lg:block
-            ${sidebarOpen ? 'block fixed inset-0 z-50 bg-white p-6 overflow-y-auto lg:relative lg:inset-auto lg:z-auto lg:p-0' : 'hidden'}
-          `}
-        >
-          {/* Mobile close button */}
-          {sidebarOpen && (
-            <div className="lg:hidden flex justify-between items-center mb-4">
+        {/* SIDEBAR — desktop: always visible (md = 768px+) */}
+        <aside className="hidden md:block w-64 flex-shrink-0">
+          {renderSidebar()}
+        </aside>
+
+        {/* SIDEBAR — mobile: fullscreen overlay */}
+        {sidebarOpen && (
+          <div className="md:hidden fixed inset-0 z-50 bg-white p-6 overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-slate-800">Filtre</h2>
               <button onClick={() => setSidebarOpen(false)} className="p-2 text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
-          )}
-          {renderSidebar()}
-        </aside>
+            {renderSidebar()}
+          </div>
+        )}
 
         {/* CONTENT */}
         <main className="flex-1 min-w-0">
