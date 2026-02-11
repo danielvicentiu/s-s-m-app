@@ -9,8 +9,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = routing.defaultLocale
   }
 
-  console.log('[next-intl] Loading messages for locale:', locale)
-
   return {
     locale,
     messages: (await import(`../messages/${locale}.json`)).default,

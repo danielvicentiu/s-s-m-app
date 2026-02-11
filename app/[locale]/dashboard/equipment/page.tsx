@@ -2,12 +2,15 @@
 // M5 Echipamente PSI — Pagina dedicată CRUD
 // Pattern identic cu /dashboard/medical
 // REFACTORED: Citește equipment_types din DB (dinamic per țară)
+// 🆕 OP-LEGO Sprint 4.7: ModuleGate wrapping (modulul 'echipamente' necesar)
 
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import EquipmentClient from './EquipmentClient'
+import ModuleGate from '@/components/ModuleGate'
 
-export default async function EquipmentPage() {
+export default async function EquipmentPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
@@ -38,12 +41,17 @@ export default async function EquipmentPage() {
     .order('display_order', { ascending: true })
     .order('name', { ascending: true })
 
+  // OP-LEGO: orgId pentru ModuleGate
+  const orgId = organizations?.[0]?.id || null
+
   return (
-    <EquipmentClient
-      user={{ email: user.email || '' }}
-      organizations={organizations || []}
-      equipment={equipment || []}
-      equipmentTypes={equipmentTypes || []}
-    />
+    <ModuleGate orgId={orgId} moduleKey="echipamente" locale={locale}>
+      <EquipmentClient
+        user={{ email: user.email || '' }}
+        organizations={organizations || []}
+        equipment={equipment || []}
+        equipmentTypes={equipmentTypes || []}
+      />
+    </ModuleGate>
   )
 }

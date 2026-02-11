@@ -1,7 +1,8 @@
 // app/dashboard/DashboardClient.tsx
 // Design PIXEL-PERFECT identic cu versiunea aprobată de 9 clienți
-// Layout: Header → Risc ITM → VALUE PREVIEW → Tabs → Counters → Tabel → Notificări → Features → Butoane
+// Layout: Header → Risc ITM → VALUE PREVIEW → Tabs → Counters → Tabel → Notificări → MODULE ACTIVE → Features → Butoane
 // + Toggle-uri panou risc (salvate în DB)
+// 🆕 OP-LEGO Sprint 4.7: ActiveModulesCard integrat
 
 'use client'
 
@@ -12,6 +13,7 @@ import { ValuePreview } from '@/components/ui/ValuePreview'
 import Link from 'next/link'
 import { UserPlus, FileText } from 'lucide-react'
 import LanguageSelector from '@/components/LanguageSelector'
+import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
 
 interface OrgOption {
   id: string
@@ -118,11 +120,12 @@ export default function DashboardClient({
     ? Object.values(valuePreviewMap)[0] || null
     : valuePreviewMap[selectedOrg] || null
 
+  // 🆕 OP-LEGO: orgId pentru ActiveModulesCard
+  const moduleOrgId = selectedOrg !== 'all' ? selectedOrg : (organizations[0]?.id || null)
+
   // === DATA COMPLETENESS CALCULATION ===
-  // Calculate completeness based on available data for selected org
   const calculateCompleteness = () => {
     if (selectedOrg === 'all') {
-      // For "all orgs" view, average completeness of all orgs
       const completenessScores = organizations
         .map(org => (org as any).data_completeness)
         .filter(score => typeof score === 'number')
@@ -131,20 +134,18 @@ export default function DashboardClient({
         return Math.round(completenessScores.reduce((sum, score) => sum + score, 0) / completenessScores.length)
       }
     } else {
-      // For single org, use its data_completeness if available
       const org = organizations.find(o => o.id === selectedOrg) as any
       if (org?.data_completeness && typeof org.data_completeness === 'number') {
         return org.data_completeness
       }
     }
 
-    // Fallback: calculate based on data presence
     const hasMedicalData = filteredMedicalExams.length > 0
     const hasEquipmentData = filteredEquipment.length > 0
     const hasOrgName = !!orgName && orgName !== 'Toate organizațiile'
     const hasOrgCUI = !!orgCUI
 
-    let score = 20 // Base score
+    let score = 20
     if (hasMedicalData) score += 30
     if (hasEquipmentData) score += 30
     if (hasOrgName) score += 10
@@ -221,7 +222,7 @@ export default function DashboardClient({
             <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
             {organizations.length <= 1 ? (
               <p className="text-sm text-gray-500">
-                {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` • ${organizations[0].cui}` : ''}
+                {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` · ${organizations[0].cui}` : ''}
               </p>
             ) : (
               <select
@@ -232,7 +233,7 @@ export default function DashboardClient({
                 <option value="all">Toate organizațiile ({organizations.length})</option>
                 {organizations.map((org) => (
                   <option key={org.id} value={org.id}>
-                    {org.name} • {org.employee_count ?? 0} angajați
+                    {org.name} · {org.employee_count ?? 0} angajați
                   </option>
                 ))}
               </select>
@@ -344,7 +345,7 @@ export default function DashboardClient({
                   : 'bg-gray-50 text-gray-400 border-b border-gray-200'
               }`}
             >
-              🧯 Echipamente PSI
+              🧻 Echipamente PSI
               {eqBadge > 0 && (
                 <span className="bg-green-500 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {eqBadge}
@@ -552,12 +553,15 @@ export default function DashboardClient({
                   <span className="text-xs font-semibold text-red-500 bg-red-50 px-2 py-1 rounded-full">
                     {totalExpired} expirate
                   </span>
-                  <span className="text-xs font-semibold text-green-600">✓ Trimis</span>
+                  <span className="text-xs font-semibold text-green-600">✔ Trimis</span>
                 </div>
               </div>
             )}
           </div>
         </div>
+
+        {/* ============ 🆕 MODULE ACTIVE OP-LEGO ============ */}
+        <ActiveModulesCard orgId={moduleOrgId} locale="ro" />
 
         {/* ============ FEATURE CARDS ============ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -607,7 +611,7 @@ export default function DashboardClient({
         {/* ============ ACTION BUTTONS ============ */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button className="bg-white rounded-2xl border border-gray-200 py-4 text-center hover:bg-gray-50 transition font-medium text-gray-600 flex items-center justify-center gap-2">
-            📧 Contactează consultantul
+            📞 Contactează consultantul
           </button>
           <button
             onClick={() => window.location.reload()}

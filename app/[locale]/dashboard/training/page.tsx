@@ -1,11 +1,14 @@
 // app/dashboard/training/page.tsx
 // Server Component — Training Management with proper multi-org support
+// 🆕 OP-LEGO Sprint 4.7: ModuleGate wrapping (modulul 'ssm' necesar)
 
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import TrainingClient from './TrainingClient'
+import ModuleGate from '@/components/ModuleGate'
 
-export default async function TrainingPage() {
+export default async function TrainingPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
@@ -42,11 +45,16 @@ export default async function TrainingPage() {
     }
   }
 
+  // OP-LEGO: orgId pentru ModuleGate
+  const orgId = savedSelectedOrg || organizations[0]?.id || null
+
   return (
-    <TrainingClient
-      user={{ id: user.id, email: user.email || '' }}
-      organizations={organizations}
-      initialSelectedOrg={savedSelectedOrg}
-    />
+    <ModuleGate orgId={orgId} moduleKey="ssm" locale={locale}>
+      <TrainingClient
+        user={{ id: user.id, email: user.email || '' }}
+        organizations={organizations}
+        initialSelectedOrg={savedSelectedOrg}
+      />
+    </ModuleGate>
   )
 }
