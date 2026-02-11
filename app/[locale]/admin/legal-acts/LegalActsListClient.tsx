@@ -20,12 +20,11 @@ import {
   Link,
   X,
   Eye,
+  Zap,
 } from 'lucide-react'
-
 // ==========================================
 // TIPURI
 // ==========================================
-
 interface LegalAct {
   id: string
   act_type: string
@@ -52,7 +51,6 @@ interface LegalAct {
   parent_act_id: string | null
   hierarchy_order: number | null
 }
-
 interface ExtractionStats {
   obligations: number
   obligations_employer: number
@@ -63,14 +61,12 @@ interface ExtractionStats {
   has_penalties: boolean
   penalty_range: string | null
 }
-
 interface ValidationCheck {
   name: string
   status: 'ok' | 'warning' | 'error'
   message: string
   details?: any
 }
-
 interface ValidationResult {
   act_id: string
   act_short_name: string
@@ -79,7 +75,6 @@ interface ValidationResult {
   checks: ValidationCheck[]
   validated_at: string
 }
-
 interface TaxonomyItem {
   id: string
   domain_code: string
@@ -208,6 +203,10 @@ export default function LegalActsListClient() {
 
   // State — import URL modal
   const [importModalOpen, setImportModalOpen] = useState(false)
+
+  // State — M6 Batch
+  const [batchRunning, setBatchRunning] = useState(false)
+  const [batchReport, setBatchReport] = useState<any>(null)
 
   // ==========================================
   // DATA FETCHING
@@ -439,6 +438,35 @@ export default function LegalActsListClient() {
       console.error('Batch validation error:', err)
     } finally {
       setValidatingBatch(false)
+    }
+  }
+
+  // ==========================================
+  // M6: BATCH PROCESSING (M2 + M3)
+  // ==========================================
+
+  async function handleBatchProcess(steps: string[] = ['m2', 'm3']) {
+    setBatchRunning(true)
+    setBatchReport(null)
+
+    try {
+      const res = await fetch('/api/admin/legal-batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ steps }),
+      })
+      const data = await res.json()
+
+      if (data.success) {
+        setBatchReport(data)
+        fetchAll()
+      } else {
+        setBatchReport({ error: data.error })
+      }
+    } catch (err: any) {
+      setBatchReport({ error: err.message })
+    } finally {
+      setBatchRunning(false)
     }
   }
 
@@ -1025,6 +1053,7 @@ export default function LegalActsListClient() {
   }
 
   const actsExtracted = acts.filter((a) => a.ai_extraction_date)
+  const actsEligibleBatch = acts.filter((a) => (a.full_text_metadata?.characters > 0 && !a.ai_extraction_date) || (a.ai_extraction_date && !a.validation_date))
 
   return (
     <div className="max-w-[1400px] mx-auto p-4 sm:p-6">
@@ -1044,6 +1073,34 @@ export default function LegalActsListClient() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {/* M6 Batch Button */}
+          {actsEligibleBatch.length > 0 && (
+            <button
+              onClick={() => handleBatchProcess(['m2', 'm3'])}
+              disabled={batchRunning || extractingId !== null}
+              className={`
+                flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg font-medium transition
+                ${batchRunning
+                  ? 'bg-orange-100 text-orange-700 cursor-wait'
+                  : 'bg-orange-600 text-white hover:bg-orange-700 shadow'
+                }
+              `}
+              title="Batch: Extrage AI (M2) + Validează (M3) toate actele eligibile"
+            >
+              {batchRunning ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Batch...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4" />
+                  Batch M2+M3 ({actsEligibleBatch.length})
+                </>
+              )}
+            </button>
+          )}
+
           <button
             onClick={() => setImportModalOpen(true)}
             className="flex items-center gap-1.5 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow transition font-medium"
@@ -1094,6 +1151,84 @@ export default function LegalActsListClient() {
           </button>
         </div>
       </div>
+
+      {/* M6 Batch Report */}
+      {batchReport && (
+        <div className={`mb-4 p-4 rounded-xl border text-sm ${
+          batchReport.error
+            ? 'bg-red-50 border-red-200 text-red-700'
+            : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        }`}>
+          {batchReport.error ? (
+            <div className="flex items-center gap-2">
+              <XCircle className="w-4 h-4" />
+              Eroare batch: {batchReport.error}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  Batch complet în {batchReport.duration_seconds}s
+                </span>
+                <button
+                  onClick={() => setBatchReport(null)}
+                  className="text-emerald-500 hover:text-emerald-700"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex gap-6 flex-wrap">
+                {batchReport.summary.m2_total > 0 && (
+                  <div>
+                    <span className="font-medium">M2 Extracție:</span>{' '}
+                    <span className="text-emerald-700">{batchReport.summary.m2_success} ✅</span>
+                    {batchReport.summary.m2_failed > 0 && (
+                      <span className="text-red-600 ml-1">{batchReport.summary.m2_failed} ❌</span>
+                    )}
+                  </div>
+                )}
+                {batchReport.summary.m3_total > 0 && (
+                  <div>
+                    <span className="font-medium">M3 Validare:</span>{' '}
+                    <span className="text-emerald-700">{batchReport.summary.m3_ok} ok</span>
+                    {batchReport.summary.m3_warning > 0 && (
+                      <span className="text-amber-600 ml-1">{batchReport.summary.m3_warning} ⚠️</span>
+                    )}
+                    {batchReport.summary.m3_error > 0 && (
+                      <span className="text-red-600 ml-1">{batchReport.summary.m3_error} ❌</span>
+                    )}
+                    <span className="text-slate-500 ml-2">scor mediu: {batchReport.summary.m3_avg_score}%</span>
+                  </div>
+                )}
+                {batchReport.summary.m2_total === 0 && batchReport.summary.m3_total === 0 && (
+                  <span className="text-slate-500">Niciun act eligibil pentru procesare. Importă text (M1) întâi.</span>
+                )}
+              </div>
+              {batchReport.m2_results?.length > 0 && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-xs text-emerald-600 hover:text-emerald-800 font-medium">
+                    Detalii extracție ({batchReport.m2_results.length} acte)
+                  </summary>
+                  <div className="mt-1 space-y-1">
+                    {batchReport.m2_results.map((r: any, i: number) => (
+                      <div key={i} className={`text-xs px-2 py-1 rounded ${r.success ? 'bg-emerald-100' : 'bg-red-100'}`}>
+                        {r.success ? '✅' : '❌'} {r.act_short_name}
+                        {r.stats && (
+                          <span className="text-slate-500 ml-2">
+                            {r.stats.obligations} obligații, {r.stats.penalties} sancțiuni, {r.stats.cross_references} ref
+                          </span>
+                        )}
+                        {r.error && <span className="text-red-600 ml-2">{r.error}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* LAYOUT: Sidebar + Content */}
       <div className="flex gap-6">

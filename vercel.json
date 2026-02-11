@@ -4,5 +4,10 @@
       "path": "/api/alerts/check",
       "schedule": "0 6 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "app/api/admin/legal-batch/route.ts": {
+      "maxDuration": 300
+    }
+  }
 }
