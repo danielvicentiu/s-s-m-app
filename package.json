@@ -9,6 +9,18 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@react-email/body": "^0.2.1",
+    "@react-email/button": "^0.2.1",
+    "@react-email/column": "^0.0.14",
+    "@react-email/components": "^1.0.7",
+    "@react-email/container": "^0.0.16",
+    "@react-email/head": "^0.0.13",
+    "@react-email/hr": "^0.0.12",
+    "@react-email/html": "^0.0.12",
+    "@react-email/img": "^0.0.12",
+    "@react-email/row": "^0.0.13",
+    "@react-email/section": "^0.0.17",
+    "@react-email/text": "^0.1.6",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.2",
@@ -20,7 +32,8 @@
     "pdfkit": "^0.17.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "resend": "^6.9.1"
+    "resend": "^6.9.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
