@@ -28,7 +28,8 @@
     "login": "Enter platform",
     "home": "Home",
     "navigation": "Navigation",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "About"
   },
   "landing": {
     "badge": "Digital OHS & Fire Safety Platform",
@@ -186,5 +187,614 @@
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
     "address": "Bucharest, Romania"
+  },
+  "quickCheck": {
+    "badge": "Free test",
+    "title": "Quick OHS Check",
+    "subtitle": "Assess your OHS compliance level in 2 minutes. Free 10-question questionnaire for Romanian employers.",
+    "progress": "Progress",
+    "submit": "See results",
+    "footer": "This test is indicative and does not replace a professional OHS assessment.",
+    "answers": {
+      "yes": "Yes",
+      "partial": "Partial",
+      "no": "No"
+    },
+    "questions": {
+      "q1": {
+        "text": "Do you have all valid medical fitness certificates for your employees?"
+      },
+      "q2": {
+        "text": "Do you have OHS training (general and job-specific) completed for all employees?"
+      },
+      "q3": {
+        "text": "Do you have personal protective equipment (PPE) according to job descriptions?"
+      },
+      "q4": {
+        "text": "Do you have fire extinguishers checked and within validity period?"
+      },
+      "q5": {
+        "text": "Do you have updated job descriptions with identified risks?"
+      },
+      "q6": {
+        "text": "Do you have an evacuation plan posted and employees trained?"
+      },
+      "q7": {
+        "text": "Have you identified and assessed all risks in your organization?"
+      },
+      "q8": {
+        "text": "Have you appointed OHS/Fire Safety responsible persons as required by law?"
+      },
+      "q9": {
+        "text": "Do you have complete records (training, PPE, equipment)?"
+      },
+      "q10": {
+        "text": "Do you have an active contract with external OHS service or authorized consultant?"
+      }
+    },
+    "results": {
+      "title": "Your result",
+      "retake": "Retake test",
+      "cta": "Start free trial →",
+      "level": {
+        "good": "Good Level",
+        "medium": "Medium Level",
+        "critical": "Critical Level"
+      },
+      "description": {
+        "good": "Congratulations! Your OHS compliance level is very good. However, maintaining compliance requires constant updates and monitoring. The s-s-m.ro platform helps you automate alerts and reports.",
+        "medium": "Your OHS compliance is partial. There are aspects that require immediate attention to avoid labor inspection fines. The s-s-m.ro platform helps you identify exactly what's missing and quickly resolve issues.",
+        "critical": "WARNING: Your OHS compliance level is critical! You risk significant fines from labor inspection. It is essential to act urgently to get mandatory documents in order. The s-s-m.ro platform provides you with a clear action plan."
+      }
+    }
+  },
+  "calculatorRisc": {
+    "badge": "Free calculator",
+    "title": "OHS Risk Calculator",
+    "subtitle": "Assess your occupational risk level based on your business activities. Free calculator for employers in Romania.",
+    "formTitle": "Fill in your business activity details",
+    "fields": {
+      "caen": {
+        "label": "Business sector (CAEN)",
+        "placeholder": "Select CAEN sector"
+      },
+      "employees": {
+        "label": "Number of employees",
+        "placeholder": "Ex: 25"
+      },
+      "hazardous": {
+        "label": "Do you work with hazardous substances?",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "height": {
+        "label": "Do you work at height (above 2m)?",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "pressure": {
+        "label": "Do you have pressure equipment?",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "evacuation": {
+        "label": "Do you have an evacuation plan implemented?",
+        "yes": "Yes",
+        "no": "No"
+      }
+    },
+    "caenOptions": {
+      "construction": "Construction (CAEN 41-43)",
+      "manufacturing": "Manufacturing (CAEN 10-33)",
+      "transport": "Transport & storage (CAEN 49-53)",
+      "services": "Professional services (CAEN 69-75)",
+      "retail": "Retail trade (CAEN 47)",
+      "hospitality": "Hotels & restaurants (CAEN 55-56)",
+      "it": "IT & computer services (CAEN 62-63)",
+      "health": "Healthcare & social work (CAEN 86-88)",
+      "education": "Education (CAEN 85)",
+      "other": "Other"
+    },
+    "calculate": "Calculate risk",
+    "reset": "Reset",
+    "results": {
+      "title": "Your occupational risk level",
+      "score": "Risk score",
+      "level": {
+        "low": "Low Risk",
+        "medium": "Medium Risk",
+        "high": "High Risk",
+        "veryHigh": "Very High Risk"
+      },
+      "description": {
+        "low": "Your activity presents a low level of occupational risk. However, OHS compliance remains mandatory: occupational health, periodic training, fire safety equipment, and up-to-date documentation.",
+        "medium": "Your activity presents a medium level of occupational risk. It is essential to have all prevention measures implemented: updated risk assessment, adequate PPE, specific training, and constant monitoring.",
+        "high": "WARNING: Your activity presents a high level of occupational risk! Requires enhanced protection measures: complex risk assessment, certified PPE, frequent training, careful medical supervision, and clear emergency procedures.",
+        "veryHigh": "DANGER: Your activity presents a VERY HIGH level of occupational risk! It is MANDATORY to have: detailed professional risk assessment, certified high-performance PPE, weekly training, rigorous medical control, tested emergency plans, and dedicated OHS consultant."
+      },
+      "recommendations": {
+        "title": "Recommendations for your risk level",
+        "low": [
+          "Occupational health: Annual medical examinations for all employees",
+          "OHS training: General training at hiring + annual periodic training",
+          "Fire equipment: Fire extinguishers checked annually, evacuation plan displayed",
+          "Documentation: Updated job descriptions, complete records"
+        ],
+        "medium": [
+          "Occupational health: Semi-annual medical examinations for medium-risk positions",
+          "OHS training: General + job-specific training at hiring, periodic training every 6 months",
+          "PPE: Personal protective equipment according to job descriptions, checked monthly",
+          "Fire equipment: Fire extinguishers checked semi-annually, tested hydrants, functional emergency lighting",
+          "Risk assessment: Professional risk assessment updated annually, ISCIR for pressure equipment",
+          "Documentation: Updated prevention and protection plan, written operational procedures"
+        ],
+        "high": [
+          "Occupational health: Quarterly medical examinations for high-risk positions, specific exposure tests",
+          "OHS training: Daily training for high-risk activities, periodic simulations",
+          "PPE: Certified equipment for high protection, checked weekly, professional maintenance",
+          "Fire equipment: Automatic fire detection and extinguishing system, functional hydrants, detailed evacuation plans",
+          "Risk assessment: Complex professional risk assessment by authorized consultants, semi-annual updates",
+          "Supervision: Dedicated OHS responsible person, work permit procedures, constant monitoring",
+          "Documentation: Detailed emergency plan, tested critical procedures, regular internal audits"
+        ],
+        "veryHigh": [
+          "Occupational health: Monthly medical examinations for extreme risk positions, regular toxicological analyses, occupational psychologist",
+          "OHS training: Mandatory daily training, pre-shift briefing, weekly evacuation and emergency simulations",
+          "PPE: Maximum protection level certified equipment (respirators, flame-resistant suits, etc.), daily verification, specialized maintenance",
+          "Fire equipment: Multi-level automatic detection system, automatic sprinkler extinguishing, trained internal fire teams",
+          "Risk assessment: Detailed professional risk assessment, update on any process change, advanced ergonomic analysis",
+          "Supervision: Dedicated OHS consultant on site/location, video monitoring system, strict work permit procedures",
+          "Documentation: Emergency plan tested monthly, certified critical procedures, real-time incident reporting, redundant backup",
+          "Authorizations: ISCIR for equipment, fire department permits, health department approvals, proactive labor inspections"
+        ]
+      }
+    },
+    "cta": {
+      "title": "Want to manage risks automatically?",
+      "description": "The s-s-m.ro platform offers you all the tools for complete OHS compliance: automated alerts, financial risk calculation, instant reports.",
+      "button": "Start free trial →"
+    },
+    "footer": "This calculator is indicative and does not replace a professional risk assessment according to Law 319/2006."
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Have questions or need support? We're here to help.",
+    "form": {
+      "title": "Send us a message",
+      "name": "Full name",
+      "namePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+40 700 000 000",
+      "company": "Company",
+      "companyPlaceholder": "Company name (optional)",
+      "message": "Message",
+      "messagePlaceholder": "Write your message here...",
+      "submit": "Send message",
+      "submitting": "Sending...",
+      "success": "Message sent successfully! We'll get back to you as soon as possible.",
+      "error": "An error occurred. Please contact us directly via email."
+    },
+    "info": {
+      "title": "Contact information",
+      "email": "Email",
+      "emailValue": "contact@s-s-m.ro",
+      "support": "Technical support",
+      "supportValue": "support@s-s-m.ro",
+      "phone": "Phone",
+      "phoneValue": "+40 700 000 000",
+      "address": "Address",
+      "addressValue": "Bucharest, Romania"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": {
+        "question": "How much does the platform cost?",
+        "answer": "€200/year per organization, no setup fees. You can cancel anytime. Includes all features: occupational health, fire safety equipment, automated alerts, and PDF reports."
+      },
+      "q2": {
+        "question": "Is an OHS consultant required to use the platform?",
+        "answer": "No. The platform can be used independently by company administrators to manage OHS/Fire Safety documents. OHS consultants can use the platform to manage multiple companies simultaneously."
+      },
+      "q3": {
+        "question": "How does the trial period work?",
+        "answer": "Contact us to activate a free 14-day trial period. You'll have full access to all platform features without any restrictions."
+      }
+    }
+  },
+  "faq": {
+    "hero": {
+      "badge": "Frequently asked questions",
+      "title": "Answers to your questions",
+      "subtitle": "Everything you need to know about s-s-m.ro platform — features, pricing, compliance and technical support."
+    },
+    "search": {
+      "placeholder": "Search a question...",
+      "noResults": "No results found for your search."
+    },
+    "categories": {
+      "general": "General",
+      "features": "Features",
+      "technical": "Technical",
+      "legal": "Legal & Compliance"
+    },
+    "questions": {
+      "q1": {
+        "question": "What is the s-s-m.ro platform?",
+        "answer": "s-s-m.ro is a digital platform for managing OHS (Occupational Health and Safety) and Fire Safety compliance. It automates tracking of medical records, fire safety equipment, expiry alerts and report generation for inspections.",
+        "category": "general"
+      },
+      "q2": {
+        "question": "Who is the platform for?",
+        "answer": "The platform is designed for OHS consultants managing multiple companies and company administrators who want to internally manage OHS/Fire Safety compliance. It works excellently for portfolios of 1-100+ organizations.",
+        "category": "general"
+      },
+      "q3": {
+        "question": "How much does it cost and what's included?",
+        "answer": "€200/year per organization, no setup fees. Cancel anytime. Includes all features: unlimited occupational health, fire safety equipment, daily automated alerts, labor inspection financial risk, PDF reports, priority technical support and daily backup.",
+        "category": "general"
+      },
+      "q4": {
+        "question": "How does the Occupational Health module work?",
+        "answer": "You add employee medical records with expiry dates. The platform automatically calculates status (expired, expires in <30 days, valid) and sends daily email alerts for imminent expirations. You have instant overview of all employees in an organization.",
+        "category": "features"
+      },
+      "q5": {
+        "question": "What fire safety equipment can I manage?",
+        "answer": "You can manage: fire extinguishers, first aid kits, hydrants, smoke detectors and emergency lighting. For each equipment you add location, last inspection date and expiry date. The system automatically alerts you when re-inspection is needed.",
+        "category": "features"
+      },
+      "q6": {
+        "question": "How do automated alerts work?",
+        "answer": "The platform sends daily email (at 08:00 via Resend) with all imminent expirations (30/15/7 days before). WhatsApp and SMS notifications are in development. You can configure recipients for each organization.",
+        "category": "features"
+      },
+      "q7": {
+        "question": "What does 'Financial Risk' mean?",
+        "answer": "It's the automatic calculation of potential fines from labor inspection authorities if mandatory documents are missing. The platform analyzes what you don't have in order and shows you min-max estimates according to current legislation.",
+        "category": "features"
+      },
+      "q8": {
+        "question": "Can I manage multiple companies simultaneously?",
+        "answer": "Yes! Multi-organization architecture allows unlimited organization management from a single account. Ideal for OHS consultants with large portfolios. Instant filtering and saved preferences per organization.",
+        "category": "features"
+      },
+      "q9": {
+        "question": "How do I register on the platform?",
+        "answer": "Contact us at contact@s-s-m.ro to activate your account. After activation, you receive an email with login link. Configure your first organization and you can start adding employees and equipment immediately.",
+        "category": "technical"
+      },
+      "q10": {
+        "question": "Can I bulk import employees?",
+        "answer": "Currently import is done manually through the employee addition form. CSV/Excel import function is on the roadmap and will be available in Q2 2026. Meanwhile, we support quick addition through the interface.",
+        "category": "technical"
+      },
+      "q11": {
+        "question": "What browsers are supported?",
+        "answer": "The platform works optimally on Chrome, Firefox, Safari and Edge (latest 2 versions). The interface is 100% responsive and works perfectly on mobile and tablet for on-the-go access.",
+        "category": "technical"
+      },
+      "q12": {
+        "question": "How can I export reports?",
+        "answer": "PDF reports are generated with 1 click from the dashboard. They are available when data completeness > 80%. Each report includes SHA256 hash for immutability and can be downloaded instantly or sent via email.",
+        "category": "technical"
+      },
+      "q13": {
+        "question": "Is the platform compliant with Romanian OHS legislation?",
+        "answer": "Yes, the platform fully complies with Law 319/2006 (OHS) and Law 307/2006 (Fire Safety). We automatically update when legislative changes occur. Generated reports are accepted by labor and fire inspections for controls.",
+        "category": "legal"
+      },
+      "q14": {
+        "question": "How is data confidentiality protected (GDPR)?",
+        "answer": "All data is stored encrypted in Supabase (EU). We respect 100% GDPR: role-based access, complete audit log, data deletion on request. We don't sell/share data with third parties. You can export all your data anytime.",
+        "category": "legal"
+      },
+      "q15": {
+        "question": "Does the platform offer technical support?",
+        "answer": "Yes! Priority technical support included in subscription: <24h response on email at support@s-s-m.ro. For critical emergencies we offer phone support. Knowledge base and video tutorials available in platform.",
+        "category": "legal"
+      }
+    },
+    "cta": {
+      "title": "Still have questions?",
+      "subtitle": "Our team is here to help you.",
+      "buttonContact": "Contact us",
+      "buttonTrial": "Start trial period →"
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "About us",
+      "title": "We digitize OHS compliance",
+      "titleHighlight": "in Central and Eastern Europe",
+      "subtitle": "The s-s-m.ro platform transforms how companies and OHS consultants manage compliance in Romania, Bulgaria, Hungary, Germany and neighboring countries."
+    },
+    "mission": {
+      "title": "Our mission",
+      "description": "We digitize OHS & Fire Safety compliance in Central and Eastern Europe, transforming bureaucratic processes into automated, simple and transparent workflows.",
+      "vision": "Our vision is for every company in our region to manage OHS/Fire Safety compliance without stress, without fines and without excessive bureaucracy — all through a single digital platform."
+    },
+    "differentiators": {
+      "title": "Why we're different",
+      "subtitle": "5 key advantages that set us apart",
+      "compliance": {
+        "title": "100% legislative compliance",
+        "description": "The platform fully complies with OHS and Fire Safety legislation from Romania (Law 319/2006, Law 307/2006), with automatic updates."
+      },
+      "automation": {
+        "title": "Complete automation",
+        "description": "Zero manual bureaucracy. Automatic alerts, labor inspection financial risk calculation, PDF report generation with one click."
+      },
+      "multilingual": {
+        "title": "Multilingual & Multi-country",
+        "description": "Interface in 5 languages (RO, BG, EN, HU, DE) for consultants with international portfolios in the CEE region."
+      },
+      "analytics": {
+        "title": "Analytics & advanced reporting",
+        "description": "Real-time dashboard with key indicators: labor inspection risk, data completeness, compliance status per organization."
+      },
+      "multiOrg": {
+        "title": "Multi-organization architecture",
+        "description": "Manage 100+ companies from a single account. Ideal for OHS consultants and company groups."
+      }
+    },
+    "team": {
+      "title": "Our team",
+      "subtitle": "The people behind the platform",
+      "member1": {
+        "name": "Daniel Popescu",
+        "role": "Founder & OHS Consultant"
+      },
+      "member2": {
+        "name": "Maria Ionescu",
+        "role": "Product Manager"
+      },
+      "member3": {
+        "name": "Andrei Georgescu",
+        "role": "Tech Lead"
+      }
+    },
+    "stats": {
+      "title": "Key figures",
+      "subtitle": "The market context we serve",
+      "companies": {
+        "value": "850K",
+        "label": "Active companies in Romania (2026)"
+      },
+      "digitalization": {
+        "value": "<5%",
+        "label": "Estimated OHS digitalization rate"
+      },
+      "countries": {
+        "value": "5",
+        "label": "Countries covered (RO, BG, HU, DE, EN)"
+      },
+      "domains": {
+        "value": "8",
+        "label": "Compliance domains (OHS, Fire, GDPR, NIS2)"
+      }
+    },
+    "cta": {
+      "title": "Ready to digitize compliance?",
+      "subtitle": "Join the platform that transforms how CEE companies manage OHS & Fire Safety.",
+      "button": "Start trial period →"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "updateDate": "February 13, 2026",
+    "backToDashboard": "← Back to Dashboard",
+    "sections": {
+      "operator": {
+        "title": "Data Controller",
+        "intro": "In accordance with the General Data Protection Regulation (GDPR - Regulation EU 2016/679), the controller of your personal data is:",
+        "companyName": "Company Name",
+        "cui": "Tax ID",
+        "address": "Address",
+        "email": "Email",
+        "phone": "Phone"
+      },
+      "dataCollected": {
+        "title": "Personal Data Collected",
+        "intro": "When using the s-s-m.ro platform, we collect and process the following categories of data:",
+        "categories": {
+          "identification": {
+            "title": "Identification data",
+            "items": {
+              "name": "First and last name",
+              "email": "Email address",
+              "phone": "Phone number",
+              "cui": "Company Tax ID"
+            }
+          },
+          "professional": {
+            "title": "Professional data",
+            "items": {
+              "company": "Company name",
+              "position": "Position",
+              "department": "Department",
+              "role": "Platform role (consultant/administrator/employee)"
+            }
+          },
+          "medical": {
+            "title": "Medical data (processed with separate consent)",
+            "items": {
+              "records": "Medical fitness certificates",
+              "exams": "Periodic medical examination data",
+              "aptitude": "Work fitness status"
+            }
+          },
+          "technical": {
+            "title": "Technical data",
+            "items": {
+              "ip": "IP address",
+              "browser": "Browser type and device",
+              "logs": "Access and activity logs",
+              "cookies": "Cookies and similar technologies"
+            }
+          }
+        }
+      },
+      "purpose": {
+        "title": "Purpose of Processing and Legal Basis",
+        "legalBasis": "Legal basis",
+        "items": {
+          "contract": {
+            "title": "Contract performance",
+            "desc": "Provision of s-s-m.ro platform services, management of your account and associated organizations",
+            "basis": "Art. 6(1)(b) GDPR — performance of a contract"
+          },
+          "compliance": {
+            "title": "Legal compliance OHS/Fire Safety",
+            "desc": "Fulfillment of legal obligations regarding occupational health and safety (Law 319/2006) and fire prevention (Law 307/2006)",
+            "basis": "Art. 6(1)(c) GDPR — legal obligation + Art. 9(2)(b) GDPR for medical data"
+          },
+          "security": {
+            "title": "Security and fraud prevention",
+            "desc": "Platform protection against unauthorized access, detection of suspicious activities",
+            "basis": "Art. 6(1)(f) GDPR — legitimate interest"
+          },
+          "marketing": {
+            "title": "Marketing and communication (optional)",
+            "desc": "Sending newsletters, notifications about new features, offers (only with explicit consent)",
+            "basis": "Art. 6(1)(a) GDPR — consent"
+          }
+        }
+      },
+      "recipients": {
+        "title": "Data Recipients",
+        "intro": "Your data may be disclosed to the following categories of recipients:",
+        "items": {
+          "supabase": "Database hosting provider: Supabase Inc. (data storage in EU cloud)",
+          "vercel": "Application hosting provider: Vercel Inc. (frontend infrastructure)",
+          "authorities": "Public authorities: Labor Inspection, Fire Department, National Supervisory Authority for Personal Data Processing (only upon legal request)",
+          "consultants": "OHS consultants: if you are an employee of a company managed by external consultant",
+          "medical": "Occupational health service providers: only for managing medical records (with separate consent)"
+        }
+      },
+      "internationalTransfer": {
+        "title": "International Data Transfer",
+        "intro": "Your data is stored and processed in the European Union. In certain cases, data may be transferred to providers outside the EU:",
+        "supabase": {
+          "title": "Supabase",
+          "desc": "The database is stored in the EU region (Frankfurt, Germany). Supabase Inc. is located in the USA, but the physical data remains in the EU."
+        },
+        "vercel": {
+          "title": "Vercel",
+          "desc": "The application is hosted in the EU region. Vercel Inc. is an American company with EU infrastructure."
+        },
+        "guarantees": "For international transfers we use: Standard Contractual Clauses (SCC) approved by the European Commission and additional technical protection measures (end-to-end encryption)."
+      },
+      "retention": {
+        "title": "Data Retention Period",
+        "items": {
+          "contractData": {
+            "period": "Duration of contract + 3 years",
+            "desc": "Identification and professional data — according to legal accounting and tax obligations"
+          },
+          "medicalData": {
+            "period": "Duration of employment + 10 years",
+            "desc": "Medical data — according to Law 319/2006 on occupational health and safety"
+          },
+          "marketingData": {
+            "period": "Until consent withdrawal",
+            "desc": "Marketing data — deleted immediately upon consent withdrawal"
+          },
+          "technicalData": {
+            "period": "90 days",
+            "desc": "Technical logs and browsing data — for security and debugging"
+          }
+        }
+      },
+      "rights": {
+        "title": "Your Rights as Data Subject",
+        "intro": "Under GDPR, you have the following rights:",
+        "exercise": "How to exercise these rights",
+        "exerciseDesc": "Send a request to [DPO EMAIL] or through the contact form in the platform. We will respond within a maximum of 30 calendar days.",
+        "items": {
+          "access": {
+            "title": "Right of access (Art. 15 GDPR)",
+            "desc": "You can request a copy of all personal data we process about you."
+          },
+          "rectification": {
+            "title": "Right to rectification (Art. 16 GDPR)",
+            "desc": "You can request correction of inaccurate data or completion of incomplete data."
+          },
+          "erasure": {
+            "title": "Right to erasure / \"right to be forgotten\" (Art. 17 GDPR)",
+            "desc": "You can request deletion of your data under certain conditions (e.g. if data is no longer necessary or you withdraw consent)."
+          },
+          "restriction": {
+            "title": "Right to restriction of processing (Art. 18 GDPR)",
+            "desc": "You can request temporary limitation of data processing in certain situations."
+          },
+          "portability": {
+            "title": "Right to data portability (Art. 20 GDPR)",
+            "desc": "You can request your data in a structured, commonly used and machine-readable format, to transfer it to another controller."
+          },
+          "objection": {
+            "title": "Right to object (Art. 21 GDPR)",
+            "desc": "You can object to processing of your data for certain purposes (e.g. direct marketing)."
+          },
+          "withdraw": {
+            "title": "Right to withdraw consent",
+            "desc": "When processing is based on consent, you can withdraw it at any time, without affecting the lawfulness of previous processing."
+          },
+          "complaint": {
+            "title": "Right to lodge a complaint (Art. 77 GDPR)",
+            "desc": "You have the right to lodge a complaint with the National Supervisory Authority for Personal Data Processing (ANSPDCP)."
+          }
+        }
+      },
+      "cookies": {
+        "title": "Use of Cookies",
+        "intro": "The s-s-m.ro platform uses cookies to ensure proper functioning and to improve user experience:",
+        "types": {
+          "essential": {
+            "title": "Essential cookies (strictly necessary)",
+            "desc": "Required for authentication, session, and basic functionalities. Cannot be disabled."
+          },
+          "functional": {
+            "title": "Functional cookies",
+            "desc": "Save your preferences (language, selected organization, dashboard settings)."
+          },
+          "analytics": {
+            "title": "Analytics cookies (optional)",
+            "desc": "Help us understand how the platform is used to improve it (e.g. Google Analytics)."
+          }
+        },
+        "management": "You can manage cookies from your browser settings. Disabling essential cookies may affect platform functionality."
+      },
+      "security": {
+        "title": "Security Measures",
+        "intro": "We implement technical and organizational measures to protect your data against unauthorized access, loss or destruction:",
+        "measures": {
+          "encryption": "TLS/SSL encryption for data transmission",
+          "access": "Strict role-based access control (RBAC)",
+          "monitoring": "Monitoring and audit log for incident detection",
+          "backup": "Daily automatic backup with 30-day retention",
+          "training": "Periodic team training on data protection"
+        }
+      },
+      "dpo": {
+        "title": "Data Protection Officer (DPO)",
+        "intro": "For any questions related to your data protection, you can contact the Data Protection Officer:",
+        "email": "Email",
+        "address": "Postal address"
+      },
+      "anspdcp": {
+        "title": "Supervisory Authority",
+        "intro": "You have the right to lodge a complaint with the national supervisory authority:",
+        "name": "Name",
+        "address": "Address",
+        "website": "Website"
+      },
+      "changes": {
+        "title": "Privacy Policy Changes",
+        "desc": "We reserve the right to update this Privacy Policy. Any changes will be communicated via email and/or notification in the platform with a minimum of 30 days before taking effect."
+      }
+    }
   }
 }

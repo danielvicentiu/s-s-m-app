@@ -186,5 +186,342 @@
     "email": "contact@s-s-m.ro",
     "phone": "+36 1 000 0000",
     "address": "Budapest, Magyarország"
+  },
+  "quickCheck": {
+    "badge": "Ingyenes teszt",
+    "title": "Quick Check Munkavédelem",
+    "subtitle": "Értékelje munkavédelmi megfelelési szintjét 2 perc alatt. Ingyenes 10 kérdéses kérdőív magyar munkáltatóknak.",
+    "progress": "Haladás",
+    "submit": "Eredmény megtekintése",
+    "footer": "Ez a teszt tájékoztató jellegű és nem helyettesíti a szakmai munkavédelmi értékelést.",
+    "answers": {
+      "yes": "Igen",
+      "partial": "Részben",
+      "no": "Nem"
+    },
+    "questions": {
+      "q1": {
+        "text": "Rendelkezik érvényes munkaegészségügyi alkalmassági igazolásokkal minden munkavállalójánál?"
+      },
+      "q2": {
+        "text": "Elvégezte a munkavédelmi oktatást (általános és munkahelyi) minden munkavállalónál?"
+      },
+      "q3": {
+        "text": "Rendelkezik egyéni védőfelszerelésekkel (EVF) a munkaköri leírások szerint?"
+      },
+      "q4": {
+        "text": "Ellenőrzött és érvényességi időn belüli tűzoltó készülékei vannak?"
+      },
+      "q5": {
+        "text": "Naprakész munkaköri leírásai vannak az azonosított kockázatokkal?"
+      },
+      "q6": {
+        "text": "Kifüggesztett evakuációs terve van és kiképzett munkavállalói?"
+      },
+      "q7": {
+        "text": "Azonosította és értékelte a szervezetében lévő összes kockázatot?"
+      },
+      "q8": {
+        "text": "Kijelölte a munkavédelmi/tűzvédelmi felelős személyeket a jogszabályok szerint?"
+      },
+      "q9": {
+        "text": "Teljes nyilvántartásokkal rendelkezik (oktatások, EVF, berendezések)?"
+      },
+      "q10": {
+        "text": "Aktív szerződése van külső munkavédelmi szolgálattal vagy engedélyezett tanácsadóval?"
+      }
+    },
+    "results": {
+      "title": "Az Ön eredménye",
+      "retake": "Teszt újrakezdése",
+      "cta": "Ingyenes próbaidőszak kezdése →",
+      "level": {
+        "good": "Jó szint",
+        "medium": "Közepes szint",
+        "critical": "Kritikus szint"
+      },
+      "description": {
+        "good": "Gratulálunk! Az Ön munkavédelmi megfelelési szintje nagyon jó. A megfelelés fenntartása azonban folyamatos frissítéseket és figyelmet igényel. Az s-s-m.ro platform segít automatizálni a riasztásokat és jelentéseket.",
+        "medium": "Az Ön munkavédelmi megfelelése részleges. Vannak olyan szempontok, amelyek azonnali figyelmet igényelnek az OMMF bírságok elkerülése érdekében. Az s-s-m.ro platform segít pontosan azonosítani, mi hiányzik, és gyorsan megoldani a problémákat.",
+        "critical": "FIGYELEM: Az Ön munkavédelmi megfelelési szintje kritikus! Jelentős OMMF bírságok kockázatát futja. Sürgős cselekvésre van szükség a kötelező dokumentumok rendbe tételéhez. Az s-s-m.ro platform egyértelmű cselekvési tervet nyújt."
+      }
+    }
+  },
+  "calculatorRisc": {
+    "badge": "Ingyenes kalkulátor",
+    "title": "Munkavédelmi Kockázatkalkulátor",
+    "subtitle": "Értékelje foglalkozási kockázati szintjét üzleti tevékenységei alapján.",
+    "formTitle": "Töltse ki üzleti tevékenységének részleteit",
+    "calculate": "Kockázat kiszámítása",
+    "reset": "Visszaállítás",
+    "cta": {
+      "title": "Szeretné automatikusan kezelni a kockázatokat?",
+      "description": "Az s-s-m.ro platform minden eszközt biztosít a teljes munkavédelmi megfeleléshez.",
+      "button": "Ingyenes próbaidőszak kezdése →"
+    },
+    "footer": "Ez a kalkulátor tájékoztató jellegű, és nem helyettesíti a szakmai kockázatértékelést."
+  },
+  "contact": {
+    "title": "Kapcsolat",
+    "subtitle": "Kérdése van, vagy támogatásra van szüksége? Itt vagyunk, hogy segítsünk.",
+    "form": {
+      "title": "Küldjön nekünk üzenetet",
+      "name": "Teljes név",
+      "namePlaceholder": "Kiss János",
+      "email": "E-mail",
+      "emailPlaceholder": "email@pelda.hu",
+      "phone": "Telefon",
+      "phonePlaceholder": "+36 70 000 0000",
+      "company": "Cég",
+      "companyPlaceholder": "Cégnév (opcionális)",
+      "message": "Üzenet",
+      "messagePlaceholder": "Írja ide üzenetét...",
+      "submit": "Üzenet küldése",
+      "submitting": "Küldés folyamatban...",
+      "success": "Üzenet sikeresen elküldve! A lehető leghamarabb válaszolunk.",
+      "error": "Hiba történt. Kérjük, vegye fel velünk a kapcsolatot közvetlenül e-mailben."
+    },
+    "info": {
+      "title": "Kapcsolattartási információk",
+      "email": "E-mail",
+      "emailValue": "contact@s-s-m.ro",
+      "support": "Technikai támogatás",
+      "supportValue": "support@s-s-m.ro",
+      "phone": "Telefon",
+      "phoneValue": "+40 700 000 000",
+      "address": "Cím",
+      "addressValue": "Bukarest, Románia"
+    },
+    "faq": {
+      "title": "Gyakran ismételt kérdések",
+      "q1": {
+        "question": "Mennyibe kerül a platform?",
+        "answer": "€200/év szervezetenként, nincs beállítási díj. Bármikor lemondhatja. Minden funkciót tartalmaz: munkavédelem, tűzvédelmi eszközök, automatikus riasztások és PDF jelentések."
+      },
+      "q2": {
+        "question": "Szükséges munkavédelmi tanácsadó a platform használatához?",
+        "answer": "Nem. A platformot a vállalati adminisztrátorok önállóan használhatják a munkavédelmi és tűzvédelmi dokumentumok kezelésére. A munkavédelmi tanácsadók több vállalatot kezelhetnek egyidejűleg a platformon."
+      },
+      "q3": {
+        "question": "Hogyan működik a próbaidőszak?",
+        "answer": "Lépjen kapcsolatba velünk egy ingyenes 14 napos próbaidőszak aktiválásához. Teljes hozzáférést kap a platform összes funkciójához korlátozások nélkül."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Adatvédelmi Szabályzat",
+    "lastUpdated": "Utolsó frissítés",
+    "updateDate": "2026. február 13.",
+    "backToDashboard": "← Vissza a Vezérlőpulthoz",
+    "sections": {
+      "operator": {
+        "title": "Adatkezelő",
+        "intro": "Az Általános Adatvédelmi Rendelet (GDPR - 2016/679 EU rendelet) értelmében az Ön személyes adatainak kezelője:",
+        "companyName": "Megnevezés",
+        "cui": "Adószám",
+        "address": "Cím",
+        "email": "E-mail",
+        "phone": "Telefon"
+      },
+      "dataCollected": {
+        "title": "Gyűjtött Személyes Adatok",
+        "intro": "Az s-s-m.ro platform használata során az alábbi személyes adatkategóriákat gyűjtjük és kezeljük:",
+        "categories": {
+          "identification": {
+            "title": "Azonosító adatok",
+            "items": {
+              "name": "Név és vezetéknév",
+              "email": "E-mail cím",
+              "phone": "Telefonszám",
+              "cui": "Vállalat adószáma"
+            }
+          },
+          "professional": {
+            "title": "Szakmai adatok",
+            "items": {
+              "company": "Vállalat neve",
+              "position": "Beosztás",
+              "department": "Részleg",
+              "role": "Szerepkör a platformon (tanácsadó/adminisztrátor/munkavállaló)"
+            }
+          },
+          "medical": {
+            "title": "Egészségügyi adatok (külön hozzájárulással kezelve)",
+            "items": {
+              "records": "Munkaegészségügyi alkalmassági lapok",
+              "exams": "Időszakos orvosi vizsgálatok adatai",
+              "aptitude": "Munkaalkalmassági státusz"
+            }
+          },
+          "technical": {
+            "title": "Technikai adatok",
+            "items": {
+              "ip": "IP-cím",
+              "browser": "Böngésző és eszköz típusa",
+              "logs": "Hozzáférési és tevékenységi naplók",
+              "cookies": "Cookie-k és hasonló technológiák"
+            }
+          }
+        }
+      },
+      "purpose": {
+        "title": "Adatkezelés Célja és Jogalapja",
+        "legalBasis": "Jogalap",
+        "items": {
+          "contract": {
+            "title": "Szerződés teljesítése",
+            "desc": "Az s-s-m.ro platform szolgáltatásainak nyújtása, az Ön fiókjának és kapcsolódó szervezeteinek kezelése",
+            "basis": "GDPR 6. cikk (1) bekezdés b) pont — szerződés teljesítése"
+          },
+          "compliance": {
+            "title": "Jogi megfelelés SSM/PSI",
+            "desc": "Munkahelyi egészség és biztonság (Törvény 319/2006) és tűzvédelem (Törvény 307/2006) törvényi kötelezettségeinek teljesítése",
+            "basis": "GDPR 6. cikk (1) bekezdés c) pont — jogi kötelezettség + GDPR 9. cikk (2) bekezdés b) pont az egészségügyi adatokra"
+          },
+          "security": {
+            "title": "Biztonság és csalásmegelőzés",
+            "desc": "A platform védelme a jogosulatlan hozzáféréstől, gyanús tevékenységek észlelése",
+            "basis": "GDPR 6. cikk (1) bekezdés f) pont — jogos érdek"
+          },
+          "marketing": {
+            "title": "Marketing és kommunikáció (opcionális)",
+            "desc": "Hírlevelek, új funkciókról szóló értesítések, ajánlatok küldése (csak kifejezett hozzájárulással)",
+            "basis": "GDPR 6. cikk (1) bekezdés a) pont — hozzájárulás"
+          }
+        }
+      },
+      "recipients": {
+        "title": "Adatok Címzettjei",
+        "intro": "Az Ön adatai az alábbi címzettek kategóriáinak kerülhetnek továbbításra:",
+        "items": {
+          "supabase": "Adatbázis szolgáltató: Supabase Inc. (adatok tárolása EU felhőben)",
+          "vercel": "Alkalmazás szolgáltató: Vercel Inc. (frontend infrastruktúra)",
+          "authorities": "Hatóságok: OMMF, OKF, NAIH (csak jogi kérésre)",
+          "consultants": "Munkavédelmi tanácsadók: abban az esetben, ha Ön külső tanácsadó által kezelt vállalat munkavállalója",
+          "medical": "Munkaegészségügyi szolgáltatók: csak az orvosi nyilvántartások kezelésére (külön hozzájárulással)"
+        }
+      },
+      "internationalTransfer": {
+        "title": "Adatok Nemzetközi Továbbítása",
+        "intro": "Az Ön adatai az Európai Unióban kerülnek tárolásra és feldolgozásra. Bizonyos esetekben az adatok az EU-n kívüli szolgáltatókhoz továbbíthatók:",
+        "supabase": {
+          "title": "Supabase",
+          "desc": "Az adatbázis az EU régióban (Frankfurt, Németország) tárolódik. A Supabase Inc. vállalat az Egyesült Államokban található, de a fizikai adatok az EU-ban maradnak."
+        },
+        "vercel": {
+          "title": "Vercel",
+          "desc": "Az alkalmazás az EU régióban van tárolva. A Vercel Inc. amerikai vállalat EU infrastruktúrával."
+        },
+        "guarantees": "A nemzetközi adattovábbításokhoz az alábbi garanciákat használjuk: Az Európai Bizottság által jóváhagyott Standard Szerződési Záradékok (SCC) és további technikai védelmi intézkedések (végponttól végpontig terjedő titkosítás)."
+      },
+      "retention": {
+        "title": "Adatmegőrzési Időtartam",
+        "items": {
+          "contractData": {
+            "period": "A szerződés időtartama + 3 év",
+            "desc": "Azonosító és szakmai adatok — számviteli és adózási jogi kötelezettségeknek megfelelően"
+          },
+          "medicalData": {
+            "period": "A munkaviszony időtartama + 10 év",
+            "desc": "Egészségügyi adatok — a Törvény 319/2006 munkahelyi egészség és biztonság szerint"
+          },
+          "marketingData": {
+            "period": "A hozzájárulás visszavonásáig",
+            "desc": "Marketing adatok — a hozzájárulás visszavonása után azonnal törlődnek"
+          },
+          "technicalData": {
+            "period": "90 nap",
+            "desc": "Technikai naplók és böngészési adatok — biztonsági és hibaelhárítási célokra"
+          }
+        }
+      },
+      "rights": {
+        "title": "Az Ön Jogai mint Érintett",
+        "intro": "A GDPR szerint az alábbi jogokkal rendelkezik:",
+        "exercise": "Hogyan gyakorolja ezeket a jogokat",
+        "exerciseDesc": "Kérelmet küldhet a [DPO EMAIL] címre vagy a platformon keresztül elérhető kapcsolatfelvételi űrlapon. Legfeljebb 30 naptári napon belül válaszolunk.",
+        "items": {
+          "access": {
+            "title": "Hozzáférési jog (GDPR 15. cikk)",
+            "desc": "Kérheti az Önről általunk kezelt összes személyes adat másolatát."
+          },
+          "rectification": {
+            "title": "Helyesbítéshez való jog (GDPR 16. cikk)",
+            "desc": "Kérheti a pontatlan adatok helyesbítését vagy a hiányos adatok kiegészítését."
+          },
+          "erasure": {
+            "title": "Törléshez való jog / \"elfeledtetéshez való jog\" (GDPR 17. cikk)",
+            "desc": "Bizonyos feltételek mellett kérheti az adatai törlését (pl. ha az adatokra már nincs szükség, vagy visszavonja a hozzájárulást)."
+          },
+          "restriction": {
+            "title": "Az adatkezelés korlátozásához való jog (GDPR 18. cikk)",
+            "desc": "Bizonyos helyzetekben kérheti az adatkezelés ideiglenes korlátozását."
+          },
+          "portability": {
+            "title": "Adathordozhatósághoz való jog (GDPR 20. cikk)",
+            "desc": "Kérheti adatait strukturált, széles körben használt, géppel olvasható formátumban, hogy másik adatkezelőhöz továbbíthassa azokat."
+          },
+          "objection": {
+            "title": "Tiltakozáshoz való jog (GDPR 21. cikk)",
+            "desc": "Tiltakozhat az adatai bizonyos célú kezelése ellen (pl. közvetlen marketing)."
+          },
+          "withdraw": {
+            "title": "Hozzájárulás visszavonásához való jog",
+            "desc": "Ha az adatkezelés hozzájáruláson alapul, bármikor visszavonhatja azt, anélkül hogy ez érintené a korábbi adatkezelés jogszerűségét."
+          },
+          "complaint": {
+            "title": "Panasz benyújtásához való jog (GDPR 77. cikk)",
+            "desc": "Jogában áll panaszt benyújtani a Nemzeti Adatvédelmi és Információszabadság Hatósághoz (NAIH)."
+          }
+        }
+      },
+      "cookies": {
+        "title": "Cookie-k Használata",
+        "intro": "Az s-s-m.ro platform cookie-kat használ a megfelelő működés biztosítása és a felhasználói élmény javítása érdekében:",
+        "types": {
+          "essential": {
+            "title": "Elengedhetetlen cookie-k (szigorúan szükségesek)",
+            "desc": "Szükségesek a hitelesítéshez, munkamenethez és alapvető funkciókhoz. Nem deaktiválhatók."
+          },
+          "functional": {
+            "title": "Funkcionális cookie-k",
+            "desc": "Menti az Ön beállításait (nyelv, kiválasztott szervezet, vezérlőpult beállítások)."
+          },
+          "analytics": {
+            "title": "Elemzési cookie-k (opcionális)",
+            "desc": "Segít megérteni, hogyan használják a platformot, hogy javíthassuk azt (pl. Google Analytics)."
+          }
+        },
+        "management": "A cookie-kat a böngésző beállításaiban kezelheti. Az elengedhetetlen cookie-k letiltása befolyásolhatja a platform működését."
+      },
+      "security": {
+        "title": "Biztonsági Intézkedések",
+        "intro": "Technikai és szervezési intézkedéseket hajtunk végre az Ön adatainak védelme érdekében a jogosulatlan hozzáféréstől, elvesztéstől vagy megsemmisüléstől:",
+        "measures": {
+          "encryption": "TLS/SSL titkosítás az adatátvitelhez",
+          "access": "Szerepkör-alapú szigorú hozzáférés-szabályozás (RBAC)",
+          "monitoring": "Figyelés és audit napló az incidensek észleléséhez",
+          "backup": "Napi automatikus mentés 30 napos megőrzéssel",
+          "training": "A csapat rendszeres adatvédelmi képzése"
+        }
+      },
+      "dpo": {
+        "title": "Adatvédelmi Tisztviselő (DPO)",
+        "intro": "Az adatok védelmével kapcsolatos bármilyen kérdésével kapcsolatba léphet az Adatvédelmi Tisztviselővel:",
+        "email": "E-mail",
+        "address": "Postai cím"
+      },
+      "anspdcp": {
+        "title": "Felügyeleti Hatóság",
+        "intro": "Jogában áll panaszt benyújtani a nemzeti felügyeleti hatósághoz:",
+        "name": "Megnevezés",
+        "address": "Cím",
+        "website": "Weboldal"
+      },
+      "changes": {
+        "title": "Az Adatvédelmi Szabályzat Módosításai",
+        "desc": "Fenntartjuk a jogot az Adatvédelmi Szabályzat frissítésére. Bármilyen módosítást e-mailben és/vagy a platformon belüli értesítésen keresztül közlünk legalább 30 nappal a hatálybalépés előtt."
+      }
+    }
   }
 }

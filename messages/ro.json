@@ -28,7 +28,8 @@
     "login": "Intră în platformă",
     "home": "Acasă",
     "navigation": "Navigare",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "Despre"
   },
   "landing": {
     "badge": "Platformă digitală SSM & PSI",
@@ -186,5 +187,614 @@
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
     "address": "București, România"
+  },
+  "quickCheck": {
+    "badge": "Test gratuit",
+    "title": "Quick Check SSM",
+    "subtitle": "Evaluează-ți gradul de conformitate SSM în 2 minute. Chestionar gratuit cu 10 întrebări pentru angajatori din România.",
+    "progress": "Progres",
+    "submit": "Vezi rezultatul",
+    "footer": "Acest test este orientativ și nu înlocuiește o evaluare profesională SSM.",
+    "answers": {
+      "yes": "Da",
+      "partial": "Parțial",
+      "no": "Nu"
+    },
+    "questions": {
+      "q1": {
+        "text": "Aveți toate fișele de aptitudine medicală valabile pentru angajați?"
+      },
+      "q2": {
+        "text": "Aveți instructajul SSM (general și pe post) efectuat pentru toți angajații?"
+      },
+      "q3": {
+        "text": "Aveți echipamente de protecție individuală (EPI) conform fișelor de post?"
+      },
+      "q4": {
+        "text": "Aveți stingătoarele verificate și în termen de valabilitate?"
+      },
+      "q5": {
+        "text": "Aveți fișele de post actualizate cu riscurile identificate?"
+      },
+      "q6": {
+        "text": "Aveți planul de evacuare afișat și angajații instruiți?"
+      },
+      "q7": {
+        "text": "Aveți identificate și evaluate toate riscurile din organizație?"
+      },
+      "q8": {
+        "text": "Aveți numite persoane responsabile SSM/PSI conform legii?"
+      },
+      "q9": {
+        "text": "Aveți registre de evidență complete (instructaje, EPI, echipamente)?"
+      },
+      "q10": {
+        "text": "Aveți contract activ cu serviciu extern SSM sau consultant autorizat?"
+      }
+    },
+    "results": {
+      "title": "Rezultatul tău",
+      "retake": "Refă testul",
+      "cta": "Începe perioada de probă gratuită →",
+      "level": {
+        "good": "Nivel Bun",
+        "medium": "Nivel Mediu",
+        "critical": "Nivel Critic"
+      },
+      "description": {
+        "good": "Felicitări! Nivelul tău de conformitate SSM este foarte bun. Cu toate acestea, menținerea conformității necesită actualizări constante și monitorizare. Platforma s-s-m.ro te ajută să automatizezi alertele și rapoartele.",
+        "medium": "Conformitatea ta SSM este parțială. Există aspecte care necesită atenție imediată pentru a evita amenzi ITM. Platforma s-s-m.ro te ajută să identifici exact ce lipsește și să rezolvi rapid problemele.",
+        "critical": "ATENȚIE: Nivelul tău de conformitate SSM este critic! Riști amenzi importante de la ITM. Este esențial să acționezi urgent pentru a pune la punct documentele obligatorii. Platforma s-s-m.ro îți oferă un plan clar de acțiune."
+      }
+    }
+  },
+  "calculatorRisc": {
+    "badge": "Calculator gratuit",
+    "title": "Calculator Risc SSM",
+    "subtitle": "Evaluează-ți nivelul de risc ocupațional bazat pe specificul activității tale. Calculator gratuit pentru angajatori din România.",
+    "formTitle": "Completează datele despre activitatea ta",
+    "fields": {
+      "caen": {
+        "label": "Domeniu de activitate (CAEN)",
+        "placeholder": "Selectează domeniul CAEN"
+      },
+      "employees": {
+        "label": "Număr angajați",
+        "placeholder": "Ex: 25"
+      },
+      "hazardous": {
+        "label": "Lucrați cu substanțe periculoase?",
+        "yes": "Da",
+        "no": "Nu"
+      },
+      "height": {
+        "label": "Lucrați la înălțime (peste 2m)?",
+        "yes": "Da",
+        "no": "Nu"
+      },
+      "pressure": {
+        "label": "Aveți echipamente sub presiune?",
+        "yes": "Da",
+        "no": "Nu"
+      },
+      "evacuation": {
+        "label": "Aveți plan de evacuare implementat?",
+        "yes": "Da",
+        "no": "Nu"
+      }
+    },
+    "caenOptions": {
+      "construction": "Construcții (CAEN 41-43)",
+      "manufacturing": "Industrie prelucrătoare (CAEN 10-33)",
+      "transport": "Transport și depozitare (CAEN 49-53)",
+      "services": "Servicii profesionale (CAEN 69-75)",
+      "retail": "Comerț cu amănuntul (CAEN 47)",
+      "hospitality": "Hoteluri și restaurante (CAEN 55-56)",
+      "it": "IT și servicii informatice (CAEN 62-63)",
+      "health": "Sănătate și asistență socială (CAEN 86-88)",
+      "education": "Educație (CAEN 85)",
+      "other": "Altele"
+    },
+    "calculate": "Calculează riscul",
+    "reset": "Resetează",
+    "results": {
+      "title": "Nivelul tău de risc ocupațional",
+      "score": "Scor risc",
+      "level": {
+        "low": "Risc Scăzut",
+        "medium": "Risc Mediu",
+        "high": "Risc Ridicat",
+        "veryHigh": "Risc Foarte Ridicat"
+      },
+      "description": {
+        "low": "Activitatea ta prezintă un nivel scăzut de risc ocupațional. Cu toate acestea, conformitatea SSM rămâne obligatorie: medicina muncii, instructaje periodice, echipamente PSI, și documentație la zi.",
+        "medium": "Activitatea ta prezintă un nivel mediu de risc ocupațional. Este esențial să ai toate măsurile de prevenție implementate: evaluare de risc actualizată, EPI adecvat, instructaje specifice, și monitorizare constantă.",
+        "high": "ATENȚIE: Activitatea ta prezintă un nivel ridicat de risc ocupațional! Necesită măsuri sporite de protecție: evaluare complexă de risc, EPI certificat, instructaje frecvente, supraveghere medicală atentă, și proceduri de urgență clare.",
+        "veryHigh": "PERICOL: Activitatea ta prezintă un nivel FOARTE RIDICAT de risc ocupațional! Este OBLIGATORIU să ai: evaluare detaliată de risc profesional, EPI performant certificat, instructaje săptămânale, control medical riguros, planuri de urgență testate, și consultant SSM dedicat."
+      },
+      "recommendations": {
+        "title": "Recomandări pentru nivelul tău de risc",
+        "low": [
+          "Medicina muncii: Examinări medicale anuale pentru toți angajații",
+          "Instructaje SSM: Instructaj general la angajare + instructaj periodic anual",
+          "Echipamente PSI: Stingătoare verificate anual, plan de evacuare afișat",
+          "Documentație: Fișe de post actualizate, registre de evidență complete"
+        ],
+        "medium": [
+          "Medicina muncii: Examinări medicale semestriale pentru posturi cu risc mediu",
+          "Instructaje SSM: Instructaj general + instructaj specific pe post la angajare, instructaje periodice la 6 luni",
+          "EPI: Echipamente de protecție individuală conform fișelor de post, verificate lunar",
+          "Echipamente PSI: Stingătoare verificate semestrial, hidranți verificați, iluminat urgență funcțional",
+          "Evaluare risc: Evaluare de risc profesional actualizată anual, ISCIR pentru echipamente sub presiune",
+          "Documentație: Plan de prevenire și protecție actualizat, proceduri operaționale scrise"
+        ],
+        "high": [
+          "Medicina muncii: Examinări medicale trimestriale pentru posturi cu risc ridicat, teste specifice expunere",
+          "Instructaje SSM: Instructaj zilnic pentru activități cu risc ridicat, simulări periodice",
+          "EPI: Echipamente certificate pentru protecție ridicată, verificate săptămânal, întreținere profesională",
+          "Echipamente PSI: Sistem automat detecție și stingere incendiu, hidranți funcționali, planuri evacuare detaliate",
+          "Evaluare risc: Evaluare complexă risc profesional de către consultanți autorizați, actualizare semestrială",
+          "Supraveghere: Persoană responsabilă SSM dedicată, proceduri permis de lucru, monitorizare constantă",
+          "Documentație: Plan de urgență detaliat, proceduri critice testate, audituri interne regulate"
+        ],
+        "veryHigh": [
+          "Medicina muncii: Examinări medicale lunare pentru posturi cu risc extrem, analize toxicologice regulate, psiholog ocupațional",
+          "Instructaje SSM: Instructaj zilnic obligatoriu, briefing pre-shift, simulări săptămânale evacuare și urgență",
+          "EPI: Echipamente certificate nivel maxim protecție (respiratoare, costum ignifug, etc.), verificare zilnică, întreținere specializată",
+          "Echipamente PSI: Sistem automat detecție multi-nivel, stingere automată sprinklere, echipe interne PSI antrenate",
+          "Evaluare risc: Evaluare profesională detaliată de risc, actualizare la orice modificare proces, analiză ergonomică avansată",
+          "Supraveghere: Consultant SSM dedicat pe șantier/locație, sistem video monitorizare, proceduri permis lucru strict",
+          "Documentație: Plan de urgență testat lunar, proceduri critice certificate, raportare incidente în timp real, backup redundant",
+          "Autorizări: ISCIR pentru echipamente, autorizații pompieri, avize DSP, inspecții ITM proactive"
+        ]
+      }
+    },
+    "cta": {
+      "title": "Vrei să gestionezi riscurile automat?",
+      "description": "Platforma s-s-m.ro îți oferă toate instrumentele pentru conformitate SSM completă: alerte automate, calculul riscului financiar, rapoarte instant.",
+      "button": "Începe perioada de probă gratuită →"
+    },
+    "footer": "Acest calculator este orientativ și nu înlocuiește o evaluare profesională de risc conform Legii 319/2006."
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Ai întrebări sau ai nevoie de suport? Suntem aici să te ajutăm.",
+    "form": {
+      "title": "Trimite-ne un mesaj",
+      "name": "Nume complet",
+      "namePlaceholder": "Ion Popescu",
+      "email": "Email",
+      "emailPlaceholder": "email@exemplu.ro",
+      "phone": "Telefon",
+      "phonePlaceholder": "+40 700 000 000",
+      "company": "Companie",
+      "companyPlaceholder": "Nume firmă (opțional)",
+      "message": "Mesaj",
+      "messagePlaceholder": "Scrie mesajul tău aici...",
+      "submit": "Trimite mesaj",
+      "submitting": "Se trimite...",
+      "success": "Mesajul a fost trimis cu succes! Vom reveni în cel mai scurt timp.",
+      "error": "A apărut o eroare. Te rugăm să ne contactezi direct la email."
+    },
+    "info": {
+      "title": "Informații contact",
+      "email": "Email",
+      "emailValue": "contact@s-s-m.ro",
+      "support": "Suport tehnic",
+      "supportValue": "support@s-s-m.ro",
+      "phone": "Telefon",
+      "phoneValue": "+40 700 000 000",
+      "address": "Adresă",
+      "addressValue": "București, România"
+    },
+    "faq": {
+      "title": "Întrebări frecvente",
+      "q1": {
+        "question": "Cât costă platforma?",
+        "answer": "990 LEI/an per organizație, fără taxe de setup. Poți anula oricând. Include toate funcționalitățile: medicina muncii, echipamente PSI, alerte automate, și rapoarte PDF."
+      },
+      "q2": {
+        "question": "Este necesar consultant SSM pentru utilizare?",
+        "answer": "Nu. Platforma poate fi folosită independent de către administratori de firmă pentru gestionarea documentelor SSM/PSI. Consultanții SSM pot folosi platforma pentru a gestiona mai multe firme simultan."
+      },
+      "q3": {
+        "question": "Cum funcționează perioada de probă?",
+        "answer": "Contactează-ne pentru a activa o perioadă de probă gratuită de 14 zile. Vei avea acces complet la toate funcționalitățile platformei fără nicio restricție."
+      }
+    }
+  },
+  "faq": {
+    "hero": {
+      "badge": "Întrebări frecvente",
+      "title": "Răspunsuri la întrebările tale",
+      "subtitle": "Tot ce trebuie să știi despre platforma s-s-m.ro — funcționalități, preț, conformitate și suport tehnic."
+    },
+    "search": {
+      "placeholder": "Caută o întrebare...",
+      "noResults": "Niciun rezultat găsit pentru căutarea ta."
+    },
+    "categories": {
+      "general": "General",
+      "features": "Funcționalități",
+      "technical": "Tehnic",
+      "legal": "Legal & Conformitate"
+    },
+    "questions": {
+      "q1": {
+        "question": "Ce este platforma s-s-m.ro?",
+        "answer": "s-s-m.ro este o platformă digitală pentru gestionarea conformității SSM (securitate și sănătate în muncă) și PSI (prevenire și stingere incendii). Automatizează tracking-ul fișelor medicale, echipamentelor PSI, alertele de expirare și generarea de rapoarte pentru inspectorat.",
+        "category": "general"
+      },
+      "q2": {
+        "question": "Pentru cine este destinată platforma?",
+        "answer": "Platforma este destinată consultanților SSM care gestionează mai multe firme și administratorilor de companii care vor să gestioneze intern conformitatea SSM/PSI. Funcționează excelent pentru portofolii de 1-100+ organizații.",
+        "category": "general"
+      },
+      "q3": {
+        "question": "Cât costă și ce include abonamentul?",
+        "answer": "990 LEI/an per organizație, fără taxe de setup. Poți anula oricând. Include toate funcționalitățile: medicina muncii nelimitat, echipamente PSI, alerte automate zilnice, risc financiar ITM, rapoarte PDF, suport tehnic prioritar și backup zilnic.",
+        "category": "general"
+      },
+      "q4": {
+        "question": "Cum funcționează modulul Medicina Muncii?",
+        "answer": "Adaugi fișele medicale ale angajaților cu datele de expirare. Platforma calculează automat status-ul (expirat, expiră în <30 zile, valid) și trimite alerte zilnice pe email pentru expirări iminente. Ai vedere instant asupra tuturor angajaților dintr-o organizație.",
+        "category": "features"
+      },
+      "q5": {
+        "question": "Ce echipamente PSI pot gestiona?",
+        "answer": "Poți gestiona: stingătoare, truse prim ajutor, hidranți, detectoare fum și iluminat de urgență. Pentru fiecare echipament adaugi locație, data ultimei verificări și data expirării. Sistemul te alertează automat când e nevoie de reverificare.",
+        "category": "features"
+      },
+      "q6": {
+        "question": "Cum funcționează alertele automate?",
+        "answer": "Platforma trimite email zilnic (la 08:00 via Resend) cu toate expirările iminente (30/15/7 zile înainte). Notificările WhatsApp și SMS sunt în dezvoltare. Poți configura destinatarii pentru fiecare organizație.",
+        "category": "features"
+      },
+      "q7": {
+        "question": "Ce înseamnă 'Risc Financiar ITM'?",
+        "answer": "Este calculul automat al potențialelor amenzi de la Inspectoratul Teritorial de Muncă (ITM) dacă lipsesc documentele obligatorii. Platforma analizează ce nu ai în regulă și îți arată estimări min-max în RON conform legislației actuale.",
+        "category": "features"
+      },
+      "q8": {
+        "question": "Pot gestiona mai multe firme simultan?",
+        "answer": "Da! Arhitectura multi-organizație permite gestionarea nelimitată a organizațiilor dintr-un singur cont. Ideal pentru consultanți SSM cu portofolii mari. Filtrare instant și preferințe salvate per organizație.",
+        "category": "features"
+      },
+      "q9": {
+        "question": "Cum mă înregistrez pe platformă?",
+        "answer": "Contactează-ne la contact@s-s-m.ro pentru a activa contul. După activare, primești email cu link de login. Configurezi prima organizație și poți începe să adaugi angajați și echipamente imediat.",
+        "category": "technical"
+      },
+      "q10": {
+        "question": "Pot importa angajați în bulk?",
+        "answer": "Momentan importul se face manual prin formularul de adăugare angajat. Funcția de import CSV/Excel este pe roadmap și va fi disponibilă în Q2 2026. Între timp, suportăm adăugarea rapidă prin interfață.",
+        "category": "technical"
+      },
+      "q11": {
+        "question": "Ce browsere sunt suportate?",
+        "answer": "Platforma funcționează optim pe Chrome, Firefox, Safari și Edge (ultimele 2 versiuni). Interfața este 100% responsive și funcționează perfect pe mobile și tablet pentru acces on-the-go.",
+        "category": "technical"
+      },
+      "q12": {
+        "question": "Cum pot exporta rapoartele?",
+        "answer": "Rapoartele PDF se generează cu 1 click din dashboard. Sunt disponibile când completarea datelor > 80%. Fiecare raport include hash SHA256 pentru imutabilitate și poate fi descărcat instant sau trimis pe email.",
+        "category": "technical"
+      },
+      "q13": {
+        "question": "Este platforma conformă cu legislația SSM din România?",
+        "answer": "Da, platforma respectă integral Legea 319/2006 (SSM) și Legea 307/2006 (PSI). Actualizăm automat când apar modificări legislative. Rapoartele generate sunt acceptate de ITM și ISU pentru controale.",
+        "category": "legal"
+      },
+      "q14": {
+        "question": "Cum este protejată confidențialitatea datelor (GDPR)?",
+        "answer": "Toate datele sunt stocate criptat în Supabase (EU). Respectăm 100% GDPR: acces role-based, audit log complet, posibilitate ștergere date la cerere. Nu vindem/partajăm date către terți. Poți exporta toate datele tale oricând.",
+        "category": "legal"
+      },
+      "q15": {
+        "question": "Oferă platforma suport tehnic?",
+        "answer": "Da! Suport tehnic prioritar inclus în abonament: răspuns < 24h pe email la support@s-s-m.ro. Pentru urgențe critice oferim suport telefonic. Bază de cunoștințe și tutoriale video disponibile în platformă.",
+        "category": "legal"
+      }
+    },
+    "cta": {
+      "title": "Încă ai întrebări?",
+      "subtitle": "Echipa noastră este aici să te ajute.",
+      "buttonContact": "Contactează-ne",
+      "buttonTrial": "Începe perioada de probă →"
+    }
+  },
+  "about": {
+    "hero": {
+      "badge": "Despre noi",
+      "title": "Digitalizăm conformitatea SSM",
+      "titleHighlight": "în Europa Centrală și de Est",
+      "subtitle": "Platforma s-s-m.ro transformă modul în care firmele și consultanții SSM gestionează conformitatea în România, Bulgaria, Ungaria, Germania și țările învecinate."
+    },
+    "mission": {
+      "title": "Misiunea noastră",
+      "description": "Digitalizăm conformitatea SSM & PSI în Europa Centrală și de Est, transformând procesele birocratice în fluxuri automate, simple și transparente.",
+      "vision": "Viziunea noastră este ca fiecare firmă din regiunea noastră să poată gestiona conformitatea SSM/PSI fără stres, fără amenzi și fără birocrație excesivă — totul printr-o singură platformă digitală."
+    },
+    "differentiators": {
+      "title": "De ce suntem diferiți",
+      "subtitle": "5 avantaje cheie care ne diferențiază",
+      "compliance": {
+        "title": "Conformitate 100% legislativă",
+        "description": "Platforma respectă integral legislația SSM și PSI din România (Legea 319/2006, Legea 307/2006), cu actualizări automate."
+      },
+      "automation": {
+        "title": "Automatizare completă",
+        "description": "Zero birocrație manuală. Alerte automate, calcul risc financiar ITM, generare rapoarte PDF cu un singur click."
+      },
+      "multilingual": {
+        "title": "Multilingv & Multi-țară",
+        "description": "Interfață în 5 limbi (RO, BG, EN, HU, DE) pentru consultanți cu portofolii internaționale în regiunea ECE."
+      },
+      "analytics": {
+        "title": "Analytics & raportare avansată",
+        "description": "Dashboard în timp real cu indicatori cheie: risc ITM, completare date, status conformitate per organizație."
+      },
+      "multiOrg": {
+        "title": "Arhitectură multi-organizație",
+        "description": "Gestionează 100+ firme dintr-un singur cont. Ideal pentru consultanți SSM și grupuri de companii."
+      }
+    },
+    "team": {
+      "title": "Echipa noastră",
+      "subtitle": "Oamenii din spatele platformei",
+      "member1": {
+        "name": "Daniel Popescu",
+        "role": "Fondator & Consultant SSM"
+      },
+      "member2": {
+        "name": "Maria Ionescu",
+        "role": "Product Manager"
+      },
+      "member3": {
+        "name": "Andrei Georgescu",
+        "role": "Tech Lead"
+      }
+    },
+    "stats": {
+      "title": "Cifre cheie",
+      "subtitle": "Contextul pieței pe care îl servim",
+      "companies": {
+        "value": "850K",
+        "label": "Firme active în România (2026)"
+      },
+      "digitalization": {
+        "value": "<5%",
+        "label": "Grad de digitalizare SSM estimat"
+      },
+      "countries": {
+        "value": "5",
+        "label": "Țări acoperite (RO, BG, HU, DE, EN)"
+      },
+      "domains": {
+        "value": "8",
+        "label": "Domenii de compliance (SSM, PSI, GDPR, NIS2)"
+      }
+    },
+    "cta": {
+      "title": "Gata să digitalizezi conformitatea?",
+      "subtitle": "Alătură-te platformei care transformă modul în care firmele din ECE gestionează SSM & PSI.",
+      "button": "Începe perioada de probă →"
+    }
+  },
+  "privacy": {
+    "title": "Politica de Confidențialitate",
+    "lastUpdated": "Ultima actualizare",
+    "updateDate": "13 februarie 2026",
+    "backToDashboard": "← Înapoi la Dashboard",
+    "sections": {
+      "operator": {
+        "title": "Operator de Date cu Caracter Personal",
+        "intro": "Conform Regulamentului General privind Protecția Datelor (GDPR - Regulamentul UE 2016/679), operatorul datelor dvs. cu caracter personal este:",
+        "companyName": "Denumire",
+        "cui": "CUI",
+        "address": "Adresă",
+        "email": "Email",
+        "phone": "Telefon"
+      },
+      "dataCollected": {
+        "title": "Date cu Caracter Personal Colectate",
+        "intro": "În cadrul utilizării platformei s-s-m.ro, colectăm și procesăm următoarele categorii de date:",
+        "categories": {
+          "identification": {
+            "title": "Date de identificare",
+            "items": {
+              "name": "Nume și prenume",
+              "email": "Adresă de email",
+              "phone": "Număr de telefon",
+              "cui": "CUI/CIF al companiei"
+            }
+          },
+          "professional": {
+            "title": "Date profesionale",
+            "items": {
+              "company": "Denumire companie",
+              "position": "Funcție",
+              "department": "Departament",
+              "role": "Rol în platformă (consultant/administrator/angajat)"
+            }
+          },
+          "medical": {
+            "title": "Date medicale (procesate cu consimțământ separat)",
+            "items": {
+              "records": "Fișe de aptitudine medicală",
+              "exams": "Date examinări medicale periodice",
+              "aptitude": "Status aptitudine muncă"
+            }
+          },
+          "technical": {
+            "title": "Date tehnice",
+            "items": {
+              "ip": "Adresă IP",
+              "browser": "Tip browser și dispozitiv",
+              "logs": "Log-uri de acces și activitate",
+              "cookies": "Cookie-uri și tehnologii similare"
+            }
+          }
+        }
+      },
+      "purpose": {
+        "title": "Scopul Prelucrării și Temeiul Legal",
+        "legalBasis": "Temei legal",
+        "items": {
+          "contract": {
+            "title": "Executarea contractului",
+            "desc": "Furnizarea serviciilor platformei s-s-m.ro, gestionarea contului dvs. și a organizațiilor asociate",
+            "basis": "Art. 6(1)(b) GDPR — executarea unui contract"
+          },
+          "compliance": {
+            "title": "Conformitate legală SSM/PSI",
+            "desc": "Îndeplinirea obligațiilor legale privind securitatea și sănătatea în muncă (Legea 319/2006) și prevenirea incendiilor (Legea 307/2006)",
+            "basis": "Art. 6(1)(c) GDPR — obligație legală + Art. 9(2)(b) GDPR pentru date medicale"
+          },
+          "security": {
+            "title": "Securitate și prevenire fraud",
+            "desc": "Protejarea platformei împotriva accesului neautorizat, detectarea activităților suspecte",
+            "basis": "Art. 6(1)(f) GDPR — interes legitim"
+          },
+          "marketing": {
+            "title": "Marketing și comunicare (opțional)",
+            "desc": "Trimiterea de newsletter, notificări despre funcționalități noi, oferte (doar cu consimțământ explicit)",
+            "basis": "Art. 6(1)(a) GDPR — consimțământ"
+          }
+        }
+      },
+      "recipients": {
+        "title": "Destinatarii Datelor",
+        "intro": "Datele dvs. pot fi dezvăluite următoarelor categorii de destinatari:",
+        "items": {
+          "supabase": "Furnizor hosting bază de date: Supabase Inc. (stocare date în cloud EU)",
+          "vercel": "Furnizor hosting aplicație: Vercel Inc. (infrastructură frontend)",
+          "authorities": "Autorități publice: ITM, ISU, ANSPDCP (doar la cerere legală)",
+          "consultants": "Consultanți SSM: în cazul în care sunteți angajat al unei firme gestionate de consultant extern",
+          "medical": "Furnizori servicii medicina muncii: doar pentru gestionarea fișelor medicale (cu consimțământ separat)"
+        }
+      },
+      "internationalTransfer": {
+        "title": "Transfer Internațional de Date",
+        "intro": "Datele dvs. sunt stocate și procesate în Uniunea Europeană. În anumite cazuri, datele pot fi transferate către furnizori din afara UE:",
+        "supabase": {
+          "title": "Supabase",
+          "desc": "Baza de date este stocată în regiunea EU (Frankfurt, Germania). Compania Supabase Inc. este situată în SUA, dar datele fizice rămân în UE."
+        },
+        "vercel": {
+          "title": "Vercel",
+          "desc": "Aplicația este hostată în regiunea EU. Vercel Inc. este o companie americană cu infrastructură în UE."
+        },
+        "guarantees": "Pentru transferurile internaționale utilizăm: Clauze Contractuale Standard (SCC) aprobate de Comisia Europeană și măsuri tehnice suplimentare de protecție (criptare end-to-end)."
+      },
+      "retention": {
+        "title": "Durata de Stocare a Datelor",
+        "items": {
+          "contractData": {
+            "period": "Pe durata contractului + 3 ani",
+            "desc": "Date de identificare și profesionale — conform obligațiilor legale contabile și fiscale"
+          },
+          "medicalData": {
+            "period": "Pe durata raportului de muncă + 10 ani",
+            "desc": "Date medicale — conform Legii 319/2006 privind securitatea și sănătatea în muncă"
+          },
+          "marketingData": {
+            "period": "Până la retragerea consimțământului",
+            "desc": "Date pentru marketing — se șterg imediat la retragerea consimțământului"
+          },
+          "technicalData": {
+            "period": "90 zile",
+            "desc": "Log-uri tehnice și date de navigare — pentru securitate și debugging"
+          }
+        }
+      },
+      "rights": {
+        "title": "Drepturile Dvs. ca Persoană Vizată",
+        "intro": "Conform GDPR, beneficiați de următoarele drepturi:",
+        "exercise": "Cum exerciți aceste drepturi",
+        "exerciseDesc": "Trimiteți o solicitare la [DPO EMAIL] sau prin formularul de contact din platformă. Vom răspunde în maximum 30 de zile calendaristice.",
+        "items": {
+          "access": {
+            "title": "Dreptul de acces (Art. 15 GDPR)",
+            "desc": "Puteți solicita o copie a tuturor datelor personale pe care le procesăm despre dvs."
+          },
+          "rectification": {
+            "title": "Dreptul la rectificare (Art. 16 GDPR)",
+            "desc": "Puteți solicita corectarea datelor inexacte sau completarea datelor incomplete."
+          },
+          "erasure": {
+            "title": "Dreptul la ștergere / \"dreptul de a fi uitat\" (Art. 17 GDPR)",
+            "desc": "Puteți solicita ștergerea datelor dvs. în anumite condiții (de ex. dacă datele nu mai sunt necesare sau vă retrageți consimțământul)."
+          },
+          "restriction": {
+            "title": "Dreptul la restricționarea prelucrării (Art. 18 GDPR)",
+            "desc": "Puteți solicita limitarea temporară a prelucrării datelor în anumite situații."
+          },
+          "portability": {
+            "title": "Dreptul la portabilitatea datelor (Art. 20 GDPR)",
+            "desc": "Puteți solicita datele dvs. într-un format structurat, utilizat în mod curent și care poate fi citit automat, pentru a le transfera către alt operator."
+          },
+          "objection": {
+            "title": "Dreptul la opoziție (Art. 21 GDPR)",
+            "desc": "Puteți să vă opuneți prelucrării datelor dvs. în anumite scopuri (de ex. marketing direct)."
+          },
+          "withdraw": {
+            "title": "Dreptul de a vă retrage consimțământul",
+            "desc": "Când prelucrarea se bazează pe consimțământ, îl puteți retrage oricând, fără a afecta legalitatea prelucrării anterioare."
+          },
+          "complaint": {
+            "title": "Dreptul de a depune plângere (Art. 77 GDPR)",
+            "desc": "Aveți dreptul de a depune o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)."
+          }
+        }
+      },
+      "cookies": {
+        "title": "Utilizarea Cookie-urilor",
+        "intro": "Platforma s-s-m.ro utilizează cookie-uri pentru a asigura funcționarea corectă și pentru a îmbunătăți experiența utilizatorului:",
+        "types": {
+          "essential": {
+            "title": "Cookie-uri esențiale (strict necesare)",
+            "desc": "Necesare pentru autentificare, sesiune, și funcționalități de bază. Nu pot fi dezactivate."
+          },
+          "functional": {
+            "title": "Cookie-uri funcționale",
+            "desc": "Salvează preferințele dvs. (limba, organizația selectată, setări dashboard)."
+          },
+          "analytics": {
+            "title": "Cookie-uri de analiză (opțional)",
+            "desc": "Ne ajută să înțelegem cum este utilizată platforma pentru a o îmbunătăți (de ex. Google Analytics)."
+          }
+        },
+        "management": "Puteți gestiona cookie-urile din setările browser-ului dvs. Dezactivarea cookie-urilor esențiale poate afecta funcționarea platformei."
+      },
+      "security": {
+        "title": "Măsuri de Securitate",
+        "intro": "Implementăm măsuri tehnice și organizatorice pentru a proteja datele dvs. împotriva accesului neautorizat, pierderii sau distrugerii:",
+        "measures": {
+          "encryption": "Criptare TLS/SSL pentru transmiterea datelor",
+          "access": "Control strict al accesului bazat pe roluri (RBAC)",
+          "monitoring": "Monitoring și audit log pentru detectarea incidentelor",
+          "backup": "Backup automat zilnic cu retenție 30 zile",
+          "training": "Training periodic al echipei privind protecția datelor"
+        }
+      },
+      "dpo": {
+        "title": "Responsabilul cu Protecția Datelor (DPO)",
+        "intro": "Pentru orice întrebare legată de protecția datelor dvs., puteți contacta Responsabilul cu Protecția Datelor:",
+        "email": "Email",
+        "address": "Adresă poștală"
+      },
+      "anspdcp": {
+        "title": "Autoritatea de Supraveghere",
+        "intro": "Aveți dreptul de a depune o plângere la autoritatea națională de supraveghere:",
+        "name": "Denumire",
+        "address": "Adresă",
+        "website": "Website"
+      },
+      "changes": {
+        "title": "Modificări ale Politicii de Confidențialitate",
+        "desc": "Ne rezervăm dreptul de a actualiza această Politică de Confidențialitate. Orice modificare va fi comunicată prin email și/sau notificare în platformă cu minimum 30 de zile înainte de intrarea în vigoare."
+      }
+    }
   }
 }

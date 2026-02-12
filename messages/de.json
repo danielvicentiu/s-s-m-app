@@ -186,5 +186,342 @@
     "email": "contact@s-s-m.ro",
     "phone": "+49 30 000 0000",
     "address": "Berlin, Deutschland"
+  },
+  "quickCheck": {
+    "badge": "Kostenloser Test",
+    "title": "Quick Check Arbeitssicherheit",
+    "subtitle": "Bewerten Sie Ihren Arbeitssicherheits-Compliance-Level in 2 Minuten. Kostenloser Fragebogen mit 10 Fragen für deutsche Arbeitgeber.",
+    "progress": "Fortschritt",
+    "submit": "Ergebnis anzeigen",
+    "footer": "Dieser Test ist indikativ und ersetzt keine professionelle Arbeitssicherheitsbewertung.",
+    "answers": {
+      "yes": "Ja",
+      "partial": "Teilweise",
+      "no": "Nein"
+    },
+    "questions": {
+      "q1": {
+        "text": "Haben Sie alle gültigen arbeitsmedizinischen Bescheinigungen für Ihre Mitarbeiter?"
+      },
+      "q2": {
+        "text": "Haben Sie Arbeitssicherheitsunterweisungen (allgemein und arbeitsplatzspezifisch) für alle Mitarbeiter durchgeführt?"
+      },
+      "q3": {
+        "text": "Haben Sie persönliche Schutzausrüstung (PSA) gemäß Stellenbeschreibungen?"
+      },
+      "q4": {
+        "text": "Haben Sie überprüfte Feuerlöscher innerhalb der Gültigkeitsdauer?"
+      },
+      "q5": {
+        "text": "Haben Sie aktualisierte Stellenbeschreibungen mit identifizierten Risiken?"
+      },
+      "q6": {
+        "text": "Haben Sie einen ausgehängten Evakuierungsplan und geschulte Mitarbeiter?"
+      },
+      "q7": {
+        "text": "Haben Sie alle Risiken in Ihrer Organisation identifiziert und bewertet?"
+      },
+      "q8": {
+        "text": "Haben Sie gesetzlich vorgeschriebene Verantwortliche für Arbeitssicherheit/Brandschutz ernannt?"
+      },
+      "q9": {
+        "text": "Haben Sie vollständige Register (Unterweisungen, PSA, Ausrüstung)?"
+      },
+      "q10": {
+        "text": "Haben Sie einen aktiven Vertrag mit externem Arbeitssicherheitsdienst oder autorisiertem Berater?"
+      }
+    },
+    "results": {
+      "title": "Ihr Ergebnis",
+      "retake": "Test wiederholen",
+      "cta": "Kostenlose Testphase starten →",
+      "level": {
+        "good": "Gutes Niveau",
+        "medium": "Mittleres Niveau",
+        "critical": "Kritisches Niveau"
+      },
+      "description": {
+        "good": "Herzlichen Glückwunsch! Ihr Arbeitssicherheits-Compliance-Niveau ist sehr gut. Die Aufrechterhaltung der Compliance erfordert jedoch ständige Aktualisierungen und Überwachung. Die s-s-m.ro-Plattform hilft Ihnen, Warnungen und Berichte zu automatisieren.",
+        "medium": "Ihre Arbeitssicherheits-Compliance ist teilweise. Es gibt Aspekte, die sofortige Aufmerksamkeit erfordern, um Bußgelder von der Gewerbeaufsicht zu vermeiden. Die s-s-m.ro-Plattform hilft Ihnen, genau zu identifizieren, was fehlt, und Probleme schnell zu lösen.",
+        "critical": "ACHTUNG: Ihr Arbeitssicherheits-Compliance-Niveau ist kritisch! Sie riskieren erhebliche Bußgelder von der Gewerbeaufsicht. Es ist dringend erforderlich, zu handeln, um Pflichtdokumente in Ordnung zu bringen. Die s-s-m.ro-Plattform bietet Ihnen einen klaren Aktionsplan."
+      }
+    }
+  },
+  "calculatorRisc": {
+    "badge": "Kostenloser Rechner",
+    "title": "Arbeitsschutz-Risikorechner",
+    "subtitle": "Bewerten Sie Ihr berufliches Risikoniveau basierend auf Ihren Geschäftsaktivitäten.",
+    "formTitle": "Füllen Sie Ihre Geschäftsaktivitätsdetails aus",
+    "calculate": "Risiko berechnen",
+    "reset": "Zurücksetzen",
+    "cta": {
+      "title": "Risiken automatisch verwalten?",
+      "description": "Die s-s-m.ro-Plattform bietet Ihnen alle Tools für vollständige Arbeitsschutz-Compliance.",
+      "button": "Kostenlose Testphase starten →"
+    },
+    "footer": "Dieser Rechner ist indikativ und ersetzt keine professionelle Risikobewertung."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Haben Sie Fragen oder benötigen Unterstützung? Wir sind hier, um zu helfen.",
+    "form": {
+      "title": "Senden Sie uns eine Nachricht",
+      "name": "Vollständiger Name",
+      "namePlaceholder": "Max Mustermann",
+      "email": "E-Mail",
+      "emailPlaceholder": "email@beispiel.de",
+      "phone": "Telefon",
+      "phonePlaceholder": "+49 700 000 000",
+      "company": "Firma",
+      "companyPlaceholder": "Firmenname (optional)",
+      "message": "Nachricht",
+      "messagePlaceholder": "Schreiben Sie Ihre Nachricht hier...",
+      "submit": "Nachricht senden",
+      "submitting": "Wird gesendet...",
+      "success": "Nachricht erfolgreich gesendet! Wir werden uns so schnell wie möglich bei Ihnen melden.",
+      "error": "Es ist ein Fehler aufgetreten. Bitte kontaktieren Sie uns direkt per E-Mail."
+    },
+    "info": {
+      "title": "Kontaktinformationen",
+      "email": "E-Mail",
+      "emailValue": "contact@s-s-m.ro",
+      "support": "Technischer Support",
+      "supportValue": "support@s-s-m.ro",
+      "phone": "Telefon",
+      "phoneValue": "+40 700 000 000",
+      "address": "Adresse",
+      "addressValue": "Bukarest, Rumänien"
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "q1": {
+        "question": "Wie viel kostet die Plattform?",
+        "answer": "€200/Jahr pro Organisation, keine Einrichtungsgebühren. Sie können jederzeit kündigen. Beinhaltet alle Funktionen: Arbeitsschutz, Brandschutzausrüstung, automatische Warnungen und PDF-Berichte."
+      },
+      "q2": {
+        "question": "Ist ein Arbeitsschutzberater für die Nutzung der Plattform erforderlich?",
+        "answer": "Nein. Die Plattform kann unabhängig von Unternehmensadministratoren zur Verwaltung von Arbeitsschutz- und Brandschutzdokumenten verwendet werden. Arbeitsschutzberater können die Plattform nutzen, um mehrere Unternehmen gleichzeitig zu verwalten."
+      },
+      "q3": {
+        "question": "Wie funktioniert die Testphase?",
+        "answer": "Kontaktieren Sie uns, um eine kostenlose 14-tägige Testphase zu aktivieren. Sie erhalten vollen Zugriff auf alle Plattformfunktionen ohne Einschränkungen."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "lastUpdated": "Letzte Aktualisierung",
+    "updateDate": "13. Februar 2026",
+    "backToDashboard": "← Zurück zum Dashboard",
+    "sections": {
+      "operator": {
+        "title": "Verantwortlicher für die Verarbeitung personenbezogener Daten",
+        "intro": "Gemäß der Datenschutz-Grundverordnung (DSGVO - Verordnung EU 2016/679) ist der Verantwortliche für Ihre personenbezogenen Daten:",
+        "companyName": "Name",
+        "cui": "Steuernummer",
+        "address": "Adresse",
+        "email": "E-Mail",
+        "phone": "Telefon"
+      },
+      "dataCollected": {
+        "title": "Erhobene personenbezogene Daten",
+        "intro": "Bei der Nutzung der s-s-m.ro-Plattform erheben und verarbeiten wir folgende Kategorien personenbezogener Daten:",
+        "categories": {
+          "identification": {
+            "title": "Identifikationsdaten",
+            "items": {
+              "name": "Vor- und Nachname",
+              "email": "E-Mail-Adresse",
+              "phone": "Telefonnummer",
+              "cui": "Steuernummer des Unternehmens"
+            }
+          },
+          "professional": {
+            "title": "Berufliche Daten",
+            "items": {
+              "company": "Unternehmensname",
+              "position": "Position",
+              "department": "Abteilung",
+              "role": "Rolle auf der Plattform (Berater/Administrator/Mitarbeiter)"
+            }
+          },
+          "medical": {
+            "title": "Gesundheitsdaten (verarbeitet mit separater Einwilligung)",
+            "items": {
+              "records": "Arbeitsmedizinische Bescheinigungen",
+              "exams": "Daten zu arbeitsmedizinischen Untersuchungen",
+              "aptitude": "Status der Arbeitseignung"
+            }
+          },
+          "technical": {
+            "title": "Technische Daten",
+            "items": {
+              "ip": "IP-Adresse",
+              "browser": "Browser-Typ und Gerät",
+              "logs": "Zugriffs- und Aktivitätsprotokolle",
+              "cookies": "Cookies und ähnliche Technologien"
+            }
+          }
+        }
+      },
+      "purpose": {
+        "title": "Zweck der Verarbeitung und Rechtsgrundlage",
+        "legalBasis": "Rechtsgrundlage",
+        "items": {
+          "contract": {
+            "title": "Vertragserfüllung",
+            "desc": "Bereitstellung der Dienste der s-s-m.ro-Plattform, Verwaltung Ihres Kontos und der zugehörigen Organisationen",
+            "basis": "Art. 6 Abs. 1 lit. b DSGVO — Erfüllung eines Vertrags"
+          },
+          "compliance": {
+            "title": "Rechtliche Compliance im Arbeitsschutz/Brandschutz",
+            "desc": "Erfüllung gesetzlicher Verpflichtungen im Bereich Arbeitssicherheit und Gesundheitsschutz sowie Brandschutz",
+            "basis": "Art. 6 Abs. 1 lit. c DSGVO — rechtliche Verpflichtung + Art. 9 Abs. 2 lit. b DSGVO für Gesundheitsdaten"
+          },
+          "security": {
+            "title": "Sicherheit und Betrugsprävention",
+            "desc": "Schutz der Plattform vor unbefugtem Zugriff, Erkennung verdächtiger Aktivitäten",
+            "basis": "Art. 6 Abs. 1 lit. f DSGVO — berechtigtes Interesse"
+          },
+          "marketing": {
+            "title": "Marketing und Kommunikation (optional)",
+            "desc": "Versand von Newslettern, Benachrichtigungen über neue Funktionen, Angebote (nur mit ausdrücklicher Einwilligung)",
+            "basis": "Art. 6 Abs. 1 lit. a DSGVO — Einwilligung"
+          }
+        }
+      },
+      "recipients": {
+        "title": "Empfänger der Daten",
+        "intro": "Ihre Daten können folgenden Kategorien von Empfängern offengelegt werden:",
+        "items": {
+          "supabase": "Datenbank-Hosting-Anbieter: Supabase Inc. (Datenspeicherung in EU-Cloud)",
+          "vercel": "Anwendungs-Hosting-Anbieter: Vercel Inc. (Frontend-Infrastruktur)",
+          "authorities": "Öffentliche Behörden: Gewerbeaufsicht, Berufsgenossenschaften, Datenschutzbehörden (nur auf rechtliche Anfrage)",
+          "consultants": "Arbeitsschutzberater: falls Sie Mitarbeiter eines von einem externen Berater verwalteten Unternehmens sind",
+          "medical": "Anbieter arbeitsmedizinischer Dienste: nur zur Verwaltung arbeitsmedizinischer Unterlagen (mit separater Einwilligung)"
+        }
+      },
+      "internationalTransfer": {
+        "title": "Internationale Datenübermittlung",
+        "intro": "Ihre Daten werden in der Europäischen Union gespeichert und verarbeitet. In bestimmten Fällen können Daten an Anbieter außerhalb der EU übermittelt werden:",
+        "supabase": {
+          "title": "Supabase",
+          "desc": "Die Datenbank wird in der EU-Region (Frankfurt, Deutschland) gespeichert. Das Unternehmen Supabase Inc. hat seinen Sitz in den USA, aber die physischen Daten verbleiben in der EU."
+        },
+        "vercel": {
+          "title": "Vercel",
+          "desc": "Die Anwendung wird in der EU-Region gehostet. Vercel Inc. ist ein amerikanisches Unternehmen mit Infrastruktur in der EU."
+        },
+        "guarantees": "Für internationale Übermittlungen verwenden wir: von der Europäischen Kommission genehmigte Standardvertragsklauseln (SCC) und zusätzliche technische Schutzmaßnahmen (End-to-End-Verschlüsselung)."
+      },
+      "retention": {
+        "title": "Speicherdauer der Daten",
+        "items": {
+          "contractData": {
+            "period": "Für die Dauer des Vertrags + 3 Jahre",
+            "desc": "Identifikations- und berufliche Daten — gemäß gesetzlichen buchhalterischen und steuerlichen Verpflichtungen"
+          },
+          "medicalData": {
+            "period": "Für die Dauer des Arbeitsverhältnisses + 10 Jahre",
+            "desc": "Gesundheitsdaten — gemäß gesetzlichen Anforderungen zum Arbeitsschutz"
+          },
+          "marketingData": {
+            "period": "Bis zum Widerruf der Einwilligung",
+            "desc": "Marketing-Daten — werden sofort nach Widerruf der Einwilligung gelöscht"
+          },
+          "technicalData": {
+            "period": "90 Tage",
+            "desc": "Technische Protokolle und Navigationsdaten — für Sicherheit und Fehlersuche"
+          }
+        }
+      },
+      "rights": {
+        "title": "Ihre Rechte als betroffene Person",
+        "intro": "Gemäß der DSGVO haben Sie folgende Rechte:",
+        "exercise": "Wie Sie diese Rechte ausüben",
+        "exerciseDesc": "Senden Sie eine Anfrage an [DPO EMAIL] oder über das Kontaktformular in der Plattform. Wir werden innerhalb von maximal 30 Kalendertagen antworten.",
+        "items": {
+          "access": {
+            "title": "Auskunftsrecht (Art. 15 DSGVO)",
+            "desc": "Sie können eine Kopie aller personenbezogenen Daten anfordern, die wir über Sie verarbeiten."
+          },
+          "rectification": {
+            "title": "Recht auf Berichtigung (Art. 16 DSGVO)",
+            "desc": "Sie können die Korrektur unrichtiger Daten oder die Vervollständigung unvollständiger Daten verlangen."
+          },
+          "erasure": {
+            "title": "Recht auf Löschung / \"Recht auf Vergessenwerden\" (Art. 17 DSGVO)",
+            "desc": "Sie können die Löschung Ihrer Daten unter bestimmten Bedingungen verlangen (z.B. wenn die Daten nicht mehr erforderlich sind oder Sie Ihre Einwilligung widerrufen)."
+          },
+          "restriction": {
+            "title": "Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)",
+            "desc": "Sie können in bestimmten Situationen die vorübergehende Einschränkung der Datenverarbeitung verlangen."
+          },
+          "portability": {
+            "title": "Recht auf Datenübertragbarkeit (Art. 20 DSGVO)",
+            "desc": "Sie können Ihre Daten in einem strukturierten, gängigen und maschinenlesbaren Format anfordern, um sie an einen anderen Verantwortlichen zu übermitteln."
+          },
+          "objection": {
+            "title": "Widerspruchsrecht (Art. 21 DSGVO)",
+            "desc": "Sie können der Verarbeitung Ihrer Daten für bestimmte Zwecke widersprechen (z.B. Direktmarketing)."
+          },
+          "withdraw": {
+            "title": "Recht auf Widerruf der Einwilligung",
+            "desc": "Wenn die Verarbeitung auf Einwilligung basiert, können Sie diese jederzeit widerrufen, ohne die Rechtmäßigkeit der vorherigen Verarbeitung zu beeinträchtigen."
+          },
+          "complaint": {
+            "title": "Beschwerderecht (Art. 77 DSGVO)",
+            "desc": "Sie haben das Recht, eine Beschwerde bei der zuständigen Datenschutzaufsichtsbehörde einzureichen."
+          }
+        }
+      },
+      "cookies": {
+        "title": "Verwendung von Cookies",
+        "intro": "Die s-s-m.ro-Plattform verwendet Cookies, um die ordnungsgemäße Funktionsweise zu gewährleisten und das Benutzererlebnis zu verbessern:",
+        "types": {
+          "essential": {
+            "title": "Essentielle Cookies (unbedingt erforderlich)",
+            "desc": "Erforderlich für Authentifizierung, Sitzung und Grundfunktionen. Können nicht deaktiviert werden."
+          },
+          "functional": {
+            "title": "Funktionale Cookies",
+            "desc": "Speichern Ihre Präferenzen (Sprache, ausgewählte Organisation, Dashboard-Einstellungen)."
+          },
+          "analytics": {
+            "title": "Analyse-Cookies (optional)",
+            "desc": "Helfen uns zu verstehen, wie die Plattform genutzt wird, um sie zu verbessern (z.B. Google Analytics)."
+          }
+        },
+        "management": "Sie können Cookies über die Einstellungen Ihres Browsers verwalten. Die Deaktivierung essentieller Cookies kann die Funktionsweise der Plattform beeinträchtigen."
+      },
+      "security": {
+        "title": "Sicherheitsmaßnahmen",
+        "intro": "Wir implementieren technische und organisatorische Maßnahmen, um Ihre Daten vor unbefugtem Zugriff, Verlust oder Zerstörung zu schützen:",
+        "measures": {
+          "encryption": "TLS/SSL-Verschlüsselung für die Datenübertragung",
+          "access": "Strenge rollenbasierte Zugriffskontrolle (RBAC)",
+          "monitoring": "Überwachung und Audit-Protokolle zur Erkennung von Vorfällen",
+          "backup": "Automatisches tägliches Backup mit 30-tägiger Aufbewahrung",
+          "training": "Regelmäßige Schulung des Teams zum Datenschutz"
+        }
+      },
+      "dpo": {
+        "title": "Datenschutzbeauftragter (DSB)",
+        "intro": "Bei Fragen zum Schutz Ihrer Daten können Sie sich an den Datenschutzbeauftragten wenden:",
+        "email": "E-Mail",
+        "address": "Postadresse"
+      },
+      "anspdcp": {
+        "title": "Aufsichtsbehörde",
+        "intro": "Sie haben das Recht, eine Beschwerde bei der nationalen Datenschutzaufsichtsbehörde einzureichen:",
+        "name": "Name",
+        "address": "Adresse",
+        "website": "Webseite"
+      },
+      "changes": {
+        "title": "Änderungen der Datenschutzerklärung",
+        "desc": "Wir behalten uns das Recht vor, diese Datenschutzerklärung zu aktualisieren. Jede Änderung wird per E-Mail und/oder Benachrichtigung in der Plattform mindestens 30 Tage vor Inkrafttreten mitgeteilt."
+      }
+    }
   }
 }
