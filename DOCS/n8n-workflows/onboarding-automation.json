@@ -1,0 +1,378 @@
+{
+  "name": "SSM Employee Onboarding Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "employee-onboarding",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - New Employee",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "employee-onboarding"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.employeeId }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.body.position }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.body.organizationId }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "validate-input",
+      "name": "Validate Input Data",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Calculate training schedule based on position risk level\nconst employee = $input.item.json.body;\nconst position = employee.position;\nconst riskLevel = employee.riskLevel || 'medium';\n\n// Training requirements based on risk level\nconst trainingSchedule = {\n  high: [\n    { type: 'ssm_initial', name: 'Instruire SSM Inițială', daysFromStart: 1, duration: 8 },\n    { type: 'psi', name: 'Instruire PSI', daysFromStart: 1, duration: 4 },\n    { type: 'first_aid', name: 'Prim Ajutor', daysFromStart: 7, duration: 8 },\n    { type: 'specific_risk', name: 'Instruire Riscuri Specifice', daysFromStart: 14, duration: 4 }\n  ],\n  medium: [\n    { type: 'ssm_initial', name: 'Instruire SSM Inițială', daysFromStart: 1, duration: 4 },\n    { type: 'psi', name: 'Instruire PSI', daysFromStart: 1, duration: 2 },\n    { type: 'specific_risk', name: 'Instruire Riscuri Specifice', daysFromStart: 7, duration: 2 }\n  ],\n  low: [\n    { type: 'ssm_initial', name: 'Instruire SSM Inițială', daysFromStart: 1, duration: 2 },\n    { type: 'psi', name: 'Instruire PSI', daysFromStart: 1, duration: 2 }\n  ]\n};\n\nconst schedule = trainingSchedule[riskLevel] || trainingSchedule.medium;\n\n// Calculate actual dates\nconst startDate = new Date(employee.startDate || new Date());\nconst trainings = schedule.map(training => ({\n  ...training,\n  scheduledDate: new Date(startDate.getTime() + training.daysFromStart * 24 * 60 * 60 * 1000).toISOString(),\n  employeeId: employee.employeeId,\n  organizationId: employee.organizationId\n}));\n\nreturn {\n  json: {\n    employee,\n    trainings,\n    totalTrainings: trainings.length\n  }\n};"
+      },
+      "id": "create-training-schedule",
+      "name": "Create Training Schedule",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "trainings",
+        "columns": "employee_id, organization_id, training_type, title, scheduled_date, duration_hours, status, created_by",
+        "additionalFields": {},
+        "returnFields": "*"
+      },
+      "id": "insert-trainings",
+      "name": "Insert Training Records",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 200],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase SSM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Schedule medical examination based on position and risk\nconst employee = $input.item.json.employee;\nconst riskLevel = employee.riskLevel || 'medium';\n\n// Medical exam scheduling logic\nconst medicalExamConfig = {\n  high: { daysFromStart: 3, type: 'initial_complete', examTypes: ['general', 'psychological', 'specific'] },\n  medium: { daysFromStart: 7, type: 'initial_standard', examTypes: ['general', 'specific'] },\n  low: { daysFromStart: 14, type: 'initial_basic', examTypes: ['general'] }\n};\n\nconst config = medicalExamConfig[riskLevel] || medicalExamConfig.medium;\nconst startDate = new Date(employee.startDate || new Date());\nconst examDate = new Date(startDate.getTime() + config.daysFromStart * 24 * 60 * 60 * 1000);\n\nreturn {\n  json: {\n    employeeId: employee.employeeId,\n    organizationId: employee.organizationId,\n    examType: config.type,\n    examTypes: config.examTypes,\n    scheduledDate: examDate.toISOString(),\n    status: 'scheduled',\n    priority: riskLevel === 'high' ? 'high' : 'normal',\n    notes: `Examen medical inițial pentru ${employee.firstName} ${employee.lastName} - poziție ${employee.position}`\n  }\n};"
+      },
+      "id": "schedule-medical-exam",
+      "name": "Schedule Medical Exam",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 350]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "medical_records",
+        "columns": "employee_id, organization_id, exam_type, scheduled_date, status, notes",
+        "additionalFields": {},
+        "returnFields": "*"
+      },
+      "id": "insert-medical-record",
+      "name": "Insert Medical Record",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 350],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase SSM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generate welcome documents for new employee\nconst employee = $input.item.json.employee;\nconst position = employee.position;\nconst organizationId = employee.organizationId;\n\n// List of documents to generate\nconst documents = [\n  {\n    type: 'fisa_post',\n    title: 'Fișa Postului',\n    template: 'fisa_post_template',\n    description: 'Fișa postului cu responsabilități SSM'\n  },\n  {\n    type: 'instructiune_ssm',\n    title: 'Instrucțiune Proprie SSM',\n    template: 'instructiune_ssm_template',\n    description: 'Instrucțiune specifică pentru poziția ocupată'\n  },\n  {\n    type: 'fisa_epi',\n    title: 'Fișa de Dotare EPI',\n    template: 'fisa_epi_template',\n    description: 'Lista echipamentelor de protecție necesare'\n  },\n  {\n    type: 'declaratie_medical',\n    title: 'Declarație Control Medical',\n    template: 'declaratie_medical_template',\n    description: 'Declarație privind controlul medical periodic'\n  }\n];\n\nconst generatedDocs = documents.map(doc => ({\n  ...doc,\n  employeeId: employee.employeeId,\n  organizationId: organizationId,\n  status: 'pending_generation',\n  variables: {\n    employeeName: `${employee.firstName} ${employee.lastName}`,\n    position: position,\n    startDate: employee.startDate,\n    riskLevel: employee.riskLevel || 'medium'\n  }\n}));\n\nreturn {\n  json: {\n    employee,\n    documents: generatedDocs,\n    totalDocuments: generatedDocs.length\n  }\n};"
+      },
+      "id": "generate-welcome-docs",
+      "name": "Generate Welcome Documents",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 500]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "documents",
+        "columns": "employee_id, organization_id, document_type, title, status, metadata",
+        "additionalFields": {},
+        "returnFields": "*"
+      },
+      "id": "insert-documents",
+      "name": "Insert Document Records",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 500],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase SSM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@s-s-m.ro",
+        "toEmail": "={{ $json.employee.email }}",
+        "subject": "Bun venit la {{ $json.employee.organizationName }} - Informații SSM",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #2563eb; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }\n    .content { background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; }\n    .section { margin: 20px 0; }\n    .training-item { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #2563eb; border-radius: 4px; }\n    .footer { margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 12px; color: #6b7280; }\n    .button { display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 10px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>Bun venit la echipă!</h1>\n    </div>\n    <div class=\"content\">\n      <p>Bună {{ $json.employee.firstName }},</p>\n      \n      <p>Bine ai venit la {{ $json.employee.organizationName }}! Suntem bucuroși să te avem în echipă.</p>\n      \n      <div class=\"section\">\n        <h2>Informații SSM/PSI importante</h2>\n        <p>În conformitate cu legislația în vigoare, am programat pentru tine următoarele activități obligatorii:</p>\n      </div>\n      \n      <div class=\"section\">\n        <h3>📚 Instruiri programate</h3>\n        <p>Vei participa la {{ $json.totalTrainings }} instruiri SSM/PSI în primele săptămâni:</p>\n        <div class=\"training-item\">\n          <strong>Instruire SSM Inițială</strong><br>\n          Prima zi de lucru • Durată: 2-8 ore (în funcție de poziție)\n        </div>\n        <div class=\"training-item\">\n          <strong>Instruire PSI (Prevenire și Stingere Incendii)</strong><br>\n          Prima zi de lucru • Durată: 2-4 ore\n        </div>\n      </div>\n      \n      <div class=\"section\">\n        <h3>🏥 Control medical</h3>\n        <p>Am programat controlul medical periodic obligatoriu. Vei primi detalii separate cu data și locația.</p>\n      </div>\n      \n      <div class=\"section\">\n        <h3>📄 Documente generate</h3>\n        <p>Am pregătit documentele necesare pentru poziția ta:</p>\n        <ul>\n          <li>Fișa postului cu responsabilități SSM</li>\n          <li>Instrucțiune proprie SSM</li>\n          <li>Fișa de dotare cu echipament de protecție</li>\n          <li>Declarație control medical</li>\n        </ul>\n      </div>\n      \n      <div class=\"section\">\n        <a href=\"https://app.s-s-m.ro/dashboard\" class=\"button\">Accesează platforma SSM</a>\n      </div>\n      \n      <p>Dacă ai întrebări despre activitățile SSM/PSI, nu ezita să contactezi responsabilul SSM al companiei.</p>\n      \n      <p>Mult succes în noul rol!</p>\n      \n      <div class=\"footer\">\n        <p><strong>Platformă SSM/PSI digitală</strong><br>\n        s-s-m.ro | Email: contact@s-s-m.ro<br>\n        Acest email a fost generat automat de sistemul de onboarding.</p>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-welcome-email",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1050, 300],
+      "credentials": {
+        "smtp": {
+          "id": "smtp-credentials",
+          "name": "SMTP SSM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepare notification for manager\nconst employee = $input.item.json.employee;\nconst trainings = $input.item.json.trainings || [];\n\nreturn {\n  json: {\n    managerId: employee.managerId,\n    managerEmail: employee.managerEmail,\n    notificationType: 'new_employee_onboarded',\n    title: 'Angajat nou adăugat în echipă',\n    message: `${employee.firstName} ${employee.lastName} a fost adăugat în sistem. Instruiri programate: ${trainings.length}. Control medical: programat.`,\n    employeeId: employee.employeeId,\n    organizationId: employee.organizationId,\n    priority: 'normal',\n    actionUrl: `https://app.s-s-m.ro/dashboard/employees/${employee.employeeId}`\n  }\n};"
+      },
+      "id": "prepare-manager-notification",
+      "name": "Prepare Manager Notification",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1050, 450]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "alerts",
+        "columns": "user_id, organization_id, type, title, message, priority, metadata, status",
+        "additionalFields": {},
+        "returnFields": "*"
+      },
+      "id": "notify-manager",
+      "name": "Notify Manager",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1250, 450],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-credentials",
+          "name": "Supabase SSM"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": true,\n  \"message\": \"Employee onboarding completed successfully\",\n  \"employeeId\": $json.employee.employeeId,\n  \"trainingsScheduled\": $json.totalTrainings,\n  \"medicalExamScheduled\": true,\n  \"documentsGenerated\": $json.totalDocuments,\n  \"welcomeEmailSent\": true,\n  \"managerNotified\": true\n} }}",
+        "options": {}
+      },
+      "id": "webhook-response-success",
+      "name": "Webhook Response - Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": false,\n  \"message\": \"Invalid input data. Required: employeeId, position, organizationId\",\n  \"error\": \"VALIDATION_ERROR\"\n} }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "webhook-response-error",
+      "name": "Webhook Response - Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 650]
+    }
+  ],
+  "connections": {
+    "Webhook - New Employee": {
+      "main": [
+        [
+          {
+            "node": "Validate Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input Data": {
+      "main": [
+        [
+          {
+            "node": "Create Training Schedule",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Schedule Medical Exam",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Welcome Documents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Webhook Response - Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Training Schedule": {
+      "main": [
+        [
+          {
+            "node": "Insert Training Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Training Records": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Medical Exam": {
+      "main": [
+        [
+          {
+            "node": "Insert Medical Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Medical Record": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Welcome Documents": {
+      "main": [
+        [
+          {
+            "node": "Insert Document Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Document Records": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Prepare Manager Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Manager Notification": {
+      "main": [
+        [
+          {
+            "node": "Notify Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Manager": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response - Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "SSM",
+      "createdAt": "2026-02-13T10:00:00.000Z",
+      "updatedAt": "2026-02-13T10:00:00.000Z",
+      "id": "1"
+    },
+    {
+      "name": "Onboarding",
+      "createdAt": "2026-02-13T10:00:00.000Z",
+      "updatedAt": "2026-02-13T10:00:00.000Z",
+      "id": "2"
+    },
+    {
+      "name": "Automation",
+      "createdAt": "2026-02-13T10:00:00.000Z",
+      "updatedAt": "2026-02-13T10:00:00.000Z",
+      "id": "3"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-02-13T10:00:00.000Z",
+  "versionId": "1"
+}
