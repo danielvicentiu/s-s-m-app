@@ -186,5 +186,653 @@
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
     "address": "București, România"
+  },
+  "employees": {
+    "title": "Angajați",
+    "subtitle": "Gestionează datele angajaților și evidența personalului",
+    "addEmployee": "Adaugă angajat",
+    "editEmployee": "Editează angajat",
+    "deleteEmployee": "Șterge angajat",
+    "confirmDelete": "Ești sigur că vrei să ștergi acest angajat?",
+    "noEmployees": "Niciun angajat înregistrat.",
+    "search": "Caută angajat...",
+    "filter": "Filtrează",
+    "columns": {
+      "name": "Nume",
+      "firstName": "Prenume",
+      "lastName": "Nume",
+      "cnp": "CNP",
+      "position": "Funcție",
+      "department": "Departament",
+      "hireDate": "Data angajare",
+      "status": "Status",
+      "actions": "Acțiuni"
+    },
+    "status": {
+      "active": "Activ",
+      "inactive": "Inactiv",
+      "suspended": "Suspendat",
+      "terminated": "Încheiat"
+    },
+    "form": {
+      "personalInfo": "Informații personale",
+      "workInfo": "Informații profesionale",
+      "contactInfo": "Date de contact",
+      "firstName": "Prenume",
+      "lastName": "Nume",
+      "cnp": "CNP",
+      "birthDate": "Data nașterii",
+      "phone": "Telefon",
+      "email": "Email",
+      "address": "Adresă",
+      "position": "Funcție",
+      "department": "Departament",
+      "hireDate": "Data angajare",
+      "contractType": "Tip contract",
+      "workSchedule": "Program de lucru"
+    },
+    "contractTypes": {
+      "fullTime": "Normă întreagă",
+      "partTime": "Normă parțială",
+      "temporary": "Temporar",
+      "internship": "Stagiu"
+    }
+  },
+  "trainings": {
+    "title": "Instruiri SSM & PSI",
+    "subtitle": "Module interactive de formare și testare",
+    "myTrainings": "Instruirile mele",
+    "allTrainings": "Toate instruirile",
+    "completed": "Finalizate",
+    "inProgress": "În progres",
+    "notStarted": "Neîncepute",
+    "startTraining": "Începe instruirea",
+    "continueTraining": "Continuă",
+    "viewCertificate": "Vezi certificat",
+    "retakeTest": "Reia testul",
+    "noTrainings": "Nicio instruire disponibilă.",
+    "modules": {
+      "ssm_intro": "Introducere în SSM",
+      "psi_basics": "Prevenirea și stingerea incendiilor",
+      "first_aid": "Prim ajutor",
+      "work_equipment": "Echipamente de lucru",
+      "chemical_safety": "Siguranța substanțelor chimice",
+      "ergonomics": "Ergonomie la locul de muncă",
+      "emergency_procedures": "Proceduri de urgență",
+      "electrical_safety": "Siguranța electrică",
+      "hazard_communication": "Comunicarea riscurilor"
+    },
+    "progress": {
+      "notStarted": "Neînceput",
+      "inProgress": "{percent}% finalizat",
+      "completed": "Finalizat",
+      "passed": "Promovat",
+      "failed": "Nepromovat"
+    },
+    "quiz": {
+      "title": "Test de evaluare",
+      "question": "Întrebarea {current} din {total}",
+      "submit": "Trimite răspunsurile",
+      "score": "Scor: {score}%",
+      "passingScore": "Scor minim promovare: {score}%",
+      "passed": "Felicitări! Ai promovat testul!",
+      "failed": "Nu ai atins scorul minim. Te rugăm să reiei testul.",
+      "timeRemaining": "Timp rămas: {time}"
+    },
+    "certificate": {
+      "title": "Certificat de absolvire",
+      "downloadPdf": "Descarcă certificat PDF",
+      "issuedTo": "Emis pentru",
+      "completedOn": "Finalizat la data",
+      "validUntil": "Valid până la",
+      "certificateId": "ID Certificat"
+    }
+  },
+  "medical": {
+    "title": "Medicina Muncii",
+    "subtitle": "Evidența completă a fișelor medicale și a examinărilor",
+    "addRecord": "Adaugă fișă medicală",
+    "editRecord": "Editează fișă",
+    "deleteRecord": "Șterge fișă",
+    "viewRecord": "Vezi detalii",
+    "noRecords": "Nicio fișă medicală înregistrată.",
+    "upToDate": "La zi",
+    "requiresAttention": "Necesită atenție",
+    "expired": "Expirate",
+    "expiringSoon": "Expiră în curând",
+    "examTypes": {
+      "periodic": "Control periodic",
+      "angajare": "Examinare la angajare",
+      "reluare": "Examinare la reluarea muncii",
+      "la_cerere": "Examinare la cerere",
+      "transfer": "Examinare la transfer"
+    },
+    "aptitude": {
+      "apt": "Apt",
+      "aptCond": "Apt condiționat",
+      "inaptTemp": "Inapt temporar",
+      "inapt": "Inapt definitiv"
+    },
+    "form": {
+      "employee": "Angajat",
+      "selectEmployee": "Selectează angajat",
+      "examType": "Tip examinare",
+      "examDate": "Data examinării",
+      "expiryDate": "Data expirării",
+      "validUntil": "Valabil până la",
+      "aptitude": "Rezultat aptitudine",
+      "medicalCenter": "Centru medical",
+      "doctor": "Medic examinator",
+      "observations": "Observații",
+      "restrictions": "Restricții medicale",
+      "document": "Document scanat"
+    },
+    "filters": {
+      "all": "Toate",
+      "valid": "Valide",
+      "expiringSoon": "Expiră în <30 zile",
+      "expired": "Expirate",
+      "aptOnly": "Doar apți",
+      "requiresAction": "Necesită acțiune"
+    },
+    "stats": {
+      "total": "Total fișe",
+      "valid": "Valide",
+      "expiring30": "Expiră în 30 zile",
+      "expired": "Expirate",
+      "complianceRate": "Rata de conformitate"
+    }
+  },
+  "equipment": {
+    "title": "Echipamente PSI",
+    "subtitle": "Inventar complet de echipamente și verificări periodice",
+    "addEquipment": "Adaugă echipament",
+    "editEquipment": "Editează echipament",
+    "deleteEquipment": "Șterge echipament",
+    "viewDetails": "Vezi detalii",
+    "qrCode": "Cod QR",
+    "generateQr": "Generează cod QR",
+    "printLabel": "Printează etichetă",
+    "noEquipment": "Niciun echipament înregistrat.",
+    "types": {
+      "stingator": "Stingător de incendiu",
+      "trusa_prim_ajutor": "Trusă prim ajutor",
+      "hidrant": "Hidrant interior",
+      "detector_fum": "Detector de fum",
+      "iluminat_urgenta": "Iluminat de urgență",
+      "panou_semnalizare": "Panou de semnalizare",
+      "buton_alarma": "Buton de alarmă",
+      "sistem_sprinklere": "Sistem sprinklere"
+    },
+    "form": {
+      "type": "Tip echipament",
+      "selectType": "Selectează tip",
+      "manufacturer": "Producător",
+      "model": "Model",
+      "serialNumber": "Număr de serie",
+      "location": "Locație",
+      "floor": "Etaj",
+      "room": "Cameră/Spațiu",
+      "installDate": "Data instalării",
+      "lastCheck": "Ultima verificare",
+      "nextCheck": "Următoarea verificare",
+      "expiryDate": "Data expirării",
+      "capacity": "Capacitate",
+      "pressure": "Presiune",
+      "notes": "Observații",
+      "photo": "Fotografie"
+    },
+    "checks": {
+      "title": "Verificări periodice",
+      "addCheck": "Adaugă verificare",
+      "lastCheck": "Ultima verificare",
+      "nextCheck": "Următoarea verificare",
+      "checkDate": "Data verificării",
+      "checkedBy": "Verificat de",
+      "result": "Rezultat",
+      "passed": "În regulă",
+      "failed": "Probleme detectate",
+      "remarks": "Observații"
+    },
+    "stats": {
+      "total": "Total echipamente",
+      "operational": "Operaționale",
+      "requiresMaintenance": "Necesită întreținere",
+      "expired": "Expirate",
+      "checksDueThisMonth": "Verificări în această lună"
+    }
+  },
+  "documents": {
+    "title": "Documente",
+    "subtitle": "Arhiva digitală de documente și rapoarte",
+    "uploadDocument": "Încarcă document",
+    "newDocument": "Document nou",
+    "viewDocument": "Vezi document",
+    "downloadDocument": "Descarcă",
+    "deleteDocument": "Șterge document",
+    "shareDocument": "Partajează",
+    "noDocuments": "Niciun document încărcat.",
+    "categories": {
+      "ssm": "SSM - Securitatea muncii",
+      "psi": "PSI - Prevenire incendii",
+      "medical": "Medicina muncii",
+      "training": "Instruiri",
+      "audit": "Audituri și inspecții",
+      "contracts": "Contracte",
+      "policies": "Politici și proceduri",
+      "reports": "Rapoarte",
+      "certificates": "Certificate",
+      "other": "Altele"
+    },
+    "form": {
+      "title": "Titlu document",
+      "category": "Categorie",
+      "selectCategory": "Selectează categorie",
+      "description": "Descriere",
+      "tags": "Etichete",
+      "file": "Fișier",
+      "issueDate": "Data emiterii",
+      "expiryDate": "Data expirării",
+      "relatedTo": "Asociat cu",
+      "confidential": "Confidențial",
+      "requiresSignature": "Necesită semnătură"
+    },
+    "filters": {
+      "all": "Toate",
+      "recent": "Recente",
+      "expiringSoon": "Expiră în curând",
+      "expired": "Expirate",
+      "byCategory": "După categorie"
+    },
+    "stats": {
+      "total": "Total documente",
+      "active": "Active",
+      "expired": "Expirate",
+      "storageUsed": "Spațiu utilizat"
+    }
+  },
+  "alerts": {
+    "title": "Alerte și Notificări",
+    "subtitle": "Sistem automat de alertare pentru expirări",
+    "newAlert": "Alertă nouă",
+    "configureAlerts": "Configurează alertele",
+    "alertSettings": "Setări alerte",
+    "noAlerts": "Nicio alertă activă.",
+    "types": {
+      "medical": "Fișe medicale",
+      "equipment": "Echipamente PSI",
+      "training": "Instruiri",
+      "document": "Documente",
+      "custom": "Personalizate"
+    },
+    "channels": {
+      "email": "Email",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "push": "Notificare push",
+      "dashboard": "Dashboard"
+    },
+    "frequency": {
+      "daily": "Zilnic",
+      "weekly": "Săptămânal",
+      "monthly": "Lunar",
+      "immediate": "Imediat",
+      "custom": "Personalizat"
+    },
+    "triggers": {
+      "30days": "Cu 30 zile înainte",
+      "15days": "Cu 15 zile înainte",
+      "7days": "Cu 7 zile înainte",
+      "1day": "Cu 1 zi înainte",
+      "onExpiry": "La expirare",
+      "afterExpiry": "După expirare"
+    },
+    "form": {
+      "alertName": "Nume alertă",
+      "alertType": "Tip alertă",
+      "channel": "Canal notificare",
+      "recipients": "Destinatari",
+      "trigger": "Condiție declanșare",
+      "message": "Mesaj personalizat",
+      "active": "Activă",
+      "testAlert": "Testează alerta"
+    },
+    "history": {
+      "title": "Istoric notificări",
+      "sent": "Trimise",
+      "failed": "Eșuate",
+      "pending": "În așteptare",
+      "viewDetails": "Vezi detalii"
+    },
+    "stats": {
+      "active": "Alerte active",
+      "sentToday": "Trimise astăzi",
+      "sentThisWeek": "Trimise săptămâna aceasta",
+      "failed": "Eșuate"
+    }
+  },
+  "settings": {
+    "title": "Setări",
+    "subtitle": "Configurează platforma conform nevoilor tale",
+    "general": "General",
+    "profile": "Profil",
+    "organization": "Organizație",
+    "users": "Utilizatori",
+    "notifications": "Notificări",
+    "security": "Securitate",
+    "billing": "Facturare",
+    "integrations": "Integrări",
+    "language": "Limba",
+    "theme": "Temă",
+    "timezone": "Fus orar",
+    "dateFormat": "Format dată",
+    "currency": "Monedă",
+    "saveChanges": "Salvează modificările",
+    "changesSaved": "Modificările au fost salvate.",
+    "changesError": "Eroare la salvarea modificărilor.",
+    "profile": {
+      "title": "Profil utilizator",
+      "avatar": "Avatar",
+      "changeAvatar": "Schimbă avatar",
+      "removeAvatar": "Elimină avatar",
+      "displayName": "Nume afișat",
+      "email": "Email",
+      "phone": "Telefon",
+      "bio": "Biografie",
+      "jobTitle": "Titlu profesional",
+      "department": "Departament",
+      "location": "Locație"
+    },
+    "organization": {
+      "title": "Organizație",
+      "name": "Nume organizație",
+      "legalName": "Denumire legală",
+      "taxId": "CUI",
+      "regNumber": "Nr. reg. com.",
+      "address": "Adresă",
+      "city": "Oraș",
+      "county": "Județ",
+      "postalCode": "Cod poștal",
+      "country": "Țară",
+      "phone": "Telefon",
+      "email": "Email",
+      "website": "Website",
+      "logo": "Logo organizație",
+      "industry": "Industrie",
+      "employeeCount": "Număr angajați"
+    },
+    "security": {
+      "title": "Securitate",
+      "changePassword": "Schimbă parola",
+      "currentPassword": "Parola curentă",
+      "newPassword": "Parolă nouă",
+      "confirmPassword": "Confirmă parola",
+      "twoFactor": "Autentificare în doi pași",
+      "enable2FA": "Activează 2FA",
+      "disable2FA": "Dezactivează 2FA",
+      "sessions": "Sesiuni active",
+      "loginHistory": "Istoric autentificări",
+      "apiKeys": "Chei API",
+      "generateKey": "Generează cheie nouă"
+    },
+    "notifications": {
+      "title": "Preferințe notificări",
+      "email": "Notificări email",
+      "push": "Notificări push",
+      "sms": "Notificări SMS",
+      "digest": "Rezumat zilnic",
+      "immediateAlerts": "Alerte imediate",
+      "weeklyReport": "Raport săptămânal",
+      "monthlyReport": "Raport lunar",
+      "marketing": "Comunicări marketing"
+    }
+  },
+  "profile": {
+    "title": "Profilul meu",
+    "viewProfile": "Vezi profil",
+    "editProfile": "Editează profil",
+    "myAccount": "Contul meu",
+    "preferences": "Preferințe",
+    "activity": "Activitate",
+    "achievements": "Realizări",
+    "certificates": "Certificate",
+    "personalInfo": "Informații personale",
+    "professionalInfo": "Informații profesionale",
+    "lastLogin": "Ultima autentificare",
+    "memberSince": "Membru din",
+    "accountType": "Tip cont",
+    "roles": "Roluri"
+  },
+  "reports": {
+    "title": "Rapoarte",
+    "subtitle": "Generează și exportă rapoarte de conformitate",
+    "generateReport": "Generează raport",
+    "newReport": "Raport nou",
+    "viewReport": "Vezi raport",
+    "downloadReport": "Descarcă raport",
+    "shareReport": "Partajează raport",
+    "scheduleReport": "Programează raport",
+    "noReports": "Niciun raport generat.",
+    "types": {
+      "compliance": "Raport conformitate",
+      "medical": "Raport medicina muncii",
+      "equipment": "Raport echipamente PSI",
+      "training": "Raport instruiri",
+      "incidents": "Raport incidente",
+      "audit": "Raport audit",
+      "financial": "Raport financiar",
+      "custom": "Raport personalizat"
+    },
+    "formats": {
+      "pdf": "PDF",
+      "excel": "Excel",
+      "word": "Word",
+      "csv": "CSV"
+    },
+    "periods": {
+      "today": "Astăzi",
+      "thisWeek": "Săptămâna aceasta",
+      "thisMonth": "Luna aceasta",
+      "thisQuarter": "Trimestrul acesta",
+      "thisYear": "Anul acesta",
+      "lastMonth": "Luna trecută",
+      "lastQuarter": "Trimestrul trecut",
+      "lastYear": "Anul trecut",
+      "custom": "Perioadă personalizată"
+    },
+    "form": {
+      "reportName": "Nume raport",
+      "reportType": "Tip raport",
+      "selectType": "Selectează tip",
+      "period": "Perioadă",
+      "from": "De la",
+      "to": "Până la",
+      "format": "Format export",
+      "includeCharts": "Include grafice",
+      "includeDetails": "Include detalii",
+      "organizations": "Organizații",
+      "departments": "Departamente"
+    },
+    "schedule": {
+      "title": "Programează raport automat",
+      "frequency": "Frecvență",
+      "recipients": "Destinatari",
+      "nextRun": "Următoarea generare",
+      "enabled": "Activ"
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "Programează evenimente și verificări",
+    "today": "Astăzi",
+    "month": "Lună",
+    "week": "Săptămână",
+    "day": "Zi",
+    "agenda": "Agendă",
+    "addEvent": "Adaugă eveniment",
+    "editEvent": "Editează eveniment",
+    "deleteEvent": "Șterge eveniment",
+    "noEvents": "Niciun eveniment programat.",
+    "eventTypes": {
+      "medical": "Control medical",
+      "equipment": "Verificare echipament",
+      "training": "Instruire",
+      "meeting": "Întâlnire",
+      "deadline": "Termen limită",
+      "inspection": "Inspecție",
+      "reminder": "Memento",
+      "other": "Altele"
+    },
+    "form": {
+      "title": "Titlu eveniment",
+      "type": "Tip eveniment",
+      "startDate": "Data început",
+      "endDate": "Data sfârșit",
+      "startTime": "Ora început",
+      "endTime": "Ora sfârșit",
+      "allDay": "Toată ziua",
+      "location": "Locație",
+      "description": "Descriere",
+      "participants": "Participanți",
+      "reminders": "Memento-uri",
+      "repeat": "Repetă",
+      "color": "Culoare"
+    },
+    "repeat": {
+      "none": "Fără repetare",
+      "daily": "Zilnic",
+      "weekly": "Săptămânal",
+      "monthly": "Lunar",
+      "yearly": "Anual",
+      "custom": "Personalizat"
+    }
+  },
+  "help": {
+    "title": "Ajutor și Suport",
+    "subtitle": "Găsește răspunsuri la întrebările tale",
+    "searchHelp": "Caută în documentație...",
+    "categories": {
+      "gettingStarted": "Primii pași",
+      "medical": "Medicina muncii",
+      "equipment": "Echipamente PSI",
+      "training": "Instruiri",
+      "reports": "Rapoarte",
+      "alerts": "Alerte",
+      "account": "Cont și setări",
+      "billing": "Facturare",
+      "integrations": "Integrări"
+    },
+    "faq": "Întrebări frecvente",
+    "documentation": "Documentație",
+    "videoTutorials": "Tutorial video",
+    "contactSupport": "Contactează suportul",
+    "submitTicket": "Deschide tichet",
+    "liveChat": "Chat live",
+    "phone": "Suport telefonic",
+    "email": "Suport email",
+    "communityForum": "Forum comunitate",
+    "statusPage": "Status platformă",
+    "changelog": "Istoric modificări",
+    "apiDocs": "Documentație API"
+  },
+  "onboarding": {
+    "title": "Bun venit la s-s-m.ro!",
+    "subtitle": "Hai să configurăm platforma împreună",
+    "skip": "Sari peste",
+    "previous": "Înapoi",
+    "next": "Următorul",
+    "finish": "Finalizează",
+    "step": "Pasul {current} din {total}",
+    "steps": {
+      "welcome": {
+        "title": "Bun venit!",
+        "description": "Te vom ghida prin configurarea inițială a platformei."
+      },
+      "organization": {
+        "title": "Organizația ta",
+        "description": "Completează datele organizației pentru a începe."
+      },
+      "users": {
+        "title": "Adaugă utilizatori",
+        "description": "Invită membrii echipei tale să folosească platforma."
+      },
+      "employees": {
+        "title": "Adaugă angajați",
+        "description": "Importă sau adaugă manual angajații companiei."
+      },
+      "alerts": {
+        "title": "Configurează alertele",
+        "description": "Activează notificările automate pentru expirări."
+      },
+      "complete": {
+        "title": "Totul este gata!",
+        "description": "Platforma este configurată. Poți începe să o folosești."
+      }
+    }
+  },
+  "register": {
+    "title": "Creează cont",
+    "subtitle": "Începe să folosești platforma SSM & PSI",
+    "firstName": "Prenume",
+    "lastName": "Nume",
+    "email": "Email",
+    "password": "Parolă",
+    "confirmPassword": "Confirmă parola",
+    "organizationName": "Nume organizație",
+    "phone": "Telefon",
+    "acceptTerms": "Accept termenii și condițiile",
+    "acceptPrivacy": "Sunt de acord cu politica de confidențialitate",
+    "submit": "Creează cont",
+    "submitting": "Se creează contul...",
+    "alreadyHaveAccount": "Ai deja cont?",
+    "loginHere": "Autentifică-te aici",
+    "success": "Cont creat cu succes! Verifică email-ul pentru activare."
+  },
+  "forms": {
+    "required": "Câmp obligatoriu",
+    "invalid": "Valoare invalidă",
+    "minLength": "Minim {min} caractere",
+    "maxLength": "Maxim {max} caractere",
+    "email": "Email invalid",
+    "phone": "Număr de telefon invalid",
+    "cnp": "CNP invalid",
+    "date": "Dată invalidă",
+    "url": "URL invalid",
+    "number": "Trebuie să fie un număr",
+    "positive": "Trebuie să fie pozitiv",
+    "integer": "Trebuie să fie număr întreg",
+    "match": "Câmpurile nu se potrivesc",
+    "select": "Selectează o opțiune",
+    "upload": "Încarcă fișier",
+    "fileSize": "Fișier prea mare (max {size})",
+    "fileType": "Tip fișier neacceptat"
+  },
+  "errors": {
+    "general": "A apărut o eroare. Te rugăm să încerci din nou.",
+    "network": "Eroare de conexiune. Verifică internetul.",
+    "unauthorized": "Nu ai permisiunea să accesezi această resursă.",
+    "forbidden": "Acces interzis.",
+    "notFound": "Resursa nu a fost găsită.",
+    "serverError": "Eroare server. Te rugăm să încerci mai târziu.",
+    "timeout": "Cererea a expirat. Te rugăm să încerci din nou.",
+    "invalidData": "Date invalide. Verifică informațiile introduse.",
+    "sessionExpired": "Sesiunea a expirat. Te rugăm să te autentifici din nou.",
+    "permissionDenied": "Nu ai permisiunea să efectuezi această acțiune.",
+    "fileUploadFailed": "Încărcarea fișierului a eșuat.",
+    "duplicateEntry": "Această înregistrare există deja."
+  },
+  "success": {
+    "saved": "Salvat cu succes!",
+    "created": "Creat cu succes!",
+    "updated": "Actualizat cu succes!",
+    "deleted": "Șters cu succes!",
+    "sent": "Trimis cu succes!",
+    "uploaded": "Încărcat cu succes!",
+    "copied": "Copiat în clipboard!",
+    "exported": "Exportat cu succes!",
+    "imported": "Importat cu succes!",
+    "passwordChanged": "Parola a fost schimbată!",
+    "emailSent": "Email trimis cu succes!",
+    "settingsSaved": "Setările au fost salvate!"
   }
 }
