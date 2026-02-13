@@ -186,5 +186,220 @@
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
     "address": "București, România"
+  },
+  "breadcrumb": {
+    "home": "Acasă",
+    "dashboard": "Dashboard",
+    "admin": "Administrare",
+    "onboarding": "Configurare inițială",
+    "about": "Despre",
+    "quick_check": "Quick Check",
+    "calculator_risc": "Calculator Risc",
+    "contact": "Contact",
+    "medical": "Medicina Muncii",
+    "equipment": "Echipamente PSI",
+    "trainings": "Instruiri",
+    "alerts": "Alerte",
+    "employees": "Angajați",
+    "organizations": "Organizații",
+    "settings": "Setări",
+    "profile": "Profil"
+  },
+  "quickCheck": {
+    "badge": "Evaluare gratuită SSM",
+    "title": "Quick Check Conformitate SSM",
+    "subtitle": "Răspunde la 10 întrebări simple și descoperă nivelul tău de conformitate cu legislația SSM din România.",
+    "progress": "Progres",
+    "submit": "Vezi rezultatul",
+    "footer": "Acest chestionar este 100% gratuit și nu necesită înregistrare.",
+    "answers": {
+      "yes": "Da",
+      "partial": "Parțial",
+      "no": "Nu"
+    },
+    "questions": {
+      "q1": {
+        "text": "Aveți Fișa de aptitudini medicală actualizată pentru toți angajații?",
+        "description": "Conform Legii 319/2006, toți angajații trebuie să aibă examen medical periodic."
+      },
+      "q2": {
+        "text": "Organizația are Evaluare de Risc actualizată în ultimele 12 luni?",
+        "description": "Evaluarea riscurilor trebuie revizuită anual sau la schimbări semnificative."
+      },
+      "q3": {
+        "text": "Aveți Plan de prevenire și protecție (PPP) semnat și implementat?",
+        "description": "PPP este document obligatoriu care stabilește măsurile de prevenire SSM."
+      },
+      "q4": {
+        "text": "Angajații au primit Instruire SSM la angajare și periodic?",
+        "description": "Instruirea inițială și periodică este obligatorie conform legislației SSM."
+      },
+      "q5": {
+        "text": "Sunt desemnați și pregătiți lucrători pentru situații de urgență (PSI)?",
+        "description": "Trebuie să aveți lucrători formați pentru prim ajutor și situații de urgență."
+      },
+      "q6": {
+        "text": "Echipamentele de protecție (EPI) sunt distribuite și evidențiate?",
+        "description": "Angajații trebuie să primească EPI adecvate funcției și riscurilor."
+      },
+      "q7": {
+        "text": "Mijloacele PSI (stingătoare, hidranți) sunt verificate periodic?",
+        "description": "Verificarea tehnică a stingătoarelor se face anual de personal autorizat."
+      },
+      "q8": {
+        "text": "Aveți Autorizație PSI/ISU valabilă pentru clădire/activitate?",
+        "description": "Autorizația PSI trebuie reînnoită periodic conform categoriei de risc."
+      },
+      "q9": {
+        "text": "Accidentele de muncă sunt investigate și raportate conform legii?",
+        "description": "Orice accident de muncă trebuie raportat ITM în termen legal."
+      },
+      "q10": {
+        "text": "Aveți contract activ cu serviciu extern SSM sau specialist propriu?",
+        "description": "Angajatorul trebuie să asigure servicii SSM intern sau extern."
+      }
+    },
+    "results": {
+      "title": "Rezultatul tău",
+      "subtitle": "Iată nivelul tău de conformitate SSM",
+      "level": {
+        "good": "Nivel Bun",
+        "medium": "Nivel Mediu",
+        "critical": "Nivel Critic"
+      },
+      "description": {
+        "good": "Felicitări! Organizația ta respectă majoritatea cerințelor de conformitate SSM. Continuă să menții documentația la zi și să implementezi măsurile de siguranță.",
+        "medium": "Ai un nivel acceptabil de conformitate, dar există lacune care pot genera amenzi ITM. Recomandăm să abordezi urgent zonele cu răspuns 'Nu' sau 'Parțial'.",
+        "critical": "Atenție! Organizația ta este expusă riscului de amenzi semnificative ITM/ISU. Este necesar să implementezi urgent măsurile minime de conformitate SSM."
+      },
+      "cta": "Înregistrează-te în platformă",
+      "retake": "Încearcă din nou"
+    }
+  },
+  "breadcrumb": {
+    "home": "Acasă",
+    "dashboard": "Dashboard",
+    "admin": "Administrare",
+    "onboarding": "Configurare inițială",
+    "about": "Despre",
+    "quick_check": "Quick Check",
+    "calculator_risc": "Calculator Risc",
+    "medical": "Medicina Muncii",
+    "equipment": "Echipamente PSI",
+    "trainings": "Instruiri",
+    "alerts": "Alerte",
+    "employees": "Angajați",
+    "organizations": "Organizații",
+    "settings": "Setări",
+    "profile": "Profil"
+  },
+  "calculatorRisc": {
+    "badge": "Evaluare gratuită risc SSM",
+    "title": "Calculator Risc SSM",
+    "subtitle": "Evaluează nivelul de risc al organizației tale bazat pe domeniul de activitate și factorii de risc specifici.",
+    "formTitle": "Completează datele organizației",
+    "calculate": "Calculează nivelul de risc",
+    "reset": "Începe o nouă evaluare",
+    "footer": "Acest calculator este orientativ și nu înlocuiește o evaluare profesională de risc SSM.",
+    "fields": {
+      "caen": {
+        "label": "Domeniu de activitate (CAEN)",
+        "placeholder": "Selectează domeniul de activitate"
+      },
+      "employees": {
+        "label": "Număr de angajați",
+        "placeholder": "Introdu numărul de angajați"
+      },
+      "hazardous": {
+        "label": "Se lucrează cu substanțe periculoase?",
+        "yes": "Da",
+        "no": "Nu"
+      },
+      "height": {
+        "label": "Se lucrează la înălțime (peste 2m)?",
+        "yes": "Da",
+        "no": "Nu"
+      },
+      "pressure": {
+        "label": "Există echipamente sub presiune?",
+        "yes": "Da",
+        "no": "Nu"
+      },
+      "evacuation": {
+        "label": "Aveți plan de evacuare implementat?",
+        "yes": "Da",
+        "no": "Nu"
+      }
+    },
+    "caenOptions": {
+      "construction": "Construcții",
+      "manufacturing": "Producție/Manufacturing",
+      "transport": "Transport și logistică",
+      "services": "Servicii profesionale",
+      "retail": "Comerț cu amănuntul",
+      "hospitality": "Horeca (restaurante, hoteluri)",
+      "it": "IT & Software",
+      "health": "Sănătate și asistență medicală",
+      "education": "Educație și formare",
+      "other": "Altele"
+    },
+    "results": {
+      "title": "Rezultatul evaluării",
+      "level": {
+        "low": "Risc Scăzut",
+        "medium": "Risc Mediu",
+        "high": "Risc Ridicat",
+        "veryHigh": "Risc Foarte Ridicat"
+      },
+      "description": {
+        "low": "Organizația ta operează într-un domeniu cu risc scăzut. Cu toate acestea, conformitatea SSM rămâne obligatorie și trebuie să ai documentația de bază la zi.",
+        "medium": "Nivelul de risc este mediu. Trebuie să acordi atenție specială evaluării riscurilor și instruirii periodice a angajaților. Asigură-te că ai toate documentele SSM la zi.",
+        "high": "Atenție! Organizația ta se află într-o categorie de risc ridicat. Este esențial să implementezi măsuri stricte de prevenire și să ai un specialist SSM dedicat. Nerespectarea poate duce la amenzi semnificative.",
+        "veryHigh": "Risc foarte ridicat! Organizația ta necesită atenție maximă la securitatea muncii. Este obligatoriu să ai specialist SSM dedicat, evaluare de risc detaliată și plan de prevenire și protecție implementat. Recomandăm consultanță specializată urgentă."
+      },
+      "recommendations": {
+        "title": "Recomandări prioritare",
+        "low": [
+          "Asigură fișe medicale valabile pentru toți angajații",
+          "Realizează instruiri SSM periodice (minim anual)",
+          "Păstrează evidența documentelor SSM actualizată",
+          "Verifică periodic echipamentele PSI (stingătoare, trusă prim ajutor)"
+        ],
+        "medium": [
+          "Realizează evaluare de risc profesională actualizată",
+          "Implementează plan de prevenire și protecție (PPP)",
+          "Asigură EPI (echipamente de protecție) adecvate pentru fiecare post",
+          "Contractează serviciu extern SSM autorizat",
+          "Efectuează controale medicale periodice conform riscurilor",
+          "Verifică anual echipamentele PSI de către firme autorizate"
+        ],
+        "high": [
+          "URGENT: Angajează specialist SSM dedicat sau încheie contract serviciu extern",
+          "Realizează evaluare de risc detaliată pentru toate posturile",
+          "Implementează PPP și asigură urmărirea măsurilor de prevenire",
+          "Instruire intensivă SSM și PSI pentru toți angajații (2x/an minim)",
+          "Monitorizare strictă a echipamentelor sub presiune (ISCIR)",
+          "Verificări lunare ale condițiilor de lucru la înălțime",
+          "Plan de urgență și echipă de intervenție formată",
+          "Autorizație PSI valabilă și scenarii de securitate actualizate"
+        ],
+        "veryHigh": [
+          "CRITIC: Consultant SSM specializat dedicat organizației",
+          "Evaluare de risc complexă cu expertiză externă (chimie, construcții, presiune)",
+          "Plan de prevenire și protecție revizuit trimestrial",
+          "Instruiri SSM săptămânale/lunare pentru zonele critice",
+          "监verificare zilnică echipamente critice (presiune, înălțime, substanțe)",
+          "Echipă PSI formată profesional + exerciții evacuare trimestriale",
+          "Sistem de monitorizare și raportare incidente în timp real",
+          "Audit extern SSM anual obligatoriu",
+          "Asigurare răspundere civilă pentru riscuri majore"
+        ]
+      }
+    },
+    "cta": {
+      "title": "Gestionează riscurile SSM din platformă",
+      "description": "Monitorizează în timp real conformitatea SSM, primește alerte automate pentru expirări și generează rapoarte pentru controale ITM.",
+      "button": "Încearcă platforma gratuit"
+    }
   }
 }
