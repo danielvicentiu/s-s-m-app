@@ -30,7 +30,7 @@ import type {
 // TYPES
 // ══════════════════════════════════════════════════════════════
 
-export interface Obligation {
+interface Obligation {
   id: string                        // "OBL_1", "OBL_2", etc.
   sourceArticleId: string           // "ART_5", "ART_12"
   sourceArticleNumber: string       // "5", "12"
@@ -57,7 +57,7 @@ export interface Obligation {
   extractedAt: string               // ISO timestamp
 }
 
-export type ObligationFrequency =
+type ObligationFrequency =
   | 'annual'
   | 'biannual'
   | 'quarterly'
@@ -83,7 +83,7 @@ const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'
 // MAIN EXTRACTION FUNCTION
 // ══════════════════════════════════════════════════════════════
 
-export async function extractObligations(
+async function extractObligations(
   parsedLegislation: LegislationParsed,
   legalActName: string,
   apiKey?: string
@@ -482,7 +482,7 @@ function sleep(ms: number): Promise<void> {
 // STATISTICS & HELPERS
 // ══════════════════════════════════════════════════════════════
 
-export function getObligationStats(obligations: Obligation[]) {
+function getObligationStats(obligations: Obligation[]) {
   return {
     total: obligations.length,
     byFrequency: groupBy(obligations, o => o.frequency || 'unknown'),
