@@ -22,6 +22,18 @@ interface OrgOption {
   employee_count?: number
 }
 
+interface DashboardStats {
+  totalEmployees: number
+  totalTrainings: number
+  medicalExpired: number
+  medicalExpiring: number
+  medicalValid: number
+  equipmentExpired: number
+  equipmentExpiring: number
+  equipmentValid: number
+  trainingsExpired: number
+}
+
 interface Props {
   user: { email: string; id: string }
   overview: any[]
@@ -29,17 +41,19 @@ interface Props {
   medicalExams: any[]
   equipment: any[]
   employees: any[]
+  trainingAssignments: any[]
   valuePreviewMap?: Record<string, any>
   isConsultant?: boolean
   initialPrefs?: Record<string, any>
   organizations: OrgOption[]
   savedSelectedOrg?: string
+  stats: DashboardStats
 }
 
 export default function DashboardClient({
   user, overview, alerts, medicalExams, equipment, employees,
   valuePreviewMap = {}, isConsultant = false, initialPrefs = {},
-  organizations, savedSelectedOrg = 'all'
+  organizations, savedSelectedOrg = 'all', stats
 }: Props) {
   // DEBUG: Log employees prop
   console.log('🔍 [DashboardClient] Employees prop:', {
@@ -169,9 +183,16 @@ export default function DashboardClient({
     return { ...m, diffDays, status }
   }).sort((a: any, b: any) => a.diffDays - b.diffDays)
 
-  const medExpired = medWithStatus.filter((m: any) => m.status === 'expired').length
-  const medExpiring = medWithStatus.filter((m: any) => m.status === 'expiring').length
-  const medValid = medWithStatus.filter((m: any) => m.status === 'valid').length
+  // Recalculare pentru filtered data (după selectarea organizației)
+  const medExpired = selectedOrg === 'all'
+    ? stats.medicalExpired
+    : medWithStatus.filter((m: any) => m.status === 'expired').length
+  const medExpiring = selectedOrg === 'all'
+    ? stats.medicalExpiring
+    : medWithStatus.filter((m: any) => m.status === 'expiring').length
+  const medValid = selectedOrg === 'all'
+    ? stats.medicalValid
+    : medWithStatus.filter((m: any) => m.status === 'valid').length
 
   // === ECHIPAMENTE PSI ===
   const eqWithStatus = filteredEquipment.map((e: any) => {
@@ -184,9 +205,16 @@ export default function DashboardClient({
     return { ...e, diffDays, status }
   }).sort((a: any, b: any) => a.diffDays - b.diffDays)
 
-  const eqExpired = eqWithStatus.filter((e: any) => e.status === 'expired').length
-  const eqExpiring = eqWithStatus.filter((e: any) => e.status === 'expiring').length
-  const eqValid = eqWithStatus.filter((e: any) => e.status === 'valid').length
+  // Recalculare pentru filtered data (după selectarea organizației)
+  const eqExpired = selectedOrg === 'all'
+    ? stats.equipmentExpired
+    : eqWithStatus.filter((e: any) => e.status === 'expired').length
+  const eqExpiring = selectedOrg === 'all'
+    ? stats.equipmentExpiring
+    : eqWithStatus.filter((e: any) => e.status === 'expiring').length
+  const eqValid = selectedOrg === 'all'
+    ? stats.equipmentValid
+    : eqWithStatus.filter((e: any) => e.status === 'valid').length
 
   // Tab badge counts (expirate + expiring)
   const medBadge = medExpired + medExpiring

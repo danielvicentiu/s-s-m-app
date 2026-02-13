@@ -15,6 +15,18 @@ interface DashboardPageProps {
   searchParams: Promise<{ org?: string }>
 }
 
+interface DashboardStats {
+  totalEmployees: number
+  totalTrainings: number
+  medicalExpired: number
+  medicalExpiring: number
+  medicalValid: number
+  equipmentExpired: number
+  equipmentExpiring: number
+  equipmentValid: number
+  trainingsExpired: number
+}
+
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const resolvedSearchParams = await searchParams
   const supabase = await createSupabaseServer()
@@ -55,6 +67,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     sample: employees?.[0],
     isSuperAdmin
   })
+
+  // Fetch training assignments via training_dashboard view
+  const { data: trainingAssignments } = await supabase
+    .from('training_dashboard')
+    .select('*')
+    .order('due_date', { ascending: true })
 
   // RBAC: Obține organizațiile accesibile
   let baseOrganizations
@@ -181,6 +199,67 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     }
   }
 
+  // === CALCUL STATISTICI SERVER-SIDE ===
+  const now = new Date()
+  const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+
+  // Medical examinations stats
+  const medicalExpired = (medicalExams || []).filter((m: any) => {
+    const expiryDate = new Date(m.expiry_date)
+    return expiryDate < now
+  }).length
+
+  const medicalExpiring = (medicalExams || []).filter((m: any) => {
+    const expiryDate = new Date(m.expiry_date)
+    return expiryDate >= now && expiryDate <= thirtyDaysFromNow
+  }).length
+
+  const medicalValid = (medicalExams || []).filter((m: any) => {
+    const expiryDate = new Date(m.expiry_date)
+    return expiryDate > thirtyDaysFromNow
+  }).length
+
+  // Equipment stats
+  const equipmentExpired = (equipment || []).filter((e: any) => {
+    const expiryDate = new Date(e.expiry_date)
+    return expiryDate < now
+  }).length
+
+  const equipmentExpiring = (equipment || []).filter((e: any) => {
+    const expiryDate = new Date(e.expiry_date)
+    return expiryDate >= now && expiryDate <= thirtyDaysFromNow
+  }).length
+
+  const equipmentValid = (equipment || []).filter((e: any) => {
+    const expiryDate = new Date(e.expiry_date)
+    return expiryDate > thirtyDaysFromNow
+  }).length
+
+  // Training stats (assuming training_dashboard has due_date and completion_status)
+  const trainingsExpired = (trainingAssignments || []).filter((t: any) => {
+    if (!t.due_date) return false
+    const dueDate = new Date(t.due_date)
+    return dueDate < now && t.completion_status !== 'completed'
+  }).length
+
+  // Total employees count
+  const totalEmployees = (employees || []).length
+
+  // Total trainings count
+  const totalTrainings = (trainingAssignments || []).length
+
+  const stats: DashboardStats = {
+    totalEmployees,
+    totalTrainings,
+    medicalExpired,
+    medicalExpiring,
+    medicalValid,
+    equipmentExpired,
+    equipmentExpiring,
+    equipmentValid,
+    trainingsExpired
+  }
+
   return (
     <DashboardClient
       user={{ email: user.email || '', id: user.id }}
@@ -189,11 +268,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       medicalExams={medicalExams || []}
       equipment={equipment || []}
       employees={employees || []}
+      trainingAssignments={trainingAssignments || []}
       valuePreviewMap={valuePreviewMap}
       isConsultant={isConsultant}
       initialPrefs={initialPrefs}
       organizations={organizations}
       savedSelectedOrg={savedSelectedOrg}
+      stats={stats}
     />
   )
 }
