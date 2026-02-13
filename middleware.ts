@@ -19,6 +19,32 @@ const DOMAIN_CONFIG: Record<string, string> = {
   's-s-m.ro': 'ro',
 }
 
+// Public routes that don't require authentication
+const PUBLIC_ROUTES = [
+  '/',
+  '/login',
+  '/register',
+  '/about',
+  '/pricing',
+  '/contact',
+  '/blog',
+  '/terms',
+  '/privacy',
+  '/forgot-password',
+  '/reset-password',
+]
+
+// Protected route segments that require authentication
+const PROTECTED_SEGMENTS = [
+  '/dashboard',
+  '/onboarding',
+  '/admin',
+  '/consultant',
+  '/firma',
+  '/angajat',
+  '/inspector',
+]
+
 const intlMiddleware = createMiddleware(routing)
 
 // RBAC: Helper pentru obținerea rolurilor userului din user_roles cu fallback pe memberships
@@ -75,15 +101,16 @@ function hasAnyRole(userRoles: string[], requiredRoles: string[]): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  // Skip API routes
-  if (request.nextUrl.pathname.startsWith('/api/')) {
+  const pathname = request.nextUrl.pathname
+
+  // Skip API routes and static files
+  if (pathname.startsWith('/api/') || pathname.startsWith('/_next/') || pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|woff|woff2|ttf)$/)) {
     return NextResponse.next()
   }
 
   // Run next-intl middleware FIRST — this handles locale detection and sets headers
   const intlResponse = intlMiddleware(request)
 
-  const pathname = request.nextUrl.pathname
   const hostname = request.headers.get('host') || ''
   const domainLocale = DOMAIN_CONFIG[hostname]
 
@@ -106,14 +133,18 @@ export async function middleware(request: NextRequest) {
   }
   const countryCode = countryCodeMap[locale] || 'RO'
 
+  // Check if current path is public
+  const isPublicRoute = PUBLIC_ROUTES.some(route =>
+    pathWithoutLocale === route || pathWithoutLocale === '' || pathWithoutLocale === '/'
+  )
+
   // Check if route is protected
-  const protectedSegments = ['/dashboard', '/onboarding', '/admin', '/consultant', '/firma', '/angajat', '/inspector']
-  const isProtected = protectedSegments.some(segment =>
+  const isProtected = PROTECTED_SEGMENTS.some(segment =>
     pathWithoutLocale.startsWith(segment)
   )
 
-  // For NON-protected routes: return intlResponse directly (preserves locale)
-  if (!isProtected) {
+  // For public routes: return intlResponse directly (preserves locale)
+  if (isPublicRoute || !isProtected) {
     intlResponse.headers.set('x-country-code', countryCode)
     return intlResponse
   }
