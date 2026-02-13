@@ -11,7 +11,7 @@ import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X, QrCode } from 'lucide-react'
 // RBAC: Import hook-uri client-side pentru verificare permisiuni
 import { useHasPermission } from '@/hooks/usePermission'
 
@@ -155,7 +155,9 @@ export default function EquipmentClient({ user, organizations, equipment: initia
     description: '',
     location: '',
     serial_number: '',
-    last_check_date: '',
+    inspector_name: '',
+    last_inspection_date: '',
+    next_inspection_date: '',
     expiry_date: '',
   })
 
@@ -221,7 +223,9 @@ export default function EquipmentClient({ user, organizations, equipment: initia
       description: '',
       location: '',
       serial_number: '',
-      last_check_date: '',
+      inspector_name: '',
+      last_inspection_date: '',
+      next_inspection_date: '',
       expiry_date: '',
     })
     setShowModal(true)
@@ -236,7 +240,9 @@ export default function EquipmentClient({ user, organizations, equipment: initia
       description: e.description || '',
       location: e.location || '',
       serial_number: e.serial_number || '',
-      last_check_date: e.last_check_date || '',
+      inspector_name: e.inspector_name || '',
+      last_inspection_date: e.last_inspection_date || '',
+      next_inspection_date: e.next_inspection_date || '',
       expiry_date: e.expiry_date || '',
     })
     setShowModal(true)
@@ -396,17 +402,20 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                       Tip <SortIcon field="equipment_type" />
                     </th>
                     <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('description')}>
-                      Note <SortIcon field="description" />
+                      Denumire <SortIcon field="description" />
                     </th>
+                    <th className="px-4 py-3">Serie</th>
                     <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('location')}>
                       Locație <SortIcon field="location" />
                     </th>
-                    <th className="px-4 py-3">Serie</th>
-                    <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('last_check_date')}>
-                      Verificat <SortIcon field="last_check_date" />
+                    <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('inspector_name')}>
+                      Responsabil <SortIcon field="inspector_name" />
                     </th>
-                    <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('expiry_date')}>
-                      Expiră <SortIcon field="expiry_date" />
+                    <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('last_inspection_date')}>
+                      Ultima verificare <SortIcon field="last_inspection_date" />
+                    </th>
+                    <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('next_inspection_date')}>
+                      Următoarea verificare <SortIcon field="next_inspection_date" />
                     </th>
                     <th className="px-4 py-3">Status</th>
                     <th className="px-4 py-3 text-right">Acțiuni</th>
@@ -432,15 +441,24 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                             {e.description || '—'}
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">{e.location || '—'}</td>
                         <td className="px-4 py-3 text-sm text-gray-400 font-mono">{e.serial_number || '—'}</td>
-                        <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.last_check_date)}</td>
-                        <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.expiry_date)}</td>
+                        <td className="px-4 py-3 text-sm text-gray-500">{e.location || '—'}</td>
+                        <td className="px-4 py-3 text-sm text-gray-600">{e.inspector_name || '—'}</td>
+                        <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.last_inspection_date)}</td>
+                        <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.next_inspection_date)}</td>
                         <td className="px-4 py-3">
                           <StatusBadge status={status} label={status === 'expired' ? `Expirat ${days} zile` : status === 'expiring' ? `Expiră în ${days} zile` : `Valid ${days} zile`} />
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-1">
+                            {/* QR Code */}
+                            <button
+                              onClick={() => alert(`QR Code pentru echipament ${e.id}`)}
+                              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600"
+                              title="Generează QR Code"
+                            >
+                              <QrCode className="w-4 h-4" />
+                            </button>
                             {/* RBAC: Buton "Editează" vizibil doar dacă user are permisiune 'update' pe 'equipment' */}
                             {canUpdate && (
                               <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600" title="Editează">
@@ -595,14 +613,35 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                 />
               </div>
 
-              {/* Date row */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* Responsabil */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Responsabil verificare</label>
+                <input
+                  type="text"
+                  placeholder="ex: Numele inspectorului sau firmei"
+                  value={form.inspector_name}
+                  onChange={e => setForm({ ...form, inspector_name: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Date row - 3 coloane */}
+              <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Ultima verificare *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ultima verificare</label>
                   <input
                     type="date"
-                    value={form.last_check_date}
-                    onChange={e => setForm({ ...form, last_check_date: e.target.value })}
+                    value={form.last_inspection_date}
+                    onChange={e => setForm({ ...form, last_inspection_date: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Următoarea verificare</label>
+                  <input
+                    type="date"
+                    value={form.next_inspection_date}
+                    onChange={e => setForm({ ...form, next_inspection_date: e.target.value })}
                     className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
