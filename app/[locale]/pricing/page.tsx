@@ -1,7 +1,7 @@
 'use client'
 
-import { useRouter } from '@/i18n/navigation'
 import { Check } from 'lucide-react'
+import { useRouter } from '@/i18n/navigation'
 
 export default function PricingPage() {
   const router = useRouter()

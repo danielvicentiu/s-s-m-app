@@ -5,17 +5,17 @@
 
 'use client'
 
+import { ArrowLeft, Stethoscope, Plus, Pencil, Trash2, Download } from 'lucide-react'
 import { useState } from 'react'
-import { useRouter } from '@/i18n/navigation'
-import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { DataTable, type Column } from '@/components/ui/DataTable'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { FormModal } from '@/components/ui/FormModal'
 import { StatusBadge } from '@/components/ui/StatusBadge'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { ArrowLeft, Stethoscope, Plus, Pencil, Trash2, Download } from 'lucide-react'
-// RBAC: Import hook-uri client-side pentru verificare permisiuni
 import { useHasPermission } from '@/hooks/usePermission'
+import { useRouter } from '@/i18n/navigation'
+import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
+// RBAC: Import hook-uri client-side pentru verificare permisiuni
 
 // ========== TYPES ==========
 
@@ -106,21 +106,21 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
   function getStatus(expiryDate: string): 'valid' | 'expiring' | 'expired' {
     const expiry = new Date(expiryDate)
     const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-    if (diffDays <= 0) return 'expired'
-    if (diffDays <= 30) return 'expiring'
+    if (diffDays <= 0) {return 'expired'}
+    if (diffDays <= 30) {return 'expiring'}
     return 'valid'
   }
 
   function getDaysText(expiryDate: string): string {
     const expiry = new Date(expiryDate)
     const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-    if (diffDays <= 0) return `Expirat ${Math.abs(diffDays)} zile`
-    if (diffDays <= 30) return `Expiră în ${diffDays} zile`
+    if (diffDays <= 0) {return `Expirat ${Math.abs(diffDays)} zile`}
+    if (diffDays <= 30) {return `Expiră în ${diffDays} zile`}
     return `Valid ${diffDays} zile`
   }
 
   function fmtDate(d: string | null): string {
-    if (!d) return '—'
+    if (!d) {return '—'}
     return new Date(d).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })
   }
 
@@ -142,8 +142,8 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
   // ========== FILTERING ==========
 
   const filtered = medicalExams.filter((m) => {
-    if (filterOrg !== 'all' && m.organization_id !== filterOrg) return false
-    if (filterStatus !== 'all' && getStatus(m.expiry_date) !== filterStatus) return false
+    if (filterOrg !== 'all' && m.organization_id !== filterOrg) {return false}
+    if (filterStatus !== 'all' && getStatus(m.expiry_date) !== filterStatus) {return false}
     return true
   })
 
@@ -224,13 +224,13 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
           .update(payload)
           .eq('id', editingId)
 
-        if (error) throw error
+        if (error) {throw error}
       } else {
         const { error } = await supabase
           .from('medical_examinations')
           .insert(payload)
 
-        if (error) throw error
+        if (error) {throw error}
       }
 
       setShowForm(false)
@@ -246,7 +246,7 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
   }
 
   async function handleDelete() {
-    if (!deleteTarget) return
+    if (!deleteTarget) {return}
     try {
       setDeleteLoading(true)
       const { error } = await supabase
@@ -254,7 +254,7 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
         .delete()
         .eq('id', deleteTarget.id)
 
-      if (error) throw error
+      if (error) {throw error}
       setDeleteTarget(null)
       router.refresh()
     } catch (err) {

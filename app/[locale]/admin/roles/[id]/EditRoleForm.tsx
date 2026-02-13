@@ -3,12 +3,12 @@
 
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createSupabaseBrowser } from '@/lib/supabase/client'
-import Link from 'next/link'
 import { ArrowLeft, Save, XCircle, AlertCircle, Lock, CheckCircle } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 const RESOURCES = [
   'organizations',
@@ -115,7 +115,7 @@ export default function EditRoleForm({ role: initialRole }: Props) {
         })
         .eq('id', initialRole.id)
 
-      if (roleError) throw roleError
+      if (roleError) {throw roleError}
 
       // 2. Șterge permisiunile vechi
       const { error: deleteError } = await supabase
@@ -123,7 +123,7 @@ export default function EditRoleForm({ role: initialRole }: Props) {
         .delete()
         .eq('role_id', initialRole.id)
 
-      if (deleteError) throw deleteError
+      if (deleteError) {throw deleteError}
 
       // 3. Inserează permisiunile noi
       const permissionsToInsert: any[] = []
@@ -147,7 +147,7 @@ export default function EditRoleForm({ role: initialRole }: Props) {
           .from('permissions')
           .insert(permissionsToInsert)
 
-        if (insertError) throw insertError
+        if (insertError) {throw insertError}
       }
 
       setSuccess(true)
@@ -169,7 +169,7 @@ export default function EditRoleForm({ role: initialRole }: Props) {
         .update({ is_active: false })
         .eq('id', initialRole.id)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       setShowDeactivateDialog(false)
       router.push('/admin/roles')

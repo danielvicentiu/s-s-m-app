@@ -9,7 +9,7 @@ import NewRoleForm from './NewRoleForm'
 export default async function NewRolePage() {
   // GUARD: Verificare super_admin (server-side)
   const admin = await isSuperAdmin()
-  if (!admin) redirect('/unauthorized')
+  if (!admin) {redirect('/unauthorized')}
 
   return <NewRoleForm />
 }

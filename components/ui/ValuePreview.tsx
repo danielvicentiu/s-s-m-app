@@ -5,8 +5,8 @@
 
 'use client'
 
-import { useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp, Scale, Eye, EyeOff } from 'lucide-react'
+import { useState } from 'react'
 
 interface BreakdownItem {
   code: string
@@ -37,7 +37,7 @@ interface ValuePreviewProps {
 }
 
 function formatRON(amount: number): string {
-  return amount.toLocaleString('ro-RO') + ' RON'
+  return `${amount.toLocaleString('ro-RO')  } RON`
 }
 
 function severityColor(severity: string): string {
@@ -75,7 +75,7 @@ export function ValuePreview({ data, isConsultant = false, showToClient = false 
   const [expanded, setExpanded] = useState(false)
 
   // Nu afișa dacă nu e consultant și nu e activat pt client
-  if (!isConsultant && !showToClient) return null
+  if (!isConsultant && !showToClient) {return null}
 
   // Nu afișa dacă nu sunt date sau nu sunt neconformități
   if (!data || data.items_count === 0) {

@@ -3,8 +3,8 @@
 // PUNE ACEST FIȘIER ÎN: app/api/alerts/route.ts
 // ============================================================
 
-import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 function getResend() {
@@ -162,9 +162,9 @@ function buildAlertEmail(
   const daysUntil = (d: string) => Math.ceil((new Date(d).getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
   const statusBadge = (days: number) => {
-    if (days < 0) return `<span style="color:#DC2626;font-weight:bold">⛔ EXPIRAT (${Math.abs(days)} zile)</span>`;
-    if (days <= 7) return `<span style="color:#EA580C;font-weight:bold">🔴 Urgent (${days} zile)</span>`;
-    if (days <= 30) return `<span style="color:#D97706;font-weight:bold">🟡 Atenție (${days} zile)</span>`;
+    if (days < 0) {return `<span style="color:#DC2626;font-weight:bold">⛔ EXPIRAT (${Math.abs(days)} zile)</span>`;}
+    if (days <= 7) {return `<span style="color:#EA580C;font-weight:bold">🔴 Urgent (${days} zile)</span>`;}
+    if (days <= 30) {return `<span style="color:#D97706;font-weight:bold">🟡 Atenție (${days} zile)</span>`;}
     return `<span style="color:#16A34A">✅ OK (${days} zile)</span>`;
   };
 
@@ -206,7 +206,7 @@ function buildAlertEmail(
       const days = daysUntil(e.expiry_date);
       const rowBg = days < 0 ? 'background:#FEF2F2' : days <= 7 ? 'background:#FFFBEB' : '';
       const label = equipmentLabels[e.equipment_type] || e.equipment_type;
-      html += `<tr style="${rowBg}"><td style="padding:8px;border:1px solid #E5E7EB;font-weight:bold">${label}${e.description ? ' — ' + e.description : ''}</td><td style="padding:8px;border:1px solid #E5E7EB">${e.location || '—'}</td><td style="padding:8px;border:1px solid #E5E7EB;font-family:monospace;font-size:12px">${e.serial_number || '—'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(e.expiry_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)}</td></tr>`;
+      html += `<tr style="${rowBg}"><td style="padding:8px;border:1px solid #E5E7EB;font-weight:bold">${label}${e.description ? ` — ${  e.description}` : ''}</td><td style="padding:8px;border:1px solid #E5E7EB">${e.location || '—'}</td><td style="padding:8px;border:1px solid #E5E7EB;font-family:monospace;font-size:12px">${e.serial_number || '—'}</td><td style="padding:8px;border:1px solid #E5E7EB">${formatDate(e.expiry_date)}</td><td style="padding:8px;border:1px solid #E5E7EB">${statusBadge(days)}</td></tr>`;
     }
     html += '</table>';
   }

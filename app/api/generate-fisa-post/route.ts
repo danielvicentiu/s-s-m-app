@@ -1,9 +1,8 @@
 // app/api/generate-fisa-post/route.ts
 // API Route: Generate Fișă de Post SSM PDF
 
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase/server'
-
 const { generateFisaPostPDF } = require('@/lib/generate-fisa-post')
 
 export async function POST(request: NextRequest) {

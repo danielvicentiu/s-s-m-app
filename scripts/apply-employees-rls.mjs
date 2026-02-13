@@ -4,10 +4,10 @@
  * Rulează: node scripts/apply-employees-rls.mjs
  */
 
-import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'
-import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
+import { createClient } from '@supabase/supabase-js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -50,7 +50,7 @@ let successCount = 0
 let errorCount = 0
 
 for (let i = 0; i < statements.length; i++) {
-  const statement = statements[i] + ';'
+  const statement = `${statements[i]  };`
   const preview = statement.substring(0, 80).replace(/\s+/g, ' ')
 
   try {
@@ -85,7 +85,7 @@ for (let i = 0; i < statements.length; i++) {
   }
 }
 
-console.log('\n' + '─'.repeat(60))
+console.log(`\n${  '─'.repeat(60)}`)
 console.log(`✅ ${successCount} statement-uri executate cu succes`)
 if (errorCount > 0) {
   console.log(`❌ ${errorCount} statement-uri cu erori`)

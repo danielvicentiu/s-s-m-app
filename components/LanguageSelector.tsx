@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
 import { useLocale } from 'next-intl'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter, usePathname } from '@/i18n/navigation'
 
 interface LanguageOption {
@@ -92,7 +92,7 @@ const FLAG_COMPONENTS: Record<string, React.FC<{ className?: string }>> = {
 
 function Flag({ code, className = 'w-5 h-4' }: { code: string; className?: string }) {
   const FlagComponent = FLAG_COMPONENTS[code]
-  if (!FlagComponent) return null
+  if (!FlagComponent) {return null}
   return (
     <span className="inline-flex items-center rounded-sm overflow-hidden shadow-sm border border-gray-200/50">
       <FlagComponent className={className} />
@@ -134,7 +134,7 @@ export default function LanguageSelector({ className = '' }: Props) {
   // Close on Escape
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape') setOpen(false)
+      if (event.key === 'Escape') {setOpen(false)}
     }
     if (open) {
       document.addEventListener('keydown', handleEscape)

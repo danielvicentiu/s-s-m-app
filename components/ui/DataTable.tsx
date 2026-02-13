@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
 import { ChevronUp, ChevronDown, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useMemo } from 'react'
 
 export interface Column<T> {
   key: keyof T | string
@@ -32,7 +32,7 @@ export function DataTable<T extends Record<string, any>>({
   const [perPage, setPerPage] = useState(pageSize)
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return data
+    if (!search.trim()) {return data}
     const q = search.toLowerCase()
     return data.filter((row) =>
       columns.some((col) => {
@@ -43,7 +43,7 @@ export function DataTable<T extends Record<string, any>>({
   }, [data, search, columns])
 
   const sorted = useMemo(() => {
-    if (!sortKey) return filtered
+    if (!sortKey) {return filtered}
     return [...filtered].sort((a, b) => {
       const aVal = a[sortKey] ?? ''
       const bVal = b[sortKey] ?? ''

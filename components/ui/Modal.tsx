@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -72,7 +72,7 @@ export function Modal({
   // Focus trap handler
   useEffect(() => {
     const handleTabKey = (event: KeyboardEvent) => {
-      if (!isOpen || event.key !== 'Tab' || !modalRef.current) return;
+      if (!isOpen || event.key !== 'Tab' || !modalRef.current) {return;}
 
       const focusableElements = modalRef.current.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -106,7 +106,7 @@ export function Modal({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {return null;}
 
   return (
     <div

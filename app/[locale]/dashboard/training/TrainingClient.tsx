@@ -113,7 +113,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
       setWorkerStatuses(workerStatusData);
       setWorkers(workersData);
     } catch (err) {
-      setError(err instanceof Error ? err.message + ' | ' + err.stack : JSON.stringify(err));
+      setError(err instanceof Error ? `${err.message  } | ${  err.stack}` : JSON.stringify(err));
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
   // ACTIONS
   // ============================================================
   const handleAssign = async () => {
-    if (!assignModuleId || assignWorkerIds.length === 0) return;
+    if (!assignModuleId || assignWorkerIds.length === 0) {return;}
 
     try {
       await assignTraining({
@@ -150,7 +150,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
   };
 
   const handleRecordSession = async () => {
-    if (!recordModuleId || !recordWorkerId || !recordInstructor) return;
+    if (!recordModuleId || !recordWorkerId || !recordInstructor) {return;}
 
     try {
       const score = recordTestTotal > 0
@@ -212,15 +212,15 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
   // HELPERS
   // ============================================================
   const getDaysColor = (days: number | null) => {
-    if (days === null) return 'text-slate-500';
-    if (days < 0) return 'text-red-400';
-    if (days < 7) return 'text-amber-400';
+    if (days === null) {return 'text-slate-500';}
+    if (days < 0) {return 'text-red-400';}
+    if (days < 7) {return 'text-amber-400';}
     return 'text-slate-400';
   };
 
   const getScoreColor = (score: number | null) => {
-    if (score === null) return 'text-slate-500';
-    if (score >= 70) return 'text-emerald-400';
+    if (score === null) {return 'text-slate-500';}
+    if (score >= 70) {return 'text-emerald-400';}
     return 'text-red-400';
   };
 

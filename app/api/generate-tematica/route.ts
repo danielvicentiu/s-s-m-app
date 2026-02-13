@@ -1,9 +1,8 @@
 // app/api/generate-tematica/route.ts
 // API Route: Generate Tematică de Instruire SSM PDF
 
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase/server'
-
 const { generateTematicaPDF } = require('@/lib/generate-tematica')
 
 export async function POST(request: NextRequest) {

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { createSupabaseBrowser } from '@/lib/supabase/client';
 import { useRouter } from '@/i18n/navigation';
+import { createSupabaseBrowser } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -45,7 +45,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setError('Eroare demo login: ' + error.message);
+      setError(`Eroare demo login: ${  error.message}`);
       setLoading(false);
     } else {
       router.push('/dashboard');

@@ -18,7 +18,7 @@ export async function GET() {
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
 
-    if (error) throw error
+    if (error) {throw error}
 
     return NextResponse.json({ taxonomy: data || [] })
   } catch (err: any) {

@@ -12,7 +12,7 @@
 //   3. Returnează raport complet per act
 
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -113,7 +113,7 @@ TEXTUL ACTULUI NORMATIV (${actType}):
 // ==========================================
 
 function splitTextIntoChunks(text: string, maxChars: number = 50000): string[] {
-  if (text.length <= maxChars) return [text]
+  if (text.length <= maxChars) {return [text]}
 
   const chunks: string[] = []
   let remaining = text
@@ -199,9 +199,9 @@ async function callClaudeAPI(systemPrompt: string, userMessage: string): Promise
     () => JSON.parse(cleaned.replace(/,\s*([}\]])/g, '$1')),
     () => {
       const fixed = cleaned.replace(/[\x00-\x1F\x7F]/g, (match) => {
-        if (match === '\n') return '\\n'
-        if (match === '\r') return '\\r'
-        if (match === '\t') return '\\t'
+        if (match === '\n') {return '\\n'}
+        if (match === '\r') {return '\\r'}
+        if (match === '\t') {return '\\t'}
         return ''
       })
       return JSON.parse(fixed)
@@ -210,9 +210,9 @@ async function callClaudeAPI(systemPrompt: string, userMessage: string): Promise
       const fixed = cleaned
         .replace(/,\s*([}\]])/g, '$1')
         .replace(/[\x00-\x1F\x7F]/g, (match) => {
-          if (match === '\n') return '\\n'
-          if (match === '\r') return '\\r'
-          if (match === '\t') return '\\t'
+          if (match === '\n') {return '\\n'}
+          if (match === '\r') {return '\\r'}
+          if (match === '\t') {return '\\t'}
           return ''
         })
       return JSON.parse(fixed)
@@ -237,7 +237,7 @@ async function callClaudeAPI(systemPrompt: string, userMessage: string): Promise
 // ==========================================
 
 function mergeExtractions(extractions: any[]): any {
-  if (extractions.length === 1) return extractions[0]
+  if (extractions.length === 1) {return extractions[0]}
 
   const merged = {
     summary: extractions[0].summary,
@@ -265,7 +265,7 @@ function mergeExtractions(extractions: any[]): any {
     merged.cross_references.push(...(ext.cross_references || []))
     merged.key_definitions.push(...(ext.key_definitions || []))
 
-    if (ext.metadata?.has_penalties) merged.metadata.has_penalties = true
+    if (ext.metadata?.has_penalties) {merged.metadata.has_penalties = true}
     if (ext.metadata?.penalty_min_lei != null) {
       merged.metadata.penalty_min_lei = merged.metadata.penalty_min_lei == null
         ? ext.metadata.penalty_min_lei
@@ -281,7 +281,7 @@ function mergeExtractions(extractions: any[]): any {
   const crSet = new Set<string>()
   merged.cross_references = merged.cross_references.filter((cr: any) => {
     const key = `${cr.target_act_type}-${cr.target_act_number}-${cr.target_act_year}-${cr.reference_type}`
-    if (crSet.has(key)) return false
+    if (crSet.has(key)) {return false}
     crSet.add(key)
     return true
   })
@@ -317,7 +317,7 @@ async function saveExtractionToDB(actId: string, extraction: any): Promise<strin
     })
     .eq('id', actId)
 
-  if (actError) errors.push(`legal_acts update: ${actError.message}`)
+  if (actError) {errors.push(`legal_acts update: ${actError.message}`)}
 
   if (extraction.obligations.length > 0) {
     const obligationsRows = extraction.obligations.map((o: any, idx: number) => ({
@@ -336,7 +336,7 @@ async function saveExtractionToDB(actId: string, extraction: any): Promise<strin
 
     await supabaseAdmin.from('legal_obligations').delete().eq('legal_act_id', actId)
     const { error: oblError } = await supabaseAdmin.from('legal_obligations').insert(obligationsRows)
-    if (oblError) errors.push(`legal_obligations: ${oblError.message}`)
+    if (oblError) {errors.push(`legal_obligations: ${oblError.message}`)}
   }
 
   if (extraction.penalties.length > 0) {
@@ -355,7 +355,7 @@ async function saveExtractionToDB(actId: string, extraction: any): Promise<strin
 
     await supabaseAdmin.from('legal_penalties').delete().eq('legal_act_id', actId)
     const { error: penError } = await supabaseAdmin.from('legal_penalties').insert(penaltyRows)
-    if (penError) errors.push(`legal_penalties: ${penError.message}`)
+    if (penError) {errors.push(`legal_penalties: ${penError.message}`)}
   }
 
   if (extraction.cross_references.length > 0) {
@@ -373,7 +373,7 @@ async function saveExtractionToDB(actId: string, extraction: any): Promise<strin
 
     await supabaseAdmin.from('legal_cross_references').delete().eq('act_a_id', actId)
     const { error: crError } = await supabaseAdmin.from('legal_cross_references').insert(crRows)
-    if (crError) errors.push(`legal_cross_references: ${crError.message}`)
+    if (crError) {errors.push(`legal_cross_references: ${crError.message}`)}
   }
 
   return errors
@@ -401,7 +401,7 @@ function getArticlesFromObligations(obligations: any[]): { total: number; articl
   for (const o of obligations) {
     if (o.article_ref) {
       const match = o.article_ref.match(/Art\.\s*(\d+)/i)
-      if (match) found.add(`Art. ${match[1]}`)
+      if (match) {found.add(`Art. ${match[1]}`)}
     }
   }
   return {
@@ -518,11 +518,11 @@ async function validateAct(actId: string): Promise<ValidationResult> {
   const penalties = extraction.penalties || []
   const penaltyIssues: string[] = []
   for (const p of penalties) {
-    if (p.min_amount_lei != null && p.min_amount_lei < 0) penaltyIssues.push(`${p.article_ref}: min negativ`)
-    if (p.max_amount_lei != null && p.max_amount_lei < 0) penaltyIssues.push(`${p.article_ref}: max negativ`)
-    if (p.min_amount_lei != null && p.max_amount_lei != null && p.min_amount_lei > p.max_amount_lei) penaltyIssues.push(`${p.article_ref}: min > max`)
-    if (p.max_amount_lei != null && p.max_amount_lei > 1_000_000) penaltyIssues.push(`${p.article_ref}: sumă suspect mare`)
-    if (p.min_amount_lei != null && p.min_amount_lei > 0 && p.min_amount_lei < 100) penaltyIssues.push(`${p.article_ref}: sumă suspect mică`)
+    if (p.min_amount_lei != null && p.min_amount_lei < 0) {penaltyIssues.push(`${p.article_ref}: min negativ`)}
+    if (p.max_amount_lei != null && p.max_amount_lei < 0) {penaltyIssues.push(`${p.article_ref}: max negativ`)}
+    if (p.min_amount_lei != null && p.max_amount_lei != null && p.min_amount_lei > p.max_amount_lei) {penaltyIssues.push(`${p.article_ref}: min > max`)}
+    if (p.max_amount_lei != null && p.max_amount_lei > 1_000_000) {penaltyIssues.push(`${p.article_ref}: sumă suspect mare`)}
+    if (p.min_amount_lei != null && p.min_amount_lei > 0 && p.min_amount_lei < 100) {penaltyIssues.push(`${p.article_ref}: sumă suspect mică`)}
   }
   const penStatus = penaltyIssues.length === 0 ? 'ok' : penaltyIssues.length <= 2 ? 'warning' : 'error'
 
@@ -547,7 +547,7 @@ async function validateAct(actId: string): Promise<ValidationResult> {
     }
     for (const cr of crossRefs) {
       const key = `${cr.target_act_type}-${cr.target_act_number}-${cr.target_act_year}`
-      if (actMap.has(key)) refsInDB++
+      if (actMap.has(key)) {refsInDB++}
       else {
         refsMissing++
         missingRefs.push({ target: `${cr.target_act_type} ${cr.target_act_number}/${cr.target_act_year}`, source_article: cr.source_article, type: cr.reference_type })
@@ -583,10 +583,10 @@ async function validateAct(actId: string): Promise<ValidationResult> {
   let overallStatus: 'ok' | 'warning' | 'error' = 'ok'
   for (const check of checks) {
     const weight = weights[check.name] || 10
-    if (check.status === 'ok') score += weight
-    else if (check.status === 'warning') score += weight * 0.5
-    if (check.status === 'error') overallStatus = 'error'
-    else if (check.status === 'warning' && overallStatus !== 'error') overallStatus = 'warning'
+    if (check.status === 'ok') {score += weight}
+    else if (check.status === 'warning') {score += weight * 0.5}
+    if (check.status === 'error') {overallStatus = 'error'}
+    else if (check.status === 'warning' && overallStatus !== 'error') {overallStatus = 'warning'}
   }
   score = Math.round(score)
 

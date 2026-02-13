@@ -5,15 +5,15 @@
 
 'use client'
 
+import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { useHasPermission } from '@/hooks/usePermission'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
-import { StatusBadge } from '@/components/ui/StatusBadge'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
 // RBAC: Import hook-uri client-side pentru verificare permisiuni
-import { useHasPermission } from '@/hooks/usePermission'
 
 interface Props {
   user: { email: string }
@@ -88,7 +88,7 @@ const EQUIPMENT_MODELS: Record<string, { value: string; label: string; mass: num
 function getModelInfo(modelValue: string) {
   for (const models of Object.values(EQUIPMENT_MODELS)) {
     const found = models.find(m => m.value === modelValue)
-    if (found) return found
+    if (found) {return found}
   }
   return null
 }
@@ -96,14 +96,14 @@ function getModelInfo(modelValue: string) {
 function fmtEquipType(t: string, equipmentTypes: any[]): string {
   // Încearcă să găsească în equipment_types din DB (prin ID sau name)
   const found = equipmentTypes.find(et => et.id === t || et.name.toLowerCase() === t.toLowerCase())
-  if (found) return found.name
+  if (found) {return found.name}
 
   // Fallback pe lista hardcodată
   return FALLBACK_EQUIPMENT_TYPES.find(et => et.value === t)?.label || t
 }
 
 function fmtDate(d: string | null): string {
-  if (!d) return '—'
+  if (!d) {return '—'}
   return new Date(d).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
@@ -111,8 +111,8 @@ function getStatus(expiryDate: string): { status: 'expired' | 'expiring' | 'vali
   const now = new Date()
   const expiry = new Date(expiryDate)
   const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-  if (diffDays <= 0) return { status: 'expired', days: Math.abs(diffDays) }
-  if (diffDays <= 30) return { status: 'expiring', days: diffDays }
+  if (diffDays <= 0) {return { status: 'expired', days: Math.abs(diffDays) }}
+  if (diffDays <= 30) {return { status: 'expiring', days: diffDays }}
   return { status: 'valid', days: diffDays }
 }
 
@@ -170,11 +170,11 @@ export default function EquipmentClient({ user, organizations, equipment: initia
   // Filter + Sort + Search
   const filtered = equipment
     .filter((e: any) => {
-      if (filterOrg !== 'all' && e.organization_id !== filterOrg) return false
-      if (filterType !== 'all' && e.equipment_type !== filterType) return false
+      if (filterOrg !== 'all' && e.organization_id !== filterOrg) {return false}
+      if (filterType !== 'all' && e.equipment_type !== filterType) {return false}
       if (filterStatus !== 'all') {
         const { status } = getStatus(e.expiry_date)
-        if (filterStatus !== status) return false
+        if (filterStatus !== status) {return false}
       }
       if (searchTerm) {
         const term = searchTerm.toLowerCase()
@@ -191,7 +191,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
     .sort((a: any, b: any) => {
       const aVal = a[sortField] || ''
       const bVal = b[sortField] || ''
-      if (sortDir === 'asc') return aVal > bVal ? 1 : -1
+      if (sortDir === 'asc') {return aVal > bVal ? 1 : -1}
       return aVal < bVal ? 1 : -1
     })
 
@@ -208,7 +208,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
   }
 
   function SortIcon({ field }: { field: string }) {
-    if (sortField !== field) return null
+    if (sortField !== field) {return null}
     return sortDir === 'asc' ? <ChevronUp className="w-3 h-3 inline ml-1" /> : <ChevronDown className="w-3 h-3 inline ml-1" />
   }
 
@@ -252,12 +252,12 @@ export default function EquipmentClient({ user, organizations, equipment: initia
         .from('safety_equipment')
         .update(payload)
         .eq('id', editingId)
-      if (error) { alert('Eroare: ' + error.message); setLoading(false); return }
+      if (error) { alert(`Eroare: ${  error.message}`); setLoading(false); return }
     } else {
       const { error } = await supabase
         .from('safety_equipment')
         .insert(payload)
-      if (error) { alert('Eroare: ' + error.message); setLoading(false); return }
+      if (error) { alert(`Eroare: ${  error.message}`); setLoading(false); return }
     }
 
     // Refresh
@@ -271,7 +271,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
   }
 
   async function handleDelete() {
-    if (!deleteId) return
+    if (!deleteId) {return}
     setLoading(true)
     const supabase = createClient()
     await supabase.from('safety_equipment').delete().eq('id', deleteId)
@@ -549,7 +549,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                   {/* Info badges pentru modelul selectat */}
                   {form.model && (() => {
                     const info = getModelInfo(form.model)
-                    if (!info) return null
+                    if (!info) {return null}
                     return (
                       <div className="mt-2 flex flex-wrap gap-1.5">
                         {info.classes.split(',').map((cls: string) => (
@@ -651,7 +651,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
 
       {/* Confirm Delete */}
       <ConfirmDialog
-        isOpen={!!deleteId}
+        isOpen={Boolean(deleteId)}
         title="Șterge echipamentul?"
         message="Echipamentul va fi șters permanent. Această acțiune nu poate fi anulată."
         confirmLabel="Șterge"

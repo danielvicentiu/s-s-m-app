@@ -4,11 +4,11 @@
 
 'use client'
 
+import { type User } from '@supabase/supabase-js'
+import { ArrowLeft, Upload, Save, Camera, Bell, Globe, Clock, Lock, Mail, Phone, User as UserIcon } from 'lucide-react'
+import Link from 'next/link'
 import { useState, useRef } from 'react'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
-import { User } from '@supabase/supabase-js'
-import Link from 'next/link'
-import { ArrowLeft, Upload, Save, Camera, Bell, Globe, Clock, Lock, Mail, Phone, User as UserIcon } from 'lucide-react'
 
 interface Props {
   user: User
@@ -43,7 +43,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
   // Avatar upload handler
   async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
-    if (!file) return
+    if (!file) {return}
 
     // Validare tip fișier
     if (!file.type.startsWith('image/')) {
@@ -70,7 +70,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         .from('avatars')
         .upload(filePath, file, { upsert: true })
 
-      if (uploadError) throw uploadError
+      if (uploadError) {throw uploadError}
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
@@ -83,13 +83,13 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         .update({ avatar_url: publicUrl })
         .eq('id', user.id)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       setAvatarUrl(publicUrl)
       setMessage({ type: 'success', text: 'Avatar actualizat cu succes!' })
     } catch (error: any) {
       console.error('Error uploading avatar:', error)
-      setMessage({ type: 'error', text: 'Eroare la încărcare avatar: ' + error.message })
+      setMessage({ type: 'error', text: `Eroare la încărcare avatar: ${  error.message}` })
     } finally {
       setUploading(false)
     }
@@ -106,11 +106,11 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         .from('profiles')
         .update({
           full_name: fullName,
-          phone: phone
+          phone
         })
         .eq('id', user.id)
 
-      if (profileError) throw profileError
+      if (profileError) {throw profileError}
 
       // Update preferences in user_preferences table
       const prefsToSave = [
@@ -138,7 +138,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
       setTimeout(() => window.location.reload(), 1500)
     } catch (error: any) {
       console.error('Error saving profile:', error)
-      setMessage({ type: 'error', text: 'Eroare la salvare: ' + error.message })
+      setMessage({ type: 'error', text: `Eroare la salvare: ${  error.message}` })
     } finally {
       setSaving(false)
     }
@@ -164,7 +164,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         password: newPassword
       })
 
-      if (error) throw error
+      if (error) {throw error}
 
       setMessage({ type: 'success', text: 'Parola a fost schimbată cu succes!' })
       setCurrentPassword('')
@@ -172,7 +172,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
       setConfirmPassword('')
     } catch (error: any) {
       console.error('Error changing password:', error)
-      setMessage({ type: 'error', text: 'Eroare la schimbare parolă: ' + error.message })
+      setMessage({ type: 'error', text: `Eroare la schimbare parolă: ${  error.message}` })
     } finally {
       setChangingPassword(false)
     }

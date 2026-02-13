@@ -1,7 +1,7 @@
 'use client'
 
-import { CountryCode, COUNTRY_FLAGS, COUNTRY_NAMES } from '@/lib/types'
 import { Globe } from 'lucide-react'
+import { type CountryCode, COUNTRY_FLAGS, COUNTRY_NAMES } from '@/lib/types'
 
 interface Props {
   value: CountryCode | 'ALL'

@@ -27,7 +27,7 @@ export async function getTrainingModules(): Promise<TrainingModule[]> {
     .eq('is_active', true)
     .order('code');
 
-  if (error) throw error;
+  if (error) {throw error;}
   return data || [];
 }
 
@@ -39,7 +39,7 @@ export async function getModuleById(moduleId: string): Promise<TrainingModule | 
     .eq('id', moduleId)
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return data;
 }
 
@@ -73,7 +73,7 @@ export async function getTrainingDashboard(
 
   const { data, error } = await query.order('due_date', { ascending: true });
 
-  if (error) throw error;
+  if (error) {throw error;}
   return data || [];
 }
 
@@ -84,7 +84,7 @@ export async function getTrainingStats(organizationId: string): Promise<Training
     .select('status, training_sessions(test_score)')
     .eq('organization_id', organizationId);
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   const assignments = data || [];
   const total = assignments.length;
@@ -135,7 +135,7 @@ export async function getWorkerStatuses(organizationId: string): Promise<WorkerT
     `)
     .eq('organization_id', organizationId);
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Group by worker
   const workerMap = new Map<string, any>();
@@ -160,7 +160,7 @@ export async function getWorkerStatuses(organizationId: string): Promise<WorkerT
         w.last_training_date = row.completed_at;
       }
     }
-    if (row.status === 'overdue') w.overdue++;
+    if (row.status === 'overdue') {w.overdue++;}
     if (row.due_date && row.status !== 'completed') {
       if (!w.next_due || row.due_date < w.next_due) {
         w.next_due = row.due_date;
@@ -196,7 +196,7 @@ export async function assignTraining(payload: AssignTrainingPayload) {
     .insert(rows)
     .select();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return data;
 }
 
@@ -213,7 +213,7 @@ export async function updateAssignmentStatus(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return data;
 }
 
@@ -230,9 +230,9 @@ export async function assignToAllWorkers(
     .eq('organization_id', organizationId)
     .eq('role', 'worker');
 
-  if (membersError) throw membersError;
+  if (membersError) {throw membersError;}
 
-  if (!members || members.length === 0) return [];
+  if (!members || members.length === 0) {return [];}
 
   return assignTraining({
     organization_id: organizationId,
@@ -269,7 +269,7 @@ export async function recordTrainingSession(payload: RecordSessionPayload) {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // 2. Find and update the matching assignment
   const { data: assignment } = await supabase
@@ -311,7 +311,7 @@ export async function getOrganizationWorkers(organizationId: string) {
     `)
     .eq('organization_id', organizationId);
 
-  if (error) throw error;
+  if (error) {throw error;}
   return (data || []).map((m: any) => ({
     id: m.user_id,
     full_name: m.profiles?.full_name || 'Necunoscut',
@@ -327,6 +327,6 @@ export async function getOrganizationWorkers(organizationId: string) {
 /** Check and update overdue assignments */
 export async function checkOverdueAssignments() {
   const { data, error } = await supabase.rpc('check_overdue_assignments');
-  if (error) throw error;
+  if (error) {throw error;}
   return data;
 }

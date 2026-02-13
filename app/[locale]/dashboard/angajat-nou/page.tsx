@@ -1,9 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { createSupabaseBrowser } from '@/lib/supabase/client'
-import { useRouter } from '@/i18n/navigation'
 import { ArrowLeft, UserPlus, CheckCircle, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import { useRouter } from '@/i18n/navigation'
+import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 const supabase = createSupabaseBrowser()
 
@@ -120,8 +120,8 @@ export default function AngajatNou() {
         .select('id, name, cui')
         .order('name')
 
-      if (data) setOrganizations(data)
-      if (error) console.error('Error fetching organizations:', error)
+      if (data) {setOrganizations(data)}
+      if (error) {console.error('Error fetching organizations:', error)}
     }
     getOrganizations()
   }, [])
@@ -171,7 +171,7 @@ export default function AngajatNou() {
         },
       ])
 
-      if (insertError) throw insertError
+      if (insertError) {throw insertError}
 
       setSuccess(true)
       setFormData({

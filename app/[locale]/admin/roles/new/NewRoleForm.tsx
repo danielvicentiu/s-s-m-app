@@ -3,11 +3,11 @@
 
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createSupabaseBrowser } from '@/lib/supabase/client'
-import Link from 'next/link'
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 const COUNTRIES = ['RO', 'BG', 'HU', 'DE', 'PL']
 
@@ -77,7 +77,7 @@ export default function NewRoleForm() {
         .select()
         .single()
 
-      if (insertError) throw insertError
+      if (insertError) {throw insertError}
 
       // Redirect la editare pentru a seta permisiuni
       router.push(`/admin/roles/${newRole.id}`)

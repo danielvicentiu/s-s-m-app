@@ -6,9 +6,9 @@
 // Poate fi apelat manual sau prin cron job
 // ============================================================
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServer } from '@/lib/supabase/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { syncEmployees } from '@/lib/reges/sync';
+import { createSupabaseServer } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {

@@ -3,8 +3,8 @@
 // Acces: consultant_ssm, firma_admin, super_admin
 
 import { redirect } from 'next/navigation'
-import { createSupabaseServer } from '@/lib/supabase/server'
 import { hasRole, getMyOrgIds } from '@/lib/rbac'
+import { createSupabaseServer } from '@/lib/supabase/server'
 import DocumentGeneratorClient from './DocumentGeneratorClient'
 
 export default async function DocumentGeneratePage() {

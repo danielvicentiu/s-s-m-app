@@ -6,8 +6,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createSupabaseBrowser } from '@/lib/supabase/client'
 import type { UserRole, Resource, Action, RoleKey } from '@/lib/rbac'
+import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 // ── 1. useMyRoles() — fetch roluri user curent cu fallback pe memberships ──
 export function useMyRoles() {
@@ -82,7 +82,7 @@ export function useMyRoles() {
           .eq('user_id', user.id)
           .eq('is_active', true)
 
-        if (membershipsError) throw membershipsError
+        if (membershipsError) {throw membershipsError}
 
         if (memberships && memberships.length > 0) {
           const fallbackRoles = memberships.map(m => ({
@@ -133,7 +133,7 @@ export function useMyRoles() {
 export function useHasRole(roleKey: RoleKey): boolean {
   const { roles, isLoading } = useMyRoles()
 
-  if (isLoading) return false
+  if (isLoading) {return false}
   return roles.some(r => r.role_key === roleKey)
 }
 
@@ -206,7 +206,7 @@ export function useHasPermission(resource: Resource, action: Action): boolean {
   }, [roles, isLoading, resource, action])
 
   // Returnează false în timpul loading pentru siguranță
-  if (permissionsLoading) return false
+  if (permissionsLoading) {return false}
   return hasPermission
 }
 
@@ -219,17 +219,17 @@ export function useFieldRestrictions(resource: Resource): Record<string, string>
     let mounted = true
 
     async function fetchRestrictions() {
-      if (isLoading) return
+      if (isLoading) {return}
 
       try {
         // Super admin: fără restricții
         if (roles.some(r => r.role_key === 'super_admin')) {
-          if (mounted) setRestrictions({})
+          if (mounted) {setRestrictions({})}
           return
         }
 
         if (roles.length === 0) {
-          if (mounted) setRestrictions({})
+          if (mounted) {setRestrictions({})}
           return
         }
 
@@ -244,7 +244,7 @@ export function useFieldRestrictions(resource: Resource): Record<string, string>
           .in('roles.role_key', roleKeys)
 
         if (error || !data) {
-          if (mounted) setRestrictions({})
+          if (mounted) {setRestrictions({})}
           return
         }
 
@@ -261,9 +261,9 @@ export function useFieldRestrictions(resource: Resource): Record<string, string>
           }
         })
 
-        if (mounted) setRestrictions(merged)
+        if (mounted) {setRestrictions(merged)}
       } catch (err) {
-        if (mounted) setRestrictions({})
+        if (mounted) {setRestrictions({})}
       }
     }
 
@@ -306,7 +306,7 @@ export function useMyOrgIds(): string[] {
     let mounted = true
 
     async function fetchOrgIds() {
-      if (isLoading) return
+      if (isLoading) {return}
 
       try {
         // Super admin: toate organizațiile
@@ -322,9 +322,9 @@ export function useMyOrgIds(): string[] {
 
         // Alte roluri: doar company_id-urile din roluri
         const companyIds = [...new Set(roles.map(r => r.company_id).filter(Boolean) as string[])]
-        if (mounted) setOrgIds(companyIds)
+        if (mounted) {setOrgIds(companyIds)}
       } catch (err) {
-        if (mounted) setOrgIds([])
+        if (mounted) {setOrgIds([])}
       }
     }
 
@@ -342,12 +342,12 @@ export function useMyOrgIds(): string[] {
 export function usePrimaryRole(): RoleKey | null {
   const { roles, isLoading } = useMyRoles()
 
-  if (isLoading || roles.length === 0) return null
+  if (isLoading || roles.length === 0) {return null}
 
   // Prioritate: super_admin > consultant > firma_admin > angajat > restul
   const priority: RoleKey[] = ['super_admin', 'consultant_ssm', 'firma_admin', 'angajat']
   for (const p of priority) {
-    if (roles.some(r => r.role_key === p)) return p
+    if (roles.some(r => r.role_key === p)) {return p}
   }
 
   return roles[0].role_key

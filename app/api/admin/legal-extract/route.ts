@@ -5,7 +5,7 @@
 // ENV: ANTHROPIC_API_KEY în .env.local
 
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -105,7 +105,7 @@ TEXTUL ACTULUI NORMATIV (${actType}):
 // ==========================================
 
 function splitTextIntoChunks(text: string, maxChars: number = 50000): string[] {
-  if (text.length <= maxChars) return [text]
+  if (text.length <= maxChars) {return [text]}
   
   const chunks: string[] = []
   let remaining = text
@@ -203,9 +203,9 @@ async function callClaudeAPI(systemPrompt: string, userMessage: string): Promise
     // 3. Fix unescaped control characters in strings
     () => {
       const fixed = cleaned.replace(/[\x00-\x1F\x7F]/g, (match) => {
-        if (match === '\n') return '\\n'
-        if (match === '\r') return '\\r'
-        if (match === '\t') return '\\t'
+        if (match === '\n') {return '\\n'}
+        if (match === '\r') {return '\\r'}
+        if (match === '\t') {return '\\t'}
         return ''
       })
       return JSON.parse(fixed)
@@ -215,9 +215,9 @@ async function callClaudeAPI(systemPrompt: string, userMessage: string): Promise
       const fixed = cleaned
         .replace(/,\s*([}\]])/g, '$1')
         .replace(/[\x00-\x1F\x7F]/g, (match) => {
-          if (match === '\n') return '\\n'
-          if (match === '\r') return '\\r'
-          if (match === '\t') return '\\t'
+          if (match === '\n') {return '\\n'}
+          if (match === '\r') {return '\\r'}
+          if (match === '\t') {return '\\t'}
           return ''
         })
       return JSON.parse(fixed)
@@ -247,7 +247,7 @@ async function callClaudeAPI(systemPrompt: string, userMessage: string): Promise
 // ==========================================
 
 function mergeExtractions(extractions: any[]): any {
-  if (extractions.length === 1) return extractions[0]
+  if (extractions.length === 1) {return extractions[0]}
   
   const merged = {
     summary: extractions[0].summary,
@@ -275,7 +275,7 @@ function mergeExtractions(extractions: any[]): any {
     merged.cross_references.push(...(ext.cross_references || []))
     merged.key_definitions.push(...(ext.key_definitions || []))
     
-    if (ext.metadata?.has_penalties) merged.metadata.has_penalties = true
+    if (ext.metadata?.has_penalties) {merged.metadata.has_penalties = true}
     if (ext.metadata?.penalty_min_lei != null) {
       merged.metadata.penalty_min_lei = merged.metadata.penalty_min_lei == null
         ? ext.metadata.penalty_min_lei
@@ -292,7 +292,7 @@ function mergeExtractions(extractions: any[]): any {
   const crSet = new Set<string>()
   merged.cross_references = merged.cross_references.filter((cr: any) => {
     const key = `${cr.target_act_type}-${cr.target_act_number}-${cr.target_act_year}-${cr.reference_type}`
-    if (crSet.has(key)) return false
+    if (crSet.has(key)) {return false}
     crSet.add(key)
     return true
   })
@@ -330,7 +330,7 @@ async function saveExtractionToDB(actId: string, extraction: any) {
     })
     .eq('id', actId)
 
-  if (actError) errors.push(`legal_acts update: ${actError.message}`)
+  if (actError) {errors.push(`legal_acts update: ${actError.message}`)}
 
   // 2. Insert obligații în legal_obligations (dacă tabela există)
   if (extraction.obligations.length > 0) {
@@ -358,7 +358,7 @@ async function saveExtractionToDB(actId: string, extraction: any) {
       .from('legal_obligations')
       .insert(obligationsRows)
 
-    if (oblError) errors.push(`legal_obligations: ${oblError.message}`)
+    if (oblError) {errors.push(`legal_obligations: ${oblError.message}`)}
   }
 
   // 3. Insert sancțiuni în legal_penalties (dacă tabela există)
@@ -385,7 +385,7 @@ async function saveExtractionToDB(actId: string, extraction: any) {
       .from('legal_penalties')
       .insert(penaltyRows)
 
-    if (penError) errors.push(`legal_penalties: ${penError.message}`)
+    if (penError) {errors.push(`legal_penalties: ${penError.message}`)}
   }
 
   // 4. Insert referințe în legal_cross_references (act_a_id = source, act_b_id = target)
@@ -411,7 +411,7 @@ async function saveExtractionToDB(actId: string, extraction: any) {
       .from('legal_cross_references')
       .insert(crRows)
 
-    if (crError) errors.push(`legal_cross_references: ${crError.message}`)
+    if (crError) {errors.push(`legal_cross_references: ${crError.message}`)}
   }
 
   return errors

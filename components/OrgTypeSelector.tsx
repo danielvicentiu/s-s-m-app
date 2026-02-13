@@ -34,7 +34,7 @@ export default function OrgTypeSelector({ selected, onChange }: Props) {
         value={selected}
         onChange={(e) => {
           const orgType = orgTypes.find((org) => org.id === e.target.value)
-          if (orgType) onChange(orgType)
+          if (orgType) {onChange(orgType)}
         }}
         className="w-full bg-[#1a2332] border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       >

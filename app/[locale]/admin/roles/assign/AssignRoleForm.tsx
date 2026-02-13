@@ -3,11 +3,11 @@
 
 'use client'
 
-import { useState } from 'react'
-import { createSupabaseBrowser } from '@/lib/supabase/client'
-import Link from 'next/link'
 import { ArrowLeft, UserPlus, Trash2, CheckCircle, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 interface Props {
   roles: any[]
@@ -67,7 +67,7 @@ export default function AssignRoleForm({ roles, organizations, profiles, assignm
         granted_at: new Date().toISOString(),
       })
 
-      if (insertError) throw insertError
+      if (insertError) {throw insertError}
 
       // Refresh assignments
       const { data: newAssignments } = await supabase
@@ -101,7 +101,7 @@ export default function AssignRoleForm({ roles, organizations, profiles, assignm
   }
 
   async function handleDelete() {
-    if (!deleteTarget) return
+    if (!deleteTarget) {return}
 
     setLoading(true)
     setError(null)
@@ -112,7 +112,7 @@ export default function AssignRoleForm({ roles, organizations, profiles, assignm
         .update({ is_active: false })
         .eq('id', deleteTarget)
 
-      if (deleteError) throw deleteError
+      if (deleteError) {throw deleteError}
 
       setAssignments(assignments.filter((a) => a.id !== deleteTarget))
       setDeleteTarget(null)
@@ -343,7 +343,7 @@ export default function AssignRoleForm({ roles, organizations, profiles, assignm
 
       {/* CONFIRM DELETE DIALOG */}
       <ConfirmDialog
-        isOpen={!!deleteTarget}
+        isOpen={Boolean(deleteTarget)}
         title="Revocă asignare?"
         message="Utilizatorul va pierde accesul conferit de acest rol. Poți reasigna rolul oricând."
         confirmLabel="Revocă"

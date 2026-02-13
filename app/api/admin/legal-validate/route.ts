@@ -12,7 +12,7 @@
 // 5. Metadata: total_articles_found vs nr real din text
 
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -71,7 +71,7 @@ function getArticlesFromObligations(obligations: any[]): { total: number; articl
     if (o.article_ref) {
       // Extrage doar "Art. X" din "Art. X alin. (Y) lit. z)"
       const match = o.article_ref.match(/Art\.\s*(\d+)/i)
-      if (match) found.add(`Art. ${match[1]}`)
+      if (match) {found.add(`Art. ${match[1]}`)}
     }
   }
   return {
@@ -343,12 +343,12 @@ async function validateAct(actId: string): Promise<ValidationResult> {
 
   for (const check of checks) {
     const weight = weights[check.name] || 10
-    if (check.status === 'ok') score += weight
-    else if (check.status === 'warning') score += weight * 0.5
+    if (check.status === 'ok') {score += weight}
+    else if (check.status === 'warning') {score += weight * 0.5}
     // error = 0 points
 
-    if (check.status === 'error') overallStatus = 'error'
-    else if (check.status === 'warning' && overallStatus !== 'error') overallStatus = 'warning'
+    if (check.status === 'error') {overallStatus = 'error'}
+    else if (check.status === 'warning' && overallStatus !== 'error') {overallStatus = 'warning'}
   }
 
   score = Math.round(score)

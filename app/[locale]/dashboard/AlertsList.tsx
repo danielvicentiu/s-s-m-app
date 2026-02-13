@@ -25,8 +25,8 @@ export default function AlertsList({ alerts }: { alerts: ActiveAlert[] }) {
   const [filter, setFilter] = useState<'all' | 'expired' | 'expiring'>('all')
 
   const filtered = alerts.filter((a) => {
-    if (filter === 'expired') return a.days_remaining <= 0
-    if (filter === 'expiring') return a.days_remaining > 0 && a.days_remaining <= 30
+    if (filter === 'expired') {return a.days_remaining <= 0}
+    if (filter === 'expiring') {return a.days_remaining > 0 && a.days_remaining <= 30}
     return true
   })
 

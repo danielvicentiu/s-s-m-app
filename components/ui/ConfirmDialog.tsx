@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
 import { AlertTriangle, Loader2 } from 'lucide-react'
+import { useEffect, useCallback } from 'react'
 
 interface ConfirmDialogProps {
   title: string
@@ -28,7 +28,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !loading) onCancel()
+      if (e.key === 'Escape' && !loading) {onCancel()}
     },
     [onCancel, loading]
   )
@@ -40,7 +40,7 @@ export function ConfirmDialog({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, handleKeyDown])
 
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

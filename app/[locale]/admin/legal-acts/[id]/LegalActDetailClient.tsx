@@ -1,8 +1,8 @@
 // app/[locale]/admin/legal-acts/[id]/LegalActDetailClient.tsx
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { useState, useEffect, useCallback } from 'react'
 
 // ============================================
 // TYPES
@@ -135,7 +135,7 @@ export default function LegalActDetailClient({
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/legal-acts/${actId}`)
-      if (!res.ok) throw new Error('Eroare la încărcarea actului')
+      if (!res.ok) {throw new Error('Eroare la încărcarea actului')}
       const json = await res.json()
       setData(json)
     } catch (err: any) {
@@ -163,7 +163,7 @@ export default function LegalActDetailClient({
           review_notes: notes || null,
         }),
       })
-      if (!res.ok) throw new Error('Eroare la actualizare')
+      if (!res.ok) {throw new Error('Eroare la actualizare')}
       await fetchData()
     } catch (err) {
       console.error(err)
@@ -183,7 +183,7 @@ export default function LegalActDetailClient({
           review_status: 'edited',
         }),
       })
-      if (!res.ok) throw new Error('Eroare la salvare')
+      if (!res.ok) {throw new Error('Eroare la salvare')}
       setEditingId(null)
       setEditForm({})
       await fetchData()
@@ -202,7 +202,7 @@ export default function LegalActDetailClient({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ review_status: action }),
       })
-      if (!res.ok) throw new Error('Eroare la actualizare')
+      if (!res.ok) {throw new Error('Eroare la actualizare')}
       await fetchData()
     } catch (err) {
       console.error(err)
@@ -212,7 +212,7 @@ export default function LegalActDetailClient({
   }
 
   const handleBulkAction = async (action: 'approved' | 'rejected', type: 'obligations' | 'penalties') => {
-    if (!data) return
+    if (!data) {return}
     const items = type === 'obligations' ? data.obligations : data.penalties
     const pending = items.filter(i => (i.review_status || 'pending') === 'pending')
     
@@ -582,7 +582,7 @@ export default function LegalActDetailClient({
                                      obl.obligation_type === 'employee' ? '👷 Angajat' :
                                      obl.obligation_type === 'both' ? '🏢👷 Ambii' :
                                      obl.obligation_type === 'authority' ? '🏛️ Autoritate' :
-                                     '📌 ' + obl.obligation_type}
+                                     `📌 ${  obl.obligation_type}`}
                                   </span>
                                   {obl.severity && (
                                     <span className={`px-2 py-0.5 rounded text-xs ${severityColors[obl.severity] || 'bg-gray-100 text-gray-600'}`}>

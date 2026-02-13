@@ -4,8 +4,8 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { getCountryFromLocale } from '@/lib/country-utils'
-import LandingClient from './LandingClient'
 import type { ObligationType } from '@/lib/types'
+import LandingClient from './LandingClient'
 
 interface PageProps {
   params: Promise<{ locale: string }>

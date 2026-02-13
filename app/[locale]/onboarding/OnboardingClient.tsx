@@ -1,9 +1,9 @@
 'use client'
 
+import { Check, ArrowRight, ArrowLeft, Building2, Users, Upload, CheckCircle, X } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
-import { Check, ArrowRight, ArrowLeft, Building2, Users, Upload, CheckCircle, X } from 'lucide-react'
 
 interface Props {
   user: { id: string; email: string }
@@ -104,7 +104,7 @@ export default function OnboardingClient({ user }: Props) {
         .select()
         .single()
 
-      if (orgError) throw orgError
+      if (orgError) {throw orgError}
 
       // 2. Create membership (user → organization)
       const { error: memberError } = await supabase.from('memberships').insert({
@@ -114,7 +114,7 @@ export default function OnboardingClient({ user }: Props) {
         is_active: true,
       })
 
-      if (memberError) throw memberError
+      if (memberError) {throw memberError}
 
       setOrgId(org.id)
       setStep(2)
@@ -148,7 +148,7 @@ export default function OnboardingClient({ user }: Props) {
 
       const { error: empError } = await supabase.from('employees').insert(employeesToInsert)
 
-      if (empError) throw empError
+      if (empError) {throw empError}
 
       setStep(3)
     } catch (error) {

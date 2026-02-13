@@ -3,17 +3,17 @@
 // Dashboard principal LOCKED — aceasta e pagina separată de management
 // 🆕 OP-LEGO Sprint 4.7: ModuleGate wrapping (modulul 'ssm' necesar)
 
-import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import MedicalClient from './MedicalClient'
 import ModuleGate from '@/components/ModuleGate'
+import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
+import MedicalClient from './MedicalClient'
 
 export default async function MedicalPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
-  if (!user) redirect('/login')
+  if (!user) {redirect('/login')}
 
   // Fetch medical examinations cu join pe organizations + employees
   const { data: medicalExams, error } = await supabase

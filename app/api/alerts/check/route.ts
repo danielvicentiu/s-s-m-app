@@ -6,8 +6,8 @@
 // REFACTORED: Citește din alert_categories (dinamic per țară)
 // ============================================================
 
-import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { getAllAlertCategories, calculateAlertUrgency } from '@/lib/dashboard-helpers';
 import type { AlertCategory } from '@/lib/types';
@@ -91,7 +91,7 @@ function generateEmailHtml(orgName: string, items: AlertItem[], alertCategories:
   const info = items.filter(i => i.urgency === 'info');
 
   const renderSection = (title: string, color: string, sectionItems: AlertItem[]) => {
-    if (sectionItems.length === 0) return '';
+    if (sectionItems.length === 0) {return '';}
     return `
       <div style="margin-bottom:20px;">
         <h3 style="color:${color};margin-bottom:10px;">${title} (${sectionItems.length})</h3>
@@ -181,7 +181,7 @@ export async function GET(request: Request) {
 
     // 2. Grupează alert categories per țară
     const categoriesByCountry = alertCategories.reduce((acc, cat) => {
-      if (!acc[cat.country_code]) acc[cat.country_code] = [];
+      if (!acc[cat.country_code]) {acc[cat.country_code] = [];}
       acc[cat.country_code].push(cat);
       return acc;
     }, {} as Record<string, AlertCategory[]>);
@@ -191,7 +191,7 @@ export async function GET(request: Request) {
       .from('organizations')
       .select('id, name, contact_email, country_code, preferred_channels');
 
-    if (orgsError) throw orgsError;
+    if (orgsError) {throw orgsError;}
     if (!orgs || orgs.length === 0) {
       return NextResponse.json({ message: 'Nicio organizație', sent: 0 });
     }
@@ -201,7 +201,7 @@ export async function GET(request: Request) {
     const results: any[] = [];
 
     for (const org of orgs) {
-      if (!org.contact_email) continue; // Skip dacă nu are email
+      if (!org.contact_email) {continue;} // Skip dacă nu are email
 
       // Determină țara organizației (fallback pe RO)
       const orgCountry = org.country_code || 'RO';
@@ -319,7 +319,7 @@ export async function GET(request: Request) {
         const { data: emailResult, error: emailError } = await resend.emails.send({
           from: 'Alerte SSM <alerte@s-s-m.ro>',
           to: [org.contact_email],
-          subject: subject,
+          subject,
           html: generateEmailHtml(org.name, uniqueItems, orgAlertCategories),
         });
 
@@ -339,7 +339,7 @@ export async function GET(request: Request) {
             status: 'sent',
             sent_at: new Date().toISOString(),
             metadata: {
-              subject: subject,
+              subject,
               items_count: uniqueItems.length,
               expired: uniqueItems.filter(i => i.urgency === 'expired').length,
               critical: uniqueItems.filter(i => i.urgency === 'critical').length,

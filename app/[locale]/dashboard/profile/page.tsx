@@ -2,8 +2,8 @@
 // Pagina profil utilizator — avatar, date personale, preferințe
 // Server component — fetch date profil
 
-import { createSupabaseServer } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { createSupabaseServer } from '@/lib/supabase/server'
 import ProfileClient from './ProfileClient'
 
 export default async function ProfilePage() {

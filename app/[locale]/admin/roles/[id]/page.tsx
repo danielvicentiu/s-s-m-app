@@ -3,8 +3,8 @@
 // Acces: DOAR super_admin
 
 import { redirect } from 'next/navigation'
-import { createSupabaseServer } from '@/lib/supabase/server'
 import { isSuperAdmin } from '@/lib/rbac'
+import { createSupabaseServer } from '@/lib/supabase/server'
 import EditRoleForm from './EditRoleForm'
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 export default async function EditRolePage({ params }: Props) {
   // GUARD: Verificare super_admin (server-side)
   const admin = await isSuperAdmin()
-  if (!admin) redirect('/unauthorized')
+  if (!admin) {redirect('/unauthorized')}
 
   const supabase = await createSupabaseServer()
 

@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
 import { X, Loader2 } from 'lucide-react'
+import { useEffect, useCallback } from 'react'
 
 interface FormModalProps {
   title: string
@@ -24,7 +24,7 @@ export function FormModal({
 }: FormModalProps) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !loading) onClose()
+      if (e.key === 'Escape' && !loading) {onClose()}
     },
     [onClose, loading]
   )
@@ -40,7 +40,7 @@ export function FormModal({
     }
   }, [isOpen, handleKeyDown])
 
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

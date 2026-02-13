@@ -6,9 +6,9 @@
 // IMPORTANT: Encryption TREBUIE server-side (nu client-side)
 // ============================================================
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServer } from '@/lib/supabase/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { encryptCredentials } from '@/lib/reges/encryption';
+import { createSupabaseServer } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {

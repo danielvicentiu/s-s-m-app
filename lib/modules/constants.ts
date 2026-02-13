@@ -108,11 +108,11 @@ export function getRequiredModule(pathname: string): ModuleKey | null {
   const cleanPath = pathname.replace(/^\/(ro|bg|hu|de|pl|en)/, '')
 
   // Verifică match exact
-  if (MODULE_ROUTES[cleanPath]) return MODULE_ROUTES[cleanPath]
+  if (MODULE_ROUTES[cleanPath]) {return MODULE_ROUTES[cleanPath]}
 
   // Verifică match prefix (ex: /dashboard/training/session/123 → ssm)
   for (const [route, moduleKey] of Object.entries(MODULE_ROUTES)) {
-    if (cleanPath.startsWith(route)) return moduleKey
+    if (cleanPath.startsWith(route)) {return moduleKey}
   }
 
   return null

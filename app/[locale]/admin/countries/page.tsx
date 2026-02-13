@@ -2,12 +2,12 @@
 // Admin UI: Overview țări configurate
 // Acces: super_admin și consultant_ssm
 
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { createSupabaseServer } from '@/lib/supabase/server'
-import { isSuperAdmin, hasRole } from '@/lib/rbac'
 import { Globe, FileText, Bell, Package } from 'lucide-react'
-import { COUNTRY_FLAGS, COUNTRY_NAMES, COUNTRY_CURRENCIES, CountryCode } from '@/lib/types'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { isSuperAdmin, hasRole } from '@/lib/rbac'
+import { createSupabaseServer } from '@/lib/supabase/server'
+import { COUNTRY_FLAGS, COUNTRY_NAMES, COUNTRY_CURRENCIES, type CountryCode } from '@/lib/types'
 
 const COUNTRIES: CountryCode[] = ['RO', 'BG', 'HU', 'DE', 'PL']
 
@@ -16,7 +16,7 @@ export default async function AdminCountriesPage() {
   const admin = await isSuperAdmin()
   const consultant = await hasRole('consultant_ssm')
 
-  if (!admin && !consultant) redirect('/unauthorized')
+  if (!admin && !consultant) {redirect('/unauthorized')}
 
   const supabase = await createSupabaseServer()
 
