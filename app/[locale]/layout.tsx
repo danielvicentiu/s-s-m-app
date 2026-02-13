@@ -5,6 +5,7 @@ import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import "./globals.css";
+import "../print.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

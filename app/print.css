@@ -1,0 +1,248 @@
+/* Print Styles for s-s-m.ro Platform */
+
+@media print {
+  /* Reset and Base Styles */
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Page Setup */
+  @page {
+    size: A4;
+    margin: 2cm 1.5cm;
+  }
+
+  html, body {
+    font-size: 12pt;
+    line-height: 1.5;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+  /* Hide Navigation and UI Elements */
+  nav,
+  aside,
+  header[role="banner"],
+  footer,
+  .sidebar,
+  .navbar,
+  .navigation,
+  .menu,
+  button,
+  .button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  .btn,
+  .action-button,
+  .print-hide,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Main Content Area */
+  main,
+  .main-content,
+  article,
+  .content {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 20pt;
+    font-weight: bold;
+    margin-bottom: 12pt;
+    page-break-after: avoid;
+  }
+
+  h2 {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-top: 12pt;
+    margin-bottom: 8pt;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 8pt;
+    margin-bottom: 6pt;
+    page-break-after: avoid;
+  }
+
+  h4, h5, h6 {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 6pt;
+    margin-bottom: 4pt;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin-bottom: 8pt;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Links */
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666 !important;
+  }
+
+  /* Don't show links for internal anchors or javascript */
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: auto;
+    margin-bottom: 12pt;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #000 !important;
+    padding: 6pt 8pt;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f0f0f0 !important;
+    font-weight: bold;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Lists */
+  ul, ol {
+    margin-bottom: 8pt;
+    padding-left: 20pt;
+  }
+
+  li {
+    margin-bottom: 4pt;
+  }
+
+  /* Images */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Cards and Sections */
+  .card,
+  section,
+  .section {
+    page-break-inside: avoid;
+    margin-bottom: 12pt;
+  }
+
+  /* Page Breaks */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+
+  /* Forms */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  textarea,
+  select {
+    border: 1px solid #000 !important;
+    padding: 2pt 4pt;
+  }
+
+  /* Status Badges */
+  .badge,
+  .status-badge {
+    border: 1px solid #000 !important;
+    padding: 2pt 4pt;
+    display: inline-block;
+  }
+
+  /* Alerts and Notifications */
+  .alert,
+  .notification {
+    border: 1px solid #000 !important;
+    padding: 8pt;
+    margin-bottom: 8pt;
+  }
+
+  /* Grid Layouts */
+  .grid {
+    display: block !important;
+  }
+
+  .grid > * {
+    width: 100% !important;
+    margin-bottom: 8pt;
+  }
+
+  /* Abbreviations */
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+    font-size: 10pt;
+  }
+
+  /* Code Blocks */
+  pre,
+  code {
+    border: 1px solid #000;
+    padding: 4pt;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10pt;
+    page-break-inside: avoid;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3pt solid #000;
+    padding-left: 8pt;
+    margin-left: 12pt;
+    font-style: italic;
+    page-break-inside: avoid;
+  }
+
+  /* HR */
+  hr {
+    border: none;
+    border-top: 1pt solid #000;
+    margin: 12pt 0;
+  }
+}
