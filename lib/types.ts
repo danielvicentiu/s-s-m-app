@@ -245,3 +245,107 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── INCIDENTE / NEAR-MISS ──
+
+export type IncidentStatus = 'nou' | 'in_investigare' | 'rezolvat' | 'respins'
+export type IncidentSeverity = 'minor' | 'moderat' | 'grav' | 'critic'
+
+export interface Incident {
+  id: string
+  organization_id: string
+  incident_date: string
+  location: string
+  description: string
+  victim_name: string | null
+  witness_name: string | null
+  severity: IncidentSeverity
+  status: IncidentStatus
+  reported_by: string
+  reported_at: string
+  investigation_notes: string | null
+  resolution_notes: string | null
+  resolved_by: string | null
+  resolved_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface IncidentTimeline {
+  id: string
+  incident_id: string
+  action_type: 'created' | 'status_changed' | 'investigation_note' | 'resolved'
+  action_by: string
+  notes: string | null
+  old_status: IncidentStatus | null
+  new_status: IncidentStatus | null
+  created_at: string
+}
+
+// ── INSPECȚII INTERNE SSM ──
+
+export type InspectionStatus = 'in_progress' | 'completed' | 'approved'
+export type CheckpointStatus = 'conform' | 'neconform' | 'neaplicabil'
+
+export interface SsmInspection {
+  id: string
+  organization_id: string
+  inspection_date: string
+  inspector_name: string
+  inspector_id: string | null
+  status: InspectionStatus
+  score: number | null
+  total_points: number
+  conformity_percentage: number | null
+  general_observations: string | null
+  approved_by: string | null
+  approved_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface InspectionCheckpoint {
+  id: string
+  inspection_id: string
+  checkpoint_number: number
+  category: string
+  description: string
+  status: CheckpointStatus
+  observations: string | null
+  created_at: string
+  updated_at: string
+}
+
+// Checkpoint-uri predefinite pentru inspecție SSM
+export const SSM_INSPECTION_CHECKPOINTS = [
+  { category: 'Documentație SSM', description: 'Fișa de evaluare a riscurilor actualizată și afișată' },
+  { category: 'Documentație SSM', description: 'Regulament intern de SSM aprobat și comunicat' },
+  { category: 'Documentație SSM', description: 'Plan de prevenire și protecție întocmit' },
+  { category: 'Documentație SSM', description: 'Registru de evidență a accidentelor de muncă' },
+  { category: 'Documentație SSM', description: 'Registru de evidență a îmbolnăvirilor profesionale' },
+  { category: 'Personal', description: 'Lucrătorii au avize medicale valide (medicina muncii)' },
+  { category: 'Personal', description: 'Fișe de aptitudine completate conform reglementărilor' },
+  { category: 'Personal', description: 'Instruire SSM la angajare documentată' },
+  { category: 'Personal', description: 'Instruire periodică SSM efectuată și consemnată' },
+  { category: 'Personal', description: 'Instruire la locul de muncă documentată' },
+  { category: 'Echipamente protecție', description: 'EIP-uri furnizate conform evaluării riscurilor' },
+  { category: 'Echipamente protecție', description: 'Proces verbal de predare-primire EIP semnat' },
+  { category: 'Echipamente protecție', description: 'EIP-uri în stare bună de funcționare' },
+  { category: 'Echipamente protecție', description: 'Depozitare corespunzătoare a EIP-urilor' },
+  { category: 'Prevenire incendiu', description: 'Stingătoare verificate și în termen' },
+  { category: 'Prevenire incendiu', description: 'Căi de evacuare libere și semnalizate' },
+  { category: 'Prevenire incendiu', description: 'Planuri de evacuare afișate' },
+  { category: 'Prevenire incendiu', description: 'Iluminat de siguranță funcțional' },
+  { category: 'Prevenire incendiu', description: 'Hidranți interiori verificați (dacă aplicabil)' },
+  { category: 'Mediu de lucru', description: 'Iluminat adecvat la locurile de muncă' },
+  { category: 'Mediu de lucru', description: 'Ventilație corespunzătoare' },
+  { category: 'Mediu de lucru', description: 'Temperatură în limite acceptabile' },
+  { category: 'Mediu de lucru', description: 'Nivel de zgomot sub limitele admise' },
+  { category: 'Mediu de lucru', description: 'Curățenie și ordine la locul de muncă' },
+  { category: 'Instalații și echipamente', description: 'Echipamente de lucru cu autorizații valide' },
+  { category: 'Instalații și echipamente', description: 'Verificări tehnice periodice efectuate' },
+  { category: 'Instalații și echipamente', description: 'Dispozitive de protecție funcționale' },
+  { category: 'Instalații și echipamente', description: 'Instrucțiuni de utilizare afișate' },
+  { category: 'Prim ajutor', description: 'Trusă de prim ajutor completă și accesibilă' },
+  { category: 'Prim ajutor', description: 'Personal instruit pentru acordarea primului ajutor' }
+]
