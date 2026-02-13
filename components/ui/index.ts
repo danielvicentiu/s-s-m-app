@@ -1,5 +1,5 @@
 export { DataTable } from './DataTable'
-export type { Column } from './DataTable'
+export type { DataTableColumn } from './DataTable'
 export { FormModal } from './FormModal'
 export { StatusBadge } from './StatusBadge'
 export { EmptyState } from './EmptyState'
