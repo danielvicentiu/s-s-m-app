@@ -245,3 +245,18 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── ALERTS: View v_active_alerts ──
+
+export interface Alert {
+  organization_id: string
+  alert_type: 'medical' | 'equipment'
+  severity: AlertSeverity
+  source_id: string
+  employee_name: string | null
+  examination_type: string
+  expiry_date: string
+  days_remaining: number
+  location_name: string | null
+  organization_name: string
+}
