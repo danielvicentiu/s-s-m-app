@@ -1,0 +1,495 @@
+{
+  "hero": {
+    "badge": "Platformă digitală SSM & PSI",
+    "title": "Conformitate SSM & PSI",
+    "titleHighlight": "100% automată",
+    "subtitle": "Gestionează medicina muncii, echipamentele PSI, alertele și rapoartele dintr-o singură platformă. Zero birocrație, zero amenzi ITM.",
+    "cta": {
+      "primary": "Începe acum →",
+      "secondary": "Vezi demo gratuit",
+      "pricing": "Vezi prețuri"
+    },
+    "stats": {
+      "companies": "100+",
+      "companiesLabel": "Organizații active",
+      "employees": "5,000+",
+      "employeesLabel": "Angajați monitorizați",
+      "alerts": "10,000+",
+      "alertsLabel": "Alerte trimise",
+      "uptime": "99.9%",
+      "uptimeLabel": "Disponibilitate platformă"
+    }
+  },
+  "features": {
+    "title": "Tot ce ai nevoie într-un singur loc",
+    "subtitle": "6 module integrate pentru conformitate completă SSM & PSI",
+    "description": "Platformă all-in-one pentru consultanți SSM și firmele lor. De la medicina muncii la echipamente PSI, totul automatizat.",
+    "modules": {
+      "medical": {
+        "title": "Medicina Muncii",
+        "description": "Tracking fișe medicale, alerte expirare automată, evidență completă per angajat cu status real-time.",
+        "features": [
+          "Evidență fișe medicale per angajat",
+          "Alerte automate 30/15/7 zile înainte de expirare",
+          "Istoric medical complet",
+          "Export rapoarte pentru ITM",
+          "Status real-time: valid, expirat, în aproape de expirare"
+        ],
+        "icon": "medical"
+      },
+      "equipment": {
+        "title": "Echipamente PSI",
+        "description": "Inventar stingătoare, hidranți, detectoare fum. Programare verificări, log-uri mentenanță, QR code tracking.",
+        "features": [
+          "Inventar complet: stingătoare, hidranți, detectoare fum",
+          "Programare verificări periodice automate",
+          "Log-uri mentenanță și interventii",
+          "QR code tracking pentru fiecare echipament",
+          "Alerte verificare ISU, ISCIR"
+        ],
+        "icon": "equipment"
+      },
+      "alerts": {
+        "title": "Alerte Automate",
+        "description": "Email zilnic cu expirări iminente (30/15/7 zile). Integrare Resend, notificări WhatsApp (coming soon).",
+        "features": [
+          "Email automat zilnic la 08:00",
+          "Notificări pentru medicina muncii, PSI, instruiri",
+          "Integrare Resend pentru livrare garantată",
+          "WhatsApp notifications (coming soon)",
+          "SMS alerts (coming soon)"
+        ],
+        "icon": "alerts"
+      },
+      "risk": {
+        "title": "Risc Financiar",
+        "description": "Calcul automat amenzi potențiale ITM/ISU/ISCIR. Breakdown per autoritate, estimare min-max în RON.",
+        "features": [
+          "Calcul automat amenzi ITM, ISU, ISCIR",
+          "Breakdown per autoritate și tipologie",
+          "Estimare min-max conform legislație",
+          "Dashboard risc financiar în timp real",
+          "Rapoarte conformitate pentru management"
+        ],
+        "icon": "risk"
+      },
+      "multiOrg": {
+        "title": "Multi-Organizație",
+        "description": "Gestionează 100+ firme dintr-un singur dashboard. Filtrare instant, preferințe salvate, arhitectură tenant.",
+        "features": [
+          "Dashboard unificat pentru toate organizațiile",
+          "Filtrare instant după organizație",
+          "Preferințe salvate per utilizator",
+          "Arhitectură multi-tenant securizată (RLS)",
+          "Onboarding simplificat pentru clienți noi"
+        ],
+        "icon": "multiOrg"
+      },
+      "reports": {
+        "title": "Rapoarte PDF",
+        "description": "Generare automată rapoarte ITM, hash SHA256 pentru imutabilitate, arhivare cloud, export 1-click.",
+        "features": [
+          "Generare automată rapoarte conformitate ITM",
+          "Hash SHA256 pentru imutabilitate și audit",
+          "Arhivare cloud automată",
+          "Export PDF 1-click",
+          "Template-uri personalizabile"
+        ],
+        "icon": "reports"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Preț transparent",
+    "subtitle": "Un singur plan, toate funcționalitățile",
+    "description": "Fără costuri ascunse. Fără setup fee. Anulezi oricând.",
+    "plan": {
+      "name": "PLAN PROFESIONAL",
+      "price": "990 LEI",
+      "priceNumeric": 990,
+      "currency": "RON",
+      "period": "/an",
+      "periodLabel": "per organizație",
+      "noSetupFee": "Fără setup fee. Anulezi oricând.",
+      "cta": "Începe trial gratuit 30 zile",
+      "ctaSecondary": "Contactează-ne pentru ofertă personalizată"
+    },
+    "features": {
+      "title": "Toate funcționalitățile incluse",
+      "list": [
+        "Medicina Muncii — tracking nelimitat",
+        "Echipamente PSI — inventar complet",
+        "Alerte automate email zilnic",
+        "Risc financiar — calcul amenzi ITM",
+        "Multi-organizație — firme nelimitate",
+        "Rapoarte PDF — generare automată",
+        "Suport tehnic prioritar",
+        "Backup automat zilnic",
+        "Actualizări gratuite",
+        "Integrări API (coming soon)",
+        "Mobile app iOS & Android (coming soon)",
+        "WhatsApp alerts (coming soon)"
+      ]
+    },
+    "guarantee": {
+      "title": "Garanție de mulțumire",
+      "description": "Dacă în primele 30 de zile nu ești mulțumit, îți returnăm banii 100%."
+    },
+    "faq": {
+      "title": "Întrebări frecvente despre preț",
+      "questions": [
+        {
+          "question": "Ce înseamnă 'per organizație'?",
+          "answer": "O organizație = o firmă client. Dacă gestionezi 10 firme, plătești 990 RON × 10 = 9,900 RON/an. Fiecare organizație are utilizatori nelimitați."
+        },
+        {
+          "question": "Există reduceri pentru volume mari?",
+          "answer": "Da! Pentru 10+ organizații: 10% reducere. Pentru 50+ organizații: 20% reducere. Contactează-ne pentru ofertă personalizată."
+        },
+        {
+          "question": "Ce se întâmplă dacă depășesc numărul de angajați?",
+          "answer": "Nu există limită de angajați. Prețul este fix per organizație, indiferent de numărul de angajați."
+        },
+        {
+          "question": "Pot anula oricând?",
+          "answer": "Da, poți anula oricând. Fără penalități, fără întrebări. Datele tale rămân disponibile 90 zile după anulare."
+        }
+      ]
+    }
+  },
+  "testimonials": {
+    "title": "Ce spun consultanții SSM despre platformă",
+    "subtitle": "Peste 100 de consultanți SSM și 5,000 de angajați monitorizați",
+    "items": [
+      {
+        "quote": "Am scăzut timpul petrecut pe administrare de la 5 ore/săptămână la 30 minute. Alertele automate mi-au salvat businessul.",
+        "author": "Mihai Popescu",
+        "role": "Consultant SSM, 25 firme cliente",
+        "company": "Safety Pro SRL",
+        "rating": 5
+      },
+      {
+        "quote": "Înainte pierdeam tracking-ul pentru stingătoare. Acum totul e automat, inclusiv QR code-urile. ITM a fost impresionat.",
+        "author": "Elena Ionescu",
+        "role": "Consultant PSI, 40 firme cliente",
+        "company": "Fire Safe Consulting",
+        "rating": 5
+      },
+      {
+        "quote": "Calculul automat al amenzilor potențiale m-a ajutat să negociez mai bine cu clienții. ROI în prima lună.",
+        "author": "Andrei Dumitru",
+        "role": "Consultant SSM & PSI, 15 firme",
+        "company": "Total Safety Solutions",
+        "rating": 5
+      },
+      {
+        "quote": "Rapoartele PDF se generează instant. Hash-ul SHA256 îmi dă siguranță în caz de audit. Platformă profesională.",
+        "author": "Maria Gheorghe",
+        "role": "Consultant SSM senior, 60 firme",
+        "company": "ProSecur Consulting",
+        "rating": 5
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "Cum funcționează",
+    "subtitle": "De la onboarding la conformitate completă în 3 pași simpli",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Creează cont și adaugă organizații",
+        "description": "Înregistrare instant. Adaugă firmele tale client, invită managerii lor să colaboreze. Setup în 5 minute.",
+        "icon": "signup"
+      },
+      {
+        "number": "02",
+        "title": "Importă sau adaugă date",
+        "description": "Upload CSV sau completează manual: angajați, fișe medicale, echipamente PSI. Import bulk pentru volume mari.",
+        "icon": "import"
+      },
+      {
+        "number": "03",
+        "title": "Automatizează și monitorizează",
+        "description": "Activează alertele automate. Dashboard real-time cu risc financiar. Rapoarte PDF la un click. Zero birocrație.",
+        "icon": "automate"
+      }
+    ]
+  },
+  "stats": {
+    "title": "Platformă de încredere",
+    "subtitle": "Statistici în timp real",
+    "items": [
+      {
+        "value": "100+",
+        "label": "Organizații active",
+        "description": "Consultanți SSM și firmele lor"
+      },
+      {
+        "value": "5,000+",
+        "label": "Angajați monitorizați",
+        "description": "Fișe medicale și instruiri"
+      },
+      {
+        "value": "10,000+",
+        "label": "Alerte trimise",
+        "description": "Email și notificări automate"
+      },
+      {
+        "value": "99.9%",
+        "label": "Uptime",
+        "description": "Disponibilitate garantată"
+      },
+      {
+        "value": "3,000+",
+        "label": "Echipamente PSI",
+        "description": "Stingătoare, hidranți, detectoare"
+      },
+      {
+        "value": "500+",
+        "label": "Rapoarte generate",
+        "description": "PDF conformitate ITM"
+      }
+    ]
+  },
+  "faq": {
+    "title": "Întrebări frecvente",
+    "subtitle": "Tot ce trebuie să știi despre platformă",
+    "categories": {
+      "general": {
+        "title": "Generale",
+        "questions": [
+          {
+            "question": "Pentru cine este această platformă?",
+            "answer": "Pentru consultanți SSM/PSI care gestionează multiple firme client și doresc să automatizeze compliance-ul. De asemenea, pentru firme care vor să-și gestioneze intern conformitatea SSM & PSI."
+          },
+          {
+            "question": "Cum funcționează trial-ul de 30 zile?",
+            "answer": "Înregistrezi un cont, ai acces complet la toate funcționalitățile 30 zile gratuit. Fără card bancar necesar. După 30 zile, alegi dacă vrei să continui cu plan plătit."
+          },
+          {
+            "question": "Este sigură platforma?",
+            "answer": "Da. Folosim Supabase pentru bază de date (PostgreSQL) cu Row Level Security (RLS) activ pe toate tabelele. Toate datele sunt criptate. Backup zilnic automat."
+          },
+          {
+            "question": "Pot exporta datele mele?",
+            "answer": "Da, oricând. Export CSV pentru toate datele. Rapoarte PDF pentru conformitate. API REST pentru integrări (coming soon)."
+          }
+        ]
+      },
+      "features": {
+        "title": "Funcționalități",
+        "questions": [
+          {
+            "question": "Cum funcționează alertele automate?",
+            "answer": "Platforma trimite email zilnic la 08:00 cu toate expirările iminente (30/15/7 zile): fișe medicale, verificări PSI, instruiri. Integrare Resend pentru livrare garantată."
+          },
+          {
+            "question": "Ce înseamnă 'risc financiar'?",
+            "answer": "Calculul automat al amenzilor potențiale ITM/ISU/ISCIR dacă lipsesc documentele obligatorii. Breakdown per autoritate, estimare min-max în RON conform legislației actuale."
+          },
+          {
+            "question": "Cum funcționează multi-organizație?",
+            "answer": "Un singur dashboard pentru toate firmele client. Filtrare instant după organizație. Fiecare organizație are utilizatori proprii, date separate (arhitectură multi-tenant)."
+          },
+          {
+            "question": "Ce rapoarte pot genera?",
+            "answer": "Rapoarte conformitate ITM (medicina muncii, instruiri), rapoarte PSI (echipamente, verificări), rapoarte risc financiar. Export PDF cu hash SHA256 pentru imutabilitate."
+          }
+        ]
+      },
+      "technical": {
+        "title": "Tehnice",
+        "questions": [
+          {
+            "question": "Ce tehnologii folosiți?",
+            "answer": "Next.js 14 (App Router), Supabase (PostgreSQL + Auth), TypeScript, Tailwind CSS. Deploy Vercel. Stack modern, performant, scalabil."
+          },
+          {
+            "question": "Există API pentru integrări?",
+            "answer": "În dezvoltare. REST API complet pentru integrări cu alte sisteme (HR, ERP, contabilitate). Disponibil în Q2 2026."
+          },
+          {
+            "question": "Există aplicație mobilă?",
+            "answer": "În dezvoltare. iOS & Android native. Disponibilă în Q3 2026. Până atunci, platforma web este responsive și funcționează perfect pe mobil."
+          },
+          {
+            "question": "Cum gestionați securitatea datelor?",
+            "answer": "Row Level Security (RLS) pe toate tabelele Supabase. Datele sunt izolate per organizație. Backup zilnic automat. Conformitate GDPR. Criptare end-to-end pentru date sensibile."
+          }
+        ]
+      },
+      "pricing": {
+        "title": "Prețuri",
+        "questions": [
+          {
+            "question": "Cât costă platforma?",
+            "answer": "990 RON/an per organizație. Toate funcționalitățile incluse. Fără costuri ascunse. Fără setup fee. Anulezi oricând."
+          },
+          {
+            "question": "Există reduceri pentru volume mari?",
+            "answer": "Da! 10+ organizații: 10% reducere. 50+ organizații: 20% reducere. 100+ organizații: ofertă personalizată. Contactează-ne."
+          },
+          {
+            "question": "Ce metode de plată acceptați?",
+            "answer": "Card bancar (Visa, Mastercard), transfer bancar, factură cu plată la 30 zile pentru firme. Procesare plăți securizată Stripe."
+          },
+          {
+            "question": "Pot obține factură?",
+            "answer": "Da, factură automată pentru fiecare plată. Cu date firmă, CUI/CIF. Exportabilă PDF pentru contabilitate."
+          }
+        ]
+      }
+    }
+  },
+  "penalties": {
+    "title": "Amenzi fără conformitate SSM",
+    "subtitle": "Calculează riscul tău financiar dacă lipsesc documentele obligatorii",
+    "intro": "Autoritățile de control pot aplica amenzi între:",
+    "calculator": {
+      "title": "Bifează ce NU ai în regulă:",
+      "items": [
+        {
+          "id": "medical_cards",
+          "label": "Fișe medicale lipsă sau expirate",
+          "authority": "ITM",
+          "minFine": 3000,
+          "maxFine": 8000
+        },
+        {
+          "id": "fire_extinguishers",
+          "label": "Stingătoare neverificate/expirate",
+          "authority": "ISU",
+          "minFine": 2000,
+          "maxFine": 6000
+        },
+        {
+          "id": "ssm_training",
+          "label": "Instruiri SSM neefectuate",
+          "authority": "ITM",
+          "minFine": 2500,
+          "maxFine": 7000
+        },
+        {
+          "id": "psi_training",
+          "label": "Instruiri PSI neefectuate",
+          "authority": "ISU",
+          "minFine": 2000,
+          "maxFine": 5000
+        },
+        {
+          "id": "risk_evaluation",
+          "label": "Evaluare risc SSM lipsă",
+          "authority": "ITM",
+          "minFine": 5000,
+          "maxFine": 10000
+        },
+        {
+          "id": "fire_authorization",
+          "label": "Autorizație PSI expirată",
+          "authority": "ISU",
+          "minFine": 3000,
+          "maxFine": 8000
+        },
+        {
+          "id": "ppe",
+          "label": "Echipament protecție individuală lipsă",
+          "authority": "ITM",
+          "minFine": 2000,
+          "maxFine": 6000
+        },
+        {
+          "id": "first_aid",
+          "label": "Trusă prim ajutor incompletă",
+          "authority": "ITM",
+          "minFine": 1000,
+          "maxFine": 3000
+        }
+      ],
+      "total": "Risc total amenzi:",
+      "totalRange": "{min} — {max} RON",
+      "disclaimer": "Valori estimative conform legislației actuale. Amenzi reale pot varia.",
+      "cta": "Evită amenzile cu s-s-m.ro →"
+    }
+  },
+  "cta": {
+    "title": "Începe să automatizezi conformitatea SSM & PSI",
+    "subtitle": "Trial gratuit 30 zile. Fără card necesar. Setup în 5 minute.",
+    "primary": "Începe trial gratuit →",
+    "secondary": "Programează demo live",
+    "features": [
+      "✓ Trial 30 zile gratuit",
+      "✓ Fără card bancar necesar",
+      "✓ Setup în 5 minute",
+      "✓ Suport prioritar",
+      "✓ Anulezi oricând"
+    ]
+  },
+  "newsletter": {
+    "title": "Rămâi la curent cu legislația SSM & PSI",
+    "subtitle": "Newsletter lunar cu actualizări legislative, best practices și funcționalități noi. Zero spam.",
+    "emailPlaceholder": "email@exemplu.ro",
+    "cta": "Abonează-te gratuit",
+    "submitting": "Se înregistrează...",
+    "success": "✓ Te-ai abonat cu succes!",
+    "error": "Eroare. Încearcă din nou.",
+    "privacy": "Nu spam. Ne respectăm abonații. Dezabonare oricând."
+  },
+  "footer": {
+    "description": "Platformă digitală pentru conformitate SSM & PSI. Medicina muncii, echipamente PSI, alerte automate.",
+    "product": {
+      "title": "Produs",
+      "links": {
+        "features": "Funcționalități",
+        "pricing": "Preț",
+        "demo": "Demo",
+        "changelog": "Changelog",
+        "roadmap": "Roadmap"
+      }
+    },
+    "company": {
+      "title": "Companie",
+      "links": {
+        "about": "Despre noi",
+        "blog": "Blog",
+        "careers": "Cariere",
+        "contact": "Contact",
+        "partners": "Parteneri"
+      }
+    },
+    "resources": {
+      "title": "Resurse",
+      "links": {
+        "documentation": "Documentație",
+        "guides": "Ghiduri",
+        "api": "API Reference",
+        "support": "Suport",
+        "status": "Status platformă"
+      }
+    },
+    "legal": {
+      "title": "Legal",
+      "links": {
+        "terms": "Termeni și condiții",
+        "privacy": "Confidențialitate",
+        "gdpr": "GDPR",
+        "cookies": "Cookie Policy",
+        "licenses": "Licențe"
+      }
+    },
+    "contact": {
+      "title": "Contact",
+      "email": "contact@s-s-m.ro",
+      "phone": "+40 700 000 000",
+      "address": "București, România",
+      "social": {
+        "facebook": "Facebook",
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter",
+        "youtube": "YouTube"
+      }
+    },
+    "copyright": "© 2026 s-s-m.ro. Toate drepturile rezervate.",
+    "madeWith": "Construit cu",
+    "madeWithTech": "Next.js, Supabase, Vercel"
+  }
+}
