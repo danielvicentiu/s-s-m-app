@@ -245,3 +245,38 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── COMPLIANCE SCORE & MONITORING ──
+// Tipuri pentru monitorizarea conformității SSM/PSI
+
+export interface ComplianceBreakdown {
+  ssm: number          // Scor SSM (0-100)
+  psi: number          // Scor PSI (0-100)
+  medical: number      // Scor medicina muncii (0-100)
+  equipment: number    // Scor echipamente (0-100)
+  trainings?: number   // Scor instruiri (0-100) - optional
+}
+
+export interface ComplianceHistoryEntry {
+  month: string        // Format: 'YYYY-MM'
+  score: number        // Scor total (0-100)
+  breakdown: ComplianceBreakdown
+  timestamp: string    // ISO timestamp
+}
+
+export interface ComplianceRecommendation {
+  type: 'critical' | 'warning' | 'info'
+  category: 'ssm' | 'psi' | 'medical' | 'equipment' | 'trainings'
+  title: string
+  description: string
+  action?: string
+  priority: number     // 1 (highest) to 5 (lowest)
+}
+
+export interface ComplianceScore {
+  overall: number      // Scor total (0-100)
+  breakdown: ComplianceBreakdown
+  recommendations: ComplianceRecommendation[]
+  lastUpdated: string  // ISO timestamp
+  organizationId: string
+}
