@@ -245,3 +245,81 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── FIRST AID KITS (TRUSE PRIM AJUTOR) ──
+
+export interface FirstAidKit {
+  id: string
+  organization_id: string
+  name: string
+  location: string
+  kit_code: string | null
+  last_check_date: string | null
+  next_check_date: string | null
+  checked_by: string | null
+  is_complete: boolean
+  is_accessible: boolean
+  needs_restocking: boolean
+  meets_standards: boolean
+  standard_reference: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  updated_by: string | null
+  // Relations
+  organizations?: { name: string; cui: string | null }
+  first_aid_items?: FirstAidItem[]
+}
+
+export interface FirstAidItem {
+  id: string
+  kit_id: string
+  item_name: string
+  item_category: string | null
+  quantity_required: number
+  quantity_current: number
+  unit: string
+  expiry_date: string | null
+  batch_number: string | null
+  is_present: boolean
+  is_expired: boolean
+  condition: string | null
+  last_checked_at: string | null
+  checked_by: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type ItemCondition = 'bun' | 'deteriorat' | 'lipsă'
+export type ItemCategory = 'Pansamente' | 'Medicamente' | 'Instrumente' | 'Dezinfectante' | 'Altele'
+
+// ── INCIDENTS (INCIDENTE SSM/PSI) ──
+
+export type IncidentStatus = 'nou' | 'in_investigare' | 'rezolvat' | 'respins'
+export type IncidentSeverity = 'minor' | 'moderat' | 'grav' | 'critic'
+
+export interface Incident {
+  id: string
+  organization_id: string
+  incident_date: string
+  location: string
+  description: string
+  victim_name: string | null
+  witness_name: string | null
+  severity: IncidentSeverity
+  status: IncidentStatus
+  reported_by: string
+  reported_at: string
+  investigation_notes: string | null
+  resolution_notes: string | null
+  resolved_by: string | null
+  resolved_at: string | null
+  created_at: string
+  updated_at: string
+  // Relations
+  organizations?: { name: string; cui: string | null }
+  reporter?: { full_name: string }
+  resolver?: { full_name: string }
+}
