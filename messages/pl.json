@@ -186,5 +186,507 @@
     "email": "contact@s-s-m.ro",
     "phone": "+48 22 000 0000",
     "address": "Warszawa, Polska"
+  },
+  "employees": {
+    "title": "Pracownicy",
+    "addEmployee": "+ Dodaj pracownika",
+    "noEmployees": "Brak pracowników.",
+    "searchPlaceholder": "Szukaj pracowników...",
+    "filters": {
+      "all": "Wszyscy",
+      "active": "Aktywni",
+      "inactive": "Nieaktywni",
+      "department": "Dział"
+    },
+    "columns": {
+      "name": "Imię i nazwisko",
+      "position": "Stanowisko",
+      "department": "Dział",
+      "hireDate": "Data zatrudnienia",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "status": {
+      "active": "Aktywny",
+      "inactive": "Nieaktywny",
+      "onLeave": "Na urlopie",
+      "suspended": "Zawieszony"
+    },
+    "details": {
+      "personalInfo": "Dane osobowe",
+      "contactInfo": "Kontakt",
+      "employmentInfo": "Informacje o zatrudnieniu",
+      "documents": "Dokumenty",
+      "medicalRecords": "Dokumentacja medyczna",
+      "trainings": "Szkolenia"
+    },
+    "form": {
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "email": "Email",
+      "phone": "Telefon",
+      "position": "Stanowisko",
+      "department": "Dział",
+      "hireDate": "Data zatrudnienia",
+      "birthDate": "Data urodzenia",
+      "idNumber": "Numer dowodu",
+      "address": "Adres",
+      "city": "Miasto",
+      "postalCode": "Kod pocztowy",
+      "country": "Kraj",
+      "emergencyContact": "Kontakt awaryjny",
+      "emergencyPhone": "Telefon awaryjny"
+    },
+    "actions": {
+      "view": "Podgląd",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "deactivate": "Dezaktywuj",
+      "reactivate": "Reaktywuj",
+      "export": "Eksportuj"
+    },
+    "messages": {
+      "addSuccess": "Pracownik dodany pomyślnie",
+      "updateSuccess": "Pracownik zaktualizowany",
+      "deleteSuccess": "Pracownik usunięty",
+      "deleteConfirm": "Czy na pewno chcesz usunąć tego pracownika?",
+      "deactivateConfirm": "Czy na pewno chcesz dezaktywować tego pracownika?"
+    }
+  },
+  "trainings": {
+    "title": "Szkolenia BHP",
+    "addTraining": "+ Dodaj szkolenie",
+    "noTrainings": "Brak szkoleń.",
+    "searchPlaceholder": "Szukaj szkoleń...",
+    "types": {
+      "bhp_initial": "Szkolenie wstępne BHP",
+      "bhp_periodic": "Szkolenie okresowe BHP",
+      "fire_safety": "Ochrona przeciwpożarowa",
+      "first_aid": "Pierwsza pomoc",
+      "specialized": "Szkolenie specjalistyczne",
+      "electrical": "Przepisy elektryczne",
+      "heights": "Praca na wysokości",
+      "forklift": "Obsługa wózka widłowego"
+    },
+    "columns": {
+      "employee": "Pracownik",
+      "type": "Rodzaj szkolenia",
+      "date": "Data szkolenia",
+      "expiryDate": "Wygasa",
+      "instructor": "Instruktor",
+      "status": "Status",
+      "certificate": "Certyfikat"
+    },
+    "status": {
+      "planned": "Zaplanowane",
+      "completed": "Ukończone",
+      "expired": "Wygasłe",
+      "cancelled": "Anulowane"
+    },
+    "details": {
+      "trainingInfo": "Informacje o szkoleniu",
+      "participants": "Uczestnicy",
+      "materials": "Materiały",
+      "certificate": "Certyfikat",
+      "notes": "Uwagi"
+    },
+    "form": {
+      "trainingType": "Rodzaj szkolenia",
+      "trainingDate": "Data szkolenia",
+      "duration": "Czas trwania (godz)",
+      "instructor": "Instruktor",
+      "location": "Miejsce",
+      "participants": "Uczestnicy",
+      "description": "Opis",
+      "certificate": "Numer certyfikatu",
+      "expiryDate": "Data wygaśnięcia"
+    },
+    "actions": {
+      "schedule": "Zaplanuj",
+      "complete": "Oznacz jako ukończone",
+      "cancel": "Anuluj",
+      "viewCertificate": "Pokaż certyfikat",
+      "downloadCertificate": "Pobierz certyfikat",
+      "sendReminder": "Wyślij przypomnienie"
+    },
+    "messages": {
+      "addSuccess": "Szkolenie dodane pomyślnie",
+      "updateSuccess": "Szkolenie zaktualizowane",
+      "deleteSuccess": "Szkolenie usunięte",
+      "completeSuccess": "Szkolenie oznaczone jako ukończone",
+      "reminderSent": "Przypomnienie wysłane",
+      "expiringTitle": "Szkolenia wygasające",
+      "expiringMessage": "Masz {count} szkoleń wygasających w ciągu 30 dni"
+    }
+  },
+  "alerts": {
+    "title": "Alerty i powiadomienia",
+    "noAlerts": "Brak alertów.",
+    "types": {
+      "medical_expiry": "Wygaśnięcie badania medycznego",
+      "training_expiry": "Wygaśnięcie szkolenia",
+      "equipment_check": "Przegląd sprzętu",
+      "document_expiry": "Wygaśnięcie dokumentu",
+      "compliance": "Zgodność z przepisami",
+      "inspection": "Kontrola"
+    },
+    "priority": {
+      "low": "Niski",
+      "medium": "Średni",
+      "high": "Wysoki",
+      "critical": "Krytyczny"
+    },
+    "status": {
+      "pending": "Oczekujące",
+      "sent": "Wysłane",
+      "read": "Przeczytane",
+      "resolved": "Rozwiązane",
+      "dismissed": "Odrzucone"
+    },
+    "columns": {
+      "type": "Typ",
+      "message": "Wiadomość",
+      "priority": "Priorytet",
+      "date": "Data",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "settings": {
+      "title": "Ustawienia alertów",
+      "emailAlerts": "Alerty email",
+      "smsAlerts": "Alerty SMS",
+      "pushAlerts": "Powiadomienia push",
+      "whatsappAlerts": "Alerty WhatsApp",
+      "frequency": "Częstotliwość",
+      "daily": "Codziennie",
+      "weekly": "Tydzień",
+      "monthly": "Miesiąc",
+      "alertDays": "Ostrzegaj na dni przed",
+      "days30": "30 dni",
+      "days15": "15 dni",
+      "days7": "7 dni",
+      "days3": "3 dni"
+    },
+    "actions": {
+      "view": "Podgląd",
+      "resolve": "Rozwiąż",
+      "dismiss": "Odrzuć",
+      "resend": "Wyślij ponownie",
+      "markRead": "Oznacz jako przeczytane"
+    },
+    "messages": {
+      "resolved": "Alert rozwiązany",
+      "dismissed": "Alert odrzucony",
+      "resent": "Alert wysłany ponownie"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "tabs": {
+      "general": "Ogólne",
+      "organization": "Organizacja",
+      "users": "Użytkownicy",
+      "notifications": "Powiadomienia",
+      "integrations": "Integracje",
+      "security": "Bezpieczeństwo",
+      "billing": "Płatności"
+    },
+    "general": {
+      "language": "Język",
+      "timezone": "Strefa czasowa",
+      "dateFormat": "Format daty",
+      "currency": "Waluta",
+      "theme": "Motyw",
+      "lightMode": "Jasny",
+      "darkMode": "Ciemny",
+      "autoMode": "Automatyczny"
+    },
+    "organization": {
+      "name": "Nazwa organizacji",
+      "legalName": "Nazwa prawna",
+      "taxId": "NIP",
+      "registrationNumber": "Numer rejestracji",
+      "address": "Adres",
+      "city": "Miasto",
+      "postalCode": "Kod pocztowy",
+      "country": "Kraj",
+      "phone": "Telefon",
+      "email": "Email",
+      "website": "Strona internetowa",
+      "industry": "Branża",
+      "employeeCount": "Liczba pracowników"
+    },
+    "notifications": {
+      "emailNotifications": "Powiadomienia email",
+      "smsNotifications": "Powiadomienia SMS",
+      "pushNotifications": "Powiadomienia push",
+      "dailyDigest": "Dzienny podsumowanie",
+      "weeklyReport": "Raport tygodniowy",
+      "monthlyReport": "Raport miesięczny",
+      "alertsEnabled": "Alerty włączone",
+      "reminderTime": "Czas przypomnienia"
+    },
+    "security": {
+      "changePassword": "Zmień hasło",
+      "currentPassword": "Obecne hasło",
+      "newPassword": "Nowe hasło",
+      "confirmPassword": "Potwierdź hasło",
+      "twoFactor": "Uwierzytelnianie dwuskładnikowe",
+      "enable2FA": "Włącz 2FA",
+      "disable2FA": "Wyłącz 2FA",
+      "sessions": "Aktywne sesje",
+      "loginHistory": "Historia logowań",
+      "apiKeys": "Klucze API"
+    },
+    "actions": {
+      "save": "Zapisz zmiany",
+      "cancel": "Anuluj",
+      "reset": "Resetuj",
+      "export": "Eksportuj",
+      "import": "Importuj"
+    },
+    "messages": {
+      "saveSuccess": "Ustawienia zapisane",
+      "saveFailed": "Nie udało się zapisać ustawień",
+      "passwordChanged": "Hasło zmienione pomyślnie",
+      "passwordMismatch": "Hasła nie pasują",
+      "invalidPassword": "Nieprawidłowe hasło"
+    }
+  },
+  "profile": {
+    "title": "Profil użytkownika",
+    "avatar": "Awatar",
+    "personalInfo": "Dane osobowe",
+    "preferences": "Preferencje",
+    "notifications": "Powiadomienia",
+    "changePassword": "Zmień hasło",
+    "form": {
+      "fullName": "Imię i nazwisko",
+      "email": "Email",
+      "emailReadOnly": "Email (nie można zmienić)",
+      "phone": "Telefon",
+      "position": "Stanowisko",
+      "department": "Dział",
+      "preferredLanguage": "Język preferowany",
+      "timezone": "Strefa czasowa",
+      "avatar": "Zdjęcie profilowe"
+    },
+    "avatar": {
+      "upload": "Prześlij zdjęcie",
+      "uploading": "Przesyłanie...",
+      "change": "Zmień zdjęcie",
+      "remove": "Usuń zdjęcie",
+      "requirements": "Obrazy JPG, PNG lub GIF. Maksymalnie 2MB.",
+      "invalidType": "Proszę wybrać plik obrazu.",
+      "tooLarge": "Obraz nie może przekraczać 2MB."
+    },
+    "notifications": {
+      "emailNotifications": "Powiadomienia email",
+      "emailDescription": "Otrzymuj alerty i raporty przez email",
+      "pushNotifications": "Powiadomienia push",
+      "pushDescription": "Otrzymuj powiadomienia w przeglądarce i na urządzeniu mobilnym",
+      "smsNotifications": "Powiadomienia SMS",
+      "smsDescription": "Otrzymuj ważne alerty przez SMS"
+    },
+    "password": {
+      "current": "Obecne hasło (opcjonalne)",
+      "new": "Nowe hasło",
+      "newPlaceholder": "Minimum 8 znaków",
+      "confirm": "Potwierdź nowe hasło",
+      "confirmPlaceholder": "Powtórz nowe hasło",
+      "change": "Zmień hasło",
+      "changing": "Zmiana hasła..."
+    },
+    "actions": {
+      "save": "Zapisz zmiany",
+      "saving": "Zapisywanie...",
+      "cancel": "Anuluj"
+    },
+    "messages": {
+      "updateSuccess": "Profil zaktualizowany pomyślnie!",
+      "updateFailed": "Błąd podczas zapisu: ",
+      "avatarSuccess": "Awatar zaktualizowany pomyślnie!",
+      "avatarFailed": "Błąd podczas przesyłania awatara: ",
+      "passwordChanged": "Hasło zmienione pomyślnie!",
+      "passwordMismatch": "Hasła nie pasują.",
+      "passwordTooShort": "Hasło musi mieć minimum 8 znaków.",
+      "passwordFailed": "Błąd podczas zmiany hasła: "
+    }
+  },
+  "reports": {
+    "title": "Raporty",
+    "generate": "Generuj raport",
+    "noReports": "Brak raportów.",
+    "types": {
+      "compliance": "Raport zgodności",
+      "medical": "Raport medyczny",
+      "training": "Raport szkoleń",
+      "equipment": "Raport sprzętu",
+      "incidents": "Raport incydentów",
+      "audit": "Raport audytu",
+      "financial": "Raport finansowy"
+    },
+    "periods": {
+      "today": "Dzisiaj",
+      "yesterday": "Wczoraj",
+      "lastWeek": "Ostatni tydzień",
+      "lastMonth": "Ostatni miesiąc",
+      "lastQuarter": "Ostatni kwartał",
+      "lastYear": "Ostatni rok",
+      "custom": "Okres niestandardowy"
+    },
+    "columns": {
+      "name": "Nazwa",
+      "type": "Typ",
+      "period": "Okres",
+      "generatedDate": "Data wygenerowania",
+      "generatedBy": "Wygenerowany przez",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "status": {
+      "generating": "Generowanie...",
+      "ready": "Gotowy",
+      "failed": "Nieudany",
+      "archived": "Zarchiwizowany"
+    },
+    "form": {
+      "reportType": "Typ raportu",
+      "reportName": "Nazwa raportu",
+      "dateRange": "Zakres dat",
+      "startDate": "Data początkowa",
+      "endDate": "Data końcowa",
+      "organization": "Organizacja",
+      "department": "Dział",
+      "includeCharts": "Dołącz wykresy",
+      "includeDetails": "Dołącz szczegóły",
+      "format": "Format",
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV"
+    },
+    "actions": {
+      "download": "Pobierz",
+      "view": "Podgląd",
+      "share": "Udostępnij",
+      "schedule": "Zaplanuj",
+      "delete": "Usuń",
+      "archive": "Archiwizuj"
+    },
+    "messages": {
+      "generateSuccess": "Raport wygenerowany pomyślnie",
+      "generateFailed": "Nie udało się wygenerować raportu",
+      "downloadSuccess": "Raport pobrany",
+      "deleteSuccess": "Raport usunięty",
+      "scheduleSuccess": "Raport zaplanowany"
+    }
+  },
+  "documents": {
+    "title": "Dokumenty",
+    "addDocument": "+ Dodaj dokument",
+    "noDocuments": "Brak dokumentów.",
+    "generate": "Generuj dokument",
+    "categories": {
+      "medical": "Dokumentacja medyczna",
+      "training": "Certyfikaty szkoleń",
+      "equipment": "Dokumenty sprzętu",
+      "compliance": "Dokumenty zgodności",
+      "contracts": "Umowy",
+      "policies": "Polityki",
+      "procedures": "Procedury",
+      "other": "Inne"
+    },
+    "columns": {
+      "name": "Nazwa",
+      "category": "Kategoria",
+      "uploadDate": "Data przesłania",
+      "expiryDate": "Data wygaśnięcia",
+      "size": "Rozmiar",
+      "status": "Status",
+      "actions": "Akcje"
+    },
+    "status": {
+      "valid": "Ważny",
+      "expiring": "Wygasa",
+      "expired": "Wygasły",
+      "pending": "Oczekujący",
+      "approved": "Zatwierdzony",
+      "rejected": "Odrzucony"
+    },
+    "form": {
+      "documentName": "Nazwa dokumentu",
+      "category": "Kategoria",
+      "description": "Opis",
+      "file": "Plik",
+      "issueDate": "Data wydania",
+      "expiryDate": "Data wygaśnięcia",
+      "tags": "Tagi",
+      "notes": "Uwagi"
+    },
+    "actions": {
+      "upload": "Prześlij",
+      "download": "Pobierz",
+      "view": "Podgląd",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "approve": "Zatwierdź",
+      "reject": "Odrzuć",
+      "share": "Udostępnij"
+    },
+    "messages": {
+      "uploadSuccess": "Dokument przesłany pomyślnie",
+      "uploadFailed": "Nie udało się przesłać dokumentu",
+      "deleteSuccess": "Dokument usunięty",
+      "approveSuccess": "Dokument zatwierdzony",
+      "rejectSuccess": "Dokument odrzucony",
+      "generateSuccess": "Dokument wygenerowany pomyślnie"
+    }
+  },
+  "admin": {
+    "title": "Administracja",
+    "users": "Użytkownicy",
+    "roles": "Role",
+    "organizations": "Organizacje",
+    "legalActs": "Akty prawne",
+    "obligations": "Obowiązki",
+    "equipmentTypes": "Typy sprzętu",
+    "alertCategories": "Kategorie alertów",
+    "countries": "Kraje",
+    "import": "Import",
+    "export": "Eksport",
+    "logs": "Dzienniki",
+    "system": "System"
+  },
+  "errors": {
+    "generic": "Wystąpił błąd. Spróbuj ponownie.",
+    "network": "Błąd połączenia sieciowego",
+    "unauthorized": "Brak autoryzacji",
+    "forbidden": "Dostęp zabroniony",
+    "notFound": "Nie znaleziono",
+    "serverError": "Błąd serwera",
+    "validationError": "Błąd walidacji",
+    "requiredField": "To pole jest wymagane",
+    "invalidEmail": "Nieprawidłowy adres email",
+    "invalidPhone": "Nieprawidłowy numer telefonu",
+    "invalidDate": "Nieprawidłowa data",
+    "fileTooLarge": "Plik jest zbyt duży",
+    "invalidFileType": "Nieprawidłowy typ pliku"
+  },
+  "success": {
+    "saved": "Zapisano pomyślnie",
+    "updated": "Zaktualizowano pomyślnie",
+    "deleted": "Usunięto pomyślnie",
+    "created": "Utworzono pomyślnie",
+    "sent": "Wysłano pomyślnie",
+    "uploaded": "Przesłano pomyślnie"
+  },
+  "confirmations": {
+    "delete": "Czy na pewno chcesz usunąć?",
+    "deleteTitle": "Potwierdź usunięcie",
+    "cancel": "Czy na pewno chcesz anulować?",
+    "unsavedChanges": "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?",
+    "yes": "Tak",
+    "no": "Nie",
+    "confirm": "Potwierdź"
   }
 }
