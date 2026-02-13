@@ -1,0 +1,1830 @@
+openapi: 3.0.3
+
+info:
+  title: S-S-M.ro Platform API
+  description: |
+    REST API for the S-S-M.ro occupational health and safety compliance platform.
+
+    This API provides endpoints for managing organizations, employees, trainings, medical records,
+    safety equipment, compliance monitoring, and integrations for SSM/PSI consultants and companies
+    across Romania, Bulgaria, Hungary, Germany, and Poland.
+
+    ## Authentication
+
+    The API uses two authentication methods:
+    - **Bearer Token**: Supabase Auth JWT token (required for user-specific operations)
+    - **API Key**: Organization-level API key for webhook and integration access
+
+    ## Rate Limiting
+
+    - **Authenticated requests**: 1000 requests per hour per user
+    - **Webhook deliveries**: 100 requests per minute per organization
+
+    ## Pagination
+
+    List endpoints support pagination with the following query parameters:
+    - `page`: Page number (default: 1)
+    - `limit`: Items per page (default: 20, max: 100)
+
+    ## Versioning
+
+    The API uses URL-based versioning (e.g., `/api/v1/`). Current version: **v1**.
+
+    ## Support
+
+    For API support, contact: support@s-s-m.ro
+
+  version: 1.0.0
+  contact:
+    name: S-S-M.ro API Support
+    email: support@s-s-m.ro
+    url: https://app.s-s-m.ro
+  license:
+    name: Proprietary
+    url: https://s-s-m.ro/terms
+
+servers:
+  - url: https://app.s-s-m.ro/api/v1
+    description: Production server
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+
+tags:
+  - name: Organizations
+    description: Organization management endpoints
+  - name: Employees
+    description: Employee and worker management
+  - name: Trainings
+    description: Training assignments and modules
+  - name: Medical Records
+    description: Medical examination records (future)
+  - name: Equipment
+    description: Safety equipment tracking (future)
+  - name: Documents
+    description: Document generation and storage (future)
+  - name: Alerts
+    description: Compliance alerts and notifications (future)
+  - name: Compliance
+    description: Compliance scoring and gap analysis
+  - name: Legislation
+    description: Legislative acts and compliance requirements (future)
+  - name: Webhooks
+    description: Webhook management and delivery logs
+  - name: Feature Flags
+    description: Feature flag management
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ========================================
+  # ORGANIZATIONS
+  # ========================================
+  /organizations:
+    get:
+      summary: List organizations
+      description: Get paginated list of organizations with optional filtering and sorting
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/SortByParam'
+        - $ref: '#/components/parameters/SortOrderParam'
+        - name: cooperation_status
+          in: query
+          schema:
+            type: string
+            enum: [active, warning, uncooperative]
+          description: Filter by cooperation status
+        - name: exposure_score
+          in: query
+          schema:
+            type: string
+            enum: [necalculat, scazut, mediu, ridicat, critic]
+          description: Filter by exposure score
+        - name: county
+          in: query
+          schema:
+            type: string
+          description: Filter by county
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in name, CUI, address
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+              example:
+                data:
+                  - id: "123e4567-e89b-12d3-a456-426614174000"
+                    name: "SC EXEMPLU SRL"
+                    cui: "RO12345678"
+                    address: "Str. Exemplu nr. 1, București"
+                    county: "București"
+                    contact_email: "contact@exemplu.ro"
+                    contact_phone: "+40721234567"
+                    data_completeness: 85
+                    employee_count: 25
+                    exposure_score: "scazut"
+                    preferred_channels: ["email", "whatsapp"]
+                    cooperation_status: "active"
+                    created_at: "2024-01-15T10:30:00Z"
+                    updated_at: "2024-02-10T14:20:00Z"
+                pagination:
+                  page: 1
+                  limit: 20
+                  total: 1
+                  totalPages: 1
+                  hasNextPage: false
+                  hasPreviousPage: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Create organization
+      description: Create a new organization (consultant role only)
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationInput'
+            example:
+              name: "SC NOUA FIRMA SRL"
+              cui: "RO98765432"
+              address: "Str. Noua nr. 10, Cluj-Napoca"
+              county: "Cluj"
+              contact_email: "office@nouafirma.ro"
+              contact_phone: "+40730123456"
+              preferred_channels: ["email", "whatsapp"]
+              cooperation_status: "active"
+              exposure_score: "necalculat"
+      responses:
+        '201':
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /organizations/{id}:
+    get:
+      summary: Get organization by ID
+      description: Retrieve detailed information about a specific organization
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Organization UUID
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      summary: Update organization
+      description: Update organization details (admin/consultant only)
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationInput'
+      responses:
+        '200':
+          description: Organization updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      summary: Delete organization
+      description: Soft delete organization (consultant only)
+      tags:
+        - Organizations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Organization deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  # ========================================
+  # EMPLOYEES
+  # ========================================
+  /employees:
+    get:
+      summary: List employees
+      description: Get paginated list of employees with optional filtering, sorting, and search
+      tags:
+        - Employees
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [full_name, hire_date, created_at, job_title, nationality]
+            default: hire_date
+        - $ref: '#/components/parameters/SortOrderParam'
+        - name: organization_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by organization ID
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          description: Filter by active status
+        - name: nationality
+          in: query
+          schema:
+            type: string
+          description: Filter by nationality (e.g., RO, BG, HU)
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in full_name, email, phone, job_title, CNP
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Create employee
+      description: Create a new employee with CNP and email validation
+      tags:
+        - Employees
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmployeeInput'
+            example:
+              organization_id: "123e4567-e89b-12d3-a456-426614174000"
+              full_name: "Popescu Ion"
+              cnp: "1234567890123"
+              email: "ion.popescu@exemplu.ro"
+              phone: "+40721111222"
+              job_title: "Inginer Constructor"
+              cor_code: "214201"
+              nationality: "RO"
+              hire_date: "2024-01-15"
+              is_active: true
+      responses:
+        '201':
+          description: Employee created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /employees/{id}:
+    get:
+      summary: Get employee by ID
+      description: Retrieve detailed information about a specific employee
+      tags:
+        - Employees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      summary: Update employee
+      description: Update employee details
+      tags:
+        - Employees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEmployeeInput'
+      responses:
+        '200':
+          description: Employee updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      summary: Delete employee
+      description: Soft delete employee
+      tags:
+        - Employees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Employee deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  # ========================================
+  # TRAININGS
+  # ========================================
+  /trainings:
+    get:
+      summary: List training assignments
+      description: Get paginated list of training assignments with employee and module joins
+      tags:
+        - Trainings
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [assigned_at, due_date, completed_at, created_at, status]
+            default: assigned_at
+        - $ref: '#/components/parameters/SortOrderParam'
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: worker_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: module_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [assigned, in_progress, completed, overdue, expired, exempted]
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [ssm, psi, su, nis2, custom]
+        - name: training_type
+          in: query
+          schema:
+            type: string
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TrainingAssignment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Create training assignments
+      description: Create training assignments for multiple employees
+      tags:
+        - Trainings
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTrainingAssignmentInput'
+            example:
+              organization_id: "123e4567-e89b-12d3-a456-426614174000"
+              module_id: "456e7890-e89b-12d3-a456-426614174111"
+              worker_ids:
+                - "789e0123-e89b-12d3-a456-426614174222"
+                - "012e3456-e89b-12d3-a456-426614174333"
+              assigned_by: "345e6789-e89b-12d3-a456-426614174444"
+              due_date: "2024-03-31"
+              notes: "Instruire obligatorie SSM generală"
+      responses:
+        '201':
+          description: Training assignments created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TrainingAssignment'
+                  count:
+                    type: integer
+                  skipped:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /trainings/{id}:
+    get:
+      summary: Get training assignment by ID
+      description: Retrieve detailed information about a specific training assignment
+      tags:
+        - Trainings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingAssignment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      summary: Update training assignment
+      description: Update training assignment status or details
+      tags:
+        - Trainings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTrainingAssignmentInput'
+      responses:
+        '200':
+          description: Training assignment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingAssignment'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  # ========================================
+  # COMPLIANCE
+  # ========================================
+  /compliance:
+    get:
+      summary: Get compliance score breakdown
+      description: Returns detailed compliance score breakdown for organization including training, medical, and equipment compliance
+      tags:
+        - Compliance
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Organization UUID
+        - name: view
+          in: query
+          schema:
+            type: string
+            enum: [breakdown, timeline, gaps]
+            default: breakdown
+          description: View type - breakdown (score details), timeline (historical data), or gaps (compliance issues)
+        - name: days
+          in: query
+          schema:
+            type: integer
+            default: 90
+            minimum: 7
+            maximum: 365
+          description: Number of days for timeline view (only applicable when view=timeline)
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ComplianceBreakdown'
+                  - $ref: '#/components/schemas/ComplianceTimeline'
+                  - $ref: '#/components/schemas/ComplianceGaps'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Recalculate compliance score
+      description: Manually triggers compliance score recalculation for organization (admin/manager only)
+      tags:
+        - Compliance
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - organization_id
+              properties:
+                organization_id:
+                  type: string
+                  format: uuid
+                  description: Organization UUID
+      responses:
+        '200':
+          description: Compliance score recalculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  compliance_score:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                  exposure_score:
+                    type: string
+                    enum: [necalculat, scazut, mediu, ridicat, critic]
+                  recalculated_at:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  # ========================================
+  # WEBHOOKS
+  # ========================================
+  /webhooks:
+    get:
+      summary: List organization webhooks
+      description: Get all webhooks registered for an organization with delivery statistics
+      tags:
+        - Webhooks
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebhookWithStats'
+                  count:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Register new webhook
+      description: Create a new webhook endpoint for receiving events
+      tags:
+        - Webhooks
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWebhookInput'
+            example:
+              organization_id: "123e4567-e89b-12d3-a456-426614174000"
+              url: "https://api.example.com/webhooks/ssm"
+              events:
+                - "employee.created"
+                - "employee.updated"
+                - "training.completed"
+                - "medical.expiring"
+                - "equipment.expiring"
+      responses:
+        '201':
+          description: Webhook created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook:
+                    $ref: '#/components/schemas/Webhook'
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  # ========================================
+  # FEATURE FLAGS
+  # ========================================
+  /feature-flags:
+    get:
+      summary: List feature flags
+      description: Get all feature flags with their current status
+      tags:
+        - Feature Flags
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flags:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FeatureFlag'
+                  count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /feature-flags/overrides:
+    get:
+      summary: List feature flag overrides
+      description: Get organization or user-specific feature flag overrides
+      tags:
+        - Feature Flags
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: user_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  overrides:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FeatureFlagOverride'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+# ========================================
+# COMPONENTS
+# ========================================
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token obtained from login
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Organization-level API key for webhook and integration access
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      description: Page number
+
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+      description: Items per page
+
+    SortByParam:
+      name: sort_by
+      in: query
+      schema:
+        type: string
+        default: created_at
+      description: Field to sort by
+
+    SortOrderParam:
+      name: sort_order
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+      description: Sort order
+
+  schemas:
+    # ========================================
+    # ORGANIZATIONS
+    # ========================================
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        cui:
+          type: string
+          nullable: true
+          description: Cod Unic de Înregistrare (Romanian tax ID)
+        address:
+          type: string
+          nullable: true
+        county:
+          type: string
+          nullable: true
+        contact_email:
+          type: string
+          format: email
+          nullable: true
+        contact_phone:
+          type: string
+          nullable: true
+        data_completeness:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Percentage of completed profile data
+        employee_count:
+          type: integer
+          minimum: 0
+        exposure_score:
+          type: string
+          enum: [necalculat, scazut, mediu, ridicat, critic]
+          description: Risk exposure level
+        preferred_channels:
+          type: array
+          items:
+            type: string
+            enum: [email, whatsapp, sms, push, calendar]
+        cooperation_status:
+          type: string
+          enum: [active, warning, uncooperative]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - data_completeness
+        - exposure_score
+        - preferred_channels
+        - cooperation_status
+        - created_at
+        - updated_at
+
+    CreateOrganizationInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        cui:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        county:
+          type: string
+          nullable: true
+        contact_email:
+          type: string
+          format: email
+          nullable: true
+        contact_phone:
+          type: string
+          nullable: true
+        preferred_channels:
+          type: array
+          items:
+            type: string
+            enum: [email, whatsapp, sms, push]
+          default: []
+        cooperation_status:
+          type: string
+          enum: [active, warning, uncooperative]
+          default: active
+        exposure_score:
+          type: string
+          enum: [necalculat, scazut, mediu, ridicat, critic]
+          default: necalculat
+
+    UpdateOrganizationInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        cui:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        county:
+          type: string
+          nullable: true
+        contact_email:
+          type: string
+          format: email
+          nullable: true
+        contact_phone:
+          type: string
+          nullable: true
+        preferred_channels:
+          type: array
+          items:
+            type: string
+        cooperation_status:
+          type: string
+          enum: [active, warning, uncooperative]
+        exposure_score:
+          type: string
+          enum: [necalculat, scazut, mediu, ridicat, critic]
+
+    # ========================================
+    # EMPLOYEES
+    # ========================================
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+        cnp:
+          type: string
+          nullable: true
+          description: Cod Numeric Personal (13 digits)
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        job_title:
+          type: string
+          nullable: true
+        cor_code:
+          type: string
+          nullable: true
+          description: Clasificarea Ocupațiilor din România
+        nationality:
+          type: string
+          default: RO
+        hire_date:
+          type: string
+          format: date
+          nullable: true
+        termination_date:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Link to user account if employee has app access
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - organization_id
+        - full_name
+        - nationality
+        - is_active
+        - created_at
+        - updated_at
+
+    CreateEmployeeInput:
+      type: object
+      required:
+        - organization_id
+        - full_name
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        cnp:
+          type: string
+          nullable: true
+          pattern: '^\d{13}$'
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        job_title:
+          type: string
+          nullable: true
+        cor_code:
+          type: string
+          nullable: true
+        nationality:
+          type: string
+          default: RO
+        hire_date:
+          type: string
+          format: date
+          nullable: true
+        termination_date:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+          default: true
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    UpdateEmployeeInput:
+      type: object
+      properties:
+        full_name:
+          type: string
+          minLength: 2
+          maxLength: 255
+        cnp:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        job_title:
+          type: string
+          nullable: true
+        cor_code:
+          type: string
+          nullable: true
+        nationality:
+          type: string
+        hire_date:
+          type: string
+          format: date
+          nullable: true
+        termination_date:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+
+    # ========================================
+    # TRAININGS
+    # ========================================
+    TrainingAssignment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        worker_id:
+          type: string
+          format: uuid
+        module_id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_by:
+          type: string
+          format: uuid
+        assigned_at:
+          type: string
+          format: date-time
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          enum: [assigned, in_progress, completed, overdue, expired, exempted]
+        notes:
+          type: string
+          nullable: true
+        workers:
+          type: object
+          description: Joined employee data
+        modules:
+          type: object
+          description: Joined training module data
+        sessions:
+          type: object
+          nullable: true
+          description: Joined training session data
+
+    CreateTrainingAssignmentInput:
+      type: object
+      required:
+        - organization_id
+        - module_id
+        - worker_ids
+        - assigned_by
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        module_id:
+          type: string
+          format: uuid
+        worker_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+        assigned_by:
+          type: string
+          format: uuid
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    UpdateTrainingAssignmentInput:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [assigned, in_progress, completed, overdue, expired, exempted]
+        session_id:
+          type: string
+          format: uuid
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    # ========================================
+    # COMPLIANCE
+    # ========================================
+    ComplianceBreakdown:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        overall_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        breakdown:
+          type: object
+          properties:
+            trainings:
+              $ref: '#/components/schemas/ComplianceCategory'
+            medical_exams:
+              $ref: '#/components/schemas/ComplianceCategory'
+            equipment:
+              $ref: '#/components/schemas/ComplianceCategory'
+        metadata:
+          type: object
+          properties:
+            total_employees:
+              type: integer
+            calculated_at:
+              type: string
+              format: date-time
+            weights_used:
+              type: object
+
+    ComplianceCategory:
+      type: object
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        weight:
+          type: number
+          minimum: 0
+          maximum: 100
+        status:
+          type: string
+          enum: [excellent, good, acceptable, poor, critical]
+
+    ComplianceTimeline:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        period:
+          type: object
+          properties:
+            start_date:
+              type: string
+              format: date
+            end_date:
+              type: string
+              format: date
+            days:
+              type: integer
+        timeline:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date-time
+              score:
+                type: integer
+              exposure_score:
+                type: string
+        trend:
+          type: object
+          properties:
+            direction:
+              type: string
+              enum: [improving, declining, stable]
+            change:
+              type: integer
+
+    ComplianceGaps:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        total_gaps:
+          type: integer
+        by_severity:
+          type: object
+          properties:
+            critical:
+              type: integer
+            warning:
+              type: integer
+            info:
+              type: integer
+        by_category:
+          type: object
+          properties:
+            training:
+              type: integer
+            medical:
+              type: integer
+            equipment:
+              type: integer
+        gaps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComplianceGap'
+
+    ComplianceGap:
+      type: object
+      properties:
+        category:
+          type: string
+          enum: [training, medical, equipment]
+        severity:
+          type: string
+          enum: [critical, warning, info]
+        item_id:
+          type: string
+          format: uuid
+        item_name:
+          type: string
+        issue:
+          type: string
+        expiry_date:
+          type: string
+          format: date
+          nullable: true
+        days_overdue:
+          type: integer
+          nullable: true
+        recommended_action:
+          type: string
+
+    # ========================================
+    # WEBHOOKS
+    # ========================================
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+            enum:
+              - employee.created
+              - employee.updated
+              - employee.deleted
+              - training.created
+              - training.completed
+              - medical.created
+              - medical.updated
+              - medical.expiring
+              - equipment.created
+              - equipment.updated
+              - equipment.expiring
+              - alert.created
+              - alert.resolved
+              - document.generated
+        secret:
+          type: string
+          description: Secret for HMAC signature verification
+        is_active:
+          type: boolean
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    WebhookWithStats:
+      allOf:
+        - $ref: '#/components/schemas/Webhook'
+        - type: object
+          properties:
+            last_delivery:
+              $ref: '#/components/schemas/WebhookDeliveryLog'
+              nullable: true
+            stats:
+              type: object
+              properties:
+                success_count:
+                  type: integer
+                failed_count:
+                  type: integer
+
+    WebhookDeliveryLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+        payload:
+          type: object
+        status:
+          type: string
+          enum: [pending, success, failed]
+        http_status_code:
+          type: integer
+          nullable: true
+        response_body:
+          type: string
+          nullable: true
+        error_message:
+          type: string
+          nullable: true
+        attempts:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateWebhookInput:
+      type: object
+      required:
+        - organization_id
+        - url
+        - events
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+          minItems: 1
+
+    # ========================================
+    # FEATURE FLAGS
+    # ========================================
+    FeatureFlag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        flag_key:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        is_enabled_globally:
+          type: boolean
+        rollout_percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    FeatureFlagOverride:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        flag_id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+          nullable: true
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    # ========================================
+    # COMMON
+    # ========================================
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          description: Additional error details
+        code:
+          type: string
+          description: Machine-readable error code
+
+  responses:
+    Unauthorized:
+      description: Unauthorized - Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: "Unauthorized"
+            message: "Trebuie să fii autentificat pentru a accesa această resursă"
+            code: "AUTH_REQUIRED"
+
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: "Forbidden"
+            message: "Nu ai permisiunea să accesezi această resursă"
+            code: "INSUFFICIENT_PERMISSIONS"
+
+    NotFound:
+      description: Not Found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: "Not Found"
+            message: "Resursa solicitată nu a fost găsită"
+            code: "NOT_FOUND"
+
+    ValidationError:
+      description: Validation Error - Invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: "Validation Error"
+            message: "Date de intrare invalide"
+            code: "VALIDATION_ERROR"
+            details:
+              _errors: []
+              name:
+                _errors: ["Required"]
+
+    Conflict:
+      description: Conflict - Resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: "Conflict"
+            message: "Există deja un angajat cu acest CNP în organizație"
+            code: "DUPLICATE_CNP"
+
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: "Internal Server Error"
+            message: "A apărut o eroare neprevăzută"
+            code: "INTERNAL_ERROR"
