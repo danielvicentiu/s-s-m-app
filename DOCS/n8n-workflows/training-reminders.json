@@ -1,0 +1,512 @@
+{
+  "name": "SSM Training Reminders - Automated Notifications",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "cron-trigger-daily",
+      "name": "Daily Check at 8 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Query expiring trainings with employee and organization details\nSELECT \n  t.id,\n  t.employee_id,\n  t.organization_id,\n  t.training_type,\n  t.training_date,\n  t.expiration_date,\n  t.status,\n  e.first_name,\n  e.last_name,\n  e.email,\n  e.phone,\n  o.name as organization_name,\n  o.contact_email as org_contact_email,\n  m.user_id as consultant_user_id,\n  p.email as consultant_email,\n  p.full_name as consultant_name,\n  p.phone as consultant_phone,\n  -- Calculate days until expiration\n  DATE_PART('day', t.expiration_date - CURRENT_DATE)::int as days_until_expiration,\n  -- Determine severity level\n  CASE \n    WHEN DATE_PART('day', t.expiration_date - CURRENT_DATE) <= 7 THEN 'critical'\n    WHEN DATE_PART('day', t.expiration_date - CURRENT_DATE) <= 14 THEN 'high'\n    WHEN DATE_PART('day', t.expiration_date - CURRENT_DATE) <= 30 THEN 'medium'\n    ELSE 'low'\n  END as severity\nFROM trainings t\nINNER JOIN employees e ON t.employee_id = e.id\nINNER JOIN organizations o ON t.organization_id = o.id\nLEFT JOIN memberships m ON o.id = m.organization_id AND m.role = 'consultant'\nLEFT JOIN profiles p ON m.user_id = p.id\nWHERE \n  t.status = 'active'\n  AND t.expiration_date IS NOT NULL\n  AND t.expiration_date > CURRENT_DATE\n  AND DATE_PART('day', t.expiration_date - CURRENT_DATE) <= 30\n  AND (t.deleted_at IS NULL OR t.deleted_at > CURRENT_DATE)\nORDER BY t.expiration_date ASC;",
+        "options": {}
+      },
+      "id": "supabase-query-trainings",
+      "name": "Get Expiring Trainings",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-uhccxfyvhjeudkexcgiq",
+          "name": "Supabase SSM Database"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.severity }}",
+              "operation": "equals",
+              "value2": "critical"
+            }
+          ]
+        }
+      },
+      "id": "filter-critical",
+      "name": "Filter Critical (7 days)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.severity }}",
+              "operation": "equals",
+              "value2": "high"
+            }
+          ]
+        }
+      },
+      "id": "filter-high",
+      "name": "Filter High (14 days)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.severity }}",
+              "operation": "equals",
+              "value2": "medium"
+            }
+          ]
+        }
+      },
+      "id": "filter-medium",
+      "name": "Filter Medium (30 days)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "notifications@s-s-m.ro",
+        "toEmail": "={{ $json.email }}, {{ $json.consultant_email }}",
+        "subject": "🚨 URGENT: Instructaj SSM expiră în {{ $json.days_until_expiration }} zile",
+        "emailType": "html",
+        "html": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #dc2626; color: white; padding: 20px; border-radius: 8px; }\n    .content { background: #f9fafb; padding: 20px; margin-top: 20px; border-radius: 8px; }\n    .warning { background: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin: 15px 0; }\n    .footer { margin-top: 20px; font-size: 12px; color: #666; }\n    .button { display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 15px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>⚠️ AVERTIZARE CRITICĂ</h1>\n    </div>\n    <div class=\"content\">\n      <p>Bună ziua <strong>{{ $json.first_name }} {{ $json.last_name }}</strong>,</p>\n      \n      <div class=\"warning\">\n        <h3>Instructaj expiră în {{ $json.days_until_expiration }} ZILE!</h3>\n        <p><strong>Tip:</strong> {{ $json.training_type }}</p>\n        <p><strong>Data expirare:</strong> {{ $json.expiration_date.split('T')[0] }}</p>\n        <p><strong>Angajat:</strong> {{ $json.first_name }} {{ $json.last_name }}</p>\n        <p><strong>Organizație:</strong> {{ $json.organization_name }}</p>\n      </div>\n      \n      <p><strong>Acțiune necesară IMEDIAT:</strong></p>\n      <ul>\n        <li>Contactați consultantul SSM pentru reprogramare</li>\n        <li>Verificați disponibilitatea echipei</li>\n        <li>Evitați expirarea pentru conformitate legală</li>\n      </ul>\n      \n      <p><strong>Contact consultant:</strong><br>\n      {{ $json.consultant_name }}<br>\n      Email: {{ $json.consultant_email }}<br>\n      Telefon: {{ $json.consultant_phone }}</p>\n      \n      <a href=\"https://app.s-s-m.ro/dashboard/trainings\" class=\"button\">Vezi detalii în platformă</a>\n    </div>\n    <div class=\"footer\">\n      <p>Acest email a fost trimis automat de platforma S-S-M.ro</p>\n      <p>© 2026 S-S-M.ro - Soluții digitale SSM/PSI</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-critical",
+      "name": "Send Critical Email (Resend)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        120
+      ],
+      "credentials": {
+        "resendApi": {
+          "id": "resend-api-ssm",
+          "name": "Resend API - S-S-M"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "notifications@s-s-m.ro",
+        "toEmail": "={{ $json.email }}, {{ $json.consultant_email }}",
+        "subject": "⚠️ Atenție: Instructaj SSM expiră în {{ $json.days_until_expiration }} zile",
+        "emailType": "html",
+        "html": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #ea580c; color: white; padding: 20px; border-radius: 8px; }\n    .content { background: #f9fafb; padding: 20px; margin-top: 20px; border-radius: 8px; }\n    .warning { background: #fff7ed; border-left: 4px solid #ea580c; padding: 15px; margin: 15px 0; }\n    .footer { margin-top: 20px; font-size: 12px; color: #666; }\n    .button { display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 15px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>⚠️ AVERTIZARE IMPORTANTĂ</h1>\n    </div>\n    <div class=\"content\">\n      <p>Bună ziua <strong>{{ $json.first_name }} {{ $json.last_name }}</strong>,</p>\n      \n      <div class=\"warning\">\n        <h3>Instructaj expiră în {{ $json.days_until_expiration }} zile</h3>\n        <p><strong>Tip:</strong> {{ $json.training_type }}</p>\n        <p><strong>Data expirare:</strong> {{ $json.expiration_date.split('T')[0] }}</p>\n        <p><strong>Angajat:</strong> {{ $json.first_name }} {{ $json.last_name }}</p>\n        <p><strong>Organizație:</strong> {{ $json.organization_name }}</p>\n      </div>\n      \n      <p><strong>Acțiune recomandată:</strong></p>\n      <ul>\n        <li>Planificați reînnoirea instructajului</li>\n        <li>Contactați consultantul pentru programare</li>\n        <li>Asigurați conformitatea SSM</li>\n      </ul>\n      \n      <p><strong>Contact consultant:</strong><br>\n      {{ $json.consultant_name }}<br>\n      Email: {{ $json.consultant_email }}<br>\n      Telefon: {{ $json.consultant_phone }}</p>\n      \n      <a href=\"https://app.s-s-m.ro/dashboard/trainings\" class=\"button\">Vezi detalii în platformă</a>\n    </div>\n    <div class=\"footer\">\n      <p>Acest email a fost trimis automat de platforma S-S-M.ro</p>\n      <p>© 2026 S-S-M.ro - Soluții digitale SSM/PSI</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-high",
+      "name": "Send High Priority Email (Resend)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        320
+      ],
+      "credentials": {
+        "resendApi": {
+          "id": "resend-api-ssm",
+          "name": "Resend API - S-S-M"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "notifications@s-s-m.ro",
+        "toEmail": "={{ $json.email }}, {{ $json.consultant_email }}",
+        "subject": "📋 Reminder: Instructaj SSM expiră în {{ $json.days_until_expiration }} zile",
+        "emailType": "html",
+        "html": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px; }\n    .content { background: #f9fafb; padding: 20px; margin-top: 20px; border-radius: 8px; }\n    .info { background: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin: 15px 0; }\n    .footer { margin-top: 20px; font-size: 12px; color: #666; }\n    .button { display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 15px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>📋 Reminder Instructaj SSM</h1>\n    </div>\n    <div class=\"content\">\n      <p>Bună ziua <strong>{{ $json.first_name }} {{ $json.last_name }}</strong>,</p>\n      \n      <div class=\"info\">\n        <h3>Instructaj expiră în {{ $json.days_until_expiration }} zile</h3>\n        <p><strong>Tip:</strong> {{ $json.training_type }}</p>\n        <p><strong>Data expirare:</strong> {{ $json.expiration_date.split('T')[0] }}</p>\n        <p><strong>Angajat:</strong> {{ $json.first_name }} {{ $json.last_name }}</p>\n        <p><strong>Organizație:</strong> {{ $json.organization_name }}</p>\n      </div>\n      \n      <p>Vă informăm că instructajul SSM va expira în curând. Vă recomandăm să planificați reînnoirea.</p>\n      \n      <p><strong>Contact consultant:</strong><br>\n      {{ $json.consultant_name }}<br>\n      Email: {{ $json.consultant_email }}<br>\n      Telefon: {{ $json.consultant_phone }}</p>\n      \n      <a href=\"https://app.s-s-m.ro/dashboard/trainings\" class=\"button\">Vezi detalii în platformă</a>\n    </div>\n    <div class=\"footer\">\n      <p>Acest email a fost trimis automat de platforma S-S-M.ro</p>\n      <p>© 2026 S-S-M.ro - Soluții digitale SSM/PSI</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-medium",
+      "name": "Send Medium Priority Email (Resend)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        520
+      ],
+      "credentials": {
+        "resendApi": {
+          "id": "resend-api-ssm",
+          "name": "Resend API - S-S-M"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/={{ $credentials.twilioAccountSid }}/Messages.json",
+        "sendBody": true,
+        "specifyBody": "form",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "From",
+              "value": "whatsapp:+14155238886"
+            },
+            {
+              "name": "To",
+              "value": "whatsapp:{{ $json.phone }}"
+            },
+            {
+              "name": "Body",
+              "value": "🚨 URGENT SSM 🚨\n\nBună ziua {{ $json.first_name }},\n\nInstructaj *{{ $json.training_type }}* expiră în *{{ $json.days_until_expiration }} ZILE*!\n\n📅 Expirare: {{ $json.expiration_date.split('T')[0] }}\n🏢 {{ $json.organization_name }}\n\n⚠️ Acțiune necesară IMEDIAT!\n\nContact consultant:\n{{ $json.consultant_name }}\n📞 {{ $json.consultant_phone }}\n\nDetalii: https://app.s-s-m.ro/dashboard/trainings\n\n---\nS-S-M.ro - Notificare automată"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "whatsapp-critical",
+      "name": "Send Critical WhatsApp (Twilio)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1120,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "twilio-auth-ssm",
+          "name": "Twilio Auth - S-S-M"
+        },
+        "twilioApi": {
+          "id": "twilio-api-ssm",
+          "name": "Twilio API - S-S-M"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/={{ $credentials.twilioAccountSid }}/Messages.json",
+        "sendBody": true,
+        "specifyBody": "form",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "From",
+              "value": "whatsapp:+14155238886"
+            },
+            {
+              "name": "To",
+              "value": "whatsapp:{{ $json.phone }}"
+            },
+            {
+              "name": "Body",
+              "value": "⚠️ Atenție SSM\n\nBună ziua {{ $json.first_name }},\n\nInstructaj *{{ $json.training_type }}* expiră în *{{ $json.days_until_expiration }} zile*\n\n📅 Expirare: {{ $json.expiration_date.split('T')[0] }}\n🏢 {{ $json.organization_name }}\n\nVă recomandăm planificarea reînnoirii.\n\nContact consultant:\n{{ $json.consultant_name }}\n📞 {{ $json.consultant_phone }}\n\nDetalii: https://app.s-s-m.ro/dashboard/trainings\n\n---\nS-S-M.ro - Notificare automată"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "whatsapp-high",
+      "name": "Send High Priority WhatsApp (Twilio)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1120,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "twilio-auth-ssm",
+          "name": "Twilio Auth - S-S-M"
+        },
+        "twilioApi": {
+          "id": "twilio-api-ssm",
+          "name": "Twilio API - S-S-M"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO email_delivery_log (\n  training_id,\n  recipient_email,\n  recipient_name,\n  notification_type,\n  severity,\n  days_until_expiration,\n  email_subject,\n  email_provider,\n  delivery_status,\n  sent_at\n) VALUES (\n  '{{ $json.id }}',\n  '{{ $json.email }}',\n  '{{ $json.first_name }} {{ $json.last_name }}',\n  'training_reminder',\n  '{{ $json.severity }}',\n  {{ $json.days_until_expiration }},\n  '{{ $runIndex === 0 ? \"🚨 URGENT: Instructaj SSM expiră în \" + $json.days_until_expiration + \" zile\" : $runIndex === 1 ? \"⚠️ Atenție: Instructaj SSM expiră în \" + $json.days_until_expiration + \" zile\" : \"📋 Reminder: Instructaj SSM expiră în \" + $json.days_until_expiration + \" zile\" }}',\n  'resend',\n  'sent',\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "log-email-delivery",
+      "name": "Log Email Delivery",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1340,
+        220
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-uhccxfyvhjeudkexcgiq",
+          "name": "Supabase SSM Database"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO whatsapp_delivery_log (\n  training_id,\n  recipient_phone,\n  recipient_name,\n  notification_type,\n  severity,\n  days_until_expiration,\n  message_provider,\n  delivery_status,\n  sent_at\n) VALUES (\n  '{{ $json.id }}',\n  '{{ $json.phone }}',\n  '{{ $json.first_name }} {{ $json.last_name }}',\n  'training_reminder',\n  '{{ $json.severity }}',\n  {{ $json.days_until_expiration }},\n  'twilio',\n  'sent',\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "log-whatsapp-delivery",
+      "name": "Log WhatsApp Delivery",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1340,
+        420
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-uhccxfyvhjeudkexcgiq",
+          "name": "Supabase SSM Database"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Update workflow execution stats\nINSERT INTO workflow_execution_log (\n  workflow_name,\n  execution_id,\n  status,\n  total_trainings_checked,\n  critical_sent,\n  high_sent,\n  medium_sent,\n  started_at,\n  completed_at\n) VALUES (\n  'training-reminders',\n  '{{ $execution.id }}',\n  'success',\n  {{ $('Get Expiring Trainings').all().length }},\n  {{ $('Filter Critical (7 days)').all().length }},\n  {{ $('Filter High (14 days)').all().length }},\n  {{ $('Filter Medium (30 days)').all().length }},\n  '{{ $execution.startedAt }}',\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "log-workflow-execution",
+      "name": "Log Workflow Execution",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1560,
+        320
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-uhccxfyvhjeudkexcgiq",
+          "name": "Supabase SSM Database"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Daily Check at 8 AM": {
+      "main": [
+        [
+          {
+            "node": "Get Expiring Trainings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Expiring Trainings": {
+      "main": [
+        [
+          {
+            "node": "Filter Critical (7 days)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter High (14 days)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter Medium (30 days)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Critical (7 days)": {
+      "main": [
+        [
+          {
+            "node": "Send Critical Email (Resend)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter High (14 days)": {
+      "main": [
+        [
+          {
+            "node": "Send High Priority Email (Resend)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Medium (30 days)": {
+      "main": [
+        [
+          {
+            "node": "Send Medium Priority Email (Resend)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Critical Email (Resend)": {
+      "main": [
+        [
+          {
+            "node": "Send Critical WhatsApp (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send High Priority Email (Resend)": {
+      "main": [
+        [
+          {
+            "node": "Send High Priority WhatsApp (Twilio)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Medium Priority Email (Resend)": {
+      "main": [
+        [
+          {
+            "node": "Log Email Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Critical WhatsApp (Twilio)": {
+      "main": [
+        [
+          {
+            "node": "Log Email Delivery",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log WhatsApp Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send High Priority WhatsApp (Twilio)": {
+      "main": [
+        [
+          {
+            "node": "Log Email Delivery",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log WhatsApp Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Email Delivery": {
+      "main": [
+        [
+          {
+            "node": "Log Workflow Execution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log WhatsApp Delivery": {
+      "main": [
+        [
+          {
+            "node": "Log Workflow Execution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "versionId": "1.0.0",
+  "id": "training-reminders-workflow",
+  "meta": {
+    "instanceId": "s-s-m-ro-production"
+  },
+  "tags": [
+    {
+      "id": "ssm-automation",
+      "name": "SSM Automation"
+    },
+    {
+      "id": "notifications",
+      "name": "Notifications"
+    },
+    {
+      "id": "trainings",
+      "name": "Trainings"
+    }
+  ]
+}
