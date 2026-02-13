@@ -11,7 +11,7 @@ import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X, Flame } from 'lucide-react'
 // RBAC: Import hook-uri client-side pentru verificare permisiuni
 import { useHasPermission } from '@/hooks/usePermission'
 
@@ -381,6 +381,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
         {/* Table */}
         {filtered.length === 0 ? (
           <EmptyState
+            icon={Flame}
             title="Niciun echipament"
             description="Adaugă primul echipament PSI pentru a începe monitorizarea."
             actionLabel="+ Adaugă echipament"
