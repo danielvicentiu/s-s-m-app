@@ -22,6 +22,16 @@
     "privacy": "Adatvédelem",
     "gdpr": "GDPR"
   },
+  "seo": {
+    "landing": {
+      "title": "Digitális munkavédelmi és tűzvédelmi platform | 100% automatizált | s-s-m.ro",
+      "description": "Kezelje a munkaegészségügyet, tűzvédelmi berendezéseket, riasztásokat és jelentéseket egyetlen platformról. Nulla bürokrácia, nulla bírság az OMMF-től. Teljes digitális megoldás munkavédelmi tanácsadóknak és vállalatoknak Magyarországon."
+    },
+    "pricing": {
+      "title": "Munkavédelmi platform árak | Átlátható csomagok | s-s-m.ro",
+      "description": "Világos és egyszerű árazás a digitális munkavédelmi és tűzvédelmi platformhoz. 74.900 HUF/évtől. Nincs rejtett költség, minden funkcióval. Basic, Pro, Corporate és Enterprise."
+    }
+  },
   "nav": {
     "features": "Funkciók",
     "pricing": "Árak",
@@ -47,9 +57,9 @@
     "noSetupFee": "Nincs beállítási díj. Bármikor lemondható.",
     "features": {
       "medicalTitle": "Munkaegészségügy",
-      "medicalDesc": "Orvosi nyilvántartás követése, automatikus lejárati riasztások, teljes munkavállalónkénti nyilvántartás.",
+      "medicalDesc": "Munkaköri alkalmassági vizsgálatok követése, automatikus lejárati riasztások, teljes munkavállalónkénti nyilvántartás valós időben.",
       "equipmentTitle": "Tűzvédelmi berendezések",
-      "equipmentDesc": "Tűzoltó készülékek, tűzcsapok, füstérzékelők leltára. Ellenőrzés ütemezés, karbantartási naplók.",
+      "equipmentDesc": "Tűzoltó készülékek, tűzcsapok, füstérzékelők leltára. Ellenőrzés ütemezés, karbantartási naplók, QR kód követés.",
       "alertsTitle": "Automatikus riasztások",
       "alertsDesc": "Napi e-mail a közelgő lejáratokról (30/15/7 nap). Resend integráció, WhatsApp értesítések (hamarosan).",
       "riskTitle": "Pénzügyi kockázat",
@@ -57,7 +67,7 @@
       "multiOrgTitle": "Több szervezet",
       "multiOrgDesc": "Kezeljen 100+ céget egyetlen irányítópultról. Azonnali szűrés, mentett beállítások.",
       "reportsTitle": "PDF Jelentések",
-      "reportsDesc": "Automatikus jelentésgenerálás, SHA256 hash, felhő archiválás, 1 kattintásos exportálás."
+      "reportsDesc": "Automatikus OMMF jelentésgenerálás, SHA256 hash változtathatatlansággal, felhő archiválás, 1 kattintásos exportálás."
     },
     "pricingFeatures": [
       "Munkaegészségügy — korlátlan követés",
@@ -92,9 +102,9 @@
   "dashboard": {
     "allOrganizations": "Összes szervezet",
     "employees": "alkalmazottak",
-    "toggleRiskITM": "ITM kockázat",
-    "toggleRiskEuro": "Kockázat €",
-    "riskControl": "ITM ellenőrzési kockázat",
+    "toggleRiskITM": "OMMF kockázat",
+    "toggleRiskEuro": "Kockázat HUF",
+    "riskControl": "OMMF ellenőrzési kockázat",
     "dataCompleteness": "Adatok teljessége",
     "riskLevels": {
       "low": "Alacsony",
@@ -182,9 +192,9 @@
     }
   },
   "footer": {
-    "description": "Digitális platform munkavédelmi és tűzvédelmi megfeleléshez.",
-    "email": "contact@s-s-m.ro",
-    "phone": "+36 1 000 0000",
+    "description": "Digitális platform munkavédelmi és tűzvédelmi megfeleléshez — 1993. évi XCIII. törvény szerint.",
+    "email": "kapcsolat@s-s-m.ro",
+    "phone": "+36 30 123 4567",
     "address": "Budapest, Magyarország"
   }
 }

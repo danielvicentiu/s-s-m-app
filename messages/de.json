@@ -22,6 +22,16 @@
     "privacy": "Datenschutz",
     "gdpr": "DSGVO"
   },
+  "seo": {
+    "landing": {
+      "title": "Digitale Arbeitssicherheit und Brandschutz Plattform | 100% automatisiert | s-s-m.ro",
+      "description": "Verwalten Sie Arbeitsmedizin, Brandschutzausrüstung, Warnungen und Berichte von einer einzigen Plattform aus. Null Bürokratie, null Bußgelder. Vollständige digitale Lösung für Sicherheitsberater und Unternehmen in Deutschland."
+    },
+    "pricing": {
+      "title": "Arbeitssicherheit Plattform Preise | Transparente Pläne | s-s-m.ro",
+      "description": "Klare und einfache Preise für digitale Arbeitssicherheit und Brandschutz Plattform. Ab 399 EUR/Jahr. Keine versteckten Kosten, alle Funktionen inklusive. Basic, Pro, Corporate und Enterprise."
+    }
+  },
   "nav": {
     "features": "Funktionen",
     "pricing": "Preise",

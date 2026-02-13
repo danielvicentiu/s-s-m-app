@@ -22,6 +22,16 @@
     "privacy": "Privacy",
     "gdpr": "GDPR"
   },
+  "seo": {
+    "landing": {
+      "title": "Digital OHS & Fire Safety Platform | 100% Automated Compliance | s-s-m.ro",
+      "description": "Manage occupational health, fire safety equipment, alerts and reports from a single platform. Zero paperwork, zero fines. Complete digital solution for OHS consultants and companies."
+    },
+    "pricing": {
+      "title": "OHS Platform Pricing | Transparent Plans | s-s-m.ro",
+      "description": "Clear and simple pricing for digital OHS & Fire Safety platform. From €200/year. No hidden costs, all features included. Basic, Pro, Corporate and Enterprise plans."
+    }
+  },
   "nav": {
     "features": "Features",
     "pricing": "Pricing",

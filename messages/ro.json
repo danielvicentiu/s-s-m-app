@@ -22,6 +22,16 @@
     "privacy": "Confidențialitate",
     "gdpr": "GDPR"
   },
+  "seo": {
+    "landing": {
+      "title": "Platformă SSM & PSI Digitală | Conformitate 100% Automată | s-s-m.ro",
+      "description": "Gestionează medicina muncii, echipamentele PSI, alerte și rapoarte dintr-o singură platformă. Zero birocrație, zero amenzi ITM. Soluție digitală completă pentru consultanți SSM și firme din România."
+    },
+    "pricing": {
+      "title": "Preț Platformă SSM | Planuri Transparente | s-s-m.ro",
+      "description": "Prețuri clare și simple pentru platforma digitală SSM & PSI. De la 990 lei/an. Fără costuri ascunse, toate funcționalitățile incluse. Basic, Pro, Corporate și Enterprise."
+    }
+  },
   "nav": {
     "features": "Funcționalități",
     "pricing": "Preț",

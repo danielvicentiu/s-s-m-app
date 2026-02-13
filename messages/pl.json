@@ -22,6 +22,16 @@
     "privacy": "Prywatność",
     "gdpr": "RODO"
   },
+  "seo": {
+    "landing": {
+      "title": "Platforma cyfrowa BHP i ochrony przeciwpożarowej | 100% zautomatyzowana | s-s-m.ro",
+      "description": "Zarządzaj medycyną pracy, sprzętem przeciwpożarowym, alertami i raportami zgodnie z Kodeksem pracy. Zero biurokracji, zero kar PIP. Pełne cyfrowe rozwiązanie dla konsultantów BHP i firm w Polsce."
+    },
+    "pricing": {
+      "title": "Cennik platformy BHP | Przejrzyste plany | s-s-m.ro",
+      "description": "Jasne i proste ceny platformy cyfrowej BHP i ochrony przeciwpożarowej. Od 1.690 zł/rok. Bez ukrytych kosztów, wszystkie funkcje wliczone. Basic, Pro, Corporate i Enterprise."
+    }
+  },
   "nav": {
     "features": "Funkcje",
     "pricing": "Cennik",
@@ -31,51 +41,51 @@
     "contact": "Kontakt"
   },
   "landing": {
-    "badge": "Platforma cyfrowa BHP i ochrony przeciwpożarowej",
+    "badge": "Platforma cyfrowa BHP zgodna z Kodeksem pracy",
     "title": "Zgodność BHP i ochrony przeciwpożarowej",
     "titleHighlight": "100% zautomatyzowana",
-    "subtitle": "Zarządzaj medycyną pracy, sprzętem przeciwpożarowym, alertami i raportami z jednej platformy. Zero biurokracji, zero kar PIP.",
+    "subtitle": "Zarządzaj medycyną pracy, sprzętem przeciwpożarowym, alertami i raportami zgodnie z Kodeksem pracy i przepisami PIP. Zero biurokracji, zero kar Państwowej Inspekcji Pracy.",
     "cta": "Rozpocznij teraz →",
     "featuresTitle": "Wszystko czego potrzebujesz w jednym miejscu",
-    "featuresSubtitle": "6 zintegrowanych modułów dla pełnej zgodności BHP i ochrony przeciwpożarowej",
+    "featuresSubtitle": "6 zintegrowanych modułów dla pełnej zgodności z Kodeksem pracy i przepisami BHP",
     "pricingTitle": "Przejrzysta cena",
     "pricingSubtitle": "Jeden plan, wszystkie funkcje",
     "planProfessional": "PLAN PROFESJONALNY",
-    "price": "1.690 PLN",
+    "price": "1.690 zł",
     "perOrganization": "za organizację",
     "perYear": "/rok",
     "noSetupFee": "Bez opłaty wstępnej. Anuluj w każdej chwili.",
     "features": {
       "medicalTitle": "Medycyna pracy",
-      "medicalDesc": "Śledzenie dokumentacji medycznej, automatyczne alerty wygaśnięcia, pełna ewidencja pracowników w czasie rzeczywistym.",
+      "medicalDesc": "Śledzenie badań lekarskich zgodnie z art. 229 Kodeksu pracy. Automatyczne alerty wygaśnięcia, pełna ewidencja pracowników w czasie rzeczywistym.",
       "equipmentTitle": "Sprzęt przeciwpożarowy",
-      "equipmentDesc": "Inwentarz gaśnic, hydrantów, czujek dymu. Planowanie przeglądów, dzienniki konserwacji, śledzenie QR code.",
+      "equipmentDesc": "Inwentarz gaśnic, hydrantów, czujek dymu zgodnie z przepisami ochrony przeciwpożarowej. Planowanie przeglądów, dzienniki konserwacji, śledzenie QR code.",
       "alertsTitle": "Automatyczne alerty",
       "alertsDesc": "Codzienny email z nadchodzącymi wygaśnięciami (30/15/7 dni). Integracja Resend, powiadomienia WhatsApp (wkrótce).",
       "riskTitle": "Ryzyko finansowe",
-      "riskDesc": "Automatyczne obliczanie potencjalnych kar PIP. Rozbicie według organu, oszacowanie min-max w zł.",
+      "riskDesc": "Automatyczne obliczanie potencjalnych kar Państwowej Inspekcji Pracy (PIP). Rozbicie według kategorii naruszeń, oszacowanie min-max w PLN.",
       "multiOrgTitle": "Multi-organizacja",
-      "multiOrgDesc": "Zarządzaj 100+ firmami z jednego panelu. Natychmiastowe filtrowanie, zapisane preferencje, architektura wielodostępna.",
+      "multiOrgDesc": "Zarządzaj wieloma firmami z jednego panelu. Natychmiastowe filtrowanie, zapisane preferencje, architektura wielodostępna.",
       "reportsTitle": "Raporty PDF",
-      "reportsDesc": "Automatyczne generowanie raportów PIP, hash SHA256 dla niezmienności, archiwum w chmurze, eksport 1-kliknięciem."
+      "reportsDesc": "Automatyczne generowanie raportów dla PIP, hash SHA256 dla niezmienności, archiwum w chmurze, eksport 1-kliknięciem."
     },
     "pricingFeatures": [
-      "Medycyna pracy — nieograniczone śledzenie",
-      "Sprzęt przeciwpożarowy — pełny inwentarz",
+      "Medycyna pracy — nieograniczone śledzenie badań lekarskich",
+      "Sprzęt przeciwpożarowy — pełny inwentarz zgodny z przepisami",
       "Automatyczne codzienne alerty email",
-      "Ryzyko finansowe — obliczanie kar PIP",
+      "Ryzyko finansowe — obliczanie kar Państwowej Inspekcji Pracy",
       "Multi-organizacja — nieograniczona liczba firm",
-      "Raporty PDF — automatyczne generowanie",
+      "Raporty PDF — automatyczne generowanie dla kontroli PIP",
       "Priorytetowe wsparcie techniczne",
       "Automatyczne codzienne kopie zapasowe",
-      "Darmowe aktualizacje"
+      "Darmowe aktualizacje przepisów BHP"
     ],
-    "penaltiesTitle": "Kary za brak zgodności BHP",
-    "penaltiesSubtitle": "Oblicz swoje ryzyko finansowe jeśli brakuje obowiązkowych dokumentów",
-    "penaltiesIntro": "Organy kontrolne mogą nałożyć kary między:",
+    "penaltiesTitle": "Kary Państwowej Inspekcji Pracy za brak zgodności BHP",
+    "penaltiesSubtitle": "Oblicz swoje ryzyko finansowe jeśli brakuje obowiązkowych dokumentów zgodnie z Kodeksem pracy",
+    "penaltiesIntro": "Państwowa Inspekcja Pracy może nałożyć kary od 1.000 do 30.000 PLN za naruszenie przepisów BHP:",
     "penaltiesCalculator": "Zaznacz czego NIE masz w porządku:",
-    "penaltiesTotal": "Całkowite ryzyko kar:",
-    "penaltiesDisclaimer": "Wartości szacunkowe według aktualnego prawodawstwa. Rzeczywiste kary mogą się różnić."
+    "penaltiesTotal": "Całkowite ryzyko kar PIP:",
+    "penaltiesDisclaimer": "Wartości szacunkowe według Kodeksu pracy i przepisów wykonawczych. Rzeczywiste kary mogą się różnić w zależności od wagi naruszenia."
   },
   "login": {
     "title": "Platforma BHP — Logowanie",
@@ -92,9 +102,9 @@
   "dashboard": {
     "allOrganizations": "Wszystkie organizacje",
     "employees": "pracowników",
-    "toggleRiskITM": "Ryzyko ITM",
-    "toggleRiskEuro": "Ryzyko €",
-    "riskControl": "Ryzyko kontroli ITM",
+    "toggleRiskITM": "Ryzyko PIP",
+    "toggleRiskEuro": "Ryzyko PLN",
+    "riskControl": "Ryzyko kontroli Państwowej Inspekcji Pracy",
     "dataCompleteness": "Kompletność danych",
     "riskLevels": {
       "low": "Niski",
@@ -182,9 +192,9 @@
     }
   },
   "footer": {
-    "description": "Platforma cyfrowa dla zgodności BHP i ochrony przeciwpożarowej. Medycyna pracy, sprzęt przeciwpożarowy, automatyczne alerty.",
-    "email": "contact@s-s-m.ro",
-    "phone": "+48 22 000 0000",
+    "description": "Platforma cyfrowa dla zgodności BHP i ochrony przeciwpożarowej zgodnie z Kodeksem pracy. Medycyna pracy, sprzęt przeciwpożarowy, automatyczne alerty dla firm w Polsce.",
+    "email": "kontakt@s-s-m.ro",
+    "phone": "+48 22 123 4567",
     "address": "Warszawa, Polska"
   }
 }
