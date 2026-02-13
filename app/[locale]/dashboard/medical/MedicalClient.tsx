@@ -269,9 +269,9 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
 
   const columns: Column<MedicalExam>[] = [
     {
-      key: 'employee_name',
-      label: 'Angajat',
-      render: (row) => (
+      accessor: 'employee_name',
+      header: 'Angajat',
+      render: (value, row) => (
         <div>
           <div className="font-medium text-gray-900">{row.employee_name || '—'}</div>
           <div className="text-xs text-gray-400">{row.organizations?.name || ''}</div>
@@ -279,33 +279,33 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
       ),
     },
     {
-      key: 'job_title',
-      label: 'Funcție',
-      render: (row) => <span className="text-sm text-gray-600">{row.job_title || '—'}</span>,
+      accessor: 'job_title',
+      header: 'Funcție',
+      render: (value, row) => <span className="text-sm text-gray-600">{row.job_title || '—'}</span>,
     },
     {
-      key: 'examination_type',
-      label: 'Tip',
-      render: (row) => (
+      accessor: 'examination_type',
+      header: 'Tip',
+      render: (value, row) => (
         <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
           {examTypes[row.examination_type] || row.examination_type}
         </span>
       ),
     },
     {
-      key: 'examination_date',
-      label: 'Data examinare',
-      render: (row) => <span className="text-sm text-gray-600">{fmtDate(row.examination_date)}</span>,
+      accessor: 'examination_date',
+      header: 'Data examinare',
+      render: (value, row) => <span className="text-sm text-gray-600">{fmtDate(row.examination_date)}</span>,
     },
     {
-      key: 'expiry_date',
-      label: 'Expiră',
-      render: (row) => <span className="text-sm text-gray-600">{fmtDate(row.expiry_date)}</span>,
+      accessor: 'expiry_date',
+      header: 'Expiră',
+      render: (value, row) => <span className="text-sm text-gray-600">{fmtDate(row.expiry_date)}</span>,
     },
     {
-      key: 'result',
-      label: 'Rezultat',
-      render: (row) => {
+      accessor: 'result',
+      header: 'Rezultat',
+      render: (value, row) => {
         const colors: Record<string, string> = {
           apt: 'bg-green-50 text-green-700',
           apt_conditionat: 'bg-yellow-50 text-yellow-700',
@@ -320,10 +320,10 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
       },
     },
     {
-      key: 'status',
-      label: 'Status',
+      accessor: 'id',
+      header: 'Status',
       sortable: false,
-      render: (row) => (
+      render: (value, row) => (
         <StatusBadge
           status={getStatus(row.expiry_date)}
           label={getDaysText(row.expiry_date)}
@@ -331,10 +331,10 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
       ),
     },
     {
-      key: 'actions',
-      label: '',
+      accessor: 'id',
+      header: '',
       sortable: false,
-      render: (row) => (
+      render: (value, row) => (
         <div className="flex items-center gap-1">
           {/* RBAC: Buton "Editează" vizibil doar dacă user are permisiune 'update' pe 'medical' */}
           {canUpdate && (
@@ -457,8 +457,7 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
             <DataTable
               columns={columns}
               data={filtered}
-              emptyMessage="Nicio fișă corespunde filtrelor selectate."
-              pageSize={15}
+              emptyStateDescription="Nicio fișă corespunde filtrelor selectate."
             />
           )}
         </div>
