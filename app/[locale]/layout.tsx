@@ -4,6 +4,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
+import { SkipToContent } from "@/components/ui/SkipToContent";
+import { KeyboardNavigationProvider } from "@/components/ui/KeyboardNavigationProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,6 +48,8 @@ export default async function LocaleLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <SkipToContent />
+        <KeyboardNavigationProvider />
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
         </NextIntlClientProvider>
