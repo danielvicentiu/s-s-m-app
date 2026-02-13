@@ -1,107 +1,99 @@
 'use client'
 
 import { useRouter } from '@/i18n/navigation'
-import { Check } from 'lucide-react'
+import { Check, X } from 'lucide-react'
+import { useState } from 'react'
 
 export default function PricingPage() {
   const router = useRouter()
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual')
 
   const plans = [
     {
-      name: 'Basic',
-      price: '€200',
-      period: '/an',
-      employeeRange: '1-5 angajați',
+      name: 'Starter',
       description: 'Perfect pentru firme mici care încep digitalizarea SSM',
+      monthlyPrice: 0,
+      annualPrice: 0,
+      limits: {
+        companies: 1,
+        employees: 10,
+      },
       features: [
-        'Monitoring medicina muncii',
-        'Echipamente PSI — tracking basic',
-        'Maxim 5 angajați',
+        'O firmă',
+        'Până la 10 angajați',
+        'Medicina muncii - tracking',
+        'Echipamente PSI - basic',
         'Alerte email automate',
         'Dashboard complet',
         'Rapoarte PDF',
-        'Suport email',
+        'Suport email (48h)',
       ],
-      cta: 'Începe acum',
+      cta: 'Începe gratuit',
       highlighted: false,
-      color: 'gray',
+      isFree: true,
     },
     {
-      name: 'Pro',
-      price: '€350',
-      period: '/an',
-      employeeRange: '6-20 angajați',
+      name: 'Professional',
       description: 'Soluția optimă pentru firme în creștere',
+      monthlyPrice: 29,
+      annualPrice: 279, // 29 * 12 * 0.8 = 278.4 ≈ 279
+      limits: {
+        companies: 3,
+        employees: 100,
+      },
       features: [
-        'Toate din Basic',
-        'Până la 20 angajați',
-        'Risc financiar — calcul amenzi ITM',
-        'Multi-organizație',
+        'Până la 3 firme',
+        'Până la 100 angajați',
+        'Toate din Starter',
         'Instruiri SSM & PSI',
+        'Risc financiar — calcul amenzi ITM',
         'Alerte SMS (opțional)',
-        'Suport prioritar',
         'Export date Excel',
+        'Rapoarte personalizate',
+        'Suport prioritar (24h)',
+        'Onboarding dedicat',
       ],
       cta: 'Începe acum',
       highlighted: true,
-      color: 'blue',
-    },
-    {
-      name: 'Corporate',
-      price: '€1000',
-      period: '/an',
-      employeeRange: '21-100 angajați',
-      description: 'Pentru organizații cu echipe mari',
-      features: [
-        'Toate din Pro',
-        'Până la 100 angajați',
-        'REGES API integration',
-        'Rapoarte personalizate',
-        'Onboarding dedicat',
-        'Account manager',
-        'SLA 99.5% uptime',
-        'Training complet echipă',
-      ],
-      cta: 'Începe acum',
-      highlighted: false,
-      color: 'purple',
     },
     {
       name: 'Enterprise',
-      price: 'Custom',
-      period: '',
-      employeeRange: '100+ angajați',
       description: 'Soluție la cheie pentru grupuri de firme și consultanți SSM',
+      monthlyPrice: 99,
+      annualPrice: 950, // 99 * 12 * 0.8 = 950.4 ≈ 950
+      limits: {
+        companies: 'Nelimitat',
+        employees: 'Nelimitat',
+      },
       features: [
-        'Toate din Corporate',
+        'Firme nelimitate',
         'Angajați nelimitați',
+        'Toate din Professional',
         'White-label dashboard',
         'Multi-tenant architecture',
+        'REGES API integration',
         'Integrare ERP/HR (SAP, Saga)',
         'Workflows personalizate',
+        'Account manager dedicat',
         'SLA 99.9% uptime',
-        'Dedicated support 24/7',
+        'Training complet echipă',
+        'Support 24/7',
       ],
       cta: 'Contactează-ne',
       highlighted: false,
-      color: 'indigo',
     },
   ]
 
-  const addOns = [
-    {
-      name: 'Conformitate NIS2',
-      price: '€200',
-      period: '/an',
-      description: 'Raportare automată și monitorizare conformitate Directiva NIS2',
-    },
-    {
-      name: 'Conformitate GDPR',
-      price: '€150',
-      period: '/an',
-      description: 'Gestiune consimțăminte, rapoarte privacy, tracking DPO',
-    },
-  ]
+  const getPrice = (plan: typeof plans[0]) => {
+    if (plan.isFree) return 'Gratuit'
+    const price = billingCycle === 'monthly' ? plan.monthlyPrice : plan.annualPrice
+    return `€${price}`
+  }
+
+  const getPeriod = (plan: typeof plans[0]) => {
+    if (plan.isFree) return ''
+    return billingCycle === 'monthly' ? '/lună' : '/an'
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -138,17 +130,42 @@ export default function PricingPage() {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Alege planul potrivit pentru nevoile afacerii tale. Migrare între planuri oricând.
           </p>
+
+          {/* Billing Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <span className={`text-sm font-semibold ${billingCycle === 'monthly' ? 'text-gray-900' : 'text-gray-500'}`}>
+              Lunar
+            </span>
+            <button
+              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
+              className="relative w-14 h-7 bg-blue-600 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+            >
+              <span
+                className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${
+                  billingCycle === 'annual' ? 'translate-x-7' : ''
+                }`}
+              />
+            </button>
+            <span className={`text-sm font-semibold ${billingCycle === 'annual' ? 'text-gray-900' : 'text-gray-500'}`}>
+              Anual
+            </span>
+            {billingCycle === 'annual' && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                Economisești 20%
+              </span>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Pricing Cards */}
       <section className="pb-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {plans.map((plan, idx) => (
               <div
                 key={idx}
-                className={`rounded-2xl p-6 transition-all ${
+                className={`rounded-2xl p-8 transition-all ${
                   plan.highlighted
                     ? 'bg-blue-600 text-white shadow-2xl scale-105 border-4 border-blue-700'
                     : 'bg-white border-2 border-gray-200 hover:border-gray-300 hover:shadow-lg'
@@ -157,26 +174,19 @@ export default function PricingPage() {
                 {/* Badge */}
                 {plan.highlighted && (
                   <div className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white mb-4 uppercase tracking-wider">
-                    Popular
+                    Cel mai popular
                   </div>
                 )}
 
                 {/* Header */}
-                <div className="mb-4">
+                <div className="mb-6">
                   <h3
-                    className={`text-2xl font-black mb-1 ${
+                    className={`text-3xl font-black mb-2 ${
                       plan.highlighted ? 'text-white' : 'text-gray-900'
                     }`}
                   >
                     {plan.name}
                   </h3>
-                  <p
-                    className={`text-xs font-semibold mb-2 ${
-                      plan.highlighted ? 'text-blue-100' : 'text-blue-600'
-                    }`}
-                  >
-                    {plan.employeeRange}
-                  </p>
                   <p
                     className={`text-sm leading-relaxed ${
                       plan.highlighted ? 'text-blue-100' : 'text-gray-600'
@@ -190,35 +200,58 @@ export default function PricingPage() {
                 <div className="mb-6">
                   <div className="flex items-baseline gap-2">
                     <span
-                      className={`text-4xl font-black ${
+                      className={`text-5xl font-black ${
                         plan.highlighted ? 'text-white' : 'text-gray-900'
                       }`}
                     >
-                      {plan.price}
+                      {getPrice(plan)}
                     </span>
-                    {plan.period && (
+                    {getPeriod(plan) && (
                       <span
                         className={`text-base ${
                           plan.highlighted ? 'text-blue-100' : 'text-gray-500'
                         }`}
                       >
-                        {plan.period}
+                        {getPeriod(plan)}
                       </span>
                     )}
+                  </div>
+                  {!plan.isFree && billingCycle === 'monthly' && (
+                    <p className={`text-xs mt-2 ${plan.highlighted ? 'text-blue-100' : 'text-gray-500'}`}>
+                      sau €{plan.annualPrice}/an (economisești 20%)
+                    </p>
+                  )}
+                </div>
+
+                {/* Limits */}
+                <div className={`rounded-xl p-4 mb-6 ${plan.highlighted ? 'bg-blue-700/30' : 'bg-gray-50'}`}>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className={plan.highlighted ? 'text-blue-100' : 'text-gray-600'}>Firme:</span>
+                      <span className={`font-bold ${plan.highlighted ? 'text-white' : 'text-gray-900'}`}>
+                        {plan.limits.companies}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className={plan.highlighted ? 'text-blue-100' : 'text-gray-600'}>Angajați:</span>
+                      <span className={`font-bold ${plan.highlighted ? 'text-white' : 'text-gray-900'}`}>
+                        {plan.limits.employees}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Features */}
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2">
+                    <li key={i} className="flex items-start gap-3">
                       <Check
-                        className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
+                        className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
                           plan.highlighted ? 'text-blue-200' : 'text-blue-600'
                         }`}
                       />
                       <span
-                        className={`text-xs ${
+                        className={`text-sm ${
                           plan.highlighted ? 'text-white' : 'text-gray-700'
                         }`}
                       >
@@ -237,7 +270,7 @@ export default function PricingPage() {
                       router.push('/onboarding')
                     }
                   }}
-                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
+                  className={`w-full py-4 rounded-xl font-bold text-base transition-all ${
                     plan.highlighted
                       ? 'bg-white text-blue-600 hover:bg-blue-50 shadow-lg'
                       : 'bg-blue-600 text-white hover:bg-blue-700'
@@ -248,7 +281,7 @@ export default function PricingPage() {
 
                 {/* Footer note */}
                 {plan.highlighted && (
-                  <p className="text-center text-xs text-blue-100 mt-3">
+                  <p className="text-center text-xs text-blue-100 mt-4">
                     Fără setup fee. Anulezi oricând.
                   </p>
                 )}
@@ -258,37 +291,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Add-ons */}
-      <section className="pb-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">Module suplimentare (Add-ons)</h2>
-            <p className="text-gray-600 text-lg">Extinde funcționalitatea platformei cu module de conformitate</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {addOns.map((addon, idx) => (
-              <div
-                key={idx}
-                className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-blue-300 hover:shadow-lg transition-all"
-              >
-                <h3 className="text-2xl font-black text-gray-900 mb-2">{addon.name}</h3>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-3xl font-black text-blue-600">{addon.price}</span>
-                  <span className="text-gray-500">{addon.period}</span>
-                </div>
-                <p className="text-gray-600 mb-6">{addon.description}</p>
-                <button
-                  onClick={() => router.push('/onboarding')}
-                  className="w-full bg-gray-100 text-gray-900 px-6 py-3 rounded-xl font-bold hover:bg-gray-200 transition"
-                >
-                  Adaugă la plan
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Comparison Table */}
       <section className="py-20 px-6 bg-gray-50">
@@ -302,37 +304,180 @@ export default function PricingPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <th className="text-left px-6 py-4 text-sm font-bold text-gray-900">Funcționalitate</th>
-                    <th className="text-center px-4 py-4 text-sm font-bold text-gray-900">Basic</th>
-                    <th className="text-center px-4 py-4 text-sm font-bold text-blue-600 bg-blue-50">Pro</th>
-                    <th className="text-center px-4 py-4 text-sm font-bold text-gray-900">Corporate</th>
-                    <th className="text-center px-4 py-4 text-sm font-bold text-gray-900">Enterprise</th>
+                  <tr className="bg-gray-50 border-b-2 border-gray-200">
+                    <th className="text-left px-6 py-5 text-sm font-bold text-gray-900 w-1/3">Funcționalitate</th>
+                    <th className="text-center px-6 py-5 text-sm font-bold text-gray-900">Starter</th>
+                    <th className="text-center px-6 py-5 text-sm font-bold text-blue-600 bg-blue-50">Professional</th>
+                    <th className="text-center px-6 py-5 text-sm font-bold text-gray-900">Enterprise</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {[
-                    ['Medicina Muncii', '✓', '✓', '✓', '✓'],
-                    ['Echipamente PSI', '✓ Basic', '✓', '✓', '✓'],
-                    ['Nr. angajați', '1-5', '6-20', '21-100', 'Nelimitat'],
-                    ['Nr. organizații', '1', 'Multi', 'Multi', 'Nelimitat'],
-                    ['Alerte email', '✓', '✓', '✓', '✓'],
-                    ['Risc financiar ITM', '—', '✓', '✓', '✓'],
-                    ['Instruiri SSM', '—', '✓', '✓', '✓'],
-                    ['REGES API', '—', '—', '✓', '✓'],
-                    ['Rapoarte custom', '—', '—', '✓', '✓'],
-                    ['White-label', '—', '—', '—', '✓'],
-                    ['Account manager', '—', '—', '✓', '✓'],
-                    ['SLA uptime', '—', '—', '99.5%', '99.9%'],
-                  ].map((row, i) => (
-                    <tr key={i} className="hover:bg-gray-50 transition">
-                      <td className="px-6 py-4 text-sm text-gray-700 font-medium">{row[0]}</td>
-                      <td className="px-4 py-4 text-sm text-gray-600 text-center">{row[1]}</td>
-                      <td className="px-4 py-4 text-sm text-blue-600 text-center font-semibold bg-blue-50/30">{row[2]}</td>
-                      <td className="px-4 py-4 text-sm text-gray-600 text-center">{row[3]}</td>
-                      <td className="px-4 py-4 text-sm text-gray-600 text-center">{row[4]}</td>
-                    </tr>
-                  ))}
+                  {/* Limite */}
+                  <tr className="bg-gray-50/50">
+                    <td colSpan={4} className="px-6 py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Limite
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Număr firme</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 text-center font-semibold">1</td>
+                    <td className="px-6 py-4 text-sm text-blue-600 text-center font-semibold bg-blue-50/30">3</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 text-center font-semibold">Nelimitat</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Număr angajați</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 text-center font-semibold">10</td>
+                    <td className="px-6 py-4 text-sm text-blue-600 text-center font-semibold bg-blue-50/30">100</td>
+                    <td className="px-6 py-4 text-sm text-gray-900 text-center font-semibold">Nelimitat</td>
+                  </tr>
+
+                  {/* Core Features */}
+                  <tr className="bg-gray-50/50">
+                    <td colSpan={4} className="px-6 py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Funcționalități de bază
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Medicina muncii - tracking</td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Echipamente PSI</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center">Basic</td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Dashboard complet</td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Alerte email automate</td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Rapoarte PDF</td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+
+                  {/* Advanced Features */}
+                  <tr className="bg-gray-50/50">
+                    <td colSpan={4} className="px-6 py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Funcționalități avansate
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Instruiri SSM & PSI</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Risc financiar - calcul amenzi ITM</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Export date Excel</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Rapoarte personalizate</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Alerte SMS</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center bg-blue-50/30">Opțional</td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+
+                  {/* Enterprise Features */}
+                  <tr className="bg-gray-50/50">
+                    <td colSpan={4} className="px-6 py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Funcționalități Enterprise
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">White-label dashboard</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Multi-tenant architecture</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">REGES API integration</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Integrare ERP/HR (SAP, Saga)</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Workflows personalizate</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+
+                  {/* Support */}
+                  <tr className="bg-gray-50/50">
+                    <td colSpan={4} className="px-6 py-3 text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Suport
+                    </td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Timp răspuns suport</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center">48h</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center bg-blue-50/30">24h prioritar</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center">24/7</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Onboarding dedicat</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Account manager dedicat</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">Training complet echipă</td>
+                    <td className="px-6 py-4 text-center"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center bg-blue-50/30"><X className="w-5 h-5 text-gray-300 mx-auto" /></td>
+                    <td className="px-6 py-4 text-center"><Check className="w-5 h-5 text-green-600 mx-auto" /></td>
+                  </tr>
+                  <tr className="hover:bg-gray-50 transition">
+                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">SLA uptime</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center">—</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center bg-blue-50/30">—</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 text-center">99.9%</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -344,44 +489,41 @@ export default function PricingPage() {
       <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black text-gray-900 mb-4">Întrebări despre preț</h2>
+            <h2 className="text-4xl font-black text-gray-900 mb-4">Întrebări frecvente despre preț</h2>
+            <p className="text-gray-600 text-lg">Răspunsuri la cele mai comune întrebări</p>
           </div>
 
           <div className="space-y-4">
             {[
               {
-                q: 'Pot trece de la Basic la Pro sau Corporate oricând?',
-                a: 'Da, poți face upgrade instant. Diferența de preț se calculează pro-rata pentru perioada rămasă.',
+                q: 'Care este diferența între facturare lunară și anuală?',
+                a: 'La facturare anuală economisești 20% față de plata lunară. De exemplu, planul Professional costă €29/lună (€348/an) sau €279/an dacă plătești anual - economisind €69. Poți alege perioada de facturare din toggle-ul de mai sus.',
               },
               {
-                q: 'Ce se întâmplă dacă depășesc limita de angajați?',
-                a: 'Sistemul te va notifica automat să faci upgrade la planul următor. Datele tale rămân salvate și migrarea se face instant, fără pierdere de date.',
+                q: 'Pot face upgrade sau downgrade între planuri?',
+                a: 'Da, poți schimba planul oricând din dashboard. La upgrade, diferența de preț se calculează pro-rata pentru perioada rămasă. La downgrade, creditul rămas se transferă către perioada următoare de facturare.',
               },
               {
-                q: 'Ce include planul Enterprise?',
-                a: 'Integrare REGES API pentru raportare ANRE, white-label dashboard (logo și domeniu propriu), dedicated account manager, SLA 99.9%, onboarding personalizat și training complet echipă.',
+                q: 'Ce se întâmplă dacă depășesc limita de angajați sau firme?',
+                a: 'Sistemul te va notifica automat când te apropii de limită și îți va sugera să faci upgrade la planul următor. Datele tale rămân salvate și migrarea se face instant, fără pierdere de date sau întrerupere a serviciului.',
               },
               {
-                q: 'Ce sunt add-on-urile NIS2 și GDPR?',
-                a: 'Sunt module suplimentare pentru conformitate specifică: NIS2 pentru securitate cibernetică (obligatoriu pentru anumite sectoare) și GDPR pentru protecția datelor personale. Se pot adăuga la orice plan.',
+                q: 'Planul Starter este cu adevărat gratuit? Sunt costuri ascunse?',
+                a: 'Da, planul Starter este 100% gratuit pentru totdeauna pentru 1 firmă și până la 10 angajați. Nu există costuri ascunse, taxe de setup sau perioadă de trial. Poți folosi toate funcționalitățile de bază nelimitat, fără card.',
               },
               {
-                q: 'Există discount pentru plata anuală?',
-                a: 'Prețurile afișate sunt deja tarifeinclude anuale. Pentru planuri multi-an (3+ ani) sau multiple organizații, contactează-ne pentru ofertă personalizată.',
-              },
-              {
-                q: 'Pot anula abonamentul?',
-                a: 'Da, poți anula oricând din dashboard. Datele tale rămân accesibile în modul readonly timp de 90 de zile pentru export.',
+                q: 'Pot anula abonamentul oricând?',
+                a: 'Da, poți anula abonamentul oricând din dashboard, fără penalități. Datele tale rămân accesibile în modul read-only timp de 90 de zile pentru export. După anulare, poți reveni oricând la același plan sau altul.',
               },
             ].map((item, i) => (
-              <details key={i} className="group border border-gray-200 rounded-xl overflow-hidden">
-                <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
-                  <span className="font-medium text-gray-900 pr-4">{item.q}</span>
-                  <span className="flex-shrink-0 text-gray-400 group-open:rotate-45 transition-transform text-xl">
+              <details key={i} className="group border-2 border-gray-200 rounded-xl overflow-hidden hover:border-blue-300 transition-colors">
+                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-50 transition-colors">
+                  <span className="font-semibold text-gray-900 pr-4">{item.q}</span>
+                  <span className="flex-shrink-0 text-gray-400 group-open:rotate-45 transition-transform text-2xl font-light">
                     +
                   </span>
                 </summary>
-                <div className="px-5 pb-5 text-gray-600 leading-relaxed text-sm">{item.a}</div>
+                <div className="px-6 pb-6 text-gray-600 leading-relaxed">{item.a}</div>
               </details>
             ))}
           </div>
