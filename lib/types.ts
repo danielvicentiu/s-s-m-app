@@ -315,3 +315,57 @@ export interface WebhookDeliveryLog {
   created_at: string
   delivered_at: string | null
 }
+
+// ── API KEYS ──
+
+export type ApiKeyPermission =
+  | 'read:employees'
+  | 'write:employees'
+  | 'read:trainings'
+  | 'write:trainings'
+  | 'read:medical'
+  | 'write:medical'
+  | 'read:equipment'
+  | 'write:equipment'
+  | 'read:documents'
+  | 'write:documents'
+  | 'read:alerts'
+  | 'read:incidents'
+  | 'write:incidents'
+  | 'read:compliance'
+  | 'admin:all'
+
+export interface ApiKey {
+  id: string
+  organization_id: string
+  name: string
+  description: string | null
+  key_hash: string
+  key_prefix: string
+  permissions: ApiKeyPermission[]
+  rate_limit_per_minute: number
+  last_used_at: string | null
+  total_requests: number
+  is_active: boolean
+  expires_at: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  revoked_at: string | null
+  revoked_by: string | null
+}
+
+export interface ApiKeyUsageLog {
+  id: string
+  api_key_id: string
+  endpoint: string
+  method: string
+  status_code: number | null
+  ip_address: string | null
+  user_agent: string | null
+  request_size_bytes: number | null
+  response_size_bytes: number | null
+  duration_ms: number | null
+  error_message: string | null
+  created_at: string
+}
