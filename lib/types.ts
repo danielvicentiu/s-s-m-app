@@ -245,3 +245,55 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── EVALUARE RISCURI (Risk Assessment) ──
+
+export type RiskProbability = 1 | 2 | 3 | 4 | 5
+export type RiskSeverity = 1 | 2 | 3 | 4 | 5
+export type RiskLevel = 'scazut' | 'mediu' | 'ridicat' | 'critic'
+export type RiskStatus = 'identificat' | 'in_analiza' | 'masuri_planificate' | 'masuri_implementate' | 'rezolvat'
+
+export interface RiskAssessment {
+  id: string
+  organization_id: string
+  workplace: string
+  activity_description: string
+  risk_description: string
+  probability: RiskProbability
+  severity: RiskSeverity
+  risk_level: RiskLevel
+  current_measures: string | null
+  proposed_measures: string | null
+  responsible_person: string | null
+  deadline: string | null
+  status: RiskStatus
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+
+// Helper: Calculează nivelul de risc pe baza probabilității și gravității
+export function calculateRiskLevel(probability: RiskProbability, severity: RiskSeverity): RiskLevel {
+  const score = probability * severity
+  if (score <= 4) return 'scazut'
+  if (score <= 9) return 'mediu'
+  if (score <= 16) return 'ridicat'
+  return 'critic'
+}
+
+// Helper: Culori pentru niveluri de risc
+export const RISK_LEVEL_COLORS: Record<RiskLevel, { bg: string; text: string; dot: string }> = {
+  scazut: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
+  mediu: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500' },
+  ridicat: { bg: 'bg-orange-100', text: 'text-orange-700', dot: 'bg-orange-500' },
+  critic: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500' },
+}
+
+// Helper: Labels pentru status
+export const RISK_STATUS_LABELS: Record<RiskStatus, string> = {
+  identificat: 'Identificat',
+  in_analiza: 'În analiză',
+  masuri_planificate: 'Măsuri planificate',
+  masuri_implementate: 'Măsuri implementate',
+  rezolvat: 'Rezolvat',
+}
