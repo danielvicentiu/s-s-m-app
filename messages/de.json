@@ -34,10 +34,10 @@
     "badge": "Digitale Plattform für Arbeitssicherheit und Brandschutz",
     "title": "Arbeitssicherheit und Brandschutz Compliance",
     "titleHighlight": "100% automatisiert",
-    "subtitle": "Verwalten Sie Arbeitsmedizin, Brandschutzausrüstung, Warnungen und Berichte von einer einzigen Plattform aus. Null Bürokratie, null Bußgelder.",
+    "subtitle": "Verwalten Sie Arbeitsmedizin, Brandschutzausrüstung, Warnungen und Berichte von einer einzigen Plattform aus. Null Bürokratie, null Bußgelder gemäß ArbSchG.",
     "cta": "Jetzt starten →",
     "featuresTitle": "Alles was Sie brauchen an einem Ort",
-    "featuresSubtitle": "6 integrierte Module für vollständige Arbeitssicherheits- und Brandschutz-Compliance",
+    "featuresSubtitle": "6 integrierte Module für vollständige Arbeitssicherheits- und Brandschutz-Compliance nach ArbSchG",
     "pricingTitle": "Transparente Preise",
     "pricingSubtitle": "Ein Plan, alle Funktionen",
     "planProfessional": "PROFESSIONELLER PLAN",
@@ -46,36 +46,36 @@
     "perYear": "/Jahr",
     "noSetupFee": "Keine Einrichtungsgebühr. Jederzeit kündbar.",
     "features": {
-      "medicalTitle": "Arbeitsmedizin",
-      "medicalDesc": "Verfolgung medizinischer Unterlagen, automatische Ablaufwarnungen, vollständige Mitarbeiter-Übersicht in Echtzeit.",
+      "medicalTitle": "Arbeitsmedizinische Vorsorge",
+      "medicalDesc": "Verfolgung arbeitsmedizinischer Vorsorgeuntersuchungen gemäß ArbMedVV, automatische Ablaufwarnungen, vollständige Mitarbeiter-Übersicht in Echtzeit.",
       "equipmentTitle": "Brandschutzausrüstung",
-      "equipmentDesc": "Inventar für Feuerlöscher, Hydranten, Rauchmelder. Prüfungsplanung, Wartungsprotokolle, QR-Code-Verfolgung.",
+      "equipmentDesc": "Inventar für Feuerlöscher, Wandhydranten, Brandmelder nach ASR A2.2. Prüfungsplanung, Wartungsprotokolle, QR-Code-Verfolgung.",
       "alertsTitle": "Automatische Warnungen",
-      "alertsDesc": "Tägliche E-Mail mit bevorstehenden Ablaufterminen (30/15/7 Tage). Resend-Integration, WhatsApp-Benachrichtigungen (demnächst).",
+      "alertsDesc": "Tägliche E-Mail mit bevorstehenden Ablaufterminen (30/15/7 Tage). Resend-Integration, WhatsApp-Benachrichtigungen (in Kürze).",
       "riskTitle": "Finanzielles Risiko",
-      "riskDesc": "Automatische Berechnung potenzieller Bußgelder (Gewerbeaufsicht/Berufsgenossenschaft). Aufschlüsselung nach Behörde, Min-Max-Schätzung in €.",
+      "riskDesc": "Automatische Berechnung potenzieller Bußgelder nach ArbSchG und OWiG (Gewerbeaufsichtsamt/Berufsgenossenschaft). Aufschlüsselung nach Behörde, Min-Max-Schätzung in EUR.",
       "multiOrgTitle": "Multi-Organisation",
-      "multiOrgDesc": "Verwalten Sie 100+ Unternehmen von einem Dashboard aus. Sofortige Filterung, gespeicherte Einstellungen.",
+      "multiOrgDesc": "Verwalten Sie 100+ Unternehmen von einem Dashboard aus. Sofortige Filterung, gespeicherte Einstellungen, Multi-Tenant-Architektur.",
       "reportsTitle": "PDF-Berichte",
-      "reportsDesc": "Automatische Berichtserstellung, SHA256-Hash für Unveränderlichkeit, Cloud-Archiv, 1-Klick-Export."
+      "reportsDesc": "Automatische Berichtserstellung für Arbeitsschutz-Dokumentation, SHA256-Hash für Unveränderlichkeit, Cloud-Archiv, 1-Klick-Export."
     },
     "pricingFeatures": [
-      "Arbeitsmedizin — unbegrenztes Tracking",
-      "Brandschutzausrüstung — vollständiges Inventar",
+      "Arbeitsmedizinische Vorsorge — unbegrenztes Tracking",
+      "Brandschutzausrüstung — vollständiges Inventar nach ASR A2.2",
       "Automatische tägliche E-Mail-Warnungen",
-      "Finanzielles Risiko — Bußgeldberechnung",
+      "Finanzielles Risiko — Bußgeldberechnung nach ArbSchG",
       "Multi-Organisation — unbegrenzte Unternehmen",
       "PDF-Berichte — automatische Erstellung",
       "Prioritärer technischer Support",
       "Automatisches tägliches Backup",
       "Kostenlose Updates"
     ],
-    "penaltiesTitle": "Bußgelder ohne Arbeitssicherheits-Compliance",
-    "penaltiesSubtitle": "Berechnen Sie Ihr finanzielles Risiko wenn Pflichtdokumente fehlen",
-    "penaltiesIntro": "Aufsichtsbehörden können Bußgelder verhängen zwischen:",
-    "penaltiesCalculator": "Markieren Sie was NICHT in Ordnung ist:",
+    "penaltiesTitle": "Bußgelder ohne Arbeitsschutz-Compliance",
+    "penaltiesSubtitle": "Berechnen Sie Ihr finanzielles Risiko bei fehlenden Pflichtdokumenten nach ArbSchG",
+    "penaltiesIntro": "Gewerbeaufsichtsamt und Berufsgenossenschaften können Bußgelder verhängen zwischen:",
+    "penaltiesCalculator": "Markieren Sie, was NICHT in Ordnung ist:",
     "penaltiesTotal": "Gesamtes Bußgeldrisiko:",
-    "penaltiesDisclaimer": "Schätzwerte gemäß geltendem Recht. Tatsächliche Bußgelder können variieren."
+    "penaltiesDisclaimer": "Schätzwerte gemäß ArbSchG und OWiG. Tatsächliche Bußgelder können je nach Bundesland und Schwere des Verstoßes variieren."
   },
   "login": {
     "title": "Arbeitssicherheitsplattform — Anmeldung",
@@ -92,9 +92,9 @@
   "dashboard": {
     "allOrganizations": "Alle Organisationen",
     "employees": "Mitarbeiter",
-    "toggleRiskITM": "ITM-Risiko",
-    "toggleRiskEuro": "Risiko €",
-    "riskControl": "ITM-Kontrollrisiko",
+    "toggleRiskITM": "Arbeitsschutz-Risiko",
+    "toggleRiskEuro": "Risiko EUR",
+    "riskControl": "Gewerbeaufsicht-Kontrollrisiko",
     "dataCompleteness": "Datenvollständigkeit",
     "riskLevels": {
       "low": "Niedrig",
@@ -182,7 +182,7 @@
     }
   },
   "footer": {
-    "description": "Digitale Plattform für Arbeitssicherheits- und Brandschutz-Compliance.",
+    "description": "Digitale Plattform für Arbeitssicherheits- und Brandschutz-Compliance nach ArbSchG. Arbeitsmedizinische Vorsorge, Brandschutzausrüstung, automatische Warnungen.",
     "email": "contact@s-s-m.ro",
     "phone": "+49 30 000 0000",
     "address": "Berlin, Deutschland"
