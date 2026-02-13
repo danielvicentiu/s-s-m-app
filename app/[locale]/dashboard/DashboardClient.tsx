@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { UserPlus, FileText } from 'lucide-react'
 import LanguageSelector from '@/components/LanguageSelector'
 import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
+import AutoBreadcrumb from '@/components/navigation/AutoBreadcrumb'  // 🆕 Breadcrumb
 
 interface OrgOption {
   id: string
@@ -216,10 +217,14 @@ export default function DashboardClient({
     <div className="min-h-screen bg-gray-50">
 
       {/* ============ HEADER ============ */}
-      <header className="bg-white px-8 py-4">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
+      <header className="bg-white px-8 py-4 border-b border-gray-200">
+        <div className="max-w-6xl mx-auto">
+          {/* Breadcrumb */}
+          <AutoBreadcrumb className="mb-3" />
+
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
             {organizations.length <= 1 ? (
               <p className="text-sm text-gray-500">
                 {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` · ${organizations[0].cui}` : ''}
@@ -238,10 +243,10 @@ export default function DashboardClient({
                 ))}
               </select>
             )}
-          </div>
-          <div className="flex items-center gap-5">
-            {/* Action buttons */}
-            <div className="flex items-center gap-3 border-r border-gray-200 pr-5">
+            </div>
+            <div className="flex items-center gap-5">
+              {/* Action buttons */}
+              <div className="flex items-center gap-3 border-r border-gray-200 pr-5">
               <Link
                 href="/dashboard/angajat-nou"
                 className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition flex items-center gap-2"
@@ -256,9 +261,9 @@ export default function DashboardClient({
                 <FileText className="h-4 w-4" />
                 <span>Generează Documente</span>
               </Link>
-            </div>
-            {/* Toggle-uri panouri */}
-            <div className="flex items-center gap-4 border-r border-gray-200 pr-5">
+              </div>
+              {/* Toggle-uri panouri */}
+              <div className="flex items-center gap-4 border-r border-gray-200 pr-5">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wide">Risc ITM</span>
                 <button
@@ -277,15 +282,16 @@ export default function DashboardClient({
                   <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${showValuePreview ? 'left-[18px]' : 'left-0.5'}`} />
                 </button>
               </label>
+              </div>
+              {/* Language Selector */}
+              <LanguageSelector />
+              <span className="text-sm text-gray-400">Consultant</span>
+              <form action="/api/auth/signout" method="POST">
+                <button type="submit" className="text-sm text-red-400 hover:text-red-600 font-medium">
+                  Ieși
+                </button>
+              </form>
             </div>
-            {/* Language Selector */}
-            <LanguageSelector />
-            <span className="text-sm text-gray-400">Consultant</span>
-            <form action="/api/auth/signout" method="POST">
-              <button type="submit" className="text-sm text-red-400 hover:text-red-600 font-medium">
-                Ieși
-              </button>
-            </form>
           </div>
         </div>
       </header>
