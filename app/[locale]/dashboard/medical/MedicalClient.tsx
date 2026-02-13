@@ -8,12 +8,12 @@
 import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
-import { DataTable, type Column } from '@/components/ui/DataTable'
+import { DataTable, type DataTableColumn } from '@/components/ui'
 import { FormModal } from '@/components/ui/FormModal'
-import { StatusBadge } from '@/components/ui/StatusBadge'
+import { StatusBadge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { ArrowLeft, Stethoscope, Plus, Pencil, Trash2, Download } from 'lucide-react'
+import { ArrowLeft, Stethoscope, Plus, Pencil, Trash2, Download, Eye } from 'lucide-react'
 // RBAC: Import hook-uri client-side pentru verificare permisiuni
 import { useHasPermission } from '@/hooks/usePermission'
 
@@ -267,13 +267,18 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
 
   // ========== TABLE COLUMNS ==========
 
-  const columns: Column<MedicalExam>[] = [
+  const columns: DataTableColumn<MedicalExam>[] = [
     {
       key: 'employee_name',
       label: 'Angajat',
       render: (row) => (
         <div>
-          <div className="font-medium text-gray-900">{row.employee_name || '—'}</div>
+          <button
+            onClick={() => router.push(`/dashboard/medical/${row.id}`)}
+            className="font-medium text-gray-900 hover:text-blue-600 transition text-left"
+          >
+            {row.employee_name || '—'}
+          </button>
           <div className="text-xs text-gray-400">{row.organizations?.name || ''}</div>
         </div>
       ),
@@ -336,6 +341,13 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
       sortable: false,
       render: (row) => (
         <div className="flex items-center gap-1">
+          <button
+            onClick={() => router.push(`/dashboard/medical/${row.id}`)}
+            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-green-600"
+            title="Vezi detalii"
+          >
+            <Eye className="h-4 w-4" />
+          </button>
           {/* RBAC: Buton "Editează" vizibil doar dacă user are permisiune 'update' pe 'medical' */}
           {canUpdate && (
             <button
@@ -458,7 +470,6 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
               columns={columns}
               data={filtered}
               emptyMessage="Nicio fișă corespunde filtrelor selectate."
-              pageSize={15}
             />
           )}
         </div>
