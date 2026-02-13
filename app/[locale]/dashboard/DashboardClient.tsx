@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { UserPlus, FileText } from 'lucide-react'
 import LanguageSelector from '@/components/LanguageSelector'
 import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
+import CompanySwitcher from '@/components/navigation/CompanySwitcher'  // 🆕 Company switcher
 
 interface OrgOption {
   id: string
@@ -218,26 +219,14 @@ export default function DashboardClient({
       {/* ============ HEADER ============ */}
       <header className="bg-white px-8 py-4">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div>
+          <div className="flex items-center gap-6">
             <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
-            {organizations.length <= 1 ? (
-              <p className="text-sm text-gray-500">
-                {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` · ${organizations[0].cui}` : ''}
-              </p>
-            ) : (
-              <select
-                value={selectedOrg}
-                onChange={(e) => handleOrgChange(e.target.value)}
-                className="mt-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 max-w-xs"
-              >
-                <option value="all">Toate organizațiile ({organizations.length})</option>
-                {organizations.map((org) => (
-                  <option key={org.id} value={org.id}>
-                    {org.name} · {org.employee_count ?? 0} angajați
-                  </option>
-                ))}
-              </select>
-            )}
+            <CompanySwitcher
+              organizations={organizations}
+              selectedOrgId={selectedOrg}
+              onOrgChange={handleOrgChange}
+              userId={user.id}
+            />
           </div>
           <div className="flex items-center gap-5">
             {/* Action buttons */}
