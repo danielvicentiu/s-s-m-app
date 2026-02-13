@@ -1,13 +1,13 @@
 'use client'
 
+import { Calculator, TrendingDown } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import ActivitySearch from '@/components/ActivitySearch'
 import EmployeeCount from '@/components/EmployeeCount'
-import OrgTypeSelector from '@/components/OrgTypeSelector'
-import RoleSelector from '@/components/RoleSelector'
 import EstimateResult from '@/components/EstimateResult'
 import OfferLink from '@/components/OfferLink'
-import { Calculator, TrendingDown } from 'lucide-react'
+import OrgTypeSelector from '@/components/OrgTypeSelector'
+import RoleSelector from '@/components/RoleSelector'
 
 interface Activity {
   id: string
@@ -66,8 +66,8 @@ export default function EstimarePage() {
   }, [orgType])
 
   const getEmployeeMax = (range: string): number => {
-    if (range === '0') return 0
-    if (range === '50+') return 100
+    if (range === '0') {return 0}
+    if (range === '50+') {return 100}
     const parts = range.split('-')
     return parseInt(parts[parts.length - 1])
   }

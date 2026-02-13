@@ -6,8 +6,8 @@
 'use client'
 
 import { useOrgModules } from '@/hooks/useOrgModules'
-import type { ModuleKey } from '@/lib/modules/types'
 import { MODULE_ICONS, CATEGORY_COLORS } from '@/lib/modules/constants'
+import type { ModuleKey } from '@/lib/modules/types'
 
 // Module nav links — unde duce click-ul pe fiecare modul
 const MODULE_LINKS: Partial<Record<ModuleKey, string>> = {

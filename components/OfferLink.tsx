@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { Send, ExternalLink } from 'lucide-react'
+import { useState } from 'react'
 
 interface Props {
   activityId: string | null

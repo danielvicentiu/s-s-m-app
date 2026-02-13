@@ -2,7 +2,7 @@
 // M1: Import legislativ — fetch URL + auto-detect metadata + insert/update în DB
 
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -101,10 +101,10 @@ export function extractMetadata(text: string) {
 
   const sets = { articles: new Set<string>(), chapters: new Set<string>(), sections: new Set<string>(), annexes: new Set<string>() }
   let m
-  while ((m = PATTERNS.articles.exec(text)) !== null) sets.articles.add(m[1])
-  while ((m = PATTERNS.chapters.exec(text)) !== null) sets.chapters.add(m[1])
-  while ((m = PATTERNS.sections.exec(text)) !== null) sets.sections.add(m[1])
-  while ((m = PATTERNS.annexes.exec(text)) !== null) sets.annexes.add(m[1])
+  while ((m = PATTERNS.articles.exec(text)) !== null) {sets.articles.add(m[1])}
+  while ((m = PATTERNS.chapters.exec(text)) !== null) {sets.chapters.add(m[1])}
+  while ((m = PATTERNS.sections.exec(text)) !== null) {sets.sections.add(m[1])}
+  while ((m = PATTERNS.annexes.exec(text)) !== null) {sets.annexes.add(m[1])}
   const alineatCount = (text.match(PATTERNS.alineat) || []).length
 
   return {
@@ -315,7 +315,7 @@ export async function POST(request: NextRequest) {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return NextResponse.json({
         success: true,
@@ -351,12 +351,12 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     return NextResponse.json({
       success: true,
       action: 'inserted',
-      message: `${act_short_name || act_type + ' ' + act_number + '/' + act_year} importat cu succes!`,
+      message: `${act_short_name || `${act_type  } ${  act_number  }/${  act_year}`} importat cu succes!`,
       data,
     })
 

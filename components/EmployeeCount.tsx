@@ -10,12 +10,12 @@ export default function EmployeeCount({ count, onChange, maxEmployees }: Props) 
   const ranges = ['0', '1-5', '6-10', '11-20', '21-50', '50+']
 
   const getFilteredRanges = () => {
-    if (!maxEmployees) return ranges
+    if (!maxEmployees) {return ranges}
 
     // Filter based on maxEmployees restriction
     return ranges.filter((range) => {
-      if (range === '0') return true
-      if (range === '50+') return maxEmployees >= 50
+      if (range === '0') {return true}
+      if (range === '50+') {return maxEmployees >= 50}
 
       const max = parseInt(range.split('-')[1] || range)
       return max <= maxEmployees

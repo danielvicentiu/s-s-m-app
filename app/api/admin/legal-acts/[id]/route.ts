@@ -1,6 +1,6 @@
 // app/api/admin/legal-acts/[id]/route.ts
+import { type NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,

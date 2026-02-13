@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Check, X, AlertTriangle, Shield } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import obligationsData from '@/src/data/obligations-matrix.json'
 
 interface Obligation {
@@ -34,7 +34,7 @@ export default function EstimateResult({ activity, employeeCount, orgType, selec
   const [allObligations, setAllObligations] = useState<Obligation[]>([])
 
   useEffect(() => {
-    if (!activity) return
+    if (!activity) {return}
 
     // Combine all obligations
     const ssm = obligationsData.baseObligations.ssm as Obligation[]
@@ -46,9 +46,9 @@ export default function EstimateResult({ activity, employeeCount, orgType, selec
     // Filter based on employee count
     const hasEmployees = employeeCount !== '0'
     obligations = obligations.filter((obl) => {
-      if (!hasEmployees && !obl.appliesToZeroEmployees) return false
+      if (!hasEmployees && !obl.appliesToZeroEmployees) {return false}
       if (obl.employeeThreshold && getEmployeeMax(employeeCount) < obl.employeeThreshold)
-        return false
+        {return false}
       return true
     })
 
@@ -63,17 +63,17 @@ export default function EstimateResult({ activity, employeeCount, orgType, selec
   }, [activity, employeeCount])
 
   const getEmployeeMax = (range: string): number => {
-    if (range === '0') return 0
-    if (range === '50+') return 100
+    if (range === '0') {return 0}
+    if (range === '50+') {return 100}
     const parts = range.split('-')
     return parseInt(parts[parts.length - 1])
   }
 
   const getEmployeeAvg = (range: string): number => {
-    if (range === '0') return 0
-    if (range === '50+') return 75
+    if (range === '0') {return 0}
+    if (range === '50+') {return 75}
     const parts = range.split('-')
-    if (parts.length === 1) return parseInt(parts[0])
+    if (parts.length === 1) {return parseInt(parts[0])}
     return (parseInt(parts[0]) + parseInt(parts[1])) / 2
   }
 
@@ -112,7 +112,7 @@ export default function EstimateResult({ activity, employeeCount, orgType, selec
     setCheckedObligations((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
-  if (!activity) return null
+  if (!activity) {return null}
 
   const { costMin, costMax, fineMin, fineMax } = calculateTotals()
   const ratio = costMin > 0 ? Math.round(fineMin / costMin) : 0
@@ -124,15 +124,15 @@ export default function EstimateResult({ activity, employeeCount, orgType, selec
   }
 
   const getCategory = (obl: Obligation): string => {
-    if (obligationsData.baseObligations.ssm.find((o: any) => o.id === obl.id)) return 'ssm'
-    if (obligationsData.baseObligations.psi.find((o: any) => o.id === obl.id)) return 'psi'
+    if (obligationsData.baseObligations.ssm.find((o: any) => o.id === obl.id)) {return 'ssm'}
+    if (obligationsData.baseObligations.psi.find((o: any) => o.id === obl.id)) {return 'psi'}
     return 'medicinaMuncii'
   }
 
   const groupedObligations = allObligations.reduce(
     (acc, obl) => {
       const cat = getCategory(obl)
-      if (!acc[cat]) acc[cat] = []
+      if (!acc[cat]) {acc[cat] = []}
       acc[cat].push(obl)
       return acc
     },

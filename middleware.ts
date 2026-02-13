@@ -4,10 +4,10 @@
 // 3) RBAC: Verificare dinamică roluri din user_roles cu fallback pe memberships
 // 4) Domain-based locale detection: DOMAIN_CONFIG pentru viitor
 
-import createMiddleware from 'next-intl/middleware'
 import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { NextResponse, type NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware'
 import { routing } from './i18n/routing'
 
 // DOMAIN_CONFIG: Mapare domenii viitoare → locale
@@ -40,7 +40,7 @@ async function getRolesFromSupabase(supabase: SupabaseClient, userId: string): P
 
   if (!error && userRoles && userRoles.length > 0) {
     const activeRoles = userRoles.filter(ur => {
-      if (!ur.expires_at) return true
+      if (!ur.expires_at) {return true}
       return new Date(ur.expires_at) > new Date()
     })
 

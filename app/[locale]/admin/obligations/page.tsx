@@ -3,8 +3,8 @@
 // Acces: super_admin și consultant_ssm
 
 import { redirect } from 'next/navigation'
-import { createSupabaseServer } from '@/lib/supabase/server'
 import { isSuperAdmin, hasRole } from '@/lib/rbac'
+import { createSupabaseServer } from '@/lib/supabase/server'
 import ObligationsClient from './ObligationsClient'
 
 export default async function AdminObligationsPage() {
@@ -12,7 +12,7 @@ export default async function AdminObligationsPage() {
   const admin = await isSuperAdmin()
   const consultant = await hasRole('consultant_ssm')
 
-  if (!admin && !consultant) redirect('/unauthorized')
+  if (!admin && !consultant) {redirect('/unauthorized')}
 
   const supabase = await createSupabaseServer()
 

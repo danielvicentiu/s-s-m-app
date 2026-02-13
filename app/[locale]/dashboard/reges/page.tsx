@@ -1,15 +1,15 @@
 // app/dashboard/reges/page.tsx
 // Server Component — REGES Integration Management
 
-import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import RegesClient from './RegesClient'
 
 export default async function RegesPage() {
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
-  if (!user) redirect('/login')
+  if (!user) {redirect('/login')}
 
   // Fetch REGES connections
   const { data: connections } = await supabase

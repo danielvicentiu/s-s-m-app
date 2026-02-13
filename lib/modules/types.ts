@@ -161,7 +161,7 @@ export function isModuleActive(module: OrganizationModule): boolean {
 }
 
 export function getTrialDaysRemaining(module: OrganizationModule): number | null {
-  if (module.status !== 'trial' || !module.trial_expires_at) return null
+  if (module.status !== 'trial' || !module.trial_expires_at) {return null}
   const now = new Date()
   const expires = new Date(module.trial_expires_at)
   const days = Math.ceil((expires.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))

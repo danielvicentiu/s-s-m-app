@@ -5,8 +5,8 @@
 // 100% Node.js — funcționează pe Vercel fără Python
 // ============================================================
 
-import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 
 function getSupabase() {
   return createClient(

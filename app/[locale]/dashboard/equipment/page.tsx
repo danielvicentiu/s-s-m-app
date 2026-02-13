@@ -4,17 +4,17 @@
 // REFACTORED: Citește equipment_types din DB (dinamic per țară)
 // 🆕 OP-LEGO Sprint 4.7: ModuleGate wrapping (modulul 'echipamente' necesar)
 
-import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import EquipmentClient from './EquipmentClient'
 import ModuleGate from '@/components/ModuleGate'
+import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
+import EquipmentClient from './EquipmentClient'
 
 export default async function EquipmentPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
-  if (!user) redirect('/login')
+  if (!user) {redirect('/login')}
 
   // Fetch organizații cu country_code
   const { data: organizations } = await supabase

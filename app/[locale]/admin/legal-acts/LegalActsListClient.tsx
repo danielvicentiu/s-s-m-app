@@ -1,5 +1,4 @@
 'use client'
-import { useState, useEffect, useMemo } from 'react'
 import {
   Database,
   Brain,
@@ -22,6 +21,7 @@ import {
   Eye,
   Zap,
 } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
 // ==========================================
 // TIPURI
 // ==========================================
@@ -149,9 +149,9 @@ const PIPELINE_STATUSES: Record<PipelineStatus, { label: string; color: string }
 // ==========================================
 
 function getActPipelineStatus(act: LegalAct): PipelineStatus {
-  if (act.validation_date) return 'validated'
-  if (act.ai_extraction_date) return 'ai_extracted'
-  if (act.full_text_metadata?.characters > 0) return 'text_imported'
+  if (act.validation_date) {return 'validated'}
+  if (act.ai_extraction_date) {return 'ai_extracted'}
+  if (act.full_text_metadata?.characters > 0) {return 'text_imported'}
   return 'no_text'
 }
 
@@ -159,13 +159,13 @@ function getActDomains(act: LegalAct): string[] {
   if (act.domains && Array.isArray(act.domains) && act.domains.length > 0) {
     return act.domains
   }
-  if (act.domain) return [act.domain.toUpperCase()]
+  if (act.domain) {return [act.domain.toUpperCase()]}
   return ['ALTELE']
 }
 
 /** Extrage locale din URL curent */
 function getCurrentLocale(): string {
-  if (typeof window === 'undefined') return 'ro'
+  if (typeof window === 'undefined') {return 'ro'}
   const parts = window.location.pathname.split('/')
   return parts[1] || 'ro'
 }
@@ -262,7 +262,7 @@ export default function LegalActsListClient() {
       for (const act of acts) {
         for (const d of getActDomains(act)) {
           const domain = domains.get(d)
-          if (domain) domain.count++
+          if (domain) {domain.count++}
         }
       }
       return Array.from(domains.values()).sort((a, b) => {
@@ -284,7 +284,7 @@ export default function LegalActsListClient() {
   }, [acts, taxonomy])
 
   const availableSubdomains = useMemo(() => {
-    if (!selectedDomain || taxonomy.length === 0) return []
+    if (!selectedDomain || taxonomy.length === 0) {return []}
     return taxonomy
       .filter((t) => t.domain_code === selectedDomain && t.is_active)
       .sort((a, b) => a.sort_order - b.sort_order)
@@ -293,7 +293,7 @@ export default function LegalActsListClient() {
   const availableActTypes = useMemo(() => {
     const types = new Set<string>()
     for (const act of acts) {
-      if (act.act_type) types.add(act.act_type.toUpperCase())
+      if (act.act_type) {types.add(act.act_type.toUpperCase())}
     }
     return Array.from(types).sort((a, b) => {
       const orderA = ACT_TYPES[a]?.order ?? 99
@@ -505,7 +505,7 @@ export default function LegalActsListClient() {
 
   function getValidationBadge(actId: string) {
     const vr = validationResults[actId]
-    if (!vr) return null
+    if (!vr) {return null}
 
     const config = {
       ok: { icon: ShieldCheck, bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'Valid' },
@@ -538,7 +538,7 @@ export default function LegalActsListClient() {
 
   function renderValidationPanel(actId: string) {
     const vr = validationResults[actId]
-    if (!vr) return null
+    if (!vr) {return null}
 
     return (
       <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm space-y-3">
@@ -818,7 +818,7 @@ export default function LegalActsListClient() {
     const isValidating = validatingId === act.id
     const isValidationExpanded = expandedValidation === act.id
     const hasText = act.full_text_metadata?.characters > 0
-    const hasAI = !!act.ai_extraction_date
+    const hasAI = Boolean(act.ai_extraction_date)
     const locale = getCurrentLocale()
     const detailUrl = `/${locale}/admin/legal-acts/${act.id}`
 

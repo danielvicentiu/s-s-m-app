@@ -1,10 +1,10 @@
 'use client'
 
 import { useTranslations, useLocale } from 'next-intl'
-import { useRouter } from '@/i18n/navigation'
 import { useState } from 'react'
-import type { ObligationType } from '@/lib/types'
 import LanguageSelector from '@/components/LanguageSelector'
+import { useRouter } from '@/i18n/navigation'
+import type { ObligationType } from '@/lib/types'
 
 interface Props {
   obligations: ObligationType[]

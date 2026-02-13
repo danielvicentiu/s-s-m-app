@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { ArrowLeft, Construction } from 'lucide-react'
+import Link from 'next/link'
 
 interface Props {
   title: string

@@ -1,7 +1,7 @@
 // lib/country-utils.ts
 // Helpers pentru detecție țară din locale și mapări next-intl ↔ country_code
 
-import { CountryCode } from './types'
+import { type CountryCode } from './types'
 
 /**
  * Convertește locale next-intl (ro, bg, hu, de, pl) → country_code DB (RO, BG, HU, DE, PL)

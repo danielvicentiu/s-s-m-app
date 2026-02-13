@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { X } from 'lucide-react'
+import { useState } from 'react'
 import jobRolesData from '@/src/data/job-roles-by-activity.json'
 
 interface Role {
@@ -37,7 +37,7 @@ export default function RoleSelector({ category, selectedRoles, onChange }: Prop
     }
   }
 
-  if (roles.length === 0) return null
+  if (roles.length === 0) {return null}
 
   return (
     <div>

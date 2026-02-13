@@ -5,11 +5,11 @@
 // + User preferences (toggle-uri panouri)
 // RBAC: Verificare roluri dinamice din user_roles cu fallback pe memberships
 
-import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { getMyRoles, hasRole, getMyOrgIds } from '@/lib/rbac'
+import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import DashboardClient from './DashboardClient'
 // RBAC: Import funcții server-side pentru verificare roluri și permisiuni
-import { getMyRoles, hasRole, getMyOrgIds } from '@/lib/rbac'
 
 interface DashboardPageProps {
   searchParams: Promise<{ org?: string }>
@@ -20,7 +20,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
-  if (!user) redirect('/login')
+  if (!user) {redirect('/login')}
 
   // RBAC: Verifică dacă user e super_admin (înainte de fetch date)
   const isSuperAdmin = await hasRole('super_admin')
@@ -125,7 +125,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     const { data } = await supabase.rpc('calculate_value_preview', {
       p_organization_id: orgId
     })
-    if (data) valuePreviewMap[orgId] = data
+    if (data) {valuePreviewMap[orgId] = data}
   }))
 
   // RBAC: Verifică dacă user e consultant folosind RBAC dinamic

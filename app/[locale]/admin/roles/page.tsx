@@ -2,16 +2,16 @@
 // Admin UI: Lista rolurilor RBAC cu filtrare și statistici
 // Acces: DOAR super_admin
 
-import { redirect } from 'next/navigation'
-import { createSupabaseServer } from '@/lib/supabase/server'
-import { isSuperAdmin } from '@/lib/rbac'
-import Link from 'next/link'
 import { Plus, Shield, Globe, Lock, CheckCircle, XCircle } from 'lucide-react'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { isSuperAdmin } from '@/lib/rbac'
+import { createSupabaseServer } from '@/lib/supabase/server'
 
 export default async function AdminRolesPage() {
   // GUARD: Verificare super_admin (server-side)
   const admin = await isSuperAdmin()
-  if (!admin) redirect('/unauthorized')
+  if (!admin) {redirect('/unauthorized')}
 
   const supabase = await createSupabaseServer()
 

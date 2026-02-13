@@ -6,14 +6,14 @@
 
 'use client'
 
+import { UserPlus, FileText } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
+import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
+import LanguageSelector from '@/components/LanguageSelector'
+import { ValuePreview } from '@/components/ui/ValuePreview'
 import { useRouter, usePathname } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
-import { ValuePreview } from '@/components/ui/ValuePreview'
-import Link from 'next/link'
-import { UserPlus, FileText } from 'lucide-react'
-import LanguageSelector from '@/components/LanguageSelector'
-import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
 
 interface OrgOption {
   id: string
@@ -142,14 +142,14 @@ export default function DashboardClient({
 
     const hasMedicalData = filteredMedicalExams.length > 0
     const hasEquipmentData = filteredEquipment.length > 0
-    const hasOrgName = !!orgName && orgName !== 'Toate organizațiile'
-    const hasOrgCUI = !!orgCUI
+    const hasOrgName = Boolean(orgName) && orgName !== 'Toate organizațiile'
+    const hasOrgCUI = Boolean(orgCUI)
 
     let score = 20
-    if (hasMedicalData) score += 30
-    if (hasEquipmentData) score += 30
-    if (hasOrgName) score += 10
-    if (hasOrgCUI) score += 10
+    if (hasMedicalData) {score += 30}
+    if (hasEquipmentData) {score += 30}
+    if (hasOrgName) {score += 10}
+    if (hasOrgCUI) {score += 10}
 
     return score
   }
@@ -163,9 +163,9 @@ export default function DashboardClient({
     const expiry = new Date(m.expiry_date)
     const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     let status: 'expired' | 'expiring' | 'valid'
-    if (diffDays <= 0) status = 'expired'
-    else if (diffDays <= 30) status = 'expiring'
-    else status = 'valid'
+    if (diffDays <= 0) {status = 'expired'}
+    else if (diffDays <= 30) {status = 'expiring'}
+    else {status = 'valid'}
     return { ...m, diffDays, status }
   }).sort((a: any, b: any) => a.diffDays - b.diffDays)
 
@@ -178,9 +178,9 @@ export default function DashboardClient({
     const expiry = new Date(e.expiry_date)
     const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     let status: 'expired' | 'expiring' | 'valid'
-    if (diffDays <= 0) status = 'expired'
-    else if (diffDays <= 30) status = 'expiring'
-    else status = 'valid'
+    if (diffDays <= 0) {status = 'expired'}
+    else if (diffDays <= 30) {status = 'expiring'}
+    else {status = 'valid'}
     return { ...e, diffDays, status }
   }).sort((a: any, b: any) => a.diffDays - b.diffDays)
 
@@ -657,7 +657,7 @@ function StatusPill({ status, days }: { status: string; days: number }) {
 }
 
 function fmtDate(d: string | null): string {
-  if (!d) return '—'
+  if (!d) {return '—'}
   return new Date(d).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 

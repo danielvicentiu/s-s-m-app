@@ -1,9 +1,9 @@
 // lib/dashboard-helpers.ts
 // Helpers dinamici pentru dashboard — citesc din tabelele de configurare
 
-import { createSupabaseServer } from './supabase/server'
-import { createSupabaseBrowser } from './supabase/client'
 import { getCountryFromLocale } from './country-utils'
+import { createSupabaseBrowser } from './supabase/client'
+import { createSupabaseServer } from './supabase/server'
 import type { EquipmentType, AlertCategory, ObligationType } from './types'
 
 /**
@@ -127,7 +127,7 @@ export function formatEquipmentType(type: string, equipmentTypes: EquipmentType[
     et.id === type
   )
 
-  if (found) return found.name
+  if (found) {return found.name}
 
   // Fallback pe mapare hardcodată (backward compatibility)
   const fallback: Record<string, string> = {
@@ -153,8 +153,8 @@ export function calculateAlertUrgency(
   daysLeft: number,
   alertCategory: AlertCategory
 ): 'info' | 'warning' | 'critical' | 'expired' {
-  if (daysLeft <= 0) return 'expired'
-  if (daysLeft <= alertCategory.critical_days_before) return 'critical'
-  if (daysLeft <= alertCategory.warning_days_before) return 'warning'
+  if (daysLeft <= 0) {return 'expired'}
+  if (daysLeft <= alertCategory.critical_days_before) {return 'critical'}
+  if (daysLeft <= alertCategory.warning_days_before) {return 'warning'}
   return 'info'
 }

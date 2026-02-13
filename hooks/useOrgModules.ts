@@ -7,10 +7,10 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { createSupabaseBrowser } from '@/lib/supabase/client'
+import { BASE_MODULES } from '@/lib/modules/constants'
 import type { ModuleKey, ActiveModule, ModuleAccess, ModuleDefinition } from '@/lib/modules/types'
 import { isModuleActive, getTrialDaysRemaining } from '@/lib/modules/types'
-import { BASE_MODULES } from '@/lib/modules/constants'
+import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 // ── 1. useOrgModules() — hook principal ──
 // Fetch-uiește modulele active ale organizației cu realtime subscription
@@ -53,7 +53,7 @@ export function useOrgModules(orgId: string | null, locale: string = 'en') {
         .eq('organization_id', orgId)
         .in('status', ['active', 'trial'])
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const activeModules = (data ?? [])
         .filter(om => isModuleActive(om as any))
@@ -93,7 +93,7 @@ export function useOrgModules(orgId: string | null, locale: string = 'en') {
 
   // Realtime subscription pe organization_modules
   useEffect(() => {
-    if (!orgId) return
+    if (!orgId) {return}
 
     const supabase = createSupabaseBrowser()
 
@@ -123,7 +123,7 @@ export function useOrgModules(orgId: string | null, locale: string = 'en') {
 
   // Verifică dacă organizația are acces la un modul
   const hasModule = useCallback((moduleKey: ModuleKey): boolean => {
-    if (BASE_MODULES.includes(moduleKey)) return true
+    if (BASE_MODULES.includes(moduleKey)) {return true}
     return modules.some(m => m.module_key === moduleKey)
   }, [modules])
 
@@ -189,7 +189,7 @@ export function useModuleDefinitions() {
       } catch {
         // Silent fail — definitions are non-critical
       } finally {
-        if (mounted) setIsLoading(false)
+        if (mounted) {setIsLoading(false)}
       }
     }
 
@@ -205,6 +205,6 @@ export function useModuleDefinitions() {
 export function useHasModule(orgId: string | null, moduleKey: ModuleKey): boolean {
   const { hasModule, isLoading } = useOrgModules(orgId)
 
-  if (isLoading) return false
+  if (isLoading) {return false}
   return hasModule(moduleKey)
 }

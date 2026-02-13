@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import activitiesData from '@/src/data/caen-activities.json'
 
 interface Activity {

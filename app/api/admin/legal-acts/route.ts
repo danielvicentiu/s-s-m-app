@@ -2,7 +2,7 @@
 // Listare acte legislative cu status extracție + filtrare pe domenii/subdomenii/tip/status
 
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -57,15 +57,15 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Filtru status pipeline — se face client-side pentru că depinde de mai multe coloane
     let filteredData = data || []
     if (status) {
       filteredData = filteredData.filter((act: any) => {
         switch (status) {
-          case 'validated': return !!act.validation_date
-          case 'ai_extracted': return !!act.ai_extraction_date && !act.validation_date
+          case 'validated': return Boolean(act.validation_date)
+          case 'ai_extracted': return Boolean(act.ai_extraction_date) && !act.validation_date
           case 'text_imported': return act.full_text_metadata?.characters > 0 && !act.ai_extraction_date
           case 'no_text': return !act.full_text_metadata?.characters
           default: return true

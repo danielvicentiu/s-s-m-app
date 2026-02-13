@@ -1,6 +1,6 @@
 // app/api/admin/legal-obligations/[id]/route.ts
+import { type NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase/server'
-import { NextRequest, NextResponse } from 'next/server'
 
 // PATCH - Update review status or edit obligation
 export async function PATCH(

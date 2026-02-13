@@ -132,8 +132,8 @@ export function getExpiryStatus(expiryDate: string): ExpiryStatus {
   const expiry = new Date(expiryDate)
   const daysUntilExpiry = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 
-  if (daysUntilExpiry < 0) return 'expired'
-  if (daysUntilExpiry <= 30) return 'expiring'
+  if (daysUntilExpiry < 0) {return 'expired'}
+  if (daysUntilExpiry <= 30) {return 'expiring'}
   return 'valid'
 }
 

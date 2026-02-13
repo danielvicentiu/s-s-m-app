@@ -1,5 +1,5 @@
-import { createSupabaseServer } from '@/lib/supabase/server';
 import { cache } from 'react';
+import { createSupabaseServer } from '@/lib/supabase/server';
 
 // ── Tipuri ──
 export type RoleKey =
@@ -47,7 +47,7 @@ export interface Permission {
 export const getMyRoles = cache(async (): Promise<UserRole[]> => {
   const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return [];
+  if (!user) {return [];}
 
   const { data, error } = await supabase
     .from('user_roles')
@@ -76,7 +76,7 @@ export const getMyRoles = cache(async (): Promise<UserRole[]> => {
       .eq('user_id', user.id)
       .eq('is_active', true);
 
-    if (!memberships) return [];
+    if (!memberships) {return [];}
 
     return memberships.map(m => ({
       role_key: m.role === 'consultant' ? 'consultant_ssm' : m.role as RoleKey,
@@ -115,7 +115,7 @@ export const isSuperAdmin = cache(async (): Promise<boolean> => {
 
 // Verifică permisiune granulară (resource × action)
 export const hasPermission = cache(async (resource: Resource, action: Action): Promise<boolean> => {
-  if (await isSuperAdmin()) return true;
+  if (await isSuperAdmin()) {return true;}
 
   const supabase = await createSupabaseServer();
   const roles = await getMyRoles();
@@ -134,7 +134,7 @@ export const hasPermission = cache(async (resource: Resource, action: Action): P
 
 // Returnează field_restrictions pentru un resource
 export const getFieldRestrictions = cache(async (resource: Resource): Promise<Record<string, string>> => {
-  if (await isSuperAdmin()) return {};
+  if (await isSuperAdmin()) {return {};}
 
   const supabase = await createSupabaseServer();
   const roles = await getMyRoles();

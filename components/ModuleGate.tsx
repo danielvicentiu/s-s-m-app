@@ -5,10 +5,10 @@
 
 'use client'
 
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { useOrgModules } from '@/hooks/useOrgModules'
-import type { ModuleKey } from '@/lib/modules/types'
 import { MODULE_ICONS, CATEGORY_COLORS } from '@/lib/modules/constants'
+import type { ModuleKey } from '@/lib/modules/types'
 
 // ── Props ──
 interface ModuleGateProps {
@@ -62,9 +62,9 @@ export default function ModuleGate({
   }
 
   // Modul inactiv — fallback custom sau UpgradeCTA
-  if (hideIfNoAccess) return null
+  if (hideIfNoAccess) {return null}
 
-  if (fallback) return <>{fallback}</>
+  if (fallback) {return <>{fallback}</>}
 
   return <UpgradeCTA moduleKey={moduleKey} locale={locale} />
 }

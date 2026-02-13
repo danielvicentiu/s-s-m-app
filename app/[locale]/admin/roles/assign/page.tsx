@@ -3,14 +3,14 @@
 // Acces: DOAR super_admin
 
 import { redirect } from 'next/navigation'
-import { createSupabaseServer } from '@/lib/supabase/server'
 import { isSuperAdmin } from '@/lib/rbac'
+import { createSupabaseServer } from '@/lib/supabase/server'
 import AssignRoleForm from './AssignRoleForm'
 
 export default async function AssignRolePage() {
   // GUARD: Verificare super_admin (server-side)
   const admin = await isSuperAdmin()
-  if (!admin) redirect('/unauthorized')
+  if (!admin) {redirect('/unauthorized')}
 
   const supabase = await createSupabaseServer()
 

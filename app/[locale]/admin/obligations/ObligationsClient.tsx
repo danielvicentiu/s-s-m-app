@@ -1,8 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from '@/i18n/navigation'
-import Link from 'next/link'
 import {
   FileText,
   Plus,
@@ -13,9 +10,12 @@ import {
   XCircle,
   AlertTriangle,
 } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 import CountryFilter from '@/components/admin/CountryFilter'
-import { ObligationType, CountryCode, COUNTRY_FLAGS } from '@/lib/types'
+import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
+import { type ObligationType, type CountryCode, COUNTRY_FLAGS } from '@/lib/types'
 
 interface Props {
   obligations: ObligationType[]
@@ -54,13 +54,13 @@ export default function ObligationsClient({ obligations, stats, canDelete }: Pro
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
 
       router.refresh()
       setDeleteConfirm(null)
     } catch (error: any) {
       console.error('Error deleting obligation:', error)
-      alert('Eroare la ștergere: ' + (error.message || 'Necunoscut'))
+      alert(`Eroare la ștergere: ${  error.message || 'Necunoscut'}`)
     } finally {
       setIsDeleting(false)
     }

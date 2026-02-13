@@ -7,8 +7,8 @@
 
 import { useMemo } from 'react'
 import { useOrgModules } from '@/hooks/useOrgModules'
-import type { ModuleKey } from '@/lib/modules/types'
 import { MODULE_ICONS, CATEGORY_COLORS } from '@/lib/modules/constants'
+import type { ModuleKey } from '@/lib/modules/types'
 
 // ── Structura navigare per modul ──
 interface NavItem {
@@ -96,7 +96,7 @@ export default function ModuleNav({
 
     for (const moduleKey of activeModuleKeys) {
       const navItems = MODULE_NAV_ITEMS[moduleKey]
-      if (!navItems || navItems.length === 0) continue
+      if (!navItems || navItems.length === 0) {continue}
 
       const mod = modules.find(m => m.module_key === moduleKey)
 
@@ -152,7 +152,7 @@ export default function ModuleNav({
           {/* Nav items */}
           {section.items.map(item => {
             const isActive = currentPath === item.href ||
-              (currentPath && currentPath.startsWith(item.href + '/'))
+              (currentPath && currentPath.startsWith(`${item.href  }/`))
 
             return (
               <a

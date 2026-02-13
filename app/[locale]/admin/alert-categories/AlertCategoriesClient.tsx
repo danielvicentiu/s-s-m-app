@@ -1,8 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from '@/i18n/navigation'
-import Link from 'next/link'
 import {
   Bell,
   Plus,
@@ -15,9 +12,12 @@ import {
   MessageCircle,
   Smartphone,
 } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 import CountryFilter from '@/components/admin/CountryFilter'
-import { AlertCategory, CountryCode, COUNTRY_FLAGS } from '@/lib/types'
+import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
+import { type AlertCategory, type CountryCode, COUNTRY_FLAGS } from '@/lib/types'
 
 interface Props {
   alertCategories: AlertCategory[]
@@ -56,13 +56,13 @@ export default function AlertCategoriesClient({ alertCategories, stats, canDelet
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
 
       router.refresh()
       setDeleteConfirm(null)
     } catch (error: any) {
       console.error('Error deleting alert category:', error)
-      alert('Eroare la ștergere: ' + (error.message || 'Necunoscut'))
+      alert(`Eroare la ștergere: ${  error.message || 'Necunoscut'}`)
     } finally {
       setIsDeleting(false)
     }

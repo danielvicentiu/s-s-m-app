@@ -1,5 +1,4 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
 import {
   FileText,
   Upload,
@@ -16,6 +15,7 @@ import {
   Download,
   ArrowRight,
 } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
 
 // ==========================================
 // TIPURI
@@ -110,7 +110,7 @@ function extractMetadataClient(text: string): Metadata {
   const isNorme = /^(NORME?\s+METODOLOGIC[EĂ]|NORME?\s+GENERALE|NORME?\s+TEHNICE)/im.test(firstLines)
   if (isNorme) {
     const hgMatch = firstLines.match(/(?:Hotărâr(?:ii|ea)\s+Guvernului|H\.?G\.?)\s+nr\.\s*([\d.]+)/i)
-    if (hgMatch) actNumber = hgMatch[1].replace(/\./g, '')
+    if (hgMatch) {actNumber = hgMatch[1].replace(/\./g, '')}
   }
   if (!actNumber) {
     const numberMatch = firstLines.match(/nr\.\s*([\d.]+)/i)
@@ -129,7 +129,7 @@ function extractMetadataClient(text: string): Metadata {
   const euDirectives: string[] = []
   const euRegex = /Directiv[aă]\s+([\d\/]+\/CE[E]?)/gi
   let euMatch
-  while ((euMatch = euRegex.exec(firstLines)) !== null) euDirectives.push(euMatch[1])
+  while ((euMatch = euRegex.exec(firstLines)) !== null) {euDirectives.push(euMatch[1])}
 
   const titleMatch = firstLines.match(/(privind|pentru aprobarea|referitoare la)[^.]*\./i)
   const titleSuffix = titleMatch ? titleMatch[0].trim() : ''
@@ -139,19 +139,19 @@ function extractMetadataClient(text: string): Metadata {
   const articleSet = new Set<string>()
   const artRegex = /Art(?:icolul|\.)?\s*(\d+)/gi
   let m
-  while ((m = artRegex.exec(text)) !== null) articleSet.add(m[1])
+  while ((m = artRegex.exec(text)) !== null) {articleSet.add(m[1])}
 
   const chapterSet = new Set<string>()
   const chapRegex = /CAP(?:ITOLUL|\.)?\s*([\dIVXLC]+)/gi
-  while ((m = chapRegex.exec(text)) !== null) chapterSet.add(m[1])
+  while ((m = chapRegex.exec(text)) !== null) {chapterSet.add(m[1])}
 
   const sectionSet = new Set<string>()
   const secRegex = /SECȚIUNEA\s*([\dIVXLC]+)/gi
-  while ((m = secRegex.exec(text)) !== null) sectionSet.add(m[1])
+  while ((m = secRegex.exec(text)) !== null) {sectionSet.add(m[1])}
 
   const annexSet = new Set<string>()
   const annRegex = /ANEX[AĂ]\s*([\dIVXLC]+)/gi
-  while ((m = annRegex.exec(text)) !== null) annexSet.add(m[1])
+  while ((m = annRegex.exec(text)) !== null) {annexSet.add(m[1])}
 
   return {
     actType, actNumber, actYear, actFullName, actShortName, officialJournal, euDirectives,
@@ -206,7 +206,7 @@ export default function LegalImportClient() {
   useEffect(() => {
     fetch('/api/admin/legal-taxonomy')
       .then((r) => r.json())
-      .then((d) => { if (d.taxonomy) setTaxonomy(d.taxonomy) })
+      .then((d) => { if (d.taxonomy) {setTaxonomy(d.taxonomy)} })
       .catch(() => {})
   }, [])
 
@@ -283,11 +283,11 @@ export default function LegalImportClient() {
     const detected = extractMetadataClient(text)
     setMetadata(detected)
 
-    if (detected.actType) setActType(detected.actType)
-    if (detected.actNumber) setActNumber(detected.actNumber)
-    if (detected.actYear) setActYear(String(detected.actYear))
-    if (detected.actFullName) setActFullName(detected.actFullName)
-    if (detected.officialJournal) setOfficialJournal(detected.officialJournal)
+    if (detected.actType) {setActType(detected.actType)}
+    if (detected.actNumber) {setActNumber(detected.actNumber)}
+    if (detected.actYear) {setActYear(String(detected.actYear))}
+    if (detected.actFullName) {setActFullName(detected.actFullName)}
+    if (detected.officialJournal) {setOfficialJournal(detected.officialJournal)}
 
     setIsAnalyzing(false)
     setCurrentStep(2)
@@ -464,7 +464,7 @@ export default function LegalImportClient() {
                   onChange={(e) => { setUrlInput(e.target.value); setUrlError(null) }}
                   placeholder="https://legislatie.just.ro/Public/DetaliiDocument/..."
                   className="flex-1 p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleFetchUrl() }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') {handleFetchUrl()} }}
                 />
                 <button
                   onClick={handleFetchUrl}
