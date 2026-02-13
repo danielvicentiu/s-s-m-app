@@ -20,15 +20,27 @@
  * const obligations = await extractObligations(parsed, 'L 319/2006')
  */
 
-import type {
-  LegislationParsed,
-  Article,
-  CountryCode
-} from '@/lib/types'
+import type { CountryCode } from '@/lib/types'
 
 // ══════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════
+
+export interface Article {
+  id: string                          // "ART_1", "ART_2", etc.
+  number: string                      // "1", "2", "12"
+  content: string                     // Full article text
+  hasObligations: boolean             // Whether article contains obligations
+}
+
+export interface LegislationParsed {
+  articles: Article[]
+  metadata: {
+    country: CountryCode
+    language: string
+    parsedAt: string
+  }
+}
 
 export interface Obligation {
   id: string                        // "OBL_1", "OBL_2", etc.
@@ -98,7 +110,7 @@ export async function extractObligations(
   }
 
   // Filtrare articole cu obligații
-  const articlesWithObligations = parsedLegislation.structure.articles.filter(
+  const articlesWithObligations = parsedLegislation.articles.filter(
     article => article.hasObligations
   )
 
@@ -121,7 +133,7 @@ export async function extractObligations(
       const batchObligations = await extractObligationsFromBatch(
         batch,
         legalActName,
-        parsedLegislation.language,
+        parsedLegislation.metadata.language,
         key
       )
 
@@ -192,7 +204,7 @@ async function extractObligationsFromBatch(
 function buildPrompt(articles: Article[], legalActName: string, language: string): string {
   const articlesText = articles.map(article => {
     return `
-ARTICOLUL ${article.number}${article.title ? ` - ${article.title}` : ''}
+ARTICOLUL ${article.number}
 ${article.content}
 ---`.trim()
   }).join('\n\n')
@@ -504,10 +516,4 @@ function groupBy<T>(items: T[], keyFn: (item: T) => string): Record<string, numb
 // ══════════════════════════════════════════════════════════════
 // EXPORT PUBLIC API
 // ══════════════════════════════════════════════════════════════
-
-export {
-  type Obligation,
-  type ObligationFrequency,
-  extractObligations,
-  getObligationStats
-}
+// Note: Types are already exported above (Obligation, ObligationFrequency)

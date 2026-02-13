@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
-import { Check, ArrowRight, ArrowLeft, Building2, Users, Upload, CheckCircle, X } from 'lucide-react'
+import { Check, ArrowRight, ArrowLeft, Building2, Users, Upload, CheckCircle, X, Loader2, Search } from 'lucide-react'
+import { validateCUI, formatCUI } from '@/lib/utils/cuiValidation'
+import { fetchCompanyDataFromANAF } from '@/lib/services/anafApi'
 
 interface Props {
   user: { id: string; email: string }
@@ -21,6 +23,7 @@ export default function OnboardingClient({ user }: Props) {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [orgId, setOrgId] = useState<string | null>(null)
+  const [isAnimating, setIsAnimating] = useState(false)
 
   // Step 1: Date firmă
   const [formData, setFormData] = useState({
@@ -32,6 +35,11 @@ export default function OnboardingClient({ user }: Props) {
     contactEmail: user.email,
     contactPhone: '',
   })
+
+  // CUI validation and ANAF autocomplete
+  const [cuiError, setCuiError] = useState<string>('')
+  const [loadingANAF, setLoadingANAF] = useState(false)
+  const [anafSuggestion, setAnafSuggestion] = useState<string>('')
 
   // Step 2: Angajați
   const [employees, setEmployees] = useState<Employee[]>([])
@@ -46,7 +54,70 @@ export default function OnboardingClient({ user }: Props) {
   const [documents, setDocuments] = useState<File[]>([])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+
+    // Reset CUI error când user modifică câmpul
+    if (name === 'cui') {
+      setCuiError('')
+      setAnafSuggestion('')
+    }
+  }
+
+  // Validare CUI în timp real (blur event)
+  const handleCUIBlur = async () => {
+    const cui = formData.cui.trim()
+    if (!cui) {
+      setCuiError('')
+      return
+    }
+
+    // Validare check digit
+    const validation = validateCUI(cui)
+    if (!validation.valid) {
+      setCuiError(validation.message)
+      return
+    }
+
+    setCuiError('')
+
+    // Interogare ANAF pentru autocomplete
+    setLoadingANAF(true)
+    setAnafSuggestion('')
+
+    try {
+      const anafData = await fetchCompanyDataFromANAF(validation.cleanedCUI || cui)
+
+      if (anafData) {
+        setAnafSuggestion('Firmă găsită în registrul ANAF')
+
+        // Completare automată dacă câmpurile sunt goale
+        setFormData(prev => ({
+          ...prev,
+          cui: formatCUI(anafData.cui),
+          name: prev.name || anafData.name,
+          address: prev.address || anafData.address,
+          county: prev.county || anafData.county,
+          contactPhone: prev.contactPhone || anafData.phone,
+        }))
+      } else {
+        setAnafSuggestion('CUI valid, dar nu a fost găsit în registrul ANAF')
+      }
+    } catch (error) {
+      console.error('ANAF error:', error)
+      setAnafSuggestion('Eroare la verificarea ANAF (vei putea completa manual)')
+    } finally {
+      setLoadingANAF(false)
+    }
+  }
+
+  // Tranziție animată între pași
+  const transitionToStep = (newStep: number) => {
+    setIsAnimating(true)
+    setTimeout(() => {
+      setStep(newStep)
+      setIsAnimating(false)
+    }, 300)
   }
 
   const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,13 +150,23 @@ export default function OnboardingClient({ user }: Props) {
     }
   }
 
-  const canProceedStep1 = formData.name && formData.cui && formData.caen && formData.address
+  const canProceedStep1 = formData.name && formData.cui && formData.caen && formData.address && !cuiError
 
   async function handleStep1Complete() {
+    // Validare finală CUI înainte de salvare
+    if (formData.cui) {
+      const validation = validateCUI(formData.cui)
+      if (!validation.valid) {
+        setCuiError(validation.message)
+        alert('CUI invalid. Corectează eroarea înainte de a continua.')
+        return
+      }
+    }
+
     setLoading(true)
     const supabase = createSupabaseBrowser()
 
-    try {
+    try{
       // 1. Insert organization
       const { data: org, error: orgError } = await supabase
         .from('organizations')
@@ -117,7 +198,7 @@ export default function OnboardingClient({ user }: Props) {
       if (memberError) throw memberError
 
       setOrgId(org.id)
-      setStep(2)
+      transitionToStep(2)
     } catch (error) {
       console.error('Onboarding error:', error)
       alert('Eroare la salvare. Verifică datele și încearcă din nou.')
@@ -150,7 +231,7 @@ export default function OnboardingClient({ user }: Props) {
 
       if (empError) throw empError
 
-      setStep(3)
+      transitionToStep(3)
     } catch (error) {
       console.error('Error saving employees:', error)
       alert('Eroare la salvarea angajaților. Încearcă din nou.')
@@ -204,7 +285,7 @@ export default function OnboardingClient({ user }: Props) {
         </div>
       </header>
 
-      {/* Progress Bar */}
+      {/* Progress Stepper - Îmbunătățit */}
       <div className="max-w-4xl mx-auto px-6 pt-8 pb-6">
         <div className="flex items-center justify-between">
           {[
@@ -215,26 +296,39 @@ export default function OnboardingClient({ user }: Props) {
           ].map((s, idx) => (
             <div key={s.num} className="flex items-center flex-1">
               <div className="flex flex-col items-center flex-1">
-                <div
-                  className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
-                    step >= s.num
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-gray-200 text-gray-400'
-                  }`}
-                >
-                  {step > s.num ? <Check className="w-5 h-5 md:w-6 md:h-6" /> : <s.icon className="w-5 h-5 md:w-6 md:h-6" />}
+                {/* Circle with number or check */}
+                <div className="relative">
+                  <div
+                    className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center font-black text-lg transition-all duration-300 ${
+                      step >= s.num
+                        ? 'bg-blue-600 text-white shadow-lg ring-4 ring-blue-100'
+                        : 'bg-gray-200 text-gray-400'
+                    }`}
+                  >
+                    {step > s.num ? (
+                      <Check className="w-6 h-6 md:w-7 md:h-7" />
+                    ) : (
+                      <span className="text-lg md:text-xl">{s.num}</span>
+                    )}
+                  </div>
+                  {/* Active pulse animation */}
+                  {step === s.num && (
+                    <div className="absolute inset-0 rounded-full bg-blue-600 animate-ping opacity-25" />
+                  )}
                 </div>
+                {/* Label */}
                 <span
-                  className={`text-xs font-semibold mt-2 text-center ${
+                  className={`text-xs md:text-sm font-bold mt-2 text-center transition-colors duration-300 ${
                     step >= s.num ? 'text-blue-600' : 'text-gray-400'
                   }`}
                 >
                   {s.label}
                 </span>
               </div>
+              {/* Connector line */}
               {idx < 3 && (
                 <div
-                  className={`h-1 flex-1 mx-1 md:mx-2 rounded transition-all ${
+                  className={`h-1.5 flex-1 mx-2 md:mx-3 rounded-full transition-all duration-300 ${
                     step > s.num ? 'bg-blue-600' : 'bg-gray-200'
                   }`}
                 />
@@ -249,7 +343,7 @@ export default function OnboardingClient({ user }: Props) {
         <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
           {/* Step 1: Date firmă */}
           {step === 1 && (
-            <div>
+            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
               <h2 className="text-3xl font-black text-gray-900 mb-2">Date firmă</h2>
               <p className="text-gray-600 mb-8">Completează informațiile despre organizația ta</p>
 
@@ -273,14 +367,45 @@ export default function OnboardingClient({ user }: Props) {
                     <label className="block text-sm font-bold text-gray-700 mb-1">
                       CUI <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      name="cui"
-                      value={formData.cui}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="RO12345678"
-                    />
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="cui"
+                        value={formData.cui}
+                        onChange={handleInputChange}
+                        onBlur={handleCUIBlur}
+                        className={`w-full border rounded-lg px-4 py-3 pr-10 text-sm font-mono focus:outline-none focus:ring-2 transition-all ${
+                          cuiError
+                            ? 'border-red-500 focus:ring-red-500'
+                            : anafSuggestion
+                            ? 'border-green-500 focus:ring-green-500'
+                            : 'border-gray-300 focus:ring-blue-600'
+                        }`}
+                        placeholder="RO12345678"
+                        maxLength={12}
+                      />
+                      {loadingANAF && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                        </div>
+                      )}
+                      {!loadingANAF && anafSuggestion && !cuiError && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <Check className="w-5 h-5 text-green-600" />
+                        </div>
+                      )}
+                    </div>
+                    {cuiError && (
+                      <p className="text-xs text-red-600 mt-1 font-semibold">{cuiError}</p>
+                    )}
+                    {anafSuggestion && !cuiError && (
+                      <p className="text-xs text-green-600 mt-1 font-semibold flex items-center gap-1">
+                        <Check className="w-3 h-3" /> {anafSuggestion}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">
+                      Validare automată cu check digit și ANAF
+                    </p>
                   </div>
 
                   <div>
@@ -355,7 +480,7 @@ export default function OnboardingClient({ user }: Props) {
 
           {/* Step 2: Angajați */}
           {step === 2 && (
-            <div>
+            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
               <h2 className="text-3xl font-black text-gray-900 mb-2">Adaugă primii angajați</h2>
               <p className="text-gray-600 mb-8">
                 Adaugă angajații pentru gestionarea conformității SSM
@@ -474,7 +599,7 @@ export default function OnboardingClient({ user }: Props) {
 
           {/* Step 3: Documente (optional) */}
           {step === 3 && (
-            <div>
+            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
               <h2 className="text-3xl font-black text-gray-900 mb-2">Încarcă documente existente</h2>
               <p className="text-gray-600 mb-8">
                 Opțional: Încarcă documente SSM/PSI existente (contracte, fișe medicale, evaluări de risc)
@@ -529,7 +654,7 @@ export default function OnboardingClient({ user }: Props) {
 
           {/* Step 4: Confirmare */}
           {step === 4 && (
-            <div>
+            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
               <h2 className="text-3xl font-black text-gray-900 mb-2">Confirmare</h2>
               <p className="text-gray-600 mb-8">Verifică datele înainte de finalizare</p>
 
@@ -601,9 +726,9 @@ export default function OnboardingClient({ user }: Props) {
 
           {/* Actions */}
           <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
-            {step > 1 && step !== 2 ? (
+            {step > 1 ? (
               <button
-                onClick={() => setStep(step - 1)}
+                onClick={() => transitionToStep(step - 1)}
                 disabled={loading}
                 className="flex items-center gap-2 px-6 py-3 text-gray-600 hover:text-gray-900 font-semibold transition disabled:opacity-50"
               >
@@ -638,7 +763,7 @@ export default function OnboardingClient({ user }: Props) {
 
             {step === 3 && (
               <button
-                onClick={() => setStep(4)}
+                onClick={() => transitionToStep(4)}
                 disabled={loading}
                 className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50"
               >

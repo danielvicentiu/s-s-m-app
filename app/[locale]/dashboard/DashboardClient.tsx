@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { UserPlus, FileText } from 'lucide-react'
 import LanguageSelector from '@/components/LanguageSelector'
 import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 interface OrgOption {
   id: string
@@ -213,22 +214,22 @@ export default function DashboardClient({
   const recentNotifCount = filteredAlerts.filter((a: any) => a.severity === 'expired').length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
 
       {/* ============ HEADER ============ */}
-      <header className="bg-white px-8 py-4">
+      <header className="bg-white dark:bg-gray-800 px-8 py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
+            <h1 className="text-2xl font-black text-gray-900 dark:text-white">s-s-m.ro</h1>
             {organizations.length <= 1 ? (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` · ${organizations[0].cui}` : ''}
               </p>
             ) : (
               <select
                 value={selectedOrg}
                 onChange={(e) => handleOrgChange(e.target.value)}
-                className="mt-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 max-w-xs"
+                className="mt-1 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 max-w-xs"
               >
                 <option value="all">Toate organizațiile ({organizations.length})</option>
                 {organizations.map((org) => (
@@ -251,7 +252,7 @@ export default function DashboardClient({
               </Link>
               <Link
                 href="/ro/documents/generate"
-                className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition flex items-center gap-2"
+                className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
               >
                 <FileText className="h-4 w-4" />
                 <span>Generează Documente</span>
@@ -278,9 +279,11 @@ export default function DashboardClient({
                 </button>
               </label>
             </div>
+            {/* Theme Toggle */}
+            <ThemeToggle />
             {/* Language Selector */}
             <LanguageSelector />
-            <span className="text-sm text-gray-400">Consultant</span>
+            <span className="text-sm text-gray-400 dark:text-gray-500">Consultant</span>
             <form action="/api/auth/signout" method="POST">
               <button type="submit" className="text-sm text-red-400 hover:text-red-600 font-medium">
                 Ieși
@@ -294,16 +297,16 @@ export default function DashboardClient({
 
         {/* ============ RISC CONTROL ITM ============ */}
         {showRiskITM && (
-          <div className="rounded-2xl border-2 border-blue-600 bg-white px-6 py-5 flex justify-between items-center">
+          <div className="rounded-2xl border-2 border-blue-600 dark:border-blue-500 bg-white dark:bg-gray-800 px-6 py-5 flex justify-between items-center">
             <div>
-              <div className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+              <div className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
                 Risc Control ITM
               </div>
               <div className={`text-3xl font-black ${riskClass}`}>{riskLevel}</div>
             </div>
             <div className="text-right">
-              <div className="text-[11px] text-gray-400">Completare date</div>
-              <div className="text-4xl font-bold text-gray-900">{completeness}%</div>
+              <div className="text-[11px] text-gray-400 dark:text-gray-500">Completare date</div>
+              <div className="text-4xl font-bold text-gray-900 dark:text-white">{completeness}%</div>
             </div>
           </div>
         )}
@@ -318,15 +321,15 @@ export default function DashboardClient({
         )}
 
         {/* ============ TABS ============ */}
-        <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+        <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
           <div className="flex">
             {/* Tab Medicina Muncii */}
             <button
               onClick={() => setActiveTab('medical')}
               className={`flex-1 py-3.5 text-center text-[15px] font-semibold transition-all flex items-center justify-center gap-2 ${
                 activeTab === 'medical'
-                  ? 'bg-white text-gray-900 border-b-[3px] border-blue-600'
-                  : 'bg-gray-50 text-gray-400 border-b border-gray-200'
+                  ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-b-[3px] border-blue-600'
+                  : 'bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 border-b border-gray-200 dark:border-gray-700'
               }`}
             >
               🏥 Medicina Muncii
@@ -341,8 +344,8 @@ export default function DashboardClient({
               onClick={() => setActiveTab('equipment')}
               className={`flex-1 py-3.5 text-center text-[15px] font-semibold transition-all flex items-center justify-center gap-2 ${
                 activeTab === 'equipment'
-                  ? 'bg-white text-gray-900 border-b-[3px] border-blue-600'
-                  : 'bg-gray-50 text-gray-400 border-b border-gray-200'
+                  ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-b-[3px] border-blue-600'
+                  : 'bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 border-b border-gray-200 dark:border-gray-700'
               }`}
             >
               🧻 Echipamente PSI
@@ -357,47 +360,47 @@ export default function DashboardClient({
               onClick={() => setActiveTab('employees')}
               className={`flex-1 py-3.5 text-center text-[15px] font-semibold transition-all flex items-center justify-center gap-2 ${
                 activeTab === 'employees'
-                  ? 'bg-white text-gray-900 border-b-[3px] border-blue-600'
-                  : 'bg-gray-50 text-gray-400 border-b border-gray-200'
+                  ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-b-[3px] border-blue-600'
+                  : 'bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 border-b border-gray-200 dark:border-gray-700'
               }`}
             >
               👥 Angajați
-              <span className="text-[11px] text-gray-400">({filteredEmployees.length})</span>
+              <span className="text-[11px] text-gray-400 dark:text-gray-500">({filteredEmployees.length})</span>
             </button>
           </div>
 
           {/* ============ COUNTER CARDS ============ */}
           <div className="grid grid-cols-3 gap-4 p-5">
-            <div className="bg-red-50 rounded-xl py-6 text-center">
-              <div className="text-5xl font-black text-red-600">{expired}</div>
-              <div className="text-[11px] font-bold text-red-500 uppercase tracking-widest mt-1">Expirate</div>
+            <div className="bg-red-50 dark:bg-red-900/20 rounded-xl py-6 text-center">
+              <div className="text-5xl font-black text-red-600 dark:text-red-400">{expired}</div>
+              <div className="text-[11px] font-bold text-red-500 dark:text-red-400 uppercase tracking-widest mt-1">Expirate</div>
             </div>
-            <div className="bg-orange-50 rounded-xl py-6 text-center">
-              <div className="text-5xl font-black text-orange-500">{expiring}</div>
-              <div className="text-[11px] font-bold text-orange-500 uppercase tracking-widest mt-1">Expiră &lt;30 zile</div>
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl py-6 text-center">
+              <div className="text-5xl font-black text-orange-500 dark:text-orange-400">{expiring}</div>
+              <div className="text-[11px] font-bold text-orange-500 dark:text-orange-400 uppercase tracking-widest mt-1">Expiră &lt;30 zile</div>
             </div>
-            <div className="bg-green-50 rounded-xl py-6 text-center">
-              <div className="text-5xl font-black text-green-600">{valid}</div>
-              <div className="text-[11px] font-bold text-green-600 uppercase tracking-widest mt-1">Valide</div>
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl py-6 text-center">
+              <div className="text-5xl font-black text-green-600 dark:text-green-400">{valid}</div>
+              <div className="text-[11px] font-bold text-green-600 dark:text-green-400 uppercase tracking-widest mt-1">Valide</div>
             </div>
           </div>
         </div>
 
         {/* ============ TABEL MEDICINA MUNCII ============ */}
         {activeTab === 'medical' && (
-          <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
             <div className="px-6 py-4 flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-900">Medicina Muncii</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Medicina Muncii</h2>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-400">{filteredMedicalExams.length} înregistrări</span>
-                <button onClick={() => router.push('/dashboard/medical')} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                <span className="text-sm text-gray-400 dark:text-gray-500">{filteredMedicalExams.length} înregistrări</span>
+                <button onClick={() => router.push('/dashboard/medical')} className="bg-gray-900 dark:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-600 transition">
                   + Adaugă fișă
                 </button>
               </div>
             </div>
             <table className="w-full">
               <thead>
-                <tr className="text-left text-[11px] font-bold text-gray-400 uppercase tracking-wider border-t border-gray-100">
+                <tr className="text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider border-t border-gray-100 dark:border-gray-700">
                   <th className="px-6 py-3">Angajat</th>
                   <th className="px-6 py-3">Funcție</th>
                   <th className="px-6 py-3">Tip</th>
@@ -406,23 +409,23 @@ export default function DashboardClient({
                   <th className="px-6 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
                 {medWithStatus.map((m: any) => (
-                  <tr key={m.id} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 font-medium text-gray-900">{m.employee_name || '—'}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{m.job_title || m.notes || '—'}</td>
+                  <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{m.employee_name || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{m.job_title || m.notes || '—'}</td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">
+                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                         {fmtExamType(m.examination_type)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{fmtDate(m.examination_date)}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{fmtDate(m.expiry_date)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{fmtDate(m.examination_date)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{fmtDate(m.expiry_date)}</td>
                     <td className="px-6 py-4"><StatusPill status={m.status} days={m.diffDays} /></td>
                   </tr>
                 ))}
                 {filteredMedicalExams.length === 0 && (
-                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300">Nicio fișă medicală.</td></tr>
+                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300 dark:text-gray-600">Nicio fișă medicală.</td></tr>
                 )}
               </tbody>
             </table>
@@ -431,19 +434,19 @@ export default function DashboardClient({
 
         {/* ============ TABEL ECHIPAMENTE PSI ============ */}
         {activeTab === 'equipment' && (
-          <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
             <div className="px-6 py-4 flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-900">Echipamente PSI</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Echipamente PSI</h2>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-400">{filteredEquipment.length} înregistrări</span>
-                <button onClick={() => router.push('/dashboard/equipment')} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                <span className="text-sm text-gray-400 dark:text-gray-500">{filteredEquipment.length} înregistrări</span>
+                <button onClick={() => router.push('/dashboard/equipment')} className="bg-gray-900 dark:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-600 transition">
                   + Adaugă echipament
                 </button>
               </div>
             </div>
             <table className="w-full">
               <thead>
-                <tr className="text-left text-[11px] font-bold text-gray-400 uppercase tracking-wider border-t border-gray-100">
+                <tr className="text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider border-t border-gray-100 dark:border-gray-700">
                   <th className="px-6 py-3">Echipament</th>
                   <th className="px-6 py-3">Tip</th>
                   <th className="px-6 py-3">Locație</th>
@@ -452,23 +455,23 @@ export default function DashboardClient({
                   <th className="px-6 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
                 {eqWithStatus.map((e: any) => (
-                  <tr key={e.id} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 font-medium text-gray-900">{fmtEquipType(e.equipment_type)}</td>
+                  <tr key={e.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{fmtEquipType(e.equipment_type)}</td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">
+                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                         {fmtEquipType(e.equipment_type)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{e.location || e.description || '—'}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{fmtDate(e.last_check_date || e.created_at)}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{fmtDate(e.expiry_date)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{e.location || e.description || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{fmtDate(e.last_check_date || e.created_at)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{fmtDate(e.expiry_date)}</td>
                     <td className="px-6 py-4"><StatusPill status={e.status} days={e.diffDays} /></td>
                   </tr>
                 ))}
                 {filteredEquipment.length === 0 && (
-                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300">Niciun echipament.</td></tr>
+                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300 dark:text-gray-600">Niciun echipament.</td></tr>
                 )}
               </tbody>
             </table>
@@ -477,19 +480,19 @@ export default function DashboardClient({
 
         {/* ============ TABEL ANGAJAȚI ============ */}
         {activeTab === 'employees' && (
-          <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
             <div className="px-6 py-4 flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-900">Angajați</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Angajați</h2>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-400">{filteredEmployees.length} angajați</span>
-                <button onClick={() => router.push('/dashboard/angajat-nou')} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                <span className="text-sm text-gray-400 dark:text-gray-500">{filteredEmployees.length} angajați</span>
+                <button onClick={() => router.push('/dashboard/angajat-nou')} className="bg-gray-900 dark:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-600 transition">
                   + Angajat nou
                 </button>
               </div>
             </div>
             <table className="w-full">
               <thead>
-                <tr className="text-left text-[11px] font-bold text-gray-400 uppercase tracking-wider border-t border-gray-100">
+                <tr className="text-left text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider border-t border-gray-100 dark:border-gray-700">
                   <th className="px-6 py-3">Nume complet</th>
                   <th className="px-6 py-3">Funcție</th>
                   <th className="px-6 py-3">Cod COR</th>
@@ -498,23 +501,23 @@ export default function DashboardClient({
                   <th className="px-6 py-3">Organizație</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
                 {filteredEmployees.map((emp: any) => (
-                  <tr key={emp.id} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 font-medium text-gray-900">{emp.full_name || '—'}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{emp.job_title || '—'}</td>
+                  <tr key={emp.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{emp.full_name || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{emp.job_title || '—'}</td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">
+                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                         {emp.cor_code || '—'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{emp.nationality || '—'}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{fmtDate(emp.hire_date)}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{emp.organizations?.name || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{emp.nationality || '—'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{fmtDate(emp.hire_date)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{emp.organizations?.name || '—'}</td>
                   </tr>
                 ))}
                 {filteredEmployees.length === 0 && (
-                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300">Niciun angajat adăugat.</td></tr>
+                  <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-300 dark:text-gray-600">Niciun angajat adăugat.</td></tr>
                 )}
               </tbody>
             </table>

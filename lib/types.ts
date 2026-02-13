@@ -245,3 +245,25 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── BLOG ARTICLES ──
+
+export type BlogCategory = 'SSM' | 'PSI' | 'GDPR' | 'Legislatie' | 'Tips'
+
+export interface BlogArticle {
+  id: string
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  category: BlogCategory
+  author: string
+  author_avatar?: string
+  published_date: string
+  read_time_minutes: number
+  thumbnail_url?: string
+  tags?: string[]
+  is_published: boolean
+  created_at: string
+  updated_at: string
+}

@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
-import { StatusBadge } from '@/components/ui/StatusBadge'
+import { StatusBadge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { ArrowLeft, Plus, Pencil, Trash2, Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react'

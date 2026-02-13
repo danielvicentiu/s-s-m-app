@@ -59,6 +59,15 @@ const MODULE_NAV_ITEMS: Record<ModuleKey, NavItem[]> = {
     { label: { ro: 'Relații de muncă', en: 'Labor', bg: 'Трудови отношения', hu: 'Munkaügy', de: 'Arbeitsrecht', pl: 'Prawo pracy' }, href: '/dashboard/labor' },
     { label: { ro: 'Concedii', en: 'Leave', bg: 'Отпуски', hu: 'Szabadságok', de: 'Urlaub', pl: 'Urlopy' }, href: '/dashboard/leave' },
   ],
+  reports: [
+    { label: { ro: 'Rapoarte', en: 'Reports', bg: 'Доклади', hu: 'Jelentések', de: 'Berichte', pl: 'Raporty' }, href: '/dashboard/reports' },
+  ],
+  documents: [
+    { label: { ro: 'Documente', en: 'Documents', bg: 'Документи', hu: 'Dokumentumok', de: 'Dokumente', pl: 'Dokumenty' }, href: '/dashboard/documents' },
+  ],
+  'ssm-core': [
+    { label: { ro: 'SSM Core', en: 'SSM Core', bg: 'SSM Core', hu: 'SSM Core', de: 'SSM Core', pl: 'SSM Core' }, href: '/dashboard/ssm-core' },
+  ],
 }
 
 // ── Props ──

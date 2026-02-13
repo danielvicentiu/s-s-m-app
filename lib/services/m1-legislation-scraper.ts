@@ -1,5 +1,3 @@
-import { CountryCode, LegislationEntry, LegislationDomain } from '@/lib/types'
-
 /**
  * M1 LEGISLATION SCRAPER SERVICE
  *
@@ -10,6 +8,18 @@ import { CountryCode, LegislationEntry, LegislationDomain } from '@/lib/types'
  * - gesetze-im-internet.de (Germania)
  * - dziennikustaw.gov.pl (Polonia)
  */
+
+// Types
+type CountryCode = 'RO' | 'BG' | 'HU' | 'DE' | 'PL'
+type LegislationDomain = 'SSM' | 'PSI' | 'GDPR' | 'LABOR' | 'OTHER'
+
+interface LegislationEntry {
+  title: string
+  link: string
+  pubDate: string
+  domain: LegislationDomain
+  countryCode: CountryCode
+}
 
 // RSS endpoints per țară
 const RSS_ENDPOINTS: Record<CountryCode, string> = {
@@ -284,20 +294,11 @@ export async function scrapeLegislatie(
       }
 
       const entry: LegislationEntry = {
-        id: generateUuid(),
-        country_code: country,
-        domain,
-        act_number: extractActNumber(item.title),
-        act_date: extractActDate(item.pubDate, item.title),
         title: item.title,
-        official_journal_ref: extractOfficialJournalRef(item.description),
-        source_url: item.link,
-        raw_metadata: {
-          rss_guid: item.guid,
-          rss_pub_date: item.pubDate,
-          rss_description: item.description
-        },
-        scraped_at: now
+        link: item.link,
+        pubDate: item.pubDate,
+        domain,
+        countryCode: country
       }
 
       entries.push(entry)

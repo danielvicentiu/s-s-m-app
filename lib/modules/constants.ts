@@ -86,6 +86,9 @@ export const MODULE_ICONS: Record<ModuleKey, string> = {
   mediu: 'Leaf',
   comunicare_autoritati: 'Building2',
   relatii_munca: 'Users',
+  reports: 'FileText',
+  documents: 'FolderOpen',
+  'ssm-core': 'ShieldCheck',
 }
 
 // ── Culori per categorie (pentru badges UI) ──

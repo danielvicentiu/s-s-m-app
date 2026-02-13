@@ -15,8 +15,8 @@ export interface ChemicalHazard {
   precautionaryStatements: string[]; // P-codes
   wel: {
     // Workplace Exposure Limits
-    twa?: number; // Time-Weighted Average (8h) in mg/m³ or ppm
-    stel?: number; // Short-Term Exposure Limit (15min) in mg/m³ or ppm
+    twa?: number; // Time-Weighted Average (8h) in mg/m³, ppm, or fibre/cm³
+    stel?: number; // Short-Term Exposure Limit (15min) in mg/m³, ppm, or fibre/cm³
     unit: 'mg/m³' | 'ppm' | 'fibre/cm³';
     notes?: string;
   };

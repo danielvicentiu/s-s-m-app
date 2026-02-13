@@ -23,7 +23,7 @@ const MODULE_LINKS: Partial<Record<ModuleKey, string>> = {
 }
 
 // Icons mapping simplu (emoji fallback)
-const MODULE_EMOJI: Record<ModuleKey, string> = {
+const MODULE_EMOJI: Partial<Record<ModuleKey, string>> = {
   alerte: '🔔',
   legislatie: '⚖️',
   ssm: '🛡️',
@@ -35,6 +35,9 @@ const MODULE_EMOJI: Record<ModuleKey, string> = {
   mediu: '🌿',
   comunicare_autoritati: '🏛️',
   relatii_munca: '👥',
+  reports: '📊',
+  documents: '📄',
+  'ssm-core': '🛡️',
 }
 
 interface ActiveModulesCardProps {

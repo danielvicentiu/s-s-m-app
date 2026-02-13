@@ -1,21 +1,39 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { ChevronUp, ChevronDown, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { EmptyState } from './EmptyState'
 
-export interface Column<T> {
+export interface DataTableColumn<T> {
   key: keyof T | string
   label: string
   render?: (row: T) => React.ReactNode
   sortable?: boolean
+  width?: string
+}
+
+export interface DataTablePagination {
+  currentPage: number
+  pageSize: number
+  totalItems: number
+  totalPages: number
+}
+
+export interface DataTableSort {
+  column: string | null
+  direction: 'asc' | 'desc'
 }
 
 interface DataTableProps<T> {
-  columns: Column<T>[]
+  columns: DataTableColumn<T>[]
   data: T[]
   loading?: boolean
   emptyMessage?: string
-  pageSize?: number
+  emptyDescription?: string
+  pagination?: DataTablePagination
+  sort?: DataTableSort
+  onSort?: (column: string) => void
+  onPageChange?: (page: number) => void
+  rowKey?: (row: T, index: number) => string | number
 }
 
 export function DataTable<T extends Record<string, any>>({
@@ -23,161 +41,200 @@ export function DataTable<T extends Record<string, any>>({
   data,
   loading = false,
   emptyMessage = 'Nu există date',
-  pageSize = 10,
+  emptyDescription,
+  pagination,
+  sort,
+  onSort,
+  onPageChange,
+  rowKey,
 }: DataTableProps<T>) {
-  const [search, setSearch] = useState('')
-  const [sortKey, setSortKey] = useState<string | null>(null)
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
-  const [page, setPage] = useState(0)
-  const [perPage, setPerPage] = useState(pageSize)
-
-  const filtered = useMemo(() => {
-    if (!search.trim()) return data
-    const q = search.toLowerCase()
-    return data.filter((row) =>
-      columns.some((col) => {
-        const val = row[col.key as keyof T]
-        return val != null && String(val).toLowerCase().includes(q)
-      })
-    )
-  }, [data, search, columns])
-
-  const sorted = useMemo(() => {
-    if (!sortKey) return filtered
-    return [...filtered].sort((a, b) => {
-      const aVal = a[sortKey] ?? ''
-      const bVal = b[sortKey] ?? ''
-      const cmp = String(aVal).localeCompare(String(bVal), 'ro', { numeric: true })
-      return sortDir === 'asc' ? cmp : -cmp
-    })
-  }, [filtered, sortKey, sortDir])
-
-  const totalPages = Math.ceil(sorted.length / perPage)
-  const paged = sorted.slice(page * perPage, (page + 1) * perPage)
-
-  const handleSort = (key: string) => {
-    if (sortKey === key) {
-      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
-    } else {
-      setSortKey(key)
-      setSortDir('asc')
+  const handleSort = (column: string) => {
+    if (onSort) {
+      onSort(column)
     }
-    setPage(0)
   }
 
+  const handlePageChange = (page: number) => {
+    if (onPageChange && pagination) {
+      const validPage = Math.max(1, Math.min(page, pagination.totalPages))
+      onPageChange(validPage)
+    }
+  }
+
+  // Skeleton loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-800" />
+      <div className="space-y-3">
+        {/* Table header skeleton */}
+        <div className="hidden md:block">
+          <div className="flex gap-4 px-4 py-3 border-b border-gray-200">
+            {columns.map((col, idx) => (
+              <div
+                key={idx}
+                className="h-5 bg-gray-200 rounded animate-pulse"
+                style={{ width: col.width || '120px' }}
+              />
+            ))}
+          </div>
+          {/* Table rows skeleton */}
+          {Array.from({ length: pagination?.pageSize || 5 }).map((_, idx) => (
+            <div key={idx} className="flex gap-4 px-4 py-3 border-b border-gray-100">
+              {columns.map((col, colIdx) => (
+                <div
+                  key={colIdx}
+                  className="h-5 bg-gray-100 rounded animate-pulse"
+                  style={{ width: col.width || '120px' }}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile skeleton */}
+        <div className="md:hidden space-y-3">
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <div key={idx} className="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
+              {columns.slice(0, 3).map((_, colIdx) => (
+                <div key={colIdx} className="flex justify-between">
+                  <div className="h-4 w-20 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-32 bg-gray-100 rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
 
+  // Empty state
   if (!data || data.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
-        <p className="text-lg">{emptyMessage}</p>
-      </div>
+      <EmptyState
+        title={emptyMessage}
+        description={emptyDescription}
+      />
     )
   }
 
   return (
-    <div>
-      {/* Search + Per Page */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Caută..."
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(0) }}
-            className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
-          />
-        </div>
-        <select
-          value={perPage}
-          onChange={(e) => { setPerPage(Number(e.target.value)); setPage(0) }}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
-        >
-          <option value={10}>10 / pagină</option>
-          <option value={25}>25 / pagină</option>
-          <option value={50}>50 / pagină</option>
-        </select>
-      </div>
-
+    <div className="space-y-4">
       {/* Desktop Table */}
-      <div className="hidden md:block overflow-x-auto">
+      <div className="hidden md:block overflow-x-auto bg-white rounded-2xl border border-gray-200">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200">
-              {columns.map((col) => (
-                <th
-                  key={String(col.key)}
-                  className={`text-left px-4 py-3 font-semibold text-gray-600 ${
-                    col.sortable !== false ? 'cursor-pointer hover:text-blue-800 select-none' : ''
-                  }`}
-                  onClick={() => col.sortable !== false && handleSort(String(col.key))}
-                >
-                  <span className="flex items-center gap-1">
-                    {col.label}
-                    {col.sortable !== false && sortKey === String(col.key) && (
-                      sortDir === 'asc' ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
-                    )}
-                  </span>
-                </th>
-              ))}
+            <tr className="border-b border-gray-200 bg-gray-50">
+              {columns.map((col) => {
+                const isSortable = col.sortable !== false
+                const isSorted = sort?.column === String(col.key)
+
+                return (
+                  <th
+                    key={String(col.key)}
+                    className={`text-left px-4 py-3 font-semibold text-gray-700 ${
+                      isSortable ? 'cursor-pointer hover:text-blue-600 select-none' : ''
+                    }`}
+                    style={{ width: col.width }}
+                    onClick={() => isSortable && handleSort(String(col.key))}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {col.label}
+                      {isSortable && (
+                        <div className="flex flex-col">
+                          {isSorted ? (
+                            sort.direction === 'asc' ? (
+                              <ChevronUp className="h-4 w-4 text-blue-600" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4 text-blue-600" />
+                            )
+                          ) : (
+                            <div className="h-4 w-4 opacity-30">
+                              <ChevronUp className="h-3 w-3 -mb-1" />
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </th>
+                )
+              })}
             </tr>
           </thead>
           <tbody>
-            {paged.map((row, i) => (
-              <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
-                {columns.map((col) => (
-                  <td key={String(col.key)} className="px-4 py-3">
-                    {col.render ? col.render(row) : String(row[col.key as keyof T] ?? '—')}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {data.map((row, index) => {
+              const key = rowKey ? rowKey(row, index) : index
+              return (
+                <tr
+                  key={key}
+                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                >
+                  {columns.map((col) => (
+                    <td key={String(col.key)} className="px-4 py-3 text-gray-900">
+                      {col.render
+                        ? col.render(row)
+                        : String(row[col.key as keyof T] ?? '—')}
+                    </td>
+                  ))}
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
 
       {/* Mobile Cards */}
       <div className="md:hidden space-y-3">
-        {paged.map((row, i) => (
-          <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
-            {columns.map((col) => (
-              <div key={String(col.key)} className="flex justify-between items-start">
-                <span className="text-xs text-gray-500 font-medium">{col.label}</span>
-                <span className="text-sm text-right">
-                  {col.render ? col.render(row) : String(row[col.key as keyof T] ?? '—')}
-                </span>
-              </div>
-            ))}
-          </div>
-        ))}
+        {data.map((row, index) => {
+          const key = rowKey ? rowKey(row, index) : index
+          return (
+            <div
+              key={key}
+              className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2.5"
+            >
+              {columns.map((col) => (
+                <div key={String(col.key)} className="flex justify-between items-start gap-3">
+                  <span className="text-xs text-gray-500 font-medium min-w-[80px]">
+                    {col.label}
+                  </span>
+                  <span className="text-sm text-gray-900 text-right flex-1">
+                    {col.render
+                      ? col.render(row)
+                      : String(row[col.key as keyof T] ?? '—')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )
+        })}
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between mt-4 text-sm text-gray-600">
-          <span>{sorted.length} rezultate</span>
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex items-center justify-between pt-2 text-sm">
+          <span className="text-gray-600">
+            {((pagination.currentPage - 1) * pagination.pageSize) + 1}–
+            {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalItems)} din{' '}
+            {pagination.totalItems} rezultate
+          </span>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={page === 0}
-              className="p-1 rounded hover:bg-gray-100 disabled:opacity-30"
+              onClick={() => handlePageChange(pagination.currentPage - 1)}
+              disabled={pagination.currentPage === 1}
+              className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              aria-label="Pagina anterioară"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5 text-gray-600" />
             </button>
-            <span>{page + 1} / {totalPages}</span>
+            <span className="text-gray-700 font-medium min-w-[60px] text-center">
+              {pagination.currentPage} / {pagination.totalPages}
+            </span>
             <button
-              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-              disabled={page >= totalPages - 1}
-              className="p-1 rounded hover:bg-gray-100 disabled:opacity-30"
+              onClick={() => handlePageChange(pagination.currentPage + 1)}
+              disabled={pagination.currentPage >= pagination.totalPages}
+              className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              aria-label="Pagina următoare"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-5 w-5 text-gray-600" />
             </button>
           </div>
         </div>
