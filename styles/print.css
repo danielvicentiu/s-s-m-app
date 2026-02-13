@@ -1,0 +1,443 @@
+/* ============================================
+   PRINT STYLES - s-s-m.ro Platform
+   ============================================
+   Print-optimized styles for documents, reports,
+   and dashboard content from the SSM/PSI platform.
+   ============================================ */
+
+@media print {
+  /* ============================================
+     ROOT & BODY CONFIGURATION
+     ============================================ */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  /* ============================================
+     HIDE INTERACTIVE ELEMENTS
+     ============================================ */
+  /* Navigation & Sidebar */
+  nav,
+  aside,
+  [role="navigation"],
+  .sidebar,
+  .navigation,
+  .module-nav,
+  header nav {
+    display: none !important;
+  }
+
+  /* Buttons & Interactive Controls */
+  button,
+  .button,
+  [type="button"],
+  [type="submit"],
+  [role="button"],
+  .btn,
+  .action-button,
+  .interactive-control {
+    display: none !important;
+  }
+
+  /* Forms & Inputs */
+  input,
+  textarea,
+  select,
+  .form-control,
+  .input-field {
+    display: none !important;
+  }
+
+  /* Modals, Dialogs, Tooltips */
+  .modal,
+  .dialog,
+  .tooltip,
+  .popover,
+  .dropdown-menu,
+  [role="dialog"],
+  [role="tooltip"] {
+    display: none !important;
+  }
+
+  /* Interactive UI Elements */
+  .tabs,
+  .tab-list,
+  .pagination,
+  .file-uploader,
+  .search-input,
+  .theme-toggle,
+  .notifications {
+    display: none !important;
+  }
+
+  /* Links - remove underlines but keep color */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  /* Show URLs after links (optional, commented out by default) */
+  /* a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666;
+  } */
+
+  /* ============================================
+     PRINT HEADER
+     ============================================ */
+  .print-header {
+    display: block !important;
+    margin-bottom: 20mm;
+    padding-bottom: 5mm;
+    border-bottom: 2px solid #2563eb;
+  }
+
+  .print-logo {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .print-title {
+    font-size: 16pt;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 0 0 5px 0;
+  }
+
+  .print-subtitle {
+    font-size: 11pt;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .print-date {
+    font-size: 9pt;
+    color: #94a3b8;
+    margin-top: 5px;
+  }
+
+  /* ============================================
+     PAGE MARGINS & LAYOUT
+     ============================================ */
+  @page {
+    size: A4;
+    margin: 15mm 15mm 20mm 15mm;
+
+    /* Page numbering in footer */
+    @bottom-right {
+      content: "Pagina " counter(page) " / " counter(pages);
+      font-size: 9pt;
+      color: #64748b;
+    }
+  }
+
+  /* Main content area */
+  main,
+  .main-content,
+  .dashboard-content {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  /* ============================================
+     PAGE BREAK RULES
+     ============================================ */
+  /* Avoid breaks inside these elements */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .card,
+  .data-table tr,
+  .record-item,
+  .employee-card,
+  .training-item,
+  .equipment-item,
+  .medical-record {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Always break after these elements */
+  .page-break-after,
+  .section-break {
+    page-break-after: always;
+    break-after: always;
+  }
+
+  /* Avoid breaks before headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+    page-break-before: auto;
+    break-before: auto;
+  }
+
+  /* Keep headings with content */
+  h1 + *,
+  h2 + *,
+  h3 + * {
+    page-break-before: avoid;
+    break-before: avoid;
+  }
+
+  /* ============================================
+     TABLE STYLES
+     ============================================ */
+  table {
+    width: 100% !important;
+    border-collapse: collapse;
+    page-break-inside: auto;
+    font-size: 10pt;
+  }
+
+  /* Table rows - no break inside */
+  table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Table headers */
+  thead {
+    display: table-header-group;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  /* Repeat table headers on each page */
+  thead tr th {
+    border-bottom: 2px solid #1e293b !important;
+    background: #f8fafc !important;
+    font-weight: bold;
+    padding: 8px !important;
+    text-align: left;
+  }
+
+  tbody tr td {
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 6px 8px !important;
+  }
+
+  /* Zebra striping for readability */
+  tbody tr:nth-child(even) {
+    background: #f8fafc !important;
+  }
+
+  /* ============================================
+     TYPOGRAPHY FOR PRINT
+     ============================================ */
+  h1 {
+    font-size: 18pt;
+    margin: 0 0 10mm 0;
+    color: #1e293b;
+  }
+
+  h2 {
+    font-size: 14pt;
+    margin: 8mm 0 5mm 0;
+    color: #1e293b;
+  }
+
+  h3 {
+    font-size: 12pt;
+    margin: 6mm 0 3mm 0;
+    color: #334155;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 11pt;
+    margin: 4mm 0 2mm 0;
+    color: #475569;
+  }
+
+  p {
+    margin: 0 0 3mm 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* ============================================
+     CARDS & CONTAINERS
+     ============================================ */
+  .card,
+  .dashboard-card,
+  .data-card {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 4mm !important;
+    padding: 5mm !important;
+    margin-bottom: 5mm !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+
+  /* ============================================
+     BADGES & STATUS INDICATORS
+     ============================================ */
+  .badge,
+  .status-badge {
+    border: 1px solid currentColor !important;
+    padding: 1mm 2mm !important;
+    font-size: 9pt !important;
+    border-radius: 2mm !important;
+    display: inline-block !important;
+  }
+
+  /* Status colors - ensure visibility in print */
+  .status-active,
+  .status-success {
+    color: #16a34a !important;
+    border-color: #16a34a !important;
+  }
+
+  .status-pending,
+  .status-warning {
+    color: #ca8a04 !important;
+    border-color: #ca8a04 !important;
+  }
+
+  .status-expired,
+  .status-error {
+    color: #dc2626 !important;
+    border-color: #dc2626 !important;
+  }
+
+  .status-inactive {
+    color: #64748b !important;
+    border-color: #64748b !important;
+  }
+
+  /* ============================================
+     UTILITY CLASSES
+     ============================================ */
+  .print-only {
+    display: block !important;
+  }
+
+  .no-print,
+  .screen-only {
+    display: none !important;
+  }
+
+  /* Force visible for print */
+  .print-visible {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* ============================================
+     SPECIFIC COMPONENT OVERRIDES
+     ============================================ */
+  /* Empty state messages - hide in print */
+  .empty-state {
+    display: none !important;
+  }
+
+  /* Loading indicators */
+  .loading,
+  .spinner,
+  .skeleton {
+    display: none !important;
+  }
+
+  /* Alerts - simplify styling */
+  .alert {
+    border: 1px solid currentColor !important;
+    padding: 3mm !important;
+    margin: 3mm 0 !important;
+    background: white !important;
+  }
+
+  /* Charts & Images */
+  img,
+  svg,
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  /* ============================================
+     DOCUMENT SPECIFIC STYLES
+     ============================================ */
+  /* Employee list */
+  .employee-card {
+    margin-bottom: 5mm;
+    padding: 3mm;
+    border: 1px solid #e2e8f0;
+  }
+
+  /* Training records */
+  .training-item {
+    margin-bottom: 4mm;
+    padding: 3mm;
+    border-left: 3px solid #2563eb;
+  }
+
+  /* Medical records */
+  .medical-record {
+    margin-bottom: 5mm;
+    padding: 4mm;
+    border: 1px solid #dc2626;
+    background: #fef2f2 !important;
+  }
+
+  /* Equipment items */
+  .equipment-item {
+    margin-bottom: 4mm;
+    padding: 3mm;
+    border: 1px solid #64748b;
+  }
+
+  /* ============================================
+     ACCESSIBILITY
+     ============================================ */
+  /* Ensure sufficient contrast */
+  .text-muted,
+  .text-secondary {
+    color: #475569 !important;
+  }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  .print-footer {
+    display: block !important;
+    margin-top: 10mm;
+    padding-top: 5mm;
+    border-top: 1px solid #e2e8f0;
+    font-size: 9pt;
+    color: #64748b;
+    text-align: center;
+  }
+}
