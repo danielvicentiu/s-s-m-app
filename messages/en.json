@@ -283,6 +283,7 @@
     "about": "About",
     "quick_check": "Quick Check",
     "calculator_risc": "Risk Calculator",
+    "contact": "Contact",
     "medical": "Occupational Health",
     "equipment": "Fire Safety Equipment",
     "trainings": "Training",
@@ -291,6 +292,47 @@
     "organizations": "Organizations",
     "settings": "Settings",
     "profile": "Profile"
+  },
+  "contact": {
+    "badge": "Contact us",
+    "title": "Let's talk about",
+    "titleHighlight": "your OHS compliance",
+    "subtitle": "We're here to help you simplify OHS & Fire Safety management. Send us a message and we'll respond within 24 hours.",
+    "form": {
+      "title": "Send us a message",
+      "name": "Full name",
+      "namePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "email@company.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+40 700 000 000",
+      "company": "Company",
+      "companyPlaceholder": "Example Ltd",
+      "message": "Message",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "submit": "Send message",
+      "submitting": "Sending...",
+      "success": "Message sent successfully! We'll get back to you soon.",
+      "error": "An error occurred. Please try again."
+    },
+    "info": {
+      "title": "Contact information",
+      "email": "Email",
+      "emailValue": "contact@s-s-m.ro",
+      "support": "Technical support",
+      "supportValue": "support@s-s-m.ro",
+      "phone": "Phone",
+      "phoneValue": "+40 700 000 000",
+      "address": "Address",
+      "addressValue": "Bucharest, Romania",
+      "hours": "Hours",
+      "hoursValue": "Monday - Friday: 09:00 - 18:00"
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "subtitle": "Sign up now and get 30 days free trial.",
+      "button": "Get started"
+    }
   },
   "calculatorRisc": {
     "badge": "Free OHS risk assessment",

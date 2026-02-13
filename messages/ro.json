@@ -276,22 +276,46 @@
       "retake": "Încearcă din nou"
     }
   },
-  "breadcrumb": {
-    "home": "Acasă",
-    "dashboard": "Dashboard",
-    "admin": "Administrare",
-    "onboarding": "Configurare inițială",
-    "about": "Despre",
-    "quick_check": "Quick Check",
-    "calculator_risc": "Calculator Risc",
-    "medical": "Medicina Muncii",
-    "equipment": "Echipamente PSI",
-    "trainings": "Instruiri",
-    "alerts": "Alerte",
-    "employees": "Angajați",
-    "organizations": "Organizații",
-    "settings": "Setări",
-    "profile": "Profil"
+  "contact": {
+    "badge": "Contactează-ne",
+    "title": "Hai să vorbim despre",
+    "titleHighlight": "conformitatea ta SSM",
+    "subtitle": "Suntem aici să te ajutăm să simplifici gestionarea SSM & PSI. Trimite-ne un mesaj și îți răspundem în maxim 24 de ore.",
+    "form": {
+      "title": "Trimite-ne un mesaj",
+      "name": "Nume complet",
+      "namePlaceholder": "Ion Popescu",
+      "email": "Email",
+      "emailPlaceholder": "email@companie.ro",
+      "phone": "Telefon",
+      "phonePlaceholder": "+40 700 000 000",
+      "company": "Companie",
+      "companyPlaceholder": "SC Exemplu SRL",
+      "message": "Mesaj",
+      "messagePlaceholder": "Descrie-ne cum te putem ajuta...",
+      "submit": "Trimite mesajul",
+      "submitting": "Se trimite...",
+      "success": "Mesaj trimis cu succes! Îți vom răspunde în cel mai scurt timp.",
+      "error": "A apărut o eroare. Te rugăm să încerci din nou."
+    },
+    "info": {
+      "title": "Informații de contact",
+      "email": "Email",
+      "emailValue": "contact@s-s-m.ro",
+      "support": "Suport tehnic",
+      "supportValue": "support@s-s-m.ro",
+      "phone": "Telefon",
+      "phoneValue": "+40 700 000 000",
+      "address": "Adresă",
+      "addressValue": "București, România",
+      "hours": "Program",
+      "hoursValue": "Luni - Vineri: 09:00 - 18:00"
+    },
+    "cta": {
+      "title": "Gata să începi?",
+      "subtitle": "Înregistrează-te acum și obține 30 de zile de probă gratuită.",
+      "button": "Începe acum"
+    }
   },
   "calculatorRisc": {
     "badge": "Evaluare gratuită risc SSM",
