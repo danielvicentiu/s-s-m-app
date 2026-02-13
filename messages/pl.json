@@ -92,9 +92,9 @@
   "dashboard": {
     "allOrganizations": "Wszystkie organizacje",
     "employees": "pracowników",
-    "toggleRiskITM": "Ryzyko ITM",
+    "toggleRiskITM": "Ryzyko PIP",
     "toggleRiskEuro": "Ryzyko €",
-    "riskControl": "Ryzyko kontroli ITM",
+    "riskControl": "Ryzyko kontroli PIP",
     "dataCompleteness": "Kompletność danych",
     "riskLevels": {
       "low": "Niski",
