@@ -16,6 +16,9 @@ export const MODULE_KEYS = [
   'mediu',
   'comunicare_autoritati',
   'relatii_munca',
+  'reports',
+  'documents',
+  'ssm-core',
 ] as const
 
 export type ModuleKey = typeof MODULE_KEYS[number]
