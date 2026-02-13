@@ -75,7 +75,34 @@
     "penaltiesIntro": "Autoritățile de control pot aplica amenzi între:",
     "penaltiesCalculator": "Bifează ce NU ai în regulă:",
     "penaltiesTotal": "Risc total amenzi:",
-    "penaltiesDisclaimer": "Valori estimative conform legislației actuale. Amenzi reale pot varia."
+    "penaltiesDisclaimer": "Valori estimative conform legislației actuale. Amenzi reale pot varia.",
+    "penaltyLabel": "Amendă:",
+    "howItWorksTitle": "Cum funcționează",
+    "howItWorksSubtitle": "3 pași simpli către conformitate completă",
+    "howItWorks": {
+      "step1Title": "Înregistrare rapidă",
+      "step1Desc": "Creează cont în 2 minute. Adaugă prima organizație și invită echipa.",
+      "step2Title": "Import date",
+      "step2Desc": "Încarcă datele existente (medicina muncii, echipamente PSI) sau pornește de la zero.",
+      "step3Title": "Automatizare completă",
+      "step3Desc": "Platforma ia control: alerte automate, rapoarte PDF, calcul amenzi. Zero griji."
+    },
+    "statsTitle": "În cifre",
+    "stats": {
+      "organizations": "100+ organizații",
+      "employees": "5.000+ angajați monitorizați",
+      "alerts": "1.200+ alerte automate/lună",
+      "saved": "~50.000 RON amenzi evitate/an"
+    },
+    "testimonialsTitle": "Ce spun clienții",
+    "testimonials": {
+      "testimonial1": "Am scăpat de Excel și reminder-e manuale. Acum totul e automat. Cea mai bună investiție pentru firma mea.",
+      "author1": "Ion Popescu, Director SSM",
+      "testimonial2": "Am 80 de firme în evidență. Înainte pierdeam ore întregi cu rapoarte. Acum generez tot în 5 minute.",
+      "author2": "Maria Ionescu, Consultant SSM",
+      "testimonial3": "Platforma m-a salvat de o amendă ITM de 15.000 lei. Mi-a trimis alertă cu 7 zile înainte de expirare.",
+      "author3": "George Dumitrescu, Administrator"
+    }
   },
   "login": {
     "title": "Platformă SSM — Autentificare",

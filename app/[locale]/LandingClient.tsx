@@ -112,6 +112,53 @@ export default function LandingClient({ obligations }: Props) {
         </div>
       </section>
 
+      {/* How It Works */}
+      <section id="how-it-works" className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-gray-900 mb-4">{t('howItWorksTitle')}</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              {t('howItWorksSubtitle')}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-4xl font-black text-blue-600 mx-auto mb-6">
+                1
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('howItWorks.step1Title')}</h3>
+              <p className="text-gray-600 leading-relaxed">
+                {t('howItWorks.step1Desc')}
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-4xl font-black text-blue-600 mx-auto mb-6">
+                2
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('howItWorks.step2Title')}</h3>
+              <p className="text-gray-600 leading-relaxed">
+                {t('howItWorks.step2Desc')}
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="text-center">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-4xl font-black text-blue-600 mx-auto mb-6">
+                3
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('howItWorks.step3Title')}</h3>
+              <p className="text-gray-600 leading-relaxed">
+                {t('howItWorks.step3Desc')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features */}
       <section id="features" className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
@@ -192,6 +239,99 @@ export default function LandingClient({ obligations }: Props) {
         </div>
       </section>
 
+      {/* Stats */}
+      <section id="stats" className="py-20 px-6 bg-blue-600 text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black mb-4">{t('statsTitle')}</h2>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-5xl font-black mb-2">{t('stats.organizations')}</div>
+              <p className="text-blue-100 text-sm">active în platformă</p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-5xl font-black mb-2">{t('stats.employees')}</div>
+              <p className="text-blue-100 text-sm">cu fișe medicale</p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-5xl font-black mb-2">{t('stats.alerts')}</div>
+              <p className="text-blue-100 text-sm">trimise automat</p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-5xl font-black mb-2">{t('stats.saved')}</div>
+              <p className="text-blue-100 text-sm">economisiți anual</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="py-20 px-6 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-gray-900 mb-4">{t('testimonialsTitle')}</h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
+              <div className="text-6xl text-blue-600 mb-4">"</div>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                {t('testimonials.testimonial1')}
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                  IP
+                </div>
+                <div>
+                  <div className="font-bold text-gray-900">{t('testimonials.author1').split(',')[0]}</div>
+                  <div className="text-sm text-gray-500">{t('testimonials.author1').split(',')[1]}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
+              <div className="text-6xl text-blue-600 mb-4">"</div>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                {t('testimonials.testimonial2')}
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                  MI
+                </div>
+                <div>
+                  <div className="font-bold text-gray-900">{t('testimonials.author2').split(',')[0]}</div>
+                  <div className="text-sm text-gray-500">{t('testimonials.author2').split(',')[1]}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
+              <div className="text-6xl text-blue-600 mb-4">"</div>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                {t('testimonials.testimonial3')}
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                  GD
+                </div>
+                <div>
+                  <div className="font-bold text-gray-900">{t('testimonials.author3').split(',')[0]}</div>
+                  <div className="text-sm text-gray-500">{t('testimonials.author3').split(',')[1]}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Penalties Calculator */}
       {obligations.length > 0 && (
         <section id="penalties" className="py-20 px-6 bg-red-50">
@@ -236,7 +376,7 @@ export default function LandingClient({ obligations }: Props) {
                         <div className="text-sm text-gray-500 mt-1">{obligation.description}</div>
                       )}
                       <div className="text-sm text-red-600 font-bold mt-2">
-                        Amendă: {formatCurrency(obligation.penalty_min || 0)} - {formatCurrency(obligation.penalty_max || 0)} {currencySymbol}
+                        {t('penaltyLabel')} {formatCurrency(obligation.penalty_min || 0)} - {formatCurrency(obligation.penalty_max || 0)} {currencySymbol}
                       </div>
                     </div>
                   </label>
@@ -326,7 +466,7 @@ export default function LandingClient({ obligations }: Props) {
                 </li>
                 <li>
                   <button onClick={() => router.push('/login')} className="text-gray-600 hover:text-blue-600 transition">
-                    Login
+                    {tNav('login')}
                   </button>
                 </li>
               </ul>
