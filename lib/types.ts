@@ -76,6 +76,45 @@ export interface SafetyEquipment {
   updated_at: string
 }
 
+export interface SafetySignage {
+  id: string
+  organization_id: string
+  sign_type: 'interdictie' | 'avertizare' | 'obligatie' | 'salvare' | 'psi'
+  sign_name: string
+  location: string
+  quantity: number
+  condition: 'bun' | 'deteriorat' | 'lipsa'
+  installation_date: string | null
+  last_inspection_date: string | null
+  next_inspection_date: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type IncidentStatus = 'nou' | 'in_investigare' | 'rezolvat' | 'respins'
+export type IncidentSeverity = 'minor' | 'moderat' | 'grav' | 'critic'
+
+export interface Incident {
+  id: string
+  organization_id: string
+  incident_date: string
+  location: string
+  description: string
+  victim_name: string | null
+  witness_name: string | null
+  severity: IncidentSeverity
+  status: IncidentStatus
+  reported_by: string
+  reported_at: string
+  investigation_notes: string | null
+  resolution_notes: string | null
+  resolved_by: string | null
+  resolved_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface NotificationLogEntry {
   id: string
   organization_id: string
@@ -244,4 +283,80 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'HU': 'HUF',
   'DE': 'EUR',
   'PL': 'PLN'
+}
+
+// ── COMITET SSM ──
+
+export type CssmMemberRole = 'presedinte' | 'membru' | 'secretar'
+export type CssmMeetingStatus = 'planificata' | 'finalizata' | 'anulata'
+export type CssmDecisionStatus = 'propusa' | 'aprobata' | 'respinsa' | 'in_implementare' | 'implementata'
+
+export interface CssmMember {
+  id: string
+  organization_id: string
+  employee_name: string
+  role: CssmMemberRole
+  department: string | null
+  appointed_date: string
+  mandate_end_date: string | null
+  is_active: boolean
+  phone: string | null
+  email: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface CssmMeeting {
+  id: string
+  organization_id: string
+  meeting_date: string
+  location: string
+  status: CssmMeetingStatus
+  agenda: string | null
+  attendees: string[] | null
+  minutes_summary: string | null
+  decisions_count: number
+  protocol_number: string | null
+  protocol_file_url: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface CssmDecision {
+  id: string
+  organization_id: string
+  meeting_id: string | null
+  decision_number: string
+  decision_date: string
+  title: string
+  description: string
+  status: CssmDecisionStatus
+  responsible_person: string | null
+  deadline: string | null
+  implementation_date: string | null
+  implementation_notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ── LUCRĂTORI DESEMNAȚI SSM ──
+
+export interface DesignatedWorker {
+  id: string
+  organization_id: string
+  employee_name: string
+  job_title: string | null
+  designation_date: string
+  certificate_number: string | null
+  certificate_expiry_date: string | null
+  certificate_authority: string | null
+  responsibilities: string | null
+  is_active: boolean
+  notes: string | null
+  created_at: string
+  updated_at: string
+  // Relație
+  organizations?: { name: string; cui: string }
 }
