@@ -267,3 +267,51 @@ export interface BlogArticle {
   created_at: string
   updated_at: string
 }
+
+// ── WEBHOOKS ──
+
+export type WebhookEventType =
+  | 'employee.created'
+  | 'employee.updated'
+  | 'employee.deleted'
+  | 'training.created'
+  | 'training.completed'
+  | 'medical.created'
+  | 'medical.expiring'
+  | 'medical.expired'
+  | 'equipment.created'
+  | 'equipment.expiring'
+  | 'equipment.expired'
+  | 'alert.created'
+  | 'incident.created'
+  | 'penalty.created'
+  | 'compliance.status_changed'
+
+export type WebhookStatus = 'pending' | 'success' | 'failed'
+
+export interface Webhook {
+  id: string
+  organization_id: string
+  url: string
+  events: string[]
+  secret: string
+  is_active: boolean
+  created_by: string
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+export interface WebhookDeliveryLog {
+  id: string
+  webhook_id: string
+  event_type: string
+  payload: Record<string, any>
+  status: WebhookStatus
+  http_status_code: number | null
+  response_body: string | null
+  error_message: string | null
+  attempts: number
+  created_at: string
+  delivered_at: string | null
+}
