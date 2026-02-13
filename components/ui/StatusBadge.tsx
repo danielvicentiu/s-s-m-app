@@ -1,22 +1,93 @@
+'use client'
+
+import { Check, AlertTriangle, X, Clock, Minus } from 'lucide-react'
+
 interface StatusBadgeProps {
-  status: 'valid' | 'expiring' | 'expired' | 'incomplete'
+  status: 'valid' | 'expiring' | 'expired' | 'pending' | 'na'
+  size?: 'sm' | 'md'
+  showIcon?: boolean
   label?: string
 }
 
 const CONFIG = {
-  valid: { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500', default: 'Valid' },
-  expiring: { bg: 'bg-orange-100', text: 'text-orange-700', dot: 'bg-orange-500', default: 'Expiră curând' },
-  expired: { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-500', default: 'Expirat' },
-  incomplete: { bg: 'bg-gray-100', text: 'text-gray-500', dot: 'bg-gray-400', default: 'Incomplet' },
+  valid: {
+    bg: 'bg-green-100',
+    text: 'text-green-700',
+    border: 'border-green-200',
+    icon: Check,
+    default: 'Valid',
+  },
+  expiring: {
+    bg: 'bg-yellow-100',
+    text: 'text-yellow-700',
+    border: 'border-yellow-200',
+    icon: AlertTriangle,
+    default: 'Expiră curând',
+  },
+  expired: {
+    bg: 'bg-red-100',
+    text: 'text-red-700',
+    border: 'border-red-200',
+    icon: X,
+    default: 'Expirat',
+  },
+  pending: {
+    bg: 'bg-blue-100',
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    icon: Clock,
+    default: 'În așteptare',
+  },
+  na: {
+    bg: 'bg-gray-100',
+    text: 'text-gray-600',
+    border: 'border-gray-200',
+    icon: Minus,
+    default: 'N/A',
+  },
 }
 
-export function StatusBadge({ status, label }: StatusBadgeProps) {
-  const c = CONFIG[status] || CONFIG.incomplete
+const SIZE_CONFIG = {
+  sm: {
+    padding: 'px-2 py-0.5',
+    text: 'text-xs',
+    iconSize: 12,
+    gap: 'gap-1',
+  },
+  md: {
+    padding: 'px-2.5 py-1',
+    text: 'text-sm',
+    iconSize: 14,
+    gap: 'gap-1.5',
+  },
+}
+
+function StatusBadge({
+  status,
+  size = 'md',
+  showIcon = true,
+  label,
+}: StatusBadgeProps) {
+  const config = CONFIG[status] || CONFIG.na
+  const sizeConfig = SIZE_CONFIG[size]
+  const Icon = config.icon
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${c.bg} ${c.text}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
-      {label || c.default}
+    <span
+      className={`
+        inline-flex items-center rounded-full font-medium border
+        ${config.bg} ${config.text} ${config.border}
+        ${sizeConfig.padding} ${sizeConfig.text} ${sizeConfig.gap}
+      `}
+    >
+      {showIcon && <Icon size={sizeConfig.iconSize} strokeWidth={2.5} />}
+      {label || config.default}
     </span>
   )
 }
+
+// Named export for existing imports
+export { StatusBadge }
+
+// Default export as requested
+export default StatusBadge
