@@ -245,3 +245,49 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── EMPLOYEES ──
+
+export interface Employee {
+  id: string
+  organization_id: string
+  user_id: string | null
+  full_name: string
+  cor_code: string | null
+  job_title: string | null
+  nationality: string | null
+  email: string | null
+  phone: string | null
+  hire_date: string | null
+  termination_date: string | null
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  // Relații
+  organizations?: Organization
+}
+
+export interface EmployeeFilters {
+  is_active?: boolean
+  nationality?: string
+  cor_code?: string
+  search?: string
+}
+
+export interface EmployeeComplianceStatus {
+  employee: Employee
+  medical_status: 'valid' | 'expiring' | 'expired' | 'missing'
+  medical_expiry_date: string | null
+  trainings_count: number
+  last_training_date: string | null
+}
+
+export interface EmployeeCSVRow {
+  full_name: string
+  cor_code?: string
+  job_title?: string
+  nationality?: string
+  email?: string
+  phone?: string
+  hire_date?: string
+}
