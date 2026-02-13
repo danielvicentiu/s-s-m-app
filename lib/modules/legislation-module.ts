@@ -3,7 +3,21 @@
 // Legislation tracking, obligation mapping, compliance checking, AI extraction integration
 // Data: 13 Februarie 2026
 
-import type { ModuleKey, CountryCode, LegislationDomain } from './types'
+import type { ModuleKey } from './types'
+
+// ── Type Definitions ──
+export type CountryCode = 'RO' | 'BG' | 'HU' | 'DE' | 'PL'
+
+export type LegislationDomain =
+  | 'ssm'                      // SSM (work safety)
+  | 'psi'                      // PSI (fire safety)
+  | 'gdpr'                     // GDPR
+  | 'labor'                    // Labor law
+  | 'environmental'            // Environmental
+  | 'construction'             // Construction
+  | 'transport'                // Transport
+  | 'food_safety'              // Food safety
+  | 'other'
 
 // ── Module Interface ──
 export interface IModule {
@@ -183,7 +197,7 @@ export const legislationModule: IModule = {
 
       domainsMonitored: [
         {
-          domain: 'SSM',
+          domain: 'ssm',
           isActive: true,
           keywords: [
             'securitate',
@@ -197,7 +211,7 @@ export const legislationModule: IModule = {
           autoExtract: true,
         },
         {
-          domain: 'PSI',
+          domain: 'psi',
           isActive: true,
           keywords: [
             'incendiu',
@@ -210,7 +224,7 @@ export const legislationModule: IModule = {
           autoExtract: true,
         },
         {
-          domain: 'GDPR',
+          domain: 'gdpr',
           isActive: true,
           keywords: [
             'date personale',
@@ -222,7 +236,7 @@ export const legislationModule: IModule = {
           autoExtract: true,
         },
         {
-          domain: 'LABOR',
+          domain: 'labor',
           isActive: true,
           keywords: [
             'codul muncii',
@@ -235,7 +249,7 @@ export const legislationModule: IModule = {
           autoExtract: true,
         },
         {
-          domain: 'OTHER',
+          domain: 'other',
           isActive: false,
           keywords: [],
           autoExtract: false,
@@ -282,14 +296,14 @@ export const legislationModule: IModule = {
             {
               name: 'Monitorul Oficial',
               url: 'https://legislatie.just.ro/Public/RssFS/RSS',
-              domain: 'SSM',
+              domain: 'ssm',
               isActive: true,
               checkFrequency: 360, // 6 hours
             },
             {
               name: 'ITM - Inspecția Muncii',
               url: 'https://www.inspectiamuncii.ro/rss',
-              domain: 'SSM',
+              domain: 'ssm',
               isActive: false, // Not available
               checkFrequency: 720,
             },
@@ -301,7 +315,7 @@ export const legislationModule: IModule = {
             {
               name: 'Държавен вестник (State Gazette)',
               url: 'https://dv.parliament.bg/rss',
-              domain: 'SSM',
+              domain: 'ssm',
               isActive: false,
               checkFrequency: 360,
             },
