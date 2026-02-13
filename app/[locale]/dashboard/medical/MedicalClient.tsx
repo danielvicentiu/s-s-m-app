@@ -8,7 +8,7 @@
 import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
-import { DataTable, type Column } from '@/components/ui/DataTable'
+import { DataTable, type DataTableColumn } from '@/components/ui/DataTable'
 import { FormModal } from '@/components/ui/FormModal'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -267,7 +267,7 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
 
   // ========== TABLE COLUMNS ==========
 
-  const columns: Column<MedicalExam>[] = [
+  const columns: DataTableColumn<MedicalExam>[] = [
     {
       key: 'employee_name',
       label: 'Angajat',
@@ -458,7 +458,6 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
               columns={columns}
               data={filtered}
               emptyMessage="Nicio fișă corespunde filtrelor selectate."
-              pageSize={15}
             />
           )}
         </div>
