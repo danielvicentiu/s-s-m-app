@@ -24,77 +24,77 @@
   },
   "nav": {
     "features": "Funkciók",
-    "pricing": "Árak",
-    "login": "Belépés",
+    "pricing": "Árazás",
+    "login": "Belépés a platformra",
     "home": "Főoldal",
     "navigation": "Navigáció",
     "contact": "Kapcsolat"
   },
   "landing": {
     "badge": "Digitális munkavédelmi és tűzvédelmi platform",
-    "title": "Munkavédelmi és tűzvédelmi megfelelés",
-    "titleHighlight": "100% automatizált",
-    "subtitle": "Kezelje a munkaegészségügyet, tűzvédelmi berendezéseket, riasztásokat és jelentéseket egyetlen platformról. Nulla bürokrácia, nulla bírság az OMMF-től.",
-    "cta": "Kezdje most →",
-    "featuresTitle": "Minden, amire szüksége van egy helyen",
-    "featuresSubtitle": "6 integrált modul a teljes munkavédelmi és tűzvédelmi megfeleléshez",
+    "title": "Munkavédelmi és tűzvédelmi megfelelőség",
+    "titleHighlight": "100% automatizáltan",
+    "subtitle": "Kezelje a munkaegészségügyet, tűzvédelmi berendezéseket, riasztásokat és jelentéseket egyetlen platformról. Nulla bürokrácia, nulla bírság a munkaügyi felügyelettől.",
+    "cta": "Kezdje el most →",
+    "featuresTitle": "Minden, amire szüksége van, egyetlen helyen",
+    "featuresSubtitle": "6 integrált modul a teljes munkavédelmi és tűzvédelmi megfelelőséghez",
     "pricingTitle": "Átlátható árazás",
-    "pricingSubtitle": "Egy csomag, minden funkcióval",
+    "pricingSubtitle": "Egyetlen csomag, minden funkcióval",
     "planProfessional": "PROFESSZIONÁLIS CSOMAG",
-    "price": "74.900 HUF",
+    "price": "74.900 Ft",
     "perOrganization": "szervezetenként",
     "perYear": "/év",
     "noSetupFee": "Nincs beállítási díj. Bármikor lemondható.",
     "features": {
       "medicalTitle": "Munkaegészségügy",
-      "medicalDesc": "Orvosi nyilvántartás követése, automatikus lejárati riasztások, teljes munkavállalónkénti nyilvántartás.",
+      "medicalDesc": "Orvosi igazolások nyomon követése, automatikus lejárati riasztások, teljes munkavállalónkénti nyilvántartás valós idejű státusszal.",
       "equipmentTitle": "Tűzvédelmi berendezések",
-      "equipmentDesc": "Tűzoltó készülékek, tűzcsapok, füstérzékelők leltára. Ellenőrzés ütemezés, karbantartási naplók.",
+      "equipmentDesc": "Tűzoltó készülékek, tűzcsapok, füstérzékelők leltára. Ellenőrzések ütemezése, karbantartási naplók, QR kódos nyomon követés.",
       "alertsTitle": "Automatikus riasztások",
-      "alertsDesc": "Napi e-mail a közelgő lejáratokról (30/15/7 nap). Resend integráció, WhatsApp értesítések (hamarosan).",
+      "alertsDesc": "Napi e-mail értesítés a közelgő lejáratokról (30/15/7 nap). Resend integráció, WhatsApp értesítések (hamarosan).",
       "riskTitle": "Pénzügyi kockázat",
-      "riskDesc": "Automatikus bírságszámítás OMMF/OKF. Hatóságonkénti lebontás, min-max becslés Ft-ban.",
-      "multiOrgTitle": "Több szervezet",
-      "multiOrgDesc": "Kezeljen 100+ céget egyetlen irányítópultról. Azonnali szűrés, mentett beállítások.",
-      "reportsTitle": "PDF Jelentések",
-      "reportsDesc": "Automatikus jelentésgenerálás, SHA256 hash, felhő archiválás, 1 kattintásos exportálás."
+      "riskDesc": "Automatikus bírságszámítás a munkavédelmi/tűzvédelmi hatóságok részéről. Hatóságonkénti lebontás, min-max becslés forintban.",
+      "multiOrgTitle": "Több szervezet kezelése",
+      "multiOrgDesc": "Kezeljen 100+ vállalatot egyetlen irányítópultról. Azonnali szűrés, mentett beállítások, bérlői architektúra.",
+      "reportsTitle": "PDF jelentések",
+      "reportsDesc": "Automatikus jelentésgenerálás a hatóságok számára, SHA256 hash a változtathatatlanságért, felhőalapú archiválás, 1 kattintásos exportálás."
     },
     "pricingFeatures": [
-      "Munkaegészségügy — korlátlan követés",
+      "Munkaegészségügy — korlátlan nyomon követés",
       "Tűzvédelmi berendezések — teljes leltár",
       "Automatikus napi e-mail riasztások",
-      "Pénzügyi kockázat — OMMF bírságszámítás",
-      "Több szervezet — korlátlan cégek",
-      "PDF Jelentések — automatikus generálás",
-      "Prioritásos technikai támogatás",
-      "Automatikus napi mentés",
+      "Pénzügyi kockázat — hatósági bírságszámítás",
+      "Több szervezet — korlátlan vállalatok",
+      "PDF jelentések — automatikus generálás",
+      "Kiemelt technikai támogatás",
+      "Automatikus napi biztonsági mentés",
       "Ingyenes frissítések"
     ],
-    "penaltiesTitle": "Bírságok munkavédelmi hiányosságokért",
-    "penaltiesSubtitle": "Számítsa ki pénzügyi kockázatát ha hiányoznak kötelező dokumentumok",
-    "penaltiesIntro": "Az ellenőrző hatóságok bírságokat szabhatnak ki:",
-    "penaltiesCalculator": "Jelölje be, mi NINCS rendben:",
+    "penaltiesTitle": "Bírságok munkavédelmi hiányosságok esetén",
+    "penaltiesSubtitle": "Számítsa ki pénzügyi kockázatát, ha hiányoznak a kötelező dokumentumok",
+    "penaltiesIntro": "Az ellenőrző hatóságok a következő összegű bírságokat szabhatnak ki:",
+    "penaltiesCalculator": "Jelölje be, ami NINCS rendben:",
     "penaltiesTotal": "Teljes bírság kockázat:",
-    "penaltiesDisclaimer": "Becsült értékek a hatályos jogszabályok szerint. A tényleges bírságok eltérhetnek."
+    "penaltiesDisclaimer": "Becsült értékek a hatályos jogszabályok alapján. A tényleges bírságok eltérhetnek."
   },
   "login": {
     "title": "Munkavédelmi platform — Bejelentkezés",
-    "email": "E-mail",
+    "email": "E-mail cím",
     "emailPlaceholder": "email@pelda.hu",
     "password": "Jelszó",
     "passwordPlaceholder": "••••••••",
-    "submit": "Belépés",
-    "submitting": "Hitelesítés...",
+    "submit": "Belépés a platformra",
+    "submitting": "Hitelesítés folyamatban...",
     "demo": "Belépés Demo látogatóként",
-    "invalidCredentials": "Helytelen e-mail vagy jelszó.",
+    "invalidCredentials": "Helytelen e-mail cím vagy jelszó.",
     "footer": "© 2026 s-s-m.ro — Munkavédelmi platform"
   },
   "dashboard": {
     "allOrganizations": "Összes szervezet",
-    "employees": "alkalmazottak",
-    "toggleRiskITM": "ITM kockázat",
+    "employees": "alkalmazott",
+    "toggleRiskITM": "Munkavédelmi kockázat",
     "toggleRiskEuro": "Kockázat €",
-    "riskControl": "ITM ellenőrzési kockázat",
+    "riskControl": "Munkavédelmi ellenőrzési kockázat",
     "dataCompleteness": "Adatok teljessége",
     "riskLevels": {
       "low": "Alacsony",
@@ -108,25 +108,25 @@
     },
     "counters": {
       "expired": "Lejárt",
-      "expiring": "Lejár <30 nap",
+      "expiring": "Lejár <30 napon belül",
       "valid": "Érvényes"
     },
     "medical": {
       "title": "Munkaegészségügy",
-      "addRecord": "+ Rekord hozzáadása",
+      "addRecord": "+ Bejegyzés hozzáadása",
       "noRecords": "Nincs orvosi nyilvántartás.",
       "columns": {
         "employee": "Alkalmazott",
         "position": "Beosztás",
         "type": "Típus",
         "examDate": "Vizsgálat dátuma",
-        "expiryDate": "Lejárat",
+        "expiryDate": "Lejárati dátum",
         "status": "Státusz"
       },
       "examTypes": {
         "periodic": "Időszakos",
-        "angajare": "Felvételi",
-        "reluare": "Visszatérési",
+        "angajare": "Munkába állási",
+        "reluare": "Munkába visszatérési",
         "la_cerere": "Kérésre"
       }
     },
@@ -139,21 +139,21 @@
         "type": "Típus",
         "location": "Helyszín",
         "lastCheck": "Utolsó ellenőrzés",
-        "expiryDate": "Lejárat",
+        "expiryDate": "Lejárati dátum",
         "status": "Státusz"
       },
       "types": {
         "stingator": "Tűzoltó készülék",
-        "trusa_prim_ajutor": "Elsősegélycsomag",
+        "trusa_prim_ajutor": "Elsősegély doboz",
         "hidrant": "Tűzcsap",
         "detector_fum": "Füstérzékelő",
         "iluminat_urgenta": "Vészvilágítás"
       }
     },
     "status": {
-      "expired": "Lejárt {days} napja",
+      "expired": "Lejárt {days} nappal ezelőtt",
       "expiring": "Lejár {days} nap múlva",
-      "valid": "Érvényes {days} napig"
+      "valid": "Érvényes még {days} napig"
     },
     "notifications": {
       "title": "Legutóbbi értesítések",
@@ -165,24 +165,24 @@
       "to": "Címzett"
     },
     "features": {
-      "pdfTitle": "PDF Megfelelés",
+      "pdfTitle": "PDF megfelelőségi jelentés",
       "pdfSubtitle": "Automatikus jelentésgenerálás",
-      "pdfLocked": "Elérhető, ha az adatok teljessége > 80%",
+      "pdfLocked": "Elérhető, amikor az adatok teljessége > 80%",
       "alertsTitle": "Automatikus riasztások",
       "alertsSubtitle": "E-mail, SMS, WhatsApp",
-      "alertsActive": "Aktív — Napi e-mail 08:00-kor Resend-en",
-      "trainingsTitle": "Munkavédelmi és tűzvédelmi oktatás",
-      "trainingsSubtitle": "Interaktív modulok + teszt",
+      "alertsActive": "Aktív — Napi e-mail 08:00-kor Resend használatával",
+      "trainingsTitle": "Munkavédelmi és tűzvédelmi oktatások",
+      "trainingsSubtitle": "Interaktív modulok + vizsga",
       "trainingsActive": "9 aktív modul — Kattintson a hozzáféréshez"
     },
     "actions": {
-      "contactConsultant": "Kapcsolatfelvétel tanácsadóval",
+      "contactConsultant": "Kapcsolatfelvétel a tanácsadóval",
       "reloadData": "Adatok újratöltése",
       "aboutPlatform": "A platformról"
     }
   },
   "footer": {
-    "description": "Digitális platform munkavédelmi és tűzvédelmi megfeleléshez.",
+    "description": "Digitális platform a munkavédelmi és tűzvédelmi megfelelőséghez. Munkaegészségügy, tűzvédelmi berendezések, automatikus riasztások.",
     "email": "contact@s-s-m.ro",
     "phone": "+36 1 000 0000",
     "address": "Budapest, Magyarország"
