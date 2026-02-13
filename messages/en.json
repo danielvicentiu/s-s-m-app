@@ -186,5 +186,185 @@
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
     "address": "Bucharest, Romania"
+  },
+  "quickCheck": {
+    "badge": "Free OHS Assessment",
+    "title": "Quick OHS Compliance Check",
+    "subtitle": "Answer 10 simple questions and discover your compliance level with Romanian OHS legislation.",
+    "progress": "Progress",
+    "submit": "View results",
+    "footer": "This questionnaire is 100% free and requires no registration.",
+    "answers": {
+      "yes": "Yes",
+      "partial": "Partial",
+      "no": "No"
+    },
+    "questions": {
+      "q1": {
+        "text": "Do you have updated Medical Fitness Certificates for all employees?",
+        "description": "According to Law 319/2006, all employees must have periodic medical examinations."
+      },
+      "q2": {
+        "text": "Does your organization have an updated Risk Assessment from the last 12 months?",
+        "description": "Risk assessments must be reviewed annually or when significant changes occur."
+      },
+      "q3": {
+        "text": "Do you have a signed and implemented Prevention and Protection Plan (PPP)?",
+        "description": "PPP is a mandatory document that establishes OHS prevention measures."
+      },
+      "q4": {
+        "text": "Have employees received OHS training at hiring and periodically?",
+        "description": "Initial and periodic training is mandatory according to OHS legislation."
+      },
+      "q5": {
+        "text": "Are workers designated and trained for emergency situations (Fire Safety)?",
+        "description": "You must have trained workers for first aid and emergency situations."
+      },
+      "q6": {
+        "text": "Is Personal Protective Equipment (PPE) distributed and recorded?",
+        "description": "Employees must receive appropriate PPE for their role and risks."
+      },
+      "q7": {
+        "text": "Are fire safety equipment (extinguishers, hydrants) periodically inspected?",
+        "description": "Technical inspection of fire extinguishers must be done annually by authorized personnel."
+      },
+      "q8": {
+        "text": "Do you have a valid Fire Safety/ISU Authorization for your building/activity?",
+        "description": "Fire Safety Authorization must be renewed periodically according to risk category."
+      },
+      "q9": {
+        "text": "Are workplace accidents investigated and reported according to law?",
+        "description": "Any workplace accident must be reported to ITM within the legal deadline."
+      },
+      "q10": {
+        "text": "Do you have an active contract with external OHS service or in-house specialist?",
+        "description": "The employer must ensure OHS services internally or externally."
+      }
+    },
+    "results": {
+      "title": "Your result",
+      "subtitle": "Here is your OHS compliance level",
+      "level": {
+        "good": "Good Level",
+        "medium": "Medium Level",
+        "critical": "Critical Level"
+      },
+      "description": {
+        "good": "Congratulations! Your organization meets most OHS compliance requirements. Keep your documentation up to date and implement safety measures.",
+        "medium": "You have an acceptable compliance level, but there are gaps that may generate ITM fines. We recommend urgently addressing areas with 'No' or 'Partial' answers.",
+        "critical": "Warning! Your organization is exposed to significant ITM/ISU fines. It is necessary to urgently implement minimum OHS compliance measures."
+      },
+      "cta": "Register on platform",
+      "retake": "Try again"
+    }
+  },
+  "calculatorRisc": {
+    "badge": "Free OHS risk assessment",
+    "title": "OHS Risk Calculator",
+    "subtitle": "Evaluate your organization's risk level based on your business sector and specific risk factors.",
+    "formTitle": "Enter organization details",
+    "calculate": "Calculate risk level",
+    "reset": "Start new assessment",
+    "footer": "This calculator is for guidance only and does not replace a professional OHS risk assessment.",
+    "fields": {
+      "caen": {
+        "label": "Business sector (NACE)",
+        "placeholder": "Select business sector"
+      },
+      "employees": {
+        "label": "Number of employees",
+        "placeholder": "Enter number of employees"
+      },
+      "hazardous": {
+        "label": "Do you work with hazardous substances?",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "height": {
+        "label": "Do you work at height (over 2m)?",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "pressure": {
+        "label": "Do you have pressure equipment?",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "evacuation": {
+        "label": "Do you have an implemented evacuation plan?",
+        "yes": "Yes",
+        "no": "No"
+      }
+    },
+    "caenOptions": {
+      "construction": "Construction",
+      "manufacturing": "Manufacturing",
+      "transport": "Transport & logistics",
+      "services": "Professional services",
+      "retail": "Retail",
+      "hospitality": "Hospitality (restaurants, hotels)",
+      "it": "IT & Software",
+      "health": "Healthcare",
+      "education": "Education & training",
+      "other": "Other"
+    },
+    "results": {
+      "title": "Assessment results",
+      "level": {
+        "low": "Low Risk",
+        "medium": "Medium Risk",
+        "high": "High Risk",
+        "veryHigh": "Very High Risk"
+      },
+      "description": {
+        "low": "Your organization operates in a low-risk sector. However, OHS compliance remains mandatory and you must keep basic documentation up to date.",
+        "medium": "The risk level is medium. You should pay special attention to risk assessment and periodic employee training. Ensure all OHS documents are current.",
+        "high": "Warning! Your organization is in a high-risk category. It is essential to implement strict prevention measures and have a dedicated OHS specialist. Non-compliance can lead to significant fines.",
+        "veryHigh": "Very high risk! Your organization requires maximum attention to workplace safety. It is mandatory to have a dedicated OHS specialist, detailed risk assessment and implemented prevention and protection plan. We recommend urgent specialized consultation."
+      },
+      "recommendations": {
+        "title": "Priority recommendations",
+        "low": [
+          "Ensure valid medical certificates for all employees",
+          "Conduct periodic OHS training (minimum annually)",
+          "Keep OHS documentation records updated",
+          "Periodically check fire safety equipment (extinguishers, first aid kit)"
+        ],
+        "medium": [
+          "Conduct updated professional risk assessment",
+          "Implement prevention and protection plan (PPP)",
+          "Provide appropriate PPE (protective equipment) for each position",
+          "Contract authorized external OHS service",
+          "Conduct periodic medical checks according to risks",
+          "Annual fire safety equipment inspection by authorized companies"
+        ],
+        "high": [
+          "URGENT: Hire dedicated OHS specialist or contract external service",
+          "Conduct detailed risk assessment for all positions",
+          "Implement PPP and ensure monitoring of prevention measures",
+          "Intensive OHS and Fire Safety training for all employees (2x/year minimum)",
+          "Strict monitoring of pressure equipment (ISCIR)",
+          "Monthly inspections of work at height conditions",
+          "Emergency plan and trained intervention team",
+          "Valid Fire Safety authorization and updated security scenarios"
+        ],
+        "veryHigh": [
+          "CRITICAL: Specialized OHS consultant dedicated to organization",
+          "Complex risk assessment with external expertise (chemical, construction, pressure)",
+          "Prevention and protection plan reviewed quarterly",
+          "Weekly/monthly OHS training for critical areas",
+          "Daily inspection of critical equipment (pressure, height, substances)",
+          "Professionally trained Fire Safety team + quarterly evacuation drills",
+          "Real-time incident monitoring and reporting system",
+          "Mandatory annual external OHS audit",
+          "Liability insurance for major risks"
+        ]
+      }
+    },
+    "cta": {
+      "title": "Manage OHS risks from the platform",
+      "description": "Monitor OHS compliance in real-time, receive automated alerts for expirations and generate reports for ITM inspections.",
+      "button": "Try the platform for free"
+    }
   }
 }
