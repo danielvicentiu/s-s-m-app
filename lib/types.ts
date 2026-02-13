@@ -245,3 +245,45 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── EMPLOYEES ──
+
+export interface Employee {
+  id: string
+  organization_id: string
+  user_id: string | null
+  first_name: string
+  last_name: string
+  cnp: string
+  email: string | null
+  phone: string | null
+  position: string | null
+  department: string | null
+  hire_date: string | null
+  contract_type: 'indefinite' | 'fixed_term' | 'part_time' | 'temporary' | null
+  employment_status: 'active' | 'suspended' | 'departed'
+  workplace_risks: string | null
+  ppe_required: string | null
+  cor_code: string | null
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+export interface Training {
+  id: string
+  organization_id: string
+  training_type: 'initial' | 'periodic' | 'psi' | 'first_aid' | 'pram' | 'other'
+  training_date: string
+  training_time: string | null
+  duration_hours: number | null
+  instructor_name: string | null
+  subject: string | null
+  location: string | null
+  notes: string | null
+  participant_ids: string[]
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
