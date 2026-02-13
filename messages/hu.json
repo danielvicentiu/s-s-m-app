@@ -186,5 +186,706 @@
     "email": "contact@s-s-m.ro",
     "phone": "+36 1 000 0000",
     "address": "Budapest, Magyarország"
+  },
+  "employees": {
+    "title": "Alkalmazottak",
+    "subtitle": "Kezelje munkaerőt, beosztásokat és státuszokat",
+    "addEmployee": "+ Alkalmazott hozzáadása",
+    "noEmployees": "Még nincsenek alkalmazottak.",
+    "totalEmployees": "Összes alkalmazott",
+    "activeEmployees": "Aktív",
+    "inactiveEmployees": "Inaktív",
+    "searchPlaceholder": "Keresés név vagy beosztás szerint...",
+    "columns": {
+      "name": "Név",
+      "position": "Beosztás",
+      "department": "Osztály",
+      "hireDate": "Felvétel dátuma",
+      "status": "Státusz",
+      "actions": "Műveletek"
+    },
+    "status": {
+      "active": "Aktív",
+      "inactive": "Inaktív",
+      "onLeave": "Szabadságon",
+      "suspended": "Felfüggesztve"
+    },
+    "form": {
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "email": "E-mail",
+      "phone": "Telefonszám",
+      "position": "Beosztás",
+      "department": "Osztály",
+      "hireDate": "Felvétel dátuma",
+      "birthDate": "Születési dátum",
+      "cnp": "Személyi szám (CNP)",
+      "address": "Cím",
+      "city": "Város",
+      "country": "Ország",
+      "emergencyContact": "Vészhelyzeti kapcsolat",
+      "emergencyPhone": "Vészhelyzeti telefon",
+      "notes": "Jegyzetek"
+    },
+    "actions": {
+      "view": "Megtekintés",
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "activate": "Aktiválás",
+      "deactivate": "Deaktiválás"
+    },
+    "deleteConfirm": "Biztosan törli ezt az alkalmazottat? Ez nem vonható vissza.",
+    "deleteSuccess": "Alkalmazott sikeresen törölve.",
+    "saveSuccess": "Alkalmazott sikeresen mentve.",
+    "errorLoading": "Hiba az alkalmazottak betöltésekor.",
+    "errorSaving": "Hiba az alkalmazott mentésekor."
+  },
+  "trainings": {
+    "title": "Oktatások",
+    "subtitle": "Munkavédelmi és tűzvédelmi oktatási modulok",
+    "addTraining": "+ Oktatás hozzáadása",
+    "noTrainings": "Nincsenek oktatások.",
+    "totalTrainings": "Összes oktatás",
+    "completedTrainings": "Befejezett",
+    "pendingTrainings": "Függőben",
+    "expiredTrainings": "Lejárt",
+    "searchPlaceholder": "Keresés alkalmazott vagy oktatás szerint...",
+    "columns": {
+      "employee": "Alkalmazott",
+      "course": "Tanfolyam",
+      "type": "Típus",
+      "trainingDate": "Oktatás dátuma",
+      "expiryDate": "Lejárat",
+      "instructor": "Oktató",
+      "status": "Státusz",
+      "actions": "Műveletek"
+    },
+    "types": {
+      "ssm": "Munkavédelem (SSM)",
+      "psi": "Tűzvédelem (PSI)",
+      "prim_ajutor": "Elsősegély",
+      "lucru_inaltime": "Magasban végzett munka",
+      "spatii_confinate": "Korlátozott terek",
+      "substante_periculoase": "Veszélyes anyagok",
+      "other": "Egyéb"
+    },
+    "status": {
+      "completed": "Befejezett",
+      "pending": "Függőben",
+      "expired": "Lejárt",
+      "scheduled": "Ütemezett"
+    },
+    "form": {
+      "employee": "Alkalmazott",
+      "courseType": "Tanfolyam típusa",
+      "trainingDate": "Oktatás dátuma",
+      "expiryDate": "Lejárat dátuma",
+      "duration": "Időtartam (órák)",
+      "instructor": "Oktató",
+      "location": "Helyszín",
+      "certificate": "Tanúsítvány száma",
+      "notes": "Jegyzetek",
+      "attendance": "Részvétel"
+    },
+    "modules": {
+      "title": "Elérhető modulok",
+      "module1": "Bevezetés a munkavédelembe",
+      "module2": "Tűzvédelem alapjai",
+      "module3": "Elsősegély munkahelyen",
+      "module4": "Veszélyes anyagok kezelése",
+      "module5": "Egyéni védőfelszerelés (EPI)",
+      "module6": "Munkahelyi kockázatértékelés",
+      "module7": "Vészhelyzeti eljárások",
+      "module8": "Munkahelyi ergonómia",
+      "module9": "Munkabaleset megelőzése"
+    },
+    "actions": {
+      "viewCertificate": "Tanúsítvány megtekintése",
+      "downloadCertificate": "Tanúsítvány letöltése",
+      "scheduleTraining": "Oktatás ütemezése",
+      "markComplete": "Befejezettnek jelölés",
+      "sendReminder": "Emlékeztető küldése"
+    },
+    "saveSuccess": "Oktatás sikeresen mentve.",
+    "deleteSuccess": "Oktatás sikeresen törölve.",
+    "errorLoading": "Hiba az oktatások betöltésekor.",
+    "reminderSent": "Emlékeztető elküldve."
+  },
+  "medical": {
+    "title": "Munkaegészségügy",
+    "subtitle": "Munkaegészségügyi vizsgálatok és fișe medicale",
+    "addRecord": "+ Orvosi fișa hozzáadása",
+    "noRecords": "Nincsenek orvosi nyilvántartások.",
+    "totalRecords": "Összes fișa",
+    "validRecords": "Érvényes",
+    "expiringRecords": "Lejár hamarosan",
+    "expiredRecords": "Lejárt",
+    "searchPlaceholder": "Keresés alkalmazott szerint...",
+    "columns": {
+      "employee": "Alkalmazott",
+      "position": "Beosztás",
+      "examType": "Vizsgálat típusa",
+      "examDate": "Vizsgálat dátuma",
+      "expiryDate": "Lejárat",
+      "doctor": "Orvos",
+      "clinic": "Rendelő",
+      "result": "Eredmény",
+      "status": "Státusz",
+      "actions": "Műveletek"
+    },
+    "examTypes": {
+      "periodic": "Időszakos",
+      "angajare": "Felvételi",
+      "reluare": "Visszatérési",
+      "la_cerere": "Kérésre",
+      "promovare": "Előléptetés",
+      "schimbare_loc": "Munkahelyi változás"
+    },
+    "results": {
+      "apt": "Alkalmas",
+      "apt_conditii": "Feltételesen alkalmas",
+      "inapt": "Alkalmatlan",
+      "inapt_temporar": "Ideiglenesen alkalmatlan"
+    },
+    "form": {
+      "employee": "Alkalmazott",
+      "examType": "Vizsgálat típusa",
+      "examDate": "Vizsgálat dátuma",
+      "expiryDate": "Lejárat dátuma",
+      "doctor": "Orvos név",
+      "clinic": "Orvosi rendelő",
+      "result": "Vizsgálati eredmény",
+      "restrictions": "Korlátozások",
+      "recommendations": "Ajánlások",
+      "nextExam": "Következő vizsgálat",
+      "notes": "Jegyzetek",
+      "documentNumber": "Dokumentum száma"
+    },
+    "actions": {
+      "viewRecord": "Fișa megtekintése",
+      "downloadRecord": "Fișa letöltése",
+      "scheduleExam": "Vizsgálat ütemezése",
+      "sendReminder": "Emlékeztető küldése",
+      "printRecord": "Fișa nyomtatása"
+    },
+    "stats": {
+      "title": "Statisztikák",
+      "upcomingExams": "Közelgő vizsgálatok (30 nap)",
+      "overdueExams": "Késedelmes vizsgálatok",
+      "validCertificates": "Érvényes tanúsítványok",
+      "complianceRate": "Megfelelési arány"
+    },
+    "saveSuccess": "Orvosi fișa sikeresen mentve.",
+    "deleteSuccess": "Orvosi fișa sikeresen törölve.",
+    "errorLoading": "Hiba a fișe betöltésekor.",
+    "reminderSent": "Emlékeztető elküldve."
+  },
+  "equipment": {
+    "title": "Tűzvédelmi berendezések",
+    "subtitle": "PSI berendezés leltár és karbantartás",
+    "addEquipment": "+ Berendezés hozzáadása",
+    "noEquipment": "Nincsenek berendezések.",
+    "totalEquipment": "Összes berendezés",
+    "validEquipment": "Érvényes",
+    "expiringEquipment": "Lejár hamarosan",
+    "expiredEquipment": "Lejárt",
+    "searchPlaceholder": "Keresés berendezés vagy helyszín szerint...",
+    "columns": {
+      "name": "Berendezés",
+      "type": "Típus",
+      "location": "Helyszín",
+      "serialNumber": "Sorozatszám",
+      "manufacturer": "Gyártó",
+      "installDate": "Telepítés dátuma",
+      "lastCheck": "Utolsó ellenőrzés",
+      "nextCheck": "Következő ellenőrzés",
+      "expiryDate": "Lejárat",
+      "status": "Státusz",
+      "actions": "Műveletek"
+    },
+    "types": {
+      "stingator": "Tűzoltó készülék",
+      "stingator_pulbere": "Tűzoltó - Por",
+      "stingator_co2": "Tűzoltó - CO2",
+      "stingator_spuma": "Tűzoltó - Hab",
+      "hidrant": "Tűzcsap",
+      "hidrant_interior": "Tűzcsap - Belső",
+      "hidrant_exterior": "Tűzcsap - Külső",
+      "detector_fum": "Füstérzékelő",
+      "detector_incendiu": "Tűzjelző",
+      "iluminat_urgenta": "Vészvilágítás",
+      "trusa_prim_ajutor": "Elsősegélycsomag",
+      "sistem_sprinkler": "Sprinkler rendszer",
+      "panou_alarma": "Riasztópanel",
+      "other": "Egyéb"
+    },
+    "form": {
+      "name": "Berendezés neve",
+      "type": "Típus",
+      "location": "Helyszín",
+      "floor": "Emelet",
+      "room": "Szoba",
+      "serialNumber": "Sorozatszám",
+      "manufacturer": "Gyártó",
+      "model": "Modell",
+      "capacity": "Kapacitás",
+      "installDate": "Telepítés dátuma",
+      "lastCheck": "Utolsó ellenőrzés",
+      "nextCheck": "Következő ellenőrzés",
+      "expiryDate": "Lejárat",
+      "responsible": "Felelős személy",
+      "notes": "Jegyzetek",
+      "qrCode": "QR kód"
+    },
+    "maintenance": {
+      "title": "Karbantartási napló",
+      "addLog": "+ Napló hozzáadása",
+      "date": "Dátum",
+      "type": "Típus",
+      "technician": "Technikus",
+      "result": "Eredmény",
+      "notes": "Jegyzetek",
+      "nextMaintenance": "Következő karbantartás"
+    },
+    "actions": {
+      "viewDetails": "Részletek megtekintése",
+      "scheduleCheck": "Ellenőrzés ütemezése",
+      "addMaintenance": "Karbantartás hozzáadása",
+      "printQR": "QR kód nyomtatása",
+      "viewHistory": "Előzmények megtekintése",
+      "replace": "Csere"
+    },
+    "stats": {
+      "upcomingChecks": "Közelgő ellenőrzések (30 nap)",
+      "overdueChecks": "Késedelmes ellenőrzések",
+      "totalValue": "Teljes érték",
+      "averageAge": "Átlagos kor"
+    },
+    "saveSuccess": "Berendezés sikeresen mentve.",
+    "deleteSuccess": "Berendezés sikeresen törölve.",
+    "errorLoading": "Hiba a berendezések betöltésekor."
+  },
+  "documents": {
+    "title": "Dokumentumok",
+    "subtitle": "SSM/PSI dokumentum kezelés és archiválás",
+    "addDocument": "+ Dokumentum hozzáadása",
+    "noDocuments": "Nincsenek dokumentumok.",
+    "totalDocuments": "Összes dokumentum",
+    "uploadedThisMonth": "Feltöltve ebben a hónapban",
+    "searchPlaceholder": "Keresés név vagy típus szerint...",
+    "columns": {
+      "name": "Dokumentum név",
+      "type": "Típus",
+      "category": "Kategória",
+      "uploadDate": "Feltöltés dátuma",
+      "size": "Méret",
+      "uploadedBy": "Feltöltötte",
+      "status": "Státusz",
+      "actions": "Műveletek"
+    },
+    "types": {
+      "procedura": "Eljárás",
+      "instructiune": "Utasítás",
+      "fisa_post": "Munkaköri leírás",
+      "evaluare_risc": "Kockázatértékelés",
+      "registru": "Nyilvántartás",
+      "raport": "Jelentés",
+      "certificat": "Tanúsítvány",
+      "autorizatie": "Engedély",
+      "contract": "Szerződés",
+      "protocol": "Protokoll",
+      "proces_verbal": "Jegyzőkönyv",
+      "other": "Egyéb"
+    },
+    "categories": {
+      "ssm": "Munkavédelem (SSM)",
+      "psi": "Tűzvédelem (PSI)",
+      "medical": "Munkaegészségügy",
+      "training": "Oktatások",
+      "inspection": "Ellenőrzések",
+      "legal": "Jogi",
+      "administrative": "Adminisztratív"
+    },
+    "form": {
+      "name": "Dokumentum neve",
+      "type": "Típus",
+      "category": "Kategória",
+      "description": "Leírás",
+      "file": "Fájl",
+      "tags": "Címkék",
+      "expiryDate": "Lejárat",
+      "relatedEmployee": "Kapcsolódó alkalmazott",
+      "relatedOrg": "Kapcsolódó szervezet",
+      "notes": "Jegyzetek"
+    },
+    "actions": {
+      "view": "Megtekintés",
+      "download": "Letöltés",
+      "share": "Megosztás",
+      "archive": "Archiválás",
+      "delete": "Törlés",
+      "generatePDF": "PDF generálás"
+    },
+    "upload": {
+      "title": "Dokumentum feltöltése",
+      "dragDrop": "Húzza ide a fájlokat vagy kattintson a tallózáshoz",
+      "maxSize": "Maximális fájlméret: 10MB",
+      "allowedTypes": "Megengedett: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG"
+    },
+    "saveSuccess": "Dokumentum sikeresen feltöltve.",
+    "deleteSuccess": "Dokumentum sikeresen törölve.",
+    "errorLoading": "Hiba a dokumentumok betöltésekor.",
+    "errorUploading": "Hiba a dokumentum feltöltésekor."
+  },
+  "alerts": {
+    "title": "Riasztások",
+    "subtitle": "Automatikus értesítések és emlékeztetők",
+    "addAlert": "+ Riasztás hozzáadása",
+    "noAlerts": "Nincsenek riasztások.",
+    "totalAlerts": "Összes riasztás",
+    "activeAlerts": "Aktív",
+    "sentAlerts": "Elküldött",
+    "pendingAlerts": "Függőben",
+    "searchPlaceholder": "Keresés típus vagy címzett szerint...",
+    "columns": {
+      "type": "Típus",
+      "message": "Üzenet",
+      "recipient": "Címzett",
+      "sentDate": "Elküldve",
+      "status": "Státusz",
+      "priority": "Prioritás",
+      "actions": "Műveletek"
+    },
+    "types": {
+      "medical_expiring": "Orvosi vizsgálat lejár",
+      "medical_expired": "Orvosi vizsgálat lejárt",
+      "training_expiring": "Oktatás lejár",
+      "training_expired": "Oktatás lejárt",
+      "equipment_check": "Berendezés ellenőrzés",
+      "equipment_expired": "Berendezés lejárt",
+      "document_expiring": "Dokumentum lejár",
+      "custom": "Egyéni"
+    },
+    "status": {
+      "pending": "Függőben",
+      "sent": "Elküldve",
+      "failed": "Sikertelen",
+      "scheduled": "Ütemezett"
+    },
+    "priority": {
+      "low": "Alacsony",
+      "medium": "Közepes",
+      "high": "Magas",
+      "critical": "Kritikus"
+    },
+    "channels": {
+      "email": "E-mail",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "push": "Push értesítés"
+    },
+    "form": {
+      "type": "Riasztás típusa",
+      "message": "Üzenet",
+      "recipient": "Címzett",
+      "channel": "Csatorna",
+      "priority": "Prioritás",
+      "scheduleDate": "Ütemezés dátuma",
+      "repeat": "Ismétlés",
+      "enabled": "Engedélyezve"
+    },
+    "settings": {
+      "title": "Riasztási beállítások",
+      "dailyEmail": "Napi e-mail összefoglaló",
+      "emailTime": "E-mail idő",
+      "enableSMS": "SMS értesítések engedélyezése",
+      "enableWhatsApp": "WhatsApp engedélyezése",
+      "thresholds": "Küszöbértékek",
+      "days30": "30 nappal lejárat előtt",
+      "days15": "15 nappal lejárat előtt",
+      "days7": "7 nappal lejárat előtt",
+      "onExpiry": "Lejárat napján"
+    },
+    "saveSuccess": "Riasztás sikeresen mentve.",
+    "sendSuccess": "Riasztás sikeresen elküldve.",
+    "errorLoading": "Hiba a riasztások betöltésekor."
+  },
+  "settings": {
+    "title": "Beállítások",
+    "subtitle": "Platform és szervezeti beállítások",
+    "sections": {
+      "general": "Általános",
+      "organization": "Szervezet",
+      "notifications": "Értesítések",
+      "security": "Biztonság",
+      "billing": "Számlázás",
+      "integrations": "Integrációk",
+      "users": "Felhasználók",
+      "advanced": "Speciális"
+    },
+    "general": {
+      "title": "Általános beállítások",
+      "language": "Nyelv",
+      "timezone": "Időzóna",
+      "dateFormat": "Dátum formátum",
+      "currency": "Pénznem",
+      "theme": "Téma",
+      "themes": {
+        "light": "Világos",
+        "dark": "Sötét",
+        "auto": "Automatikus"
+      }
+    },
+    "organization": {
+      "title": "Szervezeti beállítások",
+      "name": "Szervezet neve",
+      "cui": "CUI / Adószám",
+      "regNumber": "Reg. Com. szám",
+      "address": "Cím",
+      "city": "Város",
+      "country": "Ország",
+      "phone": "Telefon",
+      "email": "E-mail",
+      "website": "Weboldal",
+      "employeeCount": "Alkalmazottak száma",
+      "industry": "Iparág",
+      "logo": "Logó"
+    },
+    "notifications": {
+      "title": "Értesítési beállítások",
+      "emailNotifications": "E-mail értesítések",
+      "smsNotifications": "SMS értesítések",
+      "pushNotifications": "Push értesítések",
+      "dailyDigest": "Napi összefoglaló",
+      "weeklyReport": "Heti jelentés",
+      "alertThresholds": "Riasztási küszöbök"
+    },
+    "security": {
+      "title": "Biztonsági beállítások",
+      "changePassword": "Jelszó módosítása",
+      "twoFactor": "Kétfaktoros hitelesítés",
+      "sessionTimeout": "Munkamenet időtúllépés",
+      "ipWhitelist": "IP fehérlista",
+      "auditLog": "Audit napló",
+      "dataExport": "Adatok exportálása"
+    },
+    "billing": {
+      "title": "Számlázás",
+      "currentPlan": "Jelenlegi csomag",
+      "planDetails": "Csomag részletei",
+      "billingCycle": "Számlázási ciklus",
+      "paymentMethod": "Fizetési mód",
+      "invoices": "Számlák",
+      "upgradePlan": "Csomag frissítése"
+    },
+    "integrations": {
+      "title": "Integrációk",
+      "email": "E-mail (Resend)",
+      "sms": "SMS szolgáltató",
+      "whatsapp": "WhatsApp Business",
+      "storage": "Felhőtárhelyű",
+      "apiKeys": "API kulcsok",
+      "webhooks": "Webhookok"
+    },
+    "users": {
+      "title": "Felhasználó kezelés",
+      "addUser": "+ Felhasználó hozzáadása",
+      "activeUsers": "Aktív felhasználók",
+      "roles": "Szerepkörök",
+      "permissions": "Jogosultságok"
+    },
+    "saveSuccess": "Beállítások sikeresen mentve.",
+    "errorLoading": "Hiba a beállítások betöltésekor.",
+    "errorSaving": "Hiba a beállítások mentésekor."
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Személyes adatok és beállítások",
+    "personalInfo": "Személyes adatok",
+    "accountSettings": "Fiók beállítások",
+    "preferences": "Preferenciák",
+    "form": {
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "email": "E-mail",
+      "phone": "Telefonszám",
+      "position": "Beosztás",
+      "department": "Osztály",
+      "bio": "Bemutatkozás",
+      "avatar": "Profilkép",
+      "currentPassword": "Jelenlegi jelszó",
+      "newPassword": "Új jelszó",
+      "confirmPassword": "Jelszó megerősítése"
+    },
+    "actions": {
+      "uploadAvatar": "Profilkép feltöltése",
+      "removeAvatar": "Profilkép eltávolítása",
+      "changePassword": "Jelszó módosítása",
+      "deleteAccount": "Fiók törlése"
+    },
+    "preferences": {
+      "language": "Interfész nyelv",
+      "notifications": "Értesítési beállítások",
+      "emailDigest": "E-mail összefoglaló",
+      "timezone": "Időzóna"
+    },
+    "saveSuccess": "Profil sikeresen frissítve.",
+    "passwordChanged": "Jelszó sikeresen módosítva.",
+    "errorLoading": "Hiba a profil betöltésekor.",
+    "errorSaving": "Hiba a profil mentésekor."
+  },
+  "reports": {
+    "title": "Jelentések",
+    "subtitle": "Generáljon átfogó SSM/PSI jelentéseket",
+    "generateReport": "Jelentés generálása",
+    "noReports": "Még nincsenek jelentések.",
+    "totalReports": "Összes jelentés",
+    "generatedThisMonth": "Generálva ebben a hónapban",
+    "columns": {
+      "name": "Jelentés neve",
+      "type": "Típus",
+      "generatedDate": "Generálás dátuma",
+      "period": "Időszak",
+      "generatedBy": "Generálta",
+      "format": "Formátum",
+      "actions": "Műveletek"
+    },
+    "types": {
+      "compliance": "Megfelelési jelentés",
+      "medical": "Munkaegészségügyi jelentés",
+      "equipment": "Berendezés jelentés",
+      "training": "Oktatási jelentés",
+      "incidents": "Incidensek",
+      "audit": "Audit jelentés",
+      "financial": "Pénzügyi kockázat",
+      "custom": "Egyéni jelentés"
+    },
+    "periods": {
+      "daily": "Napi",
+      "weekly": "Heti",
+      "monthly": "Havi",
+      "quarterly": "Negyedéves",
+      "yearly": "Éves",
+      "custom": "Egyéni időszak"
+    },
+    "formats": {
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV",
+      "json": "JSON"
+    },
+    "form": {
+      "reportType": "Jelentés típusa",
+      "organization": "Szervezet",
+      "period": "Időszak",
+      "startDate": "Kezdő dátum",
+      "endDate": "Záró dátum",
+      "format": "Formátum",
+      "includeCharts": "Diagramok",
+      "includeStats": "Statisztikák",
+      "includeSummary": "Összefoglaló"
+    },
+    "actions": {
+      "view": "Megtekintés",
+      "download": "Letöltés",
+      "share": "Megosztás",
+      "schedule": "Ütemezés",
+      "print": "Nyomtatás",
+      "delete": "Törlés"
+    },
+    "scheduler": {
+      "title": "Jelentés ütemezése",
+      "frequency": "Gyakoriság",
+      "recipients": "Címzettek",
+      "time": "Idő",
+      "enabled": "Engedélyezve"
+    },
+    "generateSuccess": "Jelentés sikeresen generálva.",
+    "downloadSuccess": "Jelentés letöltve.",
+    "errorLoading": "Hiba a jelentések betöltésekor.",
+    "errorGenerating": "Hiba a jelentés generálásakor."
+  },
+  "admin": {
+    "title": "Adminisztráció",
+    "subtitle": "Platformkezelés és felügyelet",
+    "sections": {
+      "organizations": "Szervezetek",
+      "users": "Felhasználók",
+      "roles": "Szerepkörök",
+      "permissions": "Jogosultságok",
+      "audit": "Audit napló",
+      "system": "Rendszerbeállítások"
+    },
+    "organizations": {
+      "title": "Szervezetek kezelése",
+      "totalOrgs": "Összes szervezet",
+      "activeOrgs": "Aktív",
+      "addOrganization": "+ Szervezet hozzáadása"
+    },
+    "users": {
+      "title": "Felhasználók kezelése",
+      "totalUsers": "Összes felhasználó",
+      "activeUsers": "Aktív",
+      "addUser": "+ Felhasználó hozzáadása"
+    },
+    "roles": {
+      "title": "Szerepkörök",
+      "consultant": "Tanácsadó",
+      "company_admin": "Cég adminisztrátor",
+      "employee": "Alkalmazott",
+      "custom": "Egyéni szerepkör"
+    },
+    "audit": {
+      "title": "Audit napló",
+      "action": "Művelet",
+      "user": "Felhasználó",
+      "timestamp": "Időbélyeg",
+      "details": "Részletek"
+    }
+  },
+  "errors": {
+    "generic": "Hiba történt. Kérjük, próbálja újra.",
+    "network": "Hálózati hiba. Ellenőrizze internetkapcsolatát.",
+    "unauthorized": "Nincs jogosultsága ehhez a művelethez.",
+    "notFound": "Az erőforrás nem található.",
+    "validation": "Érvényesítési hiba. Ellenőrizze bevitt adatokat.",
+    "serverError": "Szerverhiba. Kérjük, próbálja később.",
+    "timeout": "A kérés időtúllépés miatt megszakadt.",
+    "forbidden": "Hozzáférés megtagadva."
+  },
+  "success": {
+    "saved": "Sikeresen mentve.",
+    "deleted": "Sikeresen törölve.",
+    "updated": "Sikeresen frissítve.",
+    "created": "Sikeresen létrehozva.",
+    "sent": "Sikeresen elküldve.",
+    "uploaded": "Sikeresen feltöltve."
+  },
+  "confirm": {
+    "delete": "Biztosan törli ezt az elemet?",
+    "unsavedChanges": "Nem mentett változások vannak. Biztosan kilép?",
+    "proceed": "Biztosan folytatja?",
+    "yes": "Igen",
+    "no": "Nem"
+  },
+  "filters": {
+    "filterBy": "Szűrés:",
+    "sortBy": "Rendezés:",
+    "showAll": "Összes mutatása",
+    "showActive": "Csak aktívak",
+    "showInactive": "Csak inaktívak",
+    "dateRange": "Dátumtartomány",
+    "status": "Státusz",
+    "type": "Típus",
+    "clearFilters": "Szűrők törlése"
+  },
+  "pagination": {
+    "previous": "Előző",
+    "next": "Következő",
+    "page": "Oldal",
+    "of": "/",
+    "showing": "Mutatva",
+    "to": "-",
+    "entries": "bejegyzés"
   }
 }
