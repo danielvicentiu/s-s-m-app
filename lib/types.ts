@@ -123,6 +123,22 @@ export interface GeneratedDocument {
   created_at: string
 }
 
+export interface Employee {
+  id: string
+  organization_id: string
+  full_name: string
+  cnp_hash: string | null
+  job_title: string | null
+  department: string | null
+  hire_date: string | null
+  is_active: boolean
+  email: string | null
+  phone: string | null
+  created_at: string
+  updated_at: string
+  organizations?: { name: string; cui: string }
+}
+
 // Helper: Status calculat pentru fișe medicale și echipamente
 export type ExpiryStatus = 'valid' | 'expiring' | 'expired'
 
