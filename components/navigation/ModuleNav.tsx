@@ -25,6 +25,7 @@ const MODULE_NAV_ITEMS: Record<ModuleKey, NavItem[]> = {
   ],
   legislatie: [
     { label: { ro: 'Legislație', en: 'Legislation', bg: 'Законодателство', hu: 'Jogszabályok', de: 'Gesetzgebung', pl: 'Legislacja' }, href: '/dashboard/legislation' },
+    { label: { ro: 'Noutăți Legislative', en: 'Legal Updates', bg: 'Законодателни новини', hu: 'Jogszabályváltozások', de: 'Gesetzesänderungen', pl: 'Aktualizacje prawne' }, href: '/dashboard/legal-updates' },
   ],
   ssm: [
     { label: { ro: 'Instruire', en: 'Training', bg: 'Обучение', hu: 'Képzés', de: 'Schulung', pl: 'Szkolenie' }, href: '/dashboard/training' },
@@ -45,6 +46,9 @@ const MODULE_NAV_ITEMS: Record<ModuleKey, NavItem[]> = {
   ],
   echipamente: [
     { label: { ro: 'Echipamente', en: 'Equipment', bg: 'Оборудване', hu: 'Felszerelések', de: 'Ausrüstung', pl: 'Wyposażenie' }, href: '/dashboard/equipment' },
+  ],
+  semnalizare: [
+    { label: { ro: 'Semnalizare', en: 'Signage', bg: 'Знаци', hu: 'Jelzések', de: 'Beschilderung', pl: 'Oznakowanie' }, href: '/dashboard/signage' },
   ],
   near_miss: [
     { label: { ro: 'Near-miss', en: 'Near-Miss', bg: 'Почти инциденти', hu: 'Majdnem-balesetek', de: 'Beinaheunfälle', pl: 'Zdarzenia' }, href: '/dashboard/near-miss' },

@@ -36,6 +36,35 @@ export interface Membership {
   joined_at: string
 }
 
+export interface Department {
+  id: string
+  organization_id: string
+  name: string
+  head_employee_id: string | null
+  main_risks: string | null
+  training_status: 'la_zi' | 'partial' | 'expirat' | 'necunoscut'
+  description: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type IncidentStatus = 'raportat' | 'in_investigare' | 'rezolvat' | 'respins'
+export type IncidentSeverity = 'minor' | 'moderate' | 'major' | 'critical'
+
+export interface Incident {
+  id: string
+  organization_id: string
+  incident_date: string
+  location: string
+  severity: IncidentSeverity
+  status: IncidentStatus
+  description: string
+  reported_by: string
+  resolved_by: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface MedicalExamination {
   id: string
   organization_id: string
@@ -244,4 +273,21 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'HU': 'HUF',
   'DE': 'EUR',
   'PL': 'PLN'
+}
+
+// ── LEGAL UPDATES ──
+
+export type LegalUpdateImpact = 'mare' | 'mediu' | 'mic'
+
+export interface LegalUpdate {
+  id: string
+  country_code: CountryCode
+  title: string
+  summary: string
+  publication_date: string
+  impact: LegalUpdateImpact
+  action_required: string
+  source_url: string | null
+  legal_act_number: string | null
+  created_at: string
 }
