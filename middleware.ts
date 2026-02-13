@@ -106,13 +106,46 @@ export async function middleware(request: NextRequest) {
   }
   const countryCode = countryCodeMap[locale] || 'RO'
 
-  // Check if route is protected
+  // Define public routes (no auth required)
+  const publicRoutes = [
+    '/',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/about',
+    '/pricing',
+    '/contact',
+    '/faq',
+    '/terms',
+    '/privacy',
+    '/quick-check',
+    '/calculator-risc',
+    '/not-found',
+    '/unauthorized',
+  ]
+
+  // Check if route is public (allow without auth)
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route === '/') {
+      return pathWithoutLocale === '/' || pathWithoutLocale === ''
+    }
+    return pathWithoutLocale.startsWith(route)
+  })
+
+  // If public route, return early (no auth check needed)
+  if (isPublicRoute) {
+    intlResponse.headers.set('x-country-code', countryCode)
+    return intlResponse
+  }
+
+  // Define protected routes (requires auth)
   const protectedSegments = ['/dashboard', '/onboarding', '/admin', '/consultant', '/firma', '/angajat', '/inspector']
   const isProtected = protectedSegments.some(segment =>
     pathWithoutLocale.startsWith(segment)
   )
 
-  // For NON-protected routes: return intlResponse directly (preserves locale)
+  // If NOT a protected route and NOT a public route, allow through (unknown routes)
   if (!isProtected) {
     intlResponse.headers.set('x-country-code', countryCode)
     return intlResponse
@@ -139,11 +172,14 @@ export async function middleware(request: NextRequest) {
     }
   )
 
+  // AUTH CHECK: redirect to login if not authenticated
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
     const url = request.nextUrl.clone()
     url.pathname = `/${locale}/login`
+    // Add redirect query param to return after login
+    url.searchParams.set('redirect', pathWithoutLocale)
     return NextResponse.redirect(url)
   }
 
