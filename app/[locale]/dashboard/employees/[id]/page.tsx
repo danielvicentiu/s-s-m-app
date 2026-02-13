@@ -546,17 +546,12 @@ export default function EmployeeDetailPage() {
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
           <EmptyState
-            icon={<User className="w-12 h-12 text-gray-400" />}
+            icon={User}
             title={error || 'Angajat negăsit'}
             description="Nu am putut încărca datele angajatului"
-          >
-            <button
-              onClick={() => router.back()}
-              className="mt-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-            >
-              Înapoi
-            </button>
-          </EmptyState>
+            actionLabel="Înapoi"
+            onAction={() => router.back()}
+          />
         </div>
       </div>
     )
