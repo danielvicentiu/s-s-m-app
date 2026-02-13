@@ -1,0 +1,190 @@
+{
+  "common": {
+    "appName": "s-s-m.ro",
+    "platform": "Digitális munkavédelmi és tűzvédelmi platform",
+    "consultant": "Tanácsadó",
+    "logout": "Kilépés",
+    "loading": "Betöltés...",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "add": "Hozzáadás",
+    "back": "Vissza",
+    "next": "Következő",
+    "or": "vagy",
+    "all": "Összes",
+    "noData": "Nincsenek adatok.",
+    "records": "rekord",
+    "days": "nap",
+    "copyright": "© 2026 s-s-m.ro. Minden jog fenntartva.",
+    "termsAndConditions": "Általános szerződési feltételek",
+    "privacy": "Adatvédelem",
+    "gdpr": "GDPR"
+  },
+  "nav": {
+    "features": "Funkciók",
+    "pricing": "Árazás",
+    "login": "Belépés a platformba",
+    "home": "Kezdőlap",
+    "navigation": "Navigáció",
+    "contact": "Kapcsolat"
+  },
+  "landing": {
+    "badge": "Digitális munkavédelmi és tűzvédelmi platform",
+    "title": "Munkavédelmi és tűzvédelmi",
+    "titleHighlight": "100% automatizált megfelelés",
+    "subtitle": "Kezelje az üzemorvosi vizsgálatokat, tűzvédelmi eszközöket, riasztásokat és jelentéseket egyetlen platformról. Nulla bürokrácia, nulla bírság.",
+    "cta": "Kezdje most →",
+    "featuresTitle": "Minden egy helyen, amire szüksége van",
+    "featuresSubtitle": "6 integrált modul a teljes munkavédelmi és tűzvédelmi megfeleléshez",
+    "pricingTitle": "Átlátható árazás",
+    "pricingSubtitle": "Egy csomag, minden funkció",
+    "planProfessional": "PROFESSZIONÁLIS CSOMAG",
+    "price": "990 LEI",
+    "perOrganization": "szervezetenként",
+    "perYear": "/év",
+    "noSetupFee": "Nincs telepítési díj. Bármikor lemondható.",
+    "features": {
+      "medicalTitle": "Üzemorvosi vizsgálatok",
+      "medicalDesc": "Orvosi kartonok nyomon követése, automatikus lejárati figyelmeztetések, teljes alkalmazotti előzmények valós idejű státusszal.",
+      "equipmentTitle": "Tűzvédelmi eszközök",
+      "equipmentDesc": "Tűzoltó készülékek, tűzcsapok, füstérzékelők nyilvántartása. Ellenőrzések ütemezése, karbantartási naplók, QR kód követés.",
+      "alertsTitle": "Automatikus riasztások",
+      "alertsDesc": "Napi e-mail a közelgő lejáratokról (30/15/7 nap). Resend integráció, WhatsApp értesítések (hamarosan).",
+      "riskTitle": "Pénzügyi kockázat",
+      "riskDesc": "A potenciális hatósági bírságok automatikus kiszámítása. Hatóságonként bontva, min-max becslés RON-ban.",
+      "multiOrgTitle": "Több szervezet",
+      "multiOrgDesc": "Kezeljen 100+ céget egyetlen irányítópultról. Azonnali szűrés, mentett beállítások, bérlői architektúra.",
+      "reportsTitle": "PDF jelentések",
+      "reportsDesc": "Automatikus jelentéskészítés, SHA256 hash a megváltoztathatatlanságért, felhőalapú archiválás, 1-kattintásos export."
+    },
+    "pricingFeatures": [
+      "Üzemorvosi vizsgálatok — korlátlan nyomon követés",
+      "Tűzvédelmi eszközök — teljes leltár",
+      "Automatikus napi e-mail riasztások",
+      "Pénzügyi kockázat — bírság kalkuláció",
+      "Több szervezet — korlátlan cégek",
+      "PDF jelentések — automatikus generálás",
+      "Elsőbbségi műszaki támogatás",
+      "Automatikus napi biztonsági mentés",
+      "Ingyenes frissítések"
+    ],
+    "penaltiesTitle": "Bírságok munkavédelmi meg nem felelés esetén",
+    "penaltiesSubtitle": "Számítsa ki pénzügyi kockázatát, ha hiányoznak a kötelező dokumentumok",
+    "penaltiesIntro": "Az ellenőrző hatóságok bírságokat szabhatnak ki:",
+    "penaltiesCalculator": "Jelölje be, ami NINCS rendben:",
+    "penaltiesTotal": "Teljes bírság kockázat:",
+    "penaltiesDisclaimer": "Becsült értékek a jelenlegi jogszabályok szerint. A tényleges bírságok eltérhetnek."
+  },
+  "login": {
+    "title": "Munkavédelmi platform — Bejelentkezés",
+    "email": "E-mail",
+    "emailPlaceholder": "email@pelda.hu",
+    "password": "Jelszó",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Belépés a platformba",
+    "submitting": "Hitelesítés...",
+    "demo": "Belépés Demo látogatóként",
+    "invalidCredentials": "Helytelen e-mail vagy jelszó.",
+    "footer": "© 2026 s-s-m.ro — Munkavédelmi platform"
+  },
+  "dashboard": {
+    "allOrganizations": "Összes szervezet",
+    "employees": "alkalmazott",
+    "toggleRiskITM": "Ellenőrzési kockázat",
+    "toggleRiskEuro": "Kockázat €",
+    "riskControl": "Hatósági ellenőrzési kockázat",
+    "dataCompleteness": "Adatok teljessége",
+    "riskLevels": {
+      "low": "Alacsony",
+      "medium": "KÖZEPES",
+      "high": "MAGAS",
+      "critical": "KRITIKUS"
+    },
+    "tabs": {
+      "medical": "Üzemorvosi vizsgálatok",
+      "equipment": "Tűzvédelmi eszközök"
+    },
+    "counters": {
+      "expired": "Lejárt",
+      "expiring": "Lejár <30 nap",
+      "valid": "Érvényes"
+    },
+    "medical": {
+      "title": "Üzemorvosi vizsgálatok",
+      "addRecord": "+ Karton hozzáadása",
+      "noRecords": "Nincsenek orvosi kartonok.",
+      "columns": {
+        "employee": "Alkalmazott",
+        "position": "Beosztás",
+        "type": "Típus",
+        "examDate": "Vizsgálat dátuma",
+        "expiryDate": "Lejár",
+        "status": "Státusz"
+      },
+      "examTypes": {
+        "periodic": "Időszakos",
+        "angajare": "Alkalmazáskor",
+        "reluare": "Újrakezdés",
+        "la_cerere": "Kérésre"
+      }
+    },
+    "equipment": {
+      "title": "Tűzvédelmi eszközök",
+      "addRecord": "+ Eszköz hozzáadása",
+      "noRecords": "Nincsenek eszközök.",
+      "columns": {
+        "equipment": "Eszköz",
+        "type": "Típus",
+        "location": "Helyszín",
+        "lastCheck": "Ellenőrizve",
+        "expiryDate": "Lejár",
+        "status": "Státusz"
+      },
+      "types": {
+        "stingator": "Tűzoltó készülék",
+        "trusa_prim_ajutor": "Elsősegély doboz",
+        "hidrant": "Tűzcsap",
+        "detector_fum": "Füstérzékelő",
+        "iluminat_urgenta": "Vészvilágítás"
+      }
+    },
+    "status": {
+      "expired": "Lejárt {days} napja",
+      "expiring": "Lejár {days} nap múlva",
+      "valid": "Érvényes {days} napig"
+    },
+    "notifications": {
+      "title": "Legutóbbi értesítések",
+      "recent": "{count} friss",
+      "noNotifications": "Még nincsenek elküldött értesítések.",
+      "expiredAlert": "LEJÁRT!",
+      "expired": "lejárt",
+      "sent": "Elküldve",
+      "to": "Címzett"
+    },
+    "features": {
+      "pdfTitle": "PDF megfelelés",
+      "pdfSubtitle": "Automatikus jelentés generálás",
+      "pdfLocked": "Elérhető, amikor az adatok teljessége > 80%",
+      "alertsTitle": "Automatikus riasztások",
+      "alertsSubtitle": "E-mail, SMS, WhatsApp",
+      "alertsActive": "Aktív — Napi e-mail 08:00-kor Resend-en keresztül",
+      "trainingsTitle": "Munkavédelmi és tűzvédelmi képzések",
+      "trainingsSubtitle": "Interaktív modulok + teszt",
+      "trainingsActive": "9 aktív modul — Kattintson a hozzáféréshez"
+    },
+    "actions": {
+      "contactConsultant": "Kapcsolatfelvétel a tanácsadóval",
+      "reloadData": "Adatok újratöltése",
+      "aboutPlatform": "A platformról"
+    }
+  },
+  "footer": {
+    "description": "Digitális platform munkavédelmi és tűzvédelmi megfeleléshez. Üzemorvosi vizsgálatok, tűzvédelmi eszközök, automatikus riasztások.",
+    "email": "contact@s-s-m.ro",
+    "phone": "+40 700 000 000",
+    "address": "Bukarest, Románia"
+  }
+}

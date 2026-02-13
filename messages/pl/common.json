@@ -1,0 +1,190 @@
+{
+  "common": {
+    "appName": "s-s-m.ro",
+    "platform": "Cyfrowa platforma BHP i ochrony przeciwpożarowej",
+    "consultant": "Konsultant",
+    "logout": "Wyloguj",
+    "loading": "Ładowanie...",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "add": "Dodaj",
+    "back": "Wstecz",
+    "next": "Następny",
+    "or": "lub",
+    "all": "Wszystkie",
+    "noData": "Brak danych.",
+    "records": "rekordów",
+    "days": "dni",
+    "copyright": "© 2026 s-s-m.ro. Wszelkie prawa zastrzeżone.",
+    "termsAndConditions": "Regulamin",
+    "privacy": "Prywatność",
+    "gdpr": "RODO"
+  },
+  "nav": {
+    "features": "Funkcje",
+    "pricing": "Cennik",
+    "login": "Zaloguj się do platformy",
+    "home": "Start",
+    "navigation": "Nawigacja",
+    "contact": "Kontakt"
+  },
+  "landing": {
+    "badge": "Cyfrowa platforma BHP i ochrony przeciwpożarowej",
+    "title": "Zgodność z BHP i ochroną",
+    "titleHighlight": "przeciwpożarową 100% zautomatyzowana",
+    "subtitle": "Zarządzaj medycyną pracy, sprzętem przeciwpożarowym, alertami i raportami z jednej platformy. Zero biurokracji, zero kar.",
+    "cta": "Zacznij teraz →",
+    "featuresTitle": "Wszystko czego potrzebujesz w jednym miejscu",
+    "featuresSubtitle": "6 zintegrowanych modułów dla pełnej zgodności z BHP i ochroną przeciwpożarową",
+    "pricingTitle": "Przejrzysta cena",
+    "pricingSubtitle": "Jeden plan, wszystkie funkcje",
+    "planProfessional": "PLAN PROFESJONALNY",
+    "price": "990 LEI",
+    "perOrganization": "na organizację",
+    "perYear": "/rok",
+    "noSetupFee": "Bez opłaty instalacyjnej. Anuluj w dowolnym momencie.",
+    "features": {
+      "medicalTitle": "Medycyna pracy",
+      "medicalDesc": "Śledzenie kart zdrowia, automatyczne alerty o wygaśnięciu, pełna historia pracownika ze statusem w czasie rzeczywistym.",
+      "equipmentTitle": "Sprzęt przeciwpożarowy",
+      "equipmentDesc": "Inwentaryzacja gaśnic, hydrantów, czujników dymu. Planowanie kontroli, dzienniki konserwacji, śledzenie QR code.",
+      "alertsTitle": "Automatyczne alerty",
+      "alertsDesc": "Codzienny e-mail o nadchodzących wygaśnięciach (30/15/7 dni). Integracja z Resend, powiadomienia WhatsApp (wkrótce).",
+      "riskTitle": "Ryzyko finansowe",
+      "riskDesc": "Automatyczne obliczanie potencjalnych kar od organów kontroli. Podział według organów, szacunek min-max w RON.",
+      "multiOrgTitle": "Multi-organizacja",
+      "multiOrgDesc": "Zarządzaj 100+ firmami z jednego panelu. Natychmiastowe filtrowanie, zapisane preferencje, architektura wielodostępna.",
+      "reportsTitle": "Raporty PDF",
+      "reportsDesc": "Automatyczne generowanie raportów, hash SHA256 dla niezmienności, archiwizacja w chmurze, eksport 1-kliknięcie."
+    },
+    "pricingFeatures": [
+      "Medycyna pracy — nieograniczone śledzenie",
+      "Sprzęt przeciwpożarowy — pełny inwentarz",
+      "Automatyczne codzienne alerty e-mail",
+      "Ryzyko finansowe — kalkulacja kar",
+      "Multi-organizacja — nieograniczone firmy",
+      "Raporty PDF — automatyczne generowanie",
+      "Priorytetowe wsparcie techniczne",
+      "Automatyczna codzienna kopia zapasowa",
+      "Darmowe aktualizacje"
+    ],
+    "penaltiesTitle": "Kary za brak zgodności z BHP",
+    "penaltiesSubtitle": "Oblicz swoje ryzyko finansowe w przypadku braku wymaganych dokumentów",
+    "penaltiesIntro": "Organy kontroli mogą nałożyć kary pomiędzy:",
+    "penaltiesCalculator": "Zaznacz co NIE jest w porządku:",
+    "penaltiesTotal": "Całkowite ryzyko kar:",
+    "penaltiesDisclaimer": "Wartości szacunkowe zgodnie z obecnym prawem. Rzeczywiste kary mogą się różnić."
+  },
+  "login": {
+    "title": "Platforma BHP — Logowanie",
+    "email": "E-mail",
+    "emailPlaceholder": "email@przyklad.pl",
+    "password": "Hasło",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Zaloguj się do platformy",
+    "submitting": "Uwierzytelnianie...",
+    "demo": "Zaloguj się jako gość Demo",
+    "invalidCredentials": "Nieprawidłowy e-mail lub hasło.",
+    "footer": "© 2026 s-s-m.ro — Platforma BHP"
+  },
+  "dashboard": {
+    "allOrganizations": "Wszystkie organizacje",
+    "employees": "pracowników",
+    "toggleRiskITM": "Ryzyko kontroli",
+    "toggleRiskEuro": "Ryzyko €",
+    "riskControl": "Ryzyko kontroli organów",
+    "dataCompleteness": "Kompletność danych",
+    "riskLevels": {
+      "low": "Niskie",
+      "medium": "ŚREDNIE",
+      "high": "WYSOKIE",
+      "critical": "KRYTYCZNE"
+    },
+    "tabs": {
+      "medical": "Medycyna pracy",
+      "equipment": "Sprzęt przeciwpożarowy"
+    },
+    "counters": {
+      "expired": "Wygasłe",
+      "expiring": "Wygasa <30 dni",
+      "valid": "Ważne"
+    },
+    "medical": {
+      "title": "Medycyna pracy",
+      "addRecord": "+ Dodaj kartę",
+      "noRecords": "Brak kart zdrowia.",
+      "columns": {
+        "employee": "Pracownik",
+        "position": "Stanowisko",
+        "type": "Typ",
+        "examDate": "Data badania",
+        "expiryDate": "Wygasa",
+        "status": "Status"
+      },
+      "examTypes": {
+        "periodic": "Okresowe",
+        "angajare": "Przy zatrudnieniu",
+        "reluare": "Wznowienie",
+        "la_cerere": "Na żądanie"
+      }
+    },
+    "equipment": {
+      "title": "Sprzęt przeciwpożarowy",
+      "addRecord": "+ Dodaj sprzęt",
+      "noRecords": "Brak sprzętu.",
+      "columns": {
+        "equipment": "Sprzęt",
+        "type": "Typ",
+        "location": "Lokalizacja",
+        "lastCheck": "Sprawdzono",
+        "expiryDate": "Wygasa",
+        "status": "Status"
+      },
+      "types": {
+        "stingator": "Gaśnica",
+        "trusa_prim_ajutor": "Apteczka pierwszej pomocy",
+        "hidrant": "Hydrant",
+        "detector_fum": "Czujnik dymu",
+        "iluminat_urgenta": "Oświetlenie awaryjne"
+      }
+    },
+    "status": {
+      "expired": "Wygasł {days} dni temu",
+      "expiring": "Wygasa za {days} dni",
+      "valid": "Ważny przez {days} dni"
+    },
+    "notifications": {
+      "title": "Ostatnie powiadomienia",
+      "recent": "{count} ostatnich",
+      "noNotifications": "Brak wysłanych powiadomień.",
+      "expiredAlert": "WYGASŁE!",
+      "expired": "wygasłe",
+      "sent": "Wysłano",
+      "to": "Do"
+    },
+    "features": {
+      "pdfTitle": "Zgodność PDF",
+      "pdfSubtitle": "Automatyczne generowanie raportu",
+      "pdfLocked": "Dostępne gdy kompletność danych > 80%",
+      "alertsTitle": "Automatyczne alerty",
+      "alertsSubtitle": "E-mail, SMS, WhatsApp",
+      "alertsActive": "Aktywne — Codzienny e-mail o 08:00 przez Resend",
+      "trainingsTitle": "Szkolenia BHP i ochrony przeciwpożarowej",
+      "trainingsSubtitle": "Interaktywne moduły + test",
+      "trainingsActive": "9 aktywnych modułów — Kliknij dla dostępu"
+    },
+    "actions": {
+      "contactConsultant": "Skontaktuj się z konsultantem",
+      "reloadData": "Przeładuj dane",
+      "aboutPlatform": "O platformie"
+    }
+  },
+  "footer": {
+    "description": "Cyfrowa platforma dla zgodności z BHP i ochroną przeciwpożarową. Medycyna pracy, sprzęt przeciwpożarowy, automatyczne alerty.",
+    "email": "contact@s-s-m.ro",
+    "phone": "+40 700 000 000",
+    "address": "Bukareszt, Rumunia"
+  }
+}
