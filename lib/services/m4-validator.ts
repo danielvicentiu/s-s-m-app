@@ -20,7 +20,8 @@
  * const published = await publishObligations(validated, legislationId)
  */
 
-import type { Obligation, ObligationFrequency, CountryCode } from '@/lib/types'
+import type { ObligationFrequency, CountryCode } from '@/lib/types'
+import type { Obligation } from './m3-obligation-extractor'
 
 // ══════════════════════════════════════════════════════════════
 // TYPES
@@ -641,16 +642,6 @@ export function generateValidationReport(
 }
 
 // ══════════════════════════════════════════════════════════════
-// EXPORT PUBLIC API
+// EXPORTS
 // ══════════════════════════════════════════════════════════════
-
-export {
-  type ObligationStatus,
-  type ValidatedObligation,
-  type ValidationIssue,
-  type PublishResult,
-  type ValidationReport,
-  validateObligations,
-  publishObligations,
-  generateValidationReport
-}
+// All types and functions are already exported inline above
