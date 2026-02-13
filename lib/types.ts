@@ -238,6 +238,45 @@ export const COUNTRY_NAMES: Record<CountryCode, string> = {
   'PL': 'Polonia'
 }
 
+// ── API KEYS ──
+
+export type ApiKeyPermission =
+  | 'read:employees'
+  | 'write:employees'
+  | 'read:trainings'
+  | 'write:trainings'
+  | 'read:medical'
+  | 'write:medical'
+  | 'read:equipment'
+  | 'write:equipment'
+  | 'read:alerts'
+  | 'write:alerts'
+  | 'read:documents'
+  | 'write:documents'
+  | 'read:reports'
+  | 'webhook:manage'
+  | 'admin:all'
+
+export interface ApiKey {
+  id: string
+  organization_id: string
+  name: string
+  description: string | null
+  key_hash: string
+  key_prefix: string
+  permissions: ApiKeyPermission[]
+  rate_limit_per_minute: number
+  last_used_at: string | null
+  total_requests: number
+  is_active: boolean
+  expires_at: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  revoked_at: string | null
+  revoked_by: string | null
+}
+
 export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'RO': 'RON',
   'BG': 'BGN',
