@@ -92,6 +92,22 @@ export interface NotificationLogEntry {
   metadata: Record<string, any>
 }
 
+export interface InAppNotification {
+  id: string
+  user_id: string
+  organization_id: string
+  title: string
+  message: string
+  notification_type: 'alert_mm_30d' | 'alert_mm_15d' | 'alert_mm_7d' | 'alert_mm_expired' |
+    'alert_psi_30d' | 'alert_psi_15d' | 'alert_psi_expired' |
+    'report_monthly' | 'fraud_alert' | 'system_alert' | 'info'
+  is_read: boolean
+  action_url: string | null
+  metadata: Record<string, any> | null
+  created_at: string
+  read_at: string | null
+}
+
 export interface FraudAlert {
   id: string
   organization_id: string
@@ -244,4 +260,38 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'HU': 'HUF',
   'DE': 'EUR',
   'PL': 'PLN'
+}
+
+// ── AUDIT LOG ──
+
+export type AuditEntityType =
+  | 'reges_connection'
+  | 'reges_outbox'
+  | 'reges_receipt'
+  | 'reges_result'
+  | 'employee'
+  | 'contract'
+  | 'organization'
+  | 'user'
+  | 'medical_examination'
+  | 'equipment'
+  | 'training'
+  | 'document'
+
+export interface AuditLog {
+  id: string
+  organization_id: string | null
+  user_id: string | null
+  action: string
+  entity_type: AuditEntityType
+  entity_id: string | null
+  old_values: Record<string, any> | null
+  new_values: Record<string, any> | null
+  metadata: Record<string, any> | null
+  ip_address: string | null
+  user_agent: string | null
+  created_at: string
+  // Relații pentru afișare
+  profiles?: Profile
+  organizations?: Organization
 }
