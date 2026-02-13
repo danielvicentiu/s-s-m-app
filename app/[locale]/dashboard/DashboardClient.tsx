@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { UserPlus, FileText } from 'lucide-react'
 import LanguageSelector from '@/components/LanguageSelector'
 import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
+import DashboardLayout from '@/components/layouts/DashboardLayout'
 
 interface OrgOption {
   id: string
@@ -212,7 +213,15 @@ export default function DashboardClient({
   // Notificări — din alerts ca proxy
   const recentNotifCount = filteredAlerts.filter((a: any) => a.severity === 'expired').length
 
+  // Count alerte pentru sidebar
+  const sidebarAlertsCount = filteredAlerts.length
+
   return (
+    <DashboardLayout
+      alertsCount={sidebarAlertsCount}
+      locale="ro"
+      organizationName={orgName}
+    >
     <div className="min-h-screen bg-gray-50">
 
       {/* ============ HEADER ============ */}
@@ -626,6 +635,7 @@ export default function DashboardClient({
 
       </main>
     </div>
+    </DashboardLayout>
   )
 }
 
