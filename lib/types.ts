@@ -36,6 +36,22 @@ export interface Membership {
   joined_at: string
 }
 
+export interface Employee {
+  id: string
+  organization_id: string
+  user_id: string | null
+  full_name: string
+  cor_code: string | null
+  job_title: string | null
+  nationality: string
+  email: string | null
+  phone: string | null
+  hire_date: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
 export interface MedicalExamination {
   id: string
   organization_id: string
@@ -244,4 +260,25 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'HU': 'HUF',
   'DE': 'EUR',
   'PL': 'PLN'
+}
+
+// ── TOAST NOTIFICATIONS ──
+
+export type ToastType = 'success' | 'error' | 'warning' | 'info'
+
+export interface Toast {
+  id: string
+  type: ToastType
+  message: string
+  duration?: number
+}
+
+export interface ToastContextType {
+  toasts: Toast[]
+  addToast: (type: ToastType, message: string, duration?: number) => void
+  removeToast: (id: string) => void
+  success: (message: string, duration?: number) => void
+  error: (message: string, duration?: number) => void
+  warning: (message: string, duration?: number) => void
+  info: (message: string, duration?: number) => void
 }
