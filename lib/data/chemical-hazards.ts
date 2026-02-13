@@ -17,7 +17,7 @@ export interface ChemicalHazard {
     // Workplace Exposure Limits
     twa?: number; // Time-Weighted Average (8h) in mg/m³ or ppm
     stel?: number; // Short-Term Exposure Limit (15min) in mg/m³ or ppm
-    unit: 'mg/m³' | 'ppm';
+    unit: 'mg/m³' | 'ppm' | 'fibre/cm³';
     notes?: string;
   };
   requiredEIP: string[]; // Required Personal Protective Equipment
