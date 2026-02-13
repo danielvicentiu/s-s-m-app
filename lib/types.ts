@@ -354,3 +354,112 @@ export interface WebhookDeliveryLog {
   created_at: string
   delivered_at: string | null
 }
+
+// ── API KEYS ──
+
+export type ApiKeyPermission =
+  | 'read:employees'
+  | 'write:employees'
+  | 'read:trainings'
+  | 'write:trainings'
+  | 'read:medical'
+  | 'write:medical'
+  | 'read:equipment'
+  | 'write:equipment'
+  | 'read:documents'
+  | 'write:documents'
+  | 'read:alerts'
+  | 'read:incidents'
+  | 'write:incidents'
+  | 'read:compliance'
+  | 'admin:all'
+
+export interface ApiKey {
+  id: string
+  organization_id: string
+  name: string
+  description: string | null
+  key_hash: string
+  key_prefix: string
+  permissions: ApiKeyPermission[]
+  rate_limit_per_minute: number
+  last_used_at: string | null
+  total_requests: number
+  is_active: boolean
+  expires_at: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  revoked_at: string | null
+  revoked_by: string | null
+}
+
+export interface ApiKeyUsageLog {
+  id: string
+  api_key_id: string
+  endpoint: string
+  method: string
+  status_code: number | null
+  ip_address: string | null
+  user_agent: string | null
+  request_size_bytes: number | null
+  response_size_bytes: number | null
+  duration_ms: number | null
+  error_message: string | null
+  created_at: string
+}
+
+// ── OBLIGATIONS (M5 Publishing Module) ──
+
+export type ObligationStatus = 'draft' | 'validated' | 'approved' | 'published' | 'archived'
+export type OrgObligationStatus = 'pending' | 'acknowledged' | 'compliant' | 'non_compliant'
+
+export interface Obligation {
+  id: string
+  source_legal_act: string
+  source_article_id: string | null
+  source_article_number: string | null
+  country_code: CountryCode
+  obligation_text: string
+  who: string[]
+  deadline: string | null
+  frequency: ObligationFrequency | null
+  penalty: string | null
+  penalty_min: number | null
+  penalty_max: number | null
+  penalty_currency: string | null
+  evidence_required: string[]
+  confidence: number
+  validation_score: number
+  status: ObligationStatus
+  published: boolean
+  published_at: string | null
+  caen_codes: string[]
+  industry_tags: string[]
+  extracted_at: string
+  validated_at: string | null
+  approved_at: string | null
+  approved_by: string | null
+  created_at: string
+  updated_at: string
+  language: string
+  deduplication_hash: string | null
+  metadata: Record<string, any>
+}
+
+export interface OrganizationObligation {
+  id: string
+  organization_id: string
+  obligation_id: string
+  status: OrgObligationStatus
+  assigned_at: string
+  acknowledged_at: string | null
+  acknowledged_by: string | null
+  compliant_at: string | null
+  compliant_by: string | null
+  notes: string | null
+  evidence_urls: string[]
+  assigned_by: string | null
+  match_score: number
+  match_reason: string | null
+}
