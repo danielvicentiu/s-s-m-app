@@ -245,3 +245,39 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── NOTIFICATIONS SYSTEM ──
+
+export type NotificationType = 'system' | 'alert' | 'reminder' | 'approval' | 'message' | 'update'
+export type NotificationPriority = 'low' | 'medium' | 'high' | 'critical'
+
+export interface Notification {
+  id: string
+  user_id: string
+  organization_id: string | null
+  type: NotificationType
+  priority: NotificationPriority
+  title: string
+  message: string
+  link: string | null
+  metadata: Record<string, any> | null
+  is_read: boolean
+  read_at: string | null
+  created_at: string
+}
+
+export interface NotificationPreferences {
+  id: string
+  user_id: string
+  email_enabled: boolean
+  push_enabled: boolean
+  sms_enabled: boolean
+  whatsapp_enabled: boolean
+  alert_enabled: boolean
+  reminder_enabled: boolean
+  system_enabled: boolean
+  quiet_hours_start: string | null
+  quiet_hours_end: string | null
+  created_at: string
+  updated_at: string
+}
