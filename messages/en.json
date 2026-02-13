@@ -186,5 +186,634 @@
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
     "address": "Bucharest, Romania"
+  },
+  "employees": {
+    "title": "Employees",
+    "addEmployee": "+ Add employee",
+    "noEmployees": "No employees registered.",
+    "search": "Search by name, position...",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "columns": {
+      "name": "Name",
+      "position": "Position",
+      "department": "Department",
+      "employmentType": "Employment type",
+      "hireDate": "Hire date",
+      "cnp": "Personal ID",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "employmentTypes": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "contract": "Contract",
+      "internship": "Internship",
+      "temporary": "Temporary"
+    },
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended",
+      "terminated": "Terminated"
+    },
+    "details": {
+      "personalInfo": "Personal Information",
+      "contactInfo": "Contact Information",
+      "employmentInfo": "Employment Information",
+      "medicalRecords": "Medical Records",
+      "trainings": "Training History",
+      "documents": "Documents"
+    },
+    "form": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "cnp": "Personal ID (CNP)",
+      "position": "Position",
+      "department": "Department",
+      "hireDate": "Hire date",
+      "employmentType": "Employment type",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "city": "City",
+      "county": "County",
+      "country": "Country",
+      "notes": "Notes"
+    },
+    "actions": {
+      "view": "View details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "addMedical": "Add medical record",
+      "addTraining": "Add training"
+    },
+    "confirmDelete": "Are you sure you want to delete this employee? This action cannot be undone.",
+    "success": {
+      "created": "Employee created successfully.",
+      "updated": "Employee updated successfully.",
+      "deleted": "Employee deleted successfully."
+    },
+    "errors": {
+      "createFailed": "Failed to create employee.",
+      "updateFailed": "Failed to update employee.",
+      "deleteFailed": "Failed to delete employee.",
+      "loadFailed": "Failed to load employees."
+    }
+  },
+  "trainings": {
+    "title": "OHS & Fire Safety Training",
+    "addTraining": "+ Add training",
+    "noTrainings": "No training records.",
+    "search": "Search by employee, module...",
+    "filter": "Filter by status",
+    "columns": {
+      "employee": "Employee",
+      "module": "Module",
+      "type": "Type",
+      "trainingDate": "Training date",
+      "expiryDate": "Expires",
+      "status": "Status",
+      "score": "Score",
+      "instructor": "Instructor",
+      "actions": "Actions"
+    },
+    "types": {
+      "ssm": "OHS",
+      "psi": "Fire Safety",
+      "prim_ajutor": "First Aid",
+      "lucru_inaltime": "Work at Height",
+      "spatii_confinate": "Confined Spaces",
+      "electrosecuritate": "Electrical Safety"
+    },
+    "modules": {
+      "intro_ssm": "Introduction to OHS",
+      "evaluare_riscuri": "Risk Assessment",
+      "echipamente_protectie": "Personal Protective Equipment",
+      "situatii_urgenta": "Emergency Situations",
+      "psi_basic": "Basic Fire Safety",
+      "utilizare_stingatoare": "Fire Extinguisher Use",
+      "evacuare": "Evacuation Procedures",
+      "prim_ajutor": "First Aid",
+      "legislatie_ssm": "OHS Legislation"
+    },
+    "statuses": {
+      "completed": "Completed",
+      "in_progress": "In Progress",
+      "expired": "Expired",
+      "scheduled": "Scheduled"
+    },
+    "details": {
+      "generalInfo": "General Information",
+      "participants": "Participants",
+      "results": "Results",
+      "certificate": "Certificate"
+    },
+    "form": {
+      "module": "Training module",
+      "type": "Type",
+      "trainingDate": "Training date",
+      "expiryDate": "Expiry date",
+      "duration": "Duration (hours)",
+      "instructor": "Instructor",
+      "location": "Location",
+      "participants": "Participants",
+      "score": "Score (%)",
+      "passed": "Passed",
+      "notes": "Notes"
+    },
+    "actions": {
+      "view": "View details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "certificate": "Download certificate",
+      "retake": "Retake"
+    },
+    "confirmDelete": "Are you sure you want to delete this training record?",
+    "success": {
+      "created": "Training record created successfully.",
+      "updated": "Training record updated successfully.",
+      "deleted": "Training record deleted successfully."
+    },
+    "errors": {
+      "createFailed": "Failed to create training record.",
+      "updateFailed": "Failed to update training record.",
+      "deleteFailed": "Failed to delete training record.",
+      "loadFailed": "Failed to load training records."
+    }
+  },
+  "medical": {
+    "title": "Occupational Health Records",
+    "addRecord": "+ Add medical record",
+    "noRecords": "No medical records.",
+    "search": "Search by employee...",
+    "filter": "Filter by status",
+    "columns": {
+      "employee": "Employee",
+      "position": "Position",
+      "type": "Exam type",
+      "examDate": "Exam date",
+      "expiryDate": "Expires",
+      "status": "Status",
+      "doctor": "Doctor",
+      "clinic": "Clinic",
+      "actions": "Actions"
+    },
+    "examTypes": {
+      "periodic": "Periodic",
+      "angajare": "Pre-employment",
+      "reluare": "Return to work",
+      "la_cerere": "On request",
+      "la_recomandare": "Recommended"
+    },
+    "statuses": {
+      "valid": "Valid",
+      "expiring": "Expiring soon",
+      "expired": "Expired"
+    },
+    "details": {
+      "examInfo": "Exam Information",
+      "results": "Results",
+      "restrictions": "Work Restrictions",
+      "recommendations": "Recommendations",
+      "documents": "Documents"
+    },
+    "form": {
+      "employee": "Employee",
+      "type": "Exam type",
+      "examDate": "Exam date",
+      "expiryDate": "Expiry date",
+      "doctor": "Doctor name",
+      "clinic": "Clinic/Hospital",
+      "licenseNumber": "Medical license number",
+      "result": "Result",
+      "restrictions": "Work restrictions",
+      "recommendations": "Recommendations",
+      "attachments": "Attachments"
+    },
+    "results": {
+      "apt": "Fit for work",
+      "apt_conditii": "Fit with conditions",
+      "inapt_temporar": "Temporarily unfit",
+      "inapt_permanent": "Permanently unfit"
+    },
+    "actions": {
+      "view": "View details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "download": "Download",
+      "renew": "Schedule renewal"
+    },
+    "confirmDelete": "Are you sure you want to delete this medical record?",
+    "success": {
+      "created": "Medical record created successfully.",
+      "updated": "Medical record updated successfully.",
+      "deleted": "Medical record deleted successfully."
+    },
+    "errors": {
+      "createFailed": "Failed to create medical record.",
+      "updateFailed": "Failed to update medical record.",
+      "deleteFailed": "Failed to delete medical record.",
+      "loadFailed": "Failed to load medical records."
+    }
+  },
+  "equipment": {
+    "title": "Fire Safety Equipment",
+    "addEquipment": "+ Add equipment",
+    "noEquipment": "No equipment registered.",
+    "search": "Search by code, location...",
+    "filter": "Filter by type",
+    "qrCode": "Generate QR codes",
+    "columns": {
+      "code": "Code",
+      "type": "Type",
+      "location": "Location",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "capacity": "Capacity",
+      "lastCheck": "Last check",
+      "nextCheck": "Next check",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "types": {
+      "stingator": "Fire extinguisher",
+      "trusa_prim_ajutor": "First aid kit",
+      "hidrant": "Hydrant",
+      "detector_fum": "Smoke detector",
+      "iluminat_urgenta": "Emergency lighting",
+      "semnalizare": "Signage",
+      "furtun": "Fire hose",
+      "sprinkler": "Sprinkler",
+      "detector_co": "CO detector"
+    },
+    "statuses": {
+      "operational": "Operational",
+      "maintenance": "Under maintenance",
+      "expired": "Expired",
+      "damaged": "Damaged",
+      "retired": "Retired"
+    },
+    "details": {
+      "generalInfo": "General Information",
+      "specifications": "Technical Specifications",
+      "maintenanceHistory": "Maintenance History",
+      "checkHistory": "Check History",
+      "qrCode": "QR Code"
+    },
+    "form": {
+      "code": "Equipment code",
+      "type": "Equipment type",
+      "location": "Location",
+      "floor": "Floor",
+      "room": "Room",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "serialNumber": "Serial number",
+      "capacity": "Capacity",
+      "installDate": "Installation date",
+      "lastCheckDate": "Last check date",
+      "nextCheckDate": "Next check date",
+      "notes": "Notes"
+    },
+    "maintenance": {
+      "title": "Maintenance Record",
+      "date": "Date",
+      "type": "Maintenance type",
+      "technician": "Technician",
+      "description": "Description",
+      "result": "Result",
+      "nextDate": "Next maintenance"
+    },
+    "maintenanceTypes": {
+      "preventive": "Preventive",
+      "corrective": "Corrective",
+      "inspection": "Inspection",
+      "refill": "Refill",
+      "replacement": "Replacement"
+    },
+    "actions": {
+      "view": "View details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "qr": "View QR code",
+      "maintenance": "Add maintenance",
+      "check": "Record check"
+    },
+    "confirmDelete": "Are you sure you want to delete this equipment?",
+    "success": {
+      "created": "Equipment created successfully.",
+      "updated": "Equipment updated successfully.",
+      "deleted": "Equipment deleted successfully.",
+      "maintenanceAdded": "Maintenance record added successfully."
+    },
+    "errors": {
+      "createFailed": "Failed to create equipment.",
+      "updateFailed": "Failed to update equipment.",
+      "deleteFailed": "Failed to delete equipment.",
+      "loadFailed": "Failed to load equipment.",
+      "maintenanceFailed": "Failed to add maintenance record."
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "addDocument": "+ Upload document",
+    "noDocuments": "No documents.",
+    "search": "Search by name, type...",
+    "filter": "Filter by category",
+    "columns": {
+      "name": "Document name",
+      "type": "Type",
+      "category": "Category",
+      "uploadDate": "Upload date",
+      "size": "Size",
+      "uploadedBy": "Uploaded by",
+      "actions": "Actions"
+    },
+    "types": {
+      "pdf": "PDF",
+      "doc": "Word",
+      "xls": "Excel",
+      "image": "Image",
+      "other": "Other"
+    },
+    "categories": {
+      "ssm": "OHS",
+      "psi": "Fire Safety",
+      "medical": "Medical",
+      "training": "Training",
+      "administrative": "Administrative",
+      "legal": "Legal",
+      "other": "Other"
+    },
+    "form": {
+      "name": "Document name",
+      "category": "Category",
+      "description": "Description",
+      "file": "Select file",
+      "dragDrop": "or drag and drop here"
+    },
+    "actions": {
+      "view": "View",
+      "download": "Download",
+      "edit": "Edit",
+      "delete": "Delete",
+      "share": "Share"
+    },
+    "confirmDelete": "Are you sure you want to delete this document?",
+    "success": {
+      "uploaded": "Document uploaded successfully.",
+      "updated": "Document updated successfully.",
+      "deleted": "Document deleted successfully."
+    },
+    "errors": {
+      "uploadFailed": "Failed to upload document.",
+      "updateFailed": "Failed to update document.",
+      "deleteFailed": "Failed to delete document.",
+      "loadFailed": "Failed to load documents.",
+      "fileTooLarge": "File is too large. Maximum size: 10MB."
+    }
+  },
+  "alerts": {
+    "title": "Automated Alerts",
+    "subtitle": "Email notifications for expiring records",
+    "settings": "Alert Settings",
+    "history": "Alert History",
+    "noAlerts": "No alerts sent yet.",
+    "enabled": "Alerts enabled",
+    "disabled": "Alerts disabled",
+    "columns": {
+      "date": "Date sent",
+      "type": "Type",
+      "recipients": "Recipients",
+      "items": "Items",
+      "status": "Status"
+    },
+    "types": {
+      "medical": "Medical exams",
+      "equipment": "Equipment checks",
+      "training": "Training",
+      "all": "All types"
+    },
+    "statuses": {
+      "sent": "Sent",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "config": {
+      "title": "Alert Configuration",
+      "emailEnabled": "Enable email alerts",
+      "smsEnabled": "Enable SMS alerts",
+      "whatsappEnabled": "Enable WhatsApp alerts",
+      "recipients": "Recipients",
+      "addRecipient": "+ Add recipient",
+      "frequency": "Frequency",
+      "time": "Send time",
+      "daysBeforeExpiry": "Days before expiry",
+      "includeExpired": "Include expired items"
+    },
+    "frequencies": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "form": {
+      "recipientEmail": "Recipient email",
+      "recipientPhone": "Recipient phone",
+      "recipientName": "Recipient name"
+    },
+    "success": {
+      "settingsUpdated": "Alert settings updated successfully.",
+      "recipientAdded": "Recipient added successfully.",
+      "recipientRemoved": "Recipient removed successfully."
+    },
+    "errors": {
+      "updateFailed": "Failed to update alert settings.",
+      "addRecipientFailed": "Failed to add recipient.",
+      "removeRecipientFailed": "Failed to remove recipient.",
+      "loadFailed": "Failed to load alerts."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "general": "General",
+      "organization": "Organization",
+      "users": "Users",
+      "integrations": "Integrations",
+      "billing": "Billing",
+      "security": "Security"
+    },
+    "general": {
+      "title": "General Settings",
+      "language": "Language",
+      "timezone": "Timezone",
+      "dateFormat": "Date format",
+      "currency": "Currency",
+      "notifications": "Notifications"
+    },
+    "organization": {
+      "title": "Organization Information",
+      "name": "Company name",
+      "registrationNumber": "Registration number",
+      "fiscalCode": "Fiscal code",
+      "address": "Address",
+      "city": "City",
+      "county": "County",
+      "country": "Country",
+      "phone": "Phone",
+      "email": "Email",
+      "website": "Website",
+      "employees": "Number of employees",
+      "industry": "Industry"
+    },
+    "users": {
+      "title": "User Management",
+      "addUser": "+ Add user",
+      "noUsers": "No users.",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "lastLogin": "Last login",
+        "actions": "Actions"
+      },
+      "roles": {
+        "admin": "Administrator",
+        "consultant": "Consultant",
+        "firma_admin": "Company Admin",
+        "angajat": "Employee"
+      }
+    },
+    "integrations": {
+      "title": "Integrations",
+      "email": "Email (Resend)",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "calendar": "Calendar",
+      "storage": "Cloud Storage"
+    },
+    "billing": {
+      "title": "Billing",
+      "plan": "Current plan",
+      "price": "Price",
+      "nextBilling": "Next billing date",
+      "paymentMethod": "Payment method",
+      "invoices": "Invoices",
+      "upgrade": "Upgrade plan"
+    },
+    "security": {
+      "title": "Security",
+      "changePassword": "Change password",
+      "twoFactor": "Two-factor authentication",
+      "sessions": "Active sessions",
+      "apiKeys": "API Keys",
+      "auditLog": "Audit log"
+    },
+    "success": {
+      "updated": "Settings updated successfully."
+    },
+    "errors": {
+      "updateFailed": "Failed to update settings.",
+      "loadFailed": "Failed to load settings."
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal Information",
+    "accountInfo": "Account Information",
+    "preferences": "Preferences",
+    "avatar": "Profile picture",
+    "changeAvatar": "Change picture",
+    "removeAvatar": "Remove picture",
+    "form": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "bio": "Bio",
+      "language": "Preferred language",
+      "timezone": "Timezone"
+    },
+    "changePassword": {
+      "title": "Change Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Change password"
+    },
+    "success": {
+      "updated": "Profile updated successfully.",
+      "passwordChanged": "Password changed successfully.",
+      "avatarUpdated": "Profile picture updated successfully."
+    },
+    "errors": {
+      "updateFailed": "Failed to update profile.",
+      "passwordChangeFailed": "Failed to change password.",
+      "avatarUpdateFailed": "Failed to update profile picture.",
+      "passwordMismatch": "Passwords do not match.",
+      "weakPassword": "Password is too weak."
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "generate": "Generate Report",
+    "noReports": "No reports generated yet.",
+    "search": "Search by name, type...",
+    "columns": {
+      "name": "Report name",
+      "type": "Type",
+      "period": "Period",
+      "generatedDate": "Generated",
+      "generatedBy": "Generated by",
+      "size": "Size",
+      "actions": "Actions"
+    },
+    "types": {
+      "compliance": "Compliance Report",
+      "medical": "Medical Records Report",
+      "equipment": "Equipment Report",
+      "training": "Training Report",
+      "alerts": "Alerts Report",
+      "audit": "Audit Report",
+      "custom": "Custom Report"
+    },
+    "form": {
+      "name": "Report name",
+      "type": "Report type",
+      "period": "Period",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "organization": "Organization",
+      "includeExpired": "Include expired items",
+      "includeCharts": "Include charts",
+      "format": "Format"
+    },
+    "formats": {
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV"
+    },
+    "actions": {
+      "view": "View",
+      "download": "Download",
+      "share": "Share",
+      "delete": "Delete",
+      "regenerate": "Regenerate"
+    },
+    "confirmDelete": "Are you sure you want to delete this report?",
+    "success": {
+      "generated": "Report generated successfully.",
+      "deleted": "Report deleted successfully."
+    },
+    "errors": {
+      "generateFailed": "Failed to generate report.",
+      "deleteFailed": "Failed to delete report.",
+      "loadFailed": "Failed to load reports."
+    }
   }
 }
