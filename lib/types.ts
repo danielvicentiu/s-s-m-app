@@ -245,3 +245,45 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── OBLIGATIONS TRACKING ──
+
+export type ObligationStatus = 'fulfilled' | 'in_progress' | 'not_fulfilled'
+export type ObligationCategory =
+  | 'medicina_muncii'
+  | 'psi'
+  | 'ssm'
+  | 'protectia_mediului'
+  | 'resurse_umane'
+  | 'altele'
+
+export interface OrganizationObligation {
+  id: string
+  organization_id: string
+  obligation_type_id: string
+  status: ObligationStatus
+  due_date: string | null
+  completed_date: string | null
+  assigned_to: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+  // Relations
+  obligation_types?: ObligationType
+  profiles?: Profile
+}
+
+export const OBLIGATION_CATEGORY_LABELS: Record<ObligationCategory, string> = {
+  'medicina_muncii': 'Medicina Muncii',
+  'psi': 'PSI (Prevenire Incendii)',
+  'ssm': 'SSM (Securitate Muncă)',
+  'protectia_mediului': 'Protecția Mediului',
+  'resurse_umane': 'Resurse Umane',
+  'altele': 'Altele'
+}
+
+export const OBLIGATION_STATUS_LABELS: Record<ObligationStatus, string> = {
+  'fulfilled': 'Îndeplinit',
+  'in_progress': 'În lucru',
+  'not_fulfilled': 'Neîndeplinit'
+}
