@@ -76,6 +76,21 @@ export interface SafetyEquipment {
   updated_at: string
 }
 
+export interface Notification {
+  id: string
+  user_id: string
+  organization_id: string | null
+  type: 'alert' | 'reminder' | 'info' | 'success' | 'warning' | 'error'
+  title: string
+  message: string
+  action_url: string | null
+  is_read: boolean
+  read_at: string | null
+  metadata: Record<string, any> | null
+  created_at: string
+  updated_at: string
+}
+
 export interface NotificationLogEntry {
   id: string
   organization_id: string
