@@ -245,3 +245,121 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── EIP (ECHIPAMENT INDIVIDUAL DE PROTECȚIE) ──
+
+export interface EipCatalogItem {
+  id: string
+  organization_id: string
+  name: string
+  description: string | null
+  category: string
+  size_options: string[] | null
+  manufacturer: string | null
+  model: string | null
+  certification_number: string | null
+  ce_marking: boolean
+  stock_quantity: number
+  unit_price: number | null
+  currency: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface EipDistribution {
+  id: string
+  organization_id: string
+  employee_id: string
+  eip_catalog_id: string
+  distributed_date: string
+  expiry_date: string
+  quantity: number
+  size: string | null
+  signature_confirmed: boolean
+  signature_date: string | null
+  signed_by: string | null
+  notes: string | null
+  returned_date: string | null
+  return_condition: string | null
+  distributed_by_user_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type EipCategory =
+  | 'casca'
+  | 'manusi'
+  | 'ochelari'
+  | 'masca'
+  | 'vesta'
+  | 'bocanci'
+  | 'protectie_auditiva'
+  | 'ham_siguranta'
+  | 'costum_protectie'
+  | 'altul'
+
+export type EipReturnCondition = 'buna' | 'uzata' | 'deteriorata'
+
+// ── INCIDENTS ──
+
+export type IncidentSeverity = 'minor' | 'moderat' | 'grav' | 'critic'
+export type IncidentStatus = 'nou' | 'in_investigare' | 'rezolvat' | 'respins'
+
+export interface Incident {
+  id: string
+  organization_id: string
+  incident_date: string
+  location: string
+  description: string
+  victim_name: string | null
+  witness_name: string | null
+  severity: IncidentSeverity
+  status: IncidentStatus
+  reported_by: string
+  reported_at: string
+  investigation_notes: string | null
+  resolution_notes: string | null
+  resolved_by: string | null
+  resolved_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ── WORK PERMITS (PERMISE DE LUCRU) ──
+
+export type WorkPermitType =
+  | 'lucru_inaltime'
+  | 'spatii_confinate'
+  | 'foc_deschis'
+  | 'electrice'
+  | 'excavare'
+  | 'lucru_calte'
+  | 'radiatii'
+  | 'substante_periculoase'
+  | 'altul'
+
+export type WorkPermitStatus = 'activ' | 'expirat' | 'anulat' | 'finalizat'
+
+export interface WorkPermit {
+  id: string
+  organization_id: string
+  permit_number: string
+  work_type: WorkPermitType
+  location: string
+  description: string
+  start_datetime: string
+  end_datetime: string
+  team_members: string[]
+  team_leader: string | null
+  additional_measures: string | null
+  authorized_by: string | null
+  status: WorkPermitStatus
+  canceled_reason: string | null
+  canceled_by: string | null
+  canceled_at: string | null
+  completed_at: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
+}
