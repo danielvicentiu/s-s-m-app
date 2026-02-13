@@ -245,3 +245,31 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── INCIDENTE & NEAR-MISS ──
+
+export type IncidentStatus = 'nou' | 'in_investigare' | 'rezolvat' | 'respins'
+export type IncidentSeverity = 'minor' | 'moderat' | 'grav' | 'critic'
+
+export interface Incident {
+  id: string
+  organization_id: string
+  incident_date: string
+  incident_type: 'accident' | 'near_miss' | 'unsafe_condition' | 'unsafe_behavior'
+  severity: IncidentSeverity
+  status: IncidentStatus
+  location: string | null
+  description: string
+  immediate_actions: string | null
+  root_cause: string | null
+  corrective_actions: string | null
+  reported_by: string
+  resolved_by: string | null
+  resolved_at: string | null
+  witnesses: string[] | null
+  involved_employees: string[] | null
+  equipment_involved: string[] | null
+  photos: string[] | null
+  created_at: string
+  updated_at: string
+}
