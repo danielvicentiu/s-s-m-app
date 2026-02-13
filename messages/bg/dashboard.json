@@ -1,0 +1,92 @@
+{
+  "allOrganizations": "Всички организации",
+  "employees": "служители",
+  "toggleRiskITM": "Риск ИТ",
+  "toggleRiskEuro": "Риск €",
+  "riskControl": "Риск контрол ИТ",
+  "dataCompleteness": "Пълнота на данните",
+  "riskLevels": {
+    "low": "Нисък",
+    "medium": "СРЕДЕН",
+    "high": "ВИСОК",
+    "critical": "КРИТИЧЕН"
+  },
+  "tabs": {
+    "medical": "Трудова медицина",
+    "equipment": "ПБ Оборудване"
+  },
+  "counters": {
+    "expired": "Изтекли",
+    "expiring": "Изтичат <30 дни",
+    "valid": "Валидни"
+  },
+  "medical": {
+    "title": "Трудова медицина",
+    "addRecord": "+ Добави досие",
+    "noRecords": "Няма медицински досиета.",
+    "columns": {
+      "employee": "Служител",
+      "position": "Длъжност",
+      "type": "Тип",
+      "examDate": "Дата на преглед",
+      "expiryDate": "Изтича",
+      "status": "Статус"
+    },
+    "examTypes": {
+      "periodic": "Периодичен",
+      "angajare": "При назначаване",
+      "reluare": "При възстановяване",
+      "la_cerere": "По искане"
+    }
+  },
+  "equipment": {
+    "title": "ПБ Оборудване",
+    "addRecord": "+ Добави оборудване",
+    "noRecords": "Няма оборудване.",
+    "columns": {
+      "equipment": "Оборудване",
+      "type": "Тип",
+      "location": "Локация",
+      "lastCheck": "Проверено",
+      "expiryDate": "Изтича",
+      "status": "Статус"
+    },
+    "types": {
+      "stingator": "Пожарогасител",
+      "trusa_prim_ajutor": "Аптечка за първа помощ",
+      "hidrant": "Хидрант",
+      "detector_fum": "Детектор за дим",
+      "iluminat_urgenta": "Аварийно осветление"
+    }
+  },
+  "status": {
+    "expired": "Изтекъл {days} дни",
+    "expiring": "Изтича след {days} дни",
+    "valid": "Валиден {days} дни"
+  },
+  "notifications": {
+    "title": "Последни известия",
+    "recent": "{count} последни",
+    "noNotifications": "Няма изпратени известия все още.",
+    "expiredAlert": "ИЗТЕКЛИ!",
+    "expired": "изтекли",
+    "sent": "Изпратено",
+    "to": "До"
+  },
+  "features": {
+    "pdfTitle": "PDF Съответствие",
+    "pdfSubtitle": "Автоматично генериране на справка",
+    "pdfLocked": "Достъпно при пълнота на данните > 80%",
+    "alertsTitle": "Автоматични известия",
+    "alertsSubtitle": "Имейл, SMS, WhatsApp",
+    "alertsActive": "Активно — Ежедневен имейл в 08:00 чрез Resend",
+    "trainingsTitle": "Обучения ЗБУТ и ПБ",
+    "trainingsSubtitle": "Интерактивни модули + тест",
+    "trainingsActive": "9 активни модула — Кликни за достъп"
+  },
+  "actions": {
+    "contactConsultant": "Свържи се с консултант",
+    "reloadData": "Презареди данните",
+    "aboutPlatform": "За платформата"
+  }
+}
