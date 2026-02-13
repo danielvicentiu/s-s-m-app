@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { UserPlus, FileText } from 'lucide-react'
 import LanguageSelector from '@/components/LanguageSelector'
 import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
+import { AnnouncementBanner } from '@/components/AnnouncementBanner'  // 🆕 Announcements
 
 interface OrgOption {
   id: string
@@ -289,6 +290,11 @@ export default function DashboardClient({
           </div>
         </div>
       </header>
+
+      {/* ============ ANNOUNCEMENTS BANNER ============ */}
+      <div className="max-w-6xl mx-auto px-8 pt-6">
+        <AnnouncementBanner userId={user.id} />
+      </div>
 
       <main className="max-w-6xl mx-auto px-8 py-6 space-y-5">
 

@@ -245,3 +245,23 @@ export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
   'DE': 'EUR',
   'PL': 'PLN'
 }
+
+// ── ANNOUNCEMENTS: Banner anunțuri dashboard ──
+
+export type AnnouncementType = 'info' | 'warning' | 'critical'
+export type AnnouncementTargetType = 'all' | 'plan' | 'organization'
+
+export interface Announcement {
+  id: string
+  title: string
+  message: string
+  type: AnnouncementType
+  target_type: AnnouncementTargetType
+  target_id: string | null
+  start_date: string
+  end_date: string
+  is_active: boolean
+  created_by: string | null
+  created_at: string
+  updated_at: string
+}
