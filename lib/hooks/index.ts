@@ -1,2 +1,6 @@
 export { useOrganization } from './useOrganization'
 export { useOrganizationContext } from '@/lib/contexts/OrganizationContext'
+export { usePermissions } from './usePermissions'
+export type { UsePermissionsReturn } from './usePermissions'
+export { useEmployees } from './useEmployees'
+export type { UseEmployeesReturn, UseEmployeesOptions } from './useEmployees'
