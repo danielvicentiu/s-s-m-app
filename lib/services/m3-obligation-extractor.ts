@@ -20,68 +20,15 @@
  * const obligations = await extractObligations(parsed, 'L 319/2006')
  */
 
-import type { CountryCode } from '@/lib/types'
+import type { CountryCode, Obligation, ObligationFrequency } from '@/lib/types'
+import type { LegislationParsed, LegislationArticle } from './m2-legislation-parser'
 
 // ══════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════
 
-export interface Article {
-  id: string                          // "ART_1", "ART_2", etc.
-  number: string                      // "1", "2", "12"
-  content: string                     // Full article text
-  hasObligations: boolean             // Whether article contains obligations
-}
-
-export interface LegislationParsed {
-  articles: Article[]
-  metadata: {
-    country: CountryCode
-    language: string
-    parsedAt: string
-  }
-}
-
-export interface Obligation {
-  id: string                        // "OBL_1", "OBL_2", etc.
-  sourceArticleId: string           // "ART_5", "ART_12"
-  sourceArticleNumber: string       // "5", "12"
-  sourceLegalAct: string            // "L 319/2006", "HG 1425/2006"
-
-  // Conținut obligație
-  obligationText: string            // Text complet obligație
-  who: string[]                     // ["angajator", "angajat", "ITM"]
-  deadline: string | null           // "30 zile de la angajare", "anual", "la cerere"
-  frequency: ObligationFrequency | null  // 'annual', 'monthly', 'on_demand', etc.
-
-  // Sancțiuni
-  penalty: string | null            // "Amendă 5000-10000 RON"
-  penaltyMin: number | null         // 5000
-  penaltyMax: number | null         // 10000
-  penaltyCurrency: string | null    // "RON", "EUR"
-
-  // Dovezi
-  evidenceRequired: string[]        // ["Fișa medicală", "Registrul de instruire"]
-
-  // Metadata
-  confidence: number                // 0.0 - 1.0 (încredere Claude în extracție)
-  language: string                  // 'ro', 'bg', 'en'
-  extractedAt: string               // ISO timestamp
-}
-
-export type ObligationFrequency =
-  | 'annual'
-  | 'biannual'
-  | 'quarterly'
-  | 'monthly'
-  | 'weekly'
-  | 'daily'
-  | 'on_demand'
-  | 'once'
-  | 'at_hire'
-  | 'at_termination'
-  | 'continuous'
-  | 'unknown'
+// Extended frequencies for internal processing (mapped to lib/types.ts ObligationFrequency)
+export type ExtendedFrequency = ObligationFrequency | 'weekly' | 'daily' | 'at_hire' | 'at_termination' | 'continuous' | 'unknown'
 
 // ══════════════════════════════════════════════════════════════
 // CONFIGURATION
@@ -98,10 +45,11 @@ const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'
 export async function extractObligations(
   parsedLegislation: LegislationParsed,
   legalActName: string,
+  countryCode: CountryCode = 'RO',
   apiKey?: string
-): Promise<Obligation[]> {
+): Promise<Partial<Obligation>[]> {
   const startTime = Date.now()
-  const obligations: Obligation[] = []
+  const obligations: Partial<Obligation>[] = []
 
   // Validare API key
   const key = apiKey || process.env.ANTHROPIC_API_KEY
@@ -133,7 +81,7 @@ export async function extractObligations(
       const batchObligations = await extractObligationsFromBatch(
         batch,
         legalActName,
-        parsedLegislation.metadata.language,
+        countryCode,
         key
       )
 
@@ -169,11 +117,12 @@ function createBatches<T>(items: T[], batchSize: number): T[][] {
 }
 
 async function extractObligationsFromBatch(
-  articles: Article[],
+  articles: LegislationArticle[],
   legalActName: string,
-  language: string,
+  countryCode: CountryCode,
   apiKey: string
-): Promise<Obligation[]> {
+): Promise<Partial<Obligation>[]> {
+  const language = countryCode === 'RO' ? 'ro' : countryCode === 'BG' ? 'bg' : countryCode === 'HU' ? 'hu' : countryCode === 'DE' ? 'de' : 'en'
   const prompt = buildPrompt(articles, legalActName, language)
 
   let lastError: Error | null = null
@@ -182,7 +131,7 @@ async function extractObligationsFromBatch(
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const response = await callClaudeAPI(prompt, apiKey)
-      const obligations = parseClaudeResponse(response, articles, legalActName, language)
+      const obligations = parseClaudeResponse(response, articles, legalActName, countryCode)
       return obligations
     } catch (error) {
       lastError = error as Error
@@ -201,10 +150,10 @@ async function extractObligationsFromBatch(
 // PROMPT ENGINEERING
 // ══════════════════════════════════════════════════════════════
 
-function buildPrompt(articles: Article[], legalActName: string, language: string): string {
+function buildPrompt(articles: LegislationArticle[], legalActName: string, language: string): string {
   const articlesText = articles.map(article => {
     return `
-ARTICOLUL ${article.number}
+ARTICOLUL ${article.articleNumber}
 ${article.content}
 ---`.trim()
   }).join('\n\n')
@@ -326,10 +275,10 @@ interface ClaudeObligationResponse {
 
 function parseClaudeResponse(
   responseText: string,
-  articles: Article[],
+  articles: LegislationArticle[],
   legalActName: string,
-  language: string
-): Obligation[] {
+  countryCode: CountryCode
+): Partial<Obligation>[] {
   // Extract JSON from response (Claude poate adăuga text înainte/după)
   const jsonMatch = responseText.match(/\[[\s\S]*\]/);
   if (!jsonMatch) {
@@ -351,8 +300,7 @@ function parseClaudeResponse(
   }
 
   // Convert to Obligation objects
-  const obligations: Obligation[] = []
-  let obligationCounter = 0
+  const obligations: Partial<Obligation>[] = []
 
   for (const item of parsed) {
     try {
@@ -363,13 +311,11 @@ function parseClaudeResponse(
       }
 
       // Find source article
-      const sourceArticle = articles.find(a => a.number === item.sourceArticleNumber)
+      const sourceArticle = articles.find(a => a.articleNumber === item.sourceArticleNumber)
       if (!sourceArticle) {
         console.warn(`[M3] Article ${item.sourceArticleNumber} not found in batch`)
         continue
       }
-
-      obligationCounter++
 
       // Parse penalty amounts (ex: "Amendă 5.000-10.000 RON")
       let penaltyMin: number | null = null
@@ -386,27 +332,35 @@ function parseClaudeResponse(
       // Normalize frequency
       const frequency = normalizeFrequency(item.frequency)
 
-      const obligation: Obligation = {
-        id: `OBL_${obligationCounter}`,
-        sourceArticleId: sourceArticle.id,
-        sourceArticleNumber: sourceArticle.number,
-        sourceLegalAct: legalActName,
-        obligationText: item.obligationText.trim(),
+      const obligation: Partial<Obligation> = {
+        source_legal_act: legalActName,
+        source_article_number: sourceArticle.articleNumber,
+        country_code: countryCode,
+        obligation_text: item.obligationText.trim(),
         who: Array.isArray(item.who) ? item.who : [item.who || 'unknown'],
         deadline: item.deadline || null,
         frequency,
         penalty: item.penalty || null,
-        penaltyMin,
-        penaltyMax,
-        penaltyCurrency,
-        evidenceRequired: Array.isArray(item.evidenceRequired) ? item.evidenceRequired : [],
+        penalty_min: penaltyMin,
+        penalty_max: penaltyMax,
+        penalty_currency: penaltyCurrency,
+        evidence_required: Array.isArray(item.evidenceRequired) ? item.evidenceRequired : [],
         confidence: typeof item.confidence === 'number' ? item.confidence : 0.5,
-        language,
-        extractedAt: new Date().toISOString()
+        validation_score: 0,
+        status: 'draft',
+        published: false,
+        caen_codes: [],
+        industry_tags: [],
+        extracted_at: new Date().toISOString(),
+        language: countryCode === 'RO' ? 'ro' : countryCode === 'BG' ? 'bg' : countryCode === 'HU' ? 'hu' : countryCode === 'DE' ? 'de' : 'en',
+        metadata: {
+          extraction_method: 'claude_api',
+          model: CLAUDE_MODEL
+        }
       }
 
       // Validare minimă confidence
-      if (obligation.confidence >= 0.5) {
+      if ((obligation.confidence || 0) >= 0.5) {
         obligations.push(obligation)
       } else {
         console.warn(`[M3] Skipping low-confidence obligation (${obligation.confidence})`)
@@ -454,10 +408,10 @@ function parsePenalty(penaltyText: string): {
   }
 }
 
-function normalizeFrequency(freq: string): ObligationFrequency {
+function normalizeFrequency(freq: string): ObligationFrequency | null {
   const normalized = freq.toLowerCase().trim()
 
-  const mapping: Record<string, ObligationFrequency> = {
+  const mapping: Record<string, ObligationFrequency | 'once'> = {
     'annual': 'annual',
     'anual': 'annual',
     'yearly': 'annual',
@@ -467,23 +421,22 @@ function normalizeFrequency(freq: string): ObligationFrequency {
     'trimestrial': 'quarterly',
     'monthly': 'monthly',
     'lunar': 'monthly',
-    'weekly': 'weekly',
-    'săptămânal': 'weekly',
-    'daily': 'daily',
-    'zilnic': 'daily',
     'on_demand': 'on_demand',
     'la_cerere': 'on_demand',
     'once': 'once',
-    'o_dată': 'once',
-    'at_hire': 'at_hire',
-    'la_angajare': 'at_hire',
-    'at_termination': 'at_termination',
-    'la_încetare': 'at_termination',
-    'continuous': 'continuous',
-    'permanent': 'continuous'
+    'o_dată': 'once'
   }
 
-  return mapping[normalized] || 'unknown'
+  const result = mapping[normalized]
+
+  // Map extended frequencies to standard ones
+  if (normalized === 'weekly' || normalized === 'săptămânal') return 'monthly'
+  if (normalized === 'daily' || normalized === 'zilnic') return 'monthly'
+  if (normalized === 'at_hire' || normalized === 'la_angajare') return 'once'
+  if (normalized === 'at_termination' || normalized === 'la_încetare') return 'once'
+  if (normalized === 'continuous' || normalized === 'permanent') return 'annual'
+
+  return result || null
 }
 
 function sleep(ms: number): Promise<void> {
@@ -494,14 +447,16 @@ function sleep(ms: number): Promise<void> {
 // STATISTICS & HELPERS
 // ══════════════════════════════════════════════════════════════
 
-export function getObligationStats(obligations: Obligation[]) {
+export function getObligationStats(obligations: Partial<Obligation>[]) {
   return {
     total: obligations.length,
     byFrequency: groupBy(obligations, o => o.frequency || 'unknown'),
-    byWho: groupBy(obligations, o => o.who.join(', ')),
+    byWho: groupBy(obligations, o => (o.who || []).join(', ')),
     withPenalty: obligations.filter(o => o.penalty).length,
-    avgConfidence: obligations.reduce((sum, o) => sum + o.confidence, 0) / obligations.length,
-    byArticle: groupBy(obligations, o => o.sourceArticleNumber)
+    avgConfidence: obligations.length > 0
+      ? obligations.reduce((sum, o) => sum + (o.confidence || 0), 0) / obligations.length
+      : 0,
+    byArticle: groupBy(obligations, o => o.source_article_number || 'unknown')
   }
 }
 
