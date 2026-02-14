@@ -1,0 +1,668 @@
+{
+  "codes": [
+    {
+      "id": "cor-931101",
+      "cor": "931101",
+      "name": "Muncitor necalificat în construcții",
+      "group": "Lucrători necalificați în construcții, industrie și transport",
+      "riskLevel": "ridicat",
+      "synonyms": ["helper", "muncitor santier", "zilier constructii"]
+    },
+    {
+      "id": "cor-711201",
+      "cor": "711201",
+      "name": "Zidar",
+      "group": "Lucrători în construcții și asimilați",
+      "riskLevel": "ridicat",
+      "synonyms": ["mason", "muncitor zidarie"]
+    },
+    {
+      "id": "cor-742101",
+      "cor": "742101",
+      "name": "Electrician",
+      "group": "Electricieni și electromecanici",
+      "riskLevel": "ridicat",
+      "synonyms": ["electrician constructor", "electrician industrial"]
+    },
+    {
+      "id": "cor-742201",
+      "cor": "742201",
+      "name": "Instalator",
+      "group": "Instalatori și montatori de conducte",
+      "riskLevel": "ridicat",
+      "synonyms": ["instalator sanitare", "instalator termice"]
+    },
+    {
+      "id": "cor-721301",
+      "cor": "721301",
+      "name": "Sudor",
+      "group": "Sudori și flăcărari",
+      "riskLevel": "ridicat",
+      "synonyms": ["sudor electric", "sudor autogen", "flacarar"]
+    },
+    {
+      "id": "cor-834102",
+      "cor": "834102",
+      "name": "Macaragiu",
+      "group": "Operatori macarale și utilaje de ridicat",
+      "riskLevel": "ridicat",
+      "synonyms": ["operator macara", "macarangiu"]
+    },
+    {
+      "id": "cor-721101",
+      "cor": "721101",
+      "name": "Fierar betonist",
+      "group": "Lucrători în construcții de structuri metalice",
+      "riskLevel": "ridicat",
+      "synonyms": ["montator structuri metalice", "legator fier beton"]
+    },
+    {
+      "id": "cor-713202",
+      "cor": "713202",
+      "name": "Zugrav",
+      "group": "Vopsitori și lucrători asimilați",
+      "riskLevel": "mediu",
+      "synonyms": ["zugrav finisor", "vopsitor cladiri"]
+    },
+    {
+      "id": "cor-712101",
+      "cor": "712101",
+      "name": "Dulgher",
+      "group": "Dulgheri și tâmplari (construcții)",
+      "riskLevel": "mediu",
+      "synonyms": ["dulgher cofraje", "tamplar constructii"]
+    },
+    {
+      "id": "cor-752101",
+      "cor": "752101",
+      "name": "Tâmplar",
+      "group": "Tâmplari și dulgheri (mobilă)",
+      "riskLevel": "mediu",
+      "synonyms": ["tamplar mobila", "tamplar lemn"]
+    },
+    {
+      "id": "cor-713301",
+      "cor": "713301",
+      "name": "Faianțar",
+      "group": "Lucrători în finisaje interioare",
+      "riskLevel": "mediu",
+      "synonyms": ["faiansagiu", "placagiu", "gresie faianta"]
+    },
+    {
+      "id": "cor-713104",
+      "cor": "713104",
+      "name": "Parchetar",
+      "group": "Lucrători în finisaje pardoseli",
+      "riskLevel": "mediu",
+      "synonyms": ["montator parchet", "montator lambriuri"]
+    },
+    {
+      "id": "cor-312201",
+      "cor": "312201",
+      "name": "Șef șantier",
+      "group": "Tehnicieni în construcții",
+      "riskLevel": "mediu",
+      "synonyms": ["sef lucrari", "conductor santier"]
+    },
+    {
+      "id": "cor-214201",
+      "cor": "214201",
+      "name": "Inginer constructor",
+      "group": "Ingineri constructori și asimilați",
+      "riskLevel": "scazut",
+      "synonyms": ["inginer constructii", "inginer civil"]
+    },
+    {
+      "id": "cor-216101",
+      "cor": "216101",
+      "name": "Arhitect",
+      "group": "Arhitecți, urbaniști și ingineri proiectanți de trafic",
+      "riskLevel": "scazut",
+      "synonyms": ["arhitect proiectant", "arhitect sef proiect"]
+    },
+    {
+      "id": "cor-834101",
+      "cor": "834101",
+      "name": "Operator excavator",
+      "group": "Operatori utilaje de construcții",
+      "riskLevel": "ridicat",
+      "synonyms": ["masinisti excavator", "excavatorist"]
+    },
+    {
+      "id": "cor-512001",
+      "cor": "512001",
+      "name": "Bucătar",
+      "group": "Bucătari",
+      "riskLevel": "mediu",
+      "synonyms": ["chef", "cook", "bucatar restaurant"]
+    },
+    {
+      "id": "cor-941201",
+      "cor": "941201",
+      "name": "Ajutor bucătar",
+      "group": "Lucrători necalificați în servicii de alimentație",
+      "riskLevel": "mediu",
+      "synonyms": ["helper bucatarie", "prep cook"]
+    },
+    {
+      "id": "cor-513101",
+      "cor": "513101",
+      "name": "Ospătar",
+      "group": "Ospătari și barmen",
+      "riskLevel": "scazut",
+      "synonyms": ["chelner", "waiter", "server"]
+    },
+    {
+      "id": "cor-513201",
+      "cor": "513201",
+      "name": "Barman",
+      "group": "Barmen și barmani",
+      "riskLevel": "scazut",
+      "synonyms": ["barista", "bartender"]
+    },
+    {
+      "id": "cor-523101",
+      "cor": "523101",
+      "name": "Casier",
+      "group": "Casieri",
+      "riskLevel": "scazut",
+      "synonyms": ["operator casa", "cashier"]
+    },
+    {
+      "id": "cor-141204",
+      "cor": "141204",
+      "name": "Manager restaurant",
+      "group": "Manageri în hoteluri, restaurante și comerț",
+      "riskLevel": "scazut",
+      "synonyms": ["manager horeca", "director restaurant"]
+    },
+    {
+      "id": "cor-512002",
+      "cor": "512002",
+      "name": "Șef bucătar",
+      "group": "Bucătari șefi",
+      "riskLevel": "mediu",
+      "synonyms": ["head chef", "executive chef", "chef de cuisine"]
+    },
+    {
+      "id": "cor-513402",
+      "cor": "513402",
+      "name": "Cameristă",
+      "group": "Lucrători în servicii de întreținere și curățenie în hoteluri",
+      "riskLevel": "scazut",
+      "synonyms": ["menajer", "housekeeping"]
+    },
+    {
+      "id": "cor-512004",
+      "cor": "512004",
+      "name": "Patiser",
+      "group": "Cofetari și patiseri",
+      "riskLevel": "mediu",
+      "synonyms": ["cofetar", "pastry chef", "patisier"]
+    },
+    {
+      "id": "cor-512003",
+      "cor": "512003",
+      "name": "Brutar",
+      "group": "Brutari",
+      "riskLevel": "mediu",
+      "synonyms": ["pecar", "baker"]
+    },
+    {
+      "id": "cor-751302",
+      "cor": "751302",
+      "name": "Confecționer produse zaharoase",
+      "group": "Lucrători în prelucrarea alimentelor",
+      "riskLevel": "mediu",
+      "synonyms": ["lucrator cofetarie", "preparator produse zaharoase"]
+    },
+    {
+      "id": "cor-723101",
+      "cor": "723101",
+      "name": "Mecanic auto",
+      "group": "Mecanici de autovehicule",
+      "riskLevel": "mediu",
+      "synonyms": ["auto mecanic", "mecanic service auto"]
+    },
+    {
+      "id": "cor-723202",
+      "cor": "723202",
+      "name": "Electrician auto",
+      "group": "Electricieni auto",
+      "riskLevel": "mediu",
+      "synonyms": ["electromecanic auto", "electrician autovehicule"]
+    },
+    {
+      "id": "cor-723301",
+      "cor": "723301",
+      "name": "Tinichigiu auto",
+      "group": "Tinichigii auto",
+      "riskLevel": "mediu",
+      "synonyms": ["tinichigiu carosier", "tinichigiu vopsitor"]
+    },
+    {
+      "id": "cor-713205",
+      "cor": "713205",
+      "name": "Vopsitor auto",
+      "group": "Vopsitori auto",
+      "riskLevel": "mediu",
+      "synonyms": ["vopsitor masini", "lacuitor auto"]
+    },
+    {
+      "id": "cor-723501",
+      "cor": "723501",
+      "name": "Vulcanizator",
+      "group": "Lucrători în întreținere anvelope",
+      "riskLevel": "mediu",
+      "synonyms": ["vulcanizator anvelope", "montator anvelope"]
+    },
+    {
+      "id": "cor-432101",
+      "cor": "432101",
+      "name": "Recepționer",
+      "group": "Recepționeri",
+      "riskLevel": "scazut",
+      "synonyms": ["receptionist", "receptioner hotel", "recceptioner cabinet"]
+    },
+    {
+      "id": "cor-132302",
+      "cor": "132302",
+      "name": "Șef service",
+      "group": "Șefi service și întreținere tehnică",
+      "riskLevel": "scazut",
+      "synonyms": ["manager service", "coordonator service"]
+    },
+    {
+      "id": "cor-522101",
+      "cor": "522101",
+      "name": "Vânzător",
+      "group": "Vânzători",
+      "riskLevel": "scazut",
+      "synonyms": ["agent vanzari", "sales associate", "comerciant"]
+    },
+    {
+      "id": "cor-142001",
+      "cor": "142001",
+      "name": "Manager magazin",
+      "group": "Manageri retail",
+      "riskLevel": "scazut",
+      "synonyms": ["director magazin", "store manager"]
+    },
+    {
+      "id": "cor-333305",
+      "cor": "333305",
+      "name": "Merchandiser",
+      "group": "Agenți de vânzări și comercializare",
+      "riskLevel": "scazut",
+      "synonyms": ["field merchandiser", "vizualist"]
+    },
+    {
+      "id": "cor-332201",
+      "cor": "332201",
+      "name": "Agent comercial",
+      "group": "Agenți comerciali",
+      "riskLevel": "scazut",
+      "synonyms": ["agent vanzari", "sales representative", "comercial"]
+    },
+    {
+      "id": "cor-432202",
+      "cor": "432202",
+      "name": "Gestionar",
+      "group": "Gestionari de stocuri și magazie",
+      "riskLevel": "scazut",
+      "synonyms": ["gestionar depozit", "magaziner"]
+    },
+    {
+      "id": "cor-514101",
+      "cor": "514101",
+      "name": "Coafor",
+      "group": "Coafori",
+      "riskLevel": "scazut",
+      "synonyms": ["frizer", "hairstylist", "stilist par"]
+    },
+    {
+      "id": "cor-514102",
+      "cor": "514102",
+      "name": "Cosmetician",
+      "group": "Cosmeticieni și esteticieni",
+      "riskLevel": "scazut",
+      "synonyms": ["estetician", "cosmetolog", "beautician"]
+    },
+    {
+      "id": "cor-514103",
+      "cor": "514103",
+      "name": "Manichiurist",
+      "group": "Manichiuristi și pedichiuristi",
+      "riskLevel": "scazut",
+      "synonyms": ["tehnician unghii", "nail technician", "nail artist"]
+    },
+    {
+      "id": "cor-325901",
+      "cor": "325901",
+      "name": "Maseur",
+      "group": "Masori și terapeuți în recuperare fizică",
+      "riskLevel": "scazut",
+      "synonyms": ["maseur terapeutic", "massage therapist"]
+    },
+    {
+      "id": "cor-514104",
+      "cor": "514104",
+      "name": "Stilist",
+      "group": "Consilieri în înfățișare și imagine",
+      "riskLevel": "scazut",
+      "synonyms": ["consultant imagine", "fashion stylist"]
+    },
+    {
+      "id": "cor-251201",
+      "cor": "251201",
+      "name": "Programator",
+      "group": "Dezvoltatori și analiști de software și multimedia",
+      "riskLevel": "scazut",
+      "synonyms": ["developer", "software engineer", "software developer"]
+    },
+    {
+      "id": "cor-251202",
+      "cor": "251202",
+      "name": "Web developer",
+      "group": "Dezvoltatori web și multimedia",
+      "riskLevel": "scazut",
+      "synonyms": ["web designer", "frontend developer", "backend developer"]
+    },
+    {
+      "id": "cor-251101",
+      "cor": "251101",
+      "name": "Analist",
+      "group": "Analiști de sistem",
+      "riskLevel": "scazut",
+      "synonyms": ["systems analyst", "business analyst", "it analyst"]
+    },
+    {
+      "id": "cor-252101",
+      "cor": "252101",
+      "name": "Administrator rețea",
+      "group": "Administratori de rețele și sisteme",
+      "riskLevel": "scazut",
+      "synonyms": ["sys admin", "network administrator", "system administrator"]
+    },
+    {
+      "id": "cor-251203",
+      "cor": "251203",
+      "name": "Tester software",
+      "group": "Testeri și analiști de calitate software",
+      "riskLevel": "scazut",
+      "synonyms": ["QA", "quality assurance", "qa tester"]
+    },
+    {
+      "id": "cor-121301",
+      "cor": "121301",
+      "name": "Project manager IT",
+      "group": "Manageri în domeniul tehnologiei informației și comunicațiilor",
+      "riskLevel": "scazut",
+      "synonyms": ["it project manager", "pm", "project coordinator"]
+    },
+    {
+      "id": "cor-241101",
+      "cor": "241101",
+      "name": "Contabil",
+      "group": "Contabili",
+      "riskLevel": "scazut",
+      "synonyms": ["accountant", "contabil sef"]
+    },
+    {
+      "id": "cor-241102",
+      "cor": "241102",
+      "name": "Expert contabil",
+      "group": "Experți contabili",
+      "riskLevel": "scazut",
+      "synonyms": ["cpa", "chartered accountant"]
+    },
+    {
+      "id": "cor-242201",
+      "cor": "242201",
+      "name": "Consultant",
+      "group": "Consilieri în administrarea afacerilor și managementul organizational",
+      "riskLevel": "scazut",
+      "synonyms": ["business consultant", "management consultant"]
+    },
+    {
+      "id": "cor-261101",
+      "cor": "261101",
+      "name": "Avocat",
+      "group": "Avocați",
+      "riskLevel": "scazut",
+      "synonyms": ["lawyer", "attorney", "jurist"]
+    },
+    {
+      "id": "cor-261102",
+      "cor": "261102",
+      "name": "Notar",
+      "group": "Notari publici",
+      "riskLevel": "scazut",
+      "synonyms": ["notar public"]
+    },
+    {
+      "id": "cor-911201",
+      "cor": "911201",
+      "name": "Agent curățenie",
+      "group": "Lucrători în servicii de curățenie",
+      "riskLevel": "mediu",
+      "synonyms": ["menajer", "curatenie", "cleaning staff"]
+    },
+    {
+      "id": "cor-612001",
+      "cor": "612001",
+      "name": "Grădinar",
+      "group": "Grădinari și pepinieristi",
+      "riskLevel": "mediu",
+      "synonyms": ["gradinar peisagist", "horticultor", "gardener"]
+    },
+    {
+      "id": "cor-531101",
+      "cor": "531101",
+      "name": "Îngrijitor copii",
+      "group": "Îngrijitori de copii",
+      "riskLevel": "scazut",
+      "synonyms": ["bona", "babysitter", "childcare provider"]
+    },
+    {
+      "id": "cor-833101",
+      "cor": "833101",
+      "name": "Șofer",
+      "group": "Conducători de vehicule ușoare",
+      "riskLevel": "mediu",
+      "synonyms": ["driver", "conducator auto", "sofer autoturism"]
+    },
+    {
+      "id": "cor-833102",
+      "cor": "833102",
+      "name": "Șofer TIR",
+      "group": "Conducători de vehicule grele",
+      "riskLevel": "ridicat",
+      "synonyms": ["truck driver", "sofer camion", "sofer transport marfa"]
+    },
+    {
+      "id": "cor-833201",
+      "cor": "833201",
+      "name": "Taximetrist",
+      "group": "Conducători de autovehicule în transportul public",
+      "riskLevel": "mediu",
+      "synonyms": ["taxi driver", "uber driver", "bolt driver"]
+    },
+    {
+      "id": "cor-962101",
+      "cor": "962101",
+      "name": "Curier",
+      "group": "Curieri și livratori",
+      "riskLevel": "mediu",
+      "synonyms": ["delivery driver", "courier", "sofer livrari"]
+    },
+    {
+      "id": "cor-432301",
+      "cor": "432301",
+      "name": "Dispatcher",
+      "group": "Dispatcheri transport",
+      "riskLevel": "scazut",
+      "synonyms": ["dispecer", "coordonator transport"]
+    },
+    {
+      "id": "cor-221101",
+      "cor": "221101",
+      "name": "Medic",
+      "group": "Medici generaliști",
+      "riskLevel": "mediu",
+      "synonyms": ["doctor", "medic specialist", "medic primar"]
+    },
+    {
+      "id": "cor-222101",
+      "cor": "222101",
+      "name": "Asistent medical",
+      "group": "Asistenți medicali",
+      "riskLevel": "mediu",
+      "synonyms": ["nurse", "infirmiera", "asistent medical generalist"]
+    },
+    {
+      "id": "cor-226101",
+      "cor": "226101",
+      "name": "Medic dentist",
+      "group": "Medici dentiști",
+      "riskLevel": "mediu",
+      "synonyms": ["dentist", "stomatolog"]
+    },
+    {
+      "id": "cor-226102",
+      "cor": "226102",
+      "name": "Igienist dentar",
+      "group": "Igienisti dentari",
+      "riskLevel": "mediu",
+      "synonyms": ["dental hygienist", "asistent stomatologic"]
+    },
+    {
+      "id": "cor-227101",
+      "cor": "227101",
+      "name": "Farmacist",
+      "group": "Farmaciști",
+      "riskLevel": "scazut",
+      "synonyms": ["pharmacist", "chimist farmacist"]
+    },
+    {
+      "id": "cor-422101",
+      "cor": "422101",
+      "name": "Recepționer cabinet medical",
+      "group": "Recepționeri în unități medicale",
+      "riskLevel": "scazut",
+      "synonyms": ["receptionist cabinet", "secretara medicala"]
+    },
+    {
+      "id": "cor-233101",
+      "cor": "233101",
+      "name": "Profesor",
+      "group": "Profesori în învățământul secundar și primar",
+      "riskLevel": "scazut",
+      "synonyms": ["invatator", "educator", "teacher"]
+    },
+    {
+      "id": "cor-234101",
+      "cor": "234101",
+      "name": "Educator",
+      "group": "Educatori și institutori",
+      "riskLevel": "scazut",
+      "synonyms": ["invatator prescolar", "educator prescolar"]
+    },
+    {
+      "id": "cor-342201",
+      "cor": "342201",
+      "name": "Instructor fitness",
+      "group": "Instructori în fitness și activități sportive",
+      "riskLevel": "mediu",
+      "synonyms": ["personal trainer", "antrenor fitness"]
+    },
+    {
+      "id": "cor-342202",
+      "cor": "342202",
+      "name": "Antrenor sportiv",
+      "group": "Antrenori sportivi",
+      "riskLevel": "mediu",
+      "synonyms": ["coach", "antrenor", "preparator fizic"]
+    },
+    {
+      "id": "cor-226301",
+      "cor": "226301",
+      "name": "Kinetoterapeut",
+      "group": "Fizioterapeuți și kinetoterapeuti",
+      "riskLevel": "mediu",
+      "synonyms": ["fizioterapeut", "physiotherapist"]
+    },
+    {
+      "id": "cor-753201",
+      "cor": "753201",
+      "name": "Croitor",
+      "group": "Croitori",
+      "riskLevel": "scazut",
+      "synonyms": ["tailor", "croitor haine"]
+    },
+    {
+      "id": "cor-753202",
+      "cor": "753202",
+      "name": "Cusător",
+      "group": "Cusători și brodatori",
+      "riskLevel": "scazut",
+      "synonyms": ["seamstress", "cusator confectii"]
+    },
+    {
+      "id": "cor-753299",
+      "cor": "753299",
+      "name": "Muncitor confecții",
+      "group": "Lucrători în confecții textile",
+      "riskLevel": "scazut",
+      "synonyms": ["lucrator textil", "muncitor confectii textile"]
+    },
+    {
+      "id": "cor-216601",
+      "cor": "216601",
+      "name": "Designer grafic",
+      "group": "Designeri grafici și multimedia",
+      "riskLevel": "scazut",
+      "synonyms": ["graphic designer", "designer", "dtp specialist"]
+    },
+    {
+      "id": "cor-343101",
+      "cor": "343101",
+      "name": "Fotograf",
+      "group": "Fotografi",
+      "riskLevel": "scazut",
+      "synonyms": ["photographer", "fotograf profesionist"]
+    },
+    {
+      "id": "cor-264301",
+      "cor": "264301",
+      "name": "Copywriter",
+      "group": "Autori, jurnaliști și redactori",
+      "riskLevel": "scazut",
+      "synonyms": ["content writer", "redactor", "writer"]
+    },
+    {
+      "id": "cor-243501",
+      "cor": "243501",
+      "name": "Social media manager",
+      "group": "Specialiști în relații publice și comunicare",
+      "riskLevel": "scazut",
+      "synonyms": ["community manager", "social media specialist"]
+    },
+    {
+      "id": "cor-263401",
+      "cor": "263401",
+      "name": "Asistent social",
+      "group": "Asistenți sociali",
+      "riskLevel": "scazut",
+      "synonyms": ["social worker", "lucrător social"]
+    },
+    {
+      "id": "cor-532101",
+      "cor": "532101",
+      "name": "Îngrijitor persoane vârstnice",
+      "group": "Îngrijitori persoane în vârstă",
+      "riskLevel": "mediu",
+      "synonyms": ["badanta", "caregiver", "ingrijitor batrani"]
+    }
+  ]
+}
