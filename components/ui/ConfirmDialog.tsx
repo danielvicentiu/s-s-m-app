@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
-import { AlertTriangle, Loader2 } from 'lucide-react'
+import { useEffect, useCallback, useRef } from 'react'
+import { AlertTriangle, Info, AlertCircle, X } from 'lucide-react'
 
 interface ConfirmDialogProps {
   title: string
@@ -11,8 +11,7 @@ interface ConfirmDialogProps {
   isOpen: boolean
   onConfirm: () => void
   onCancel: () => void
-  isDestructive?: boolean
-  loading?: boolean
+  variant?: 'danger' | 'warning' | 'info'
 }
 
 export function ConfirmDialog({
@@ -23,60 +22,113 @@ export function ConfirmDialog({
   isOpen,
   onConfirm,
   onCancel,
-  isDestructive = false,
-  loading = false,
+  variant = 'info',
 }: ConfirmDialogProps) {
+  const confirmButtonRef = useRef<HTMLButtonElement>(null)
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !loading) onCancel()
+      if (e.key === 'Escape') onCancel()
     },
-    [onCancel, loading]
+    [onCancel]
   )
 
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown)
+      // Focus trap: focus confirm button when dialog opens
+      confirmButtonRef.current?.focus()
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden'
     }
-    return () => document.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'unset'
+    }
   }, [isOpen, handleKeyDown])
 
   if (!isOpen) return null
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={() => !loading && onCancel()} />
+  const variantConfig = {
+    danger: {
+      icon: AlertTriangle,
+      iconBg: 'bg-red-100',
+      iconColor: 'text-red-600',
+      confirmBg: 'bg-red-600 hover:bg-red-700 focus:ring-red-500',
+    },
+    warning: {
+      icon: AlertCircle,
+      iconBg: 'bg-yellow-100',
+      iconColor: 'text-yellow-600',
+      confirmBg: 'bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500',
+    },
+    info: {
+      icon: Info,
+      iconBg: 'bg-blue-100',
+      iconColor: 'text-blue-600',
+      confirmBg: 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500',
+    },
+  }
 
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
-        <div className="flex items-start gap-4">
-          {isDestructive && (
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-              <AlertTriangle className="h-5 w-5 text-red-600" />
-            </div>
-          )}
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-            <p className="text-sm text-gray-600">{message}</p>
-          </div>
+  const config = variantConfig[variant]
+  const Icon = config.icon
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dialog-title"
+    >
+      {/* Overlay */}
+      <div
+        className="absolute inset-0 bg-black/50"
+        onClick={onCancel}
+        aria-hidden="true"
+      />
+
+      {/* Dialog */}
+      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        {/* Close button */}
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label="Închide"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Icon */}
+        <div className={`mx-auto flex items-center justify-center w-12 h-12 rounded-full ${config.iconBg} mb-4`}>
+          <Icon className={`w-6 h-6 ${config.iconColor}`} />
         </div>
 
-        <div className="flex items-center justify-end gap-3 mt-6">
+        {/* Title */}
+        <h3
+          id="dialog-title"
+          className="text-lg font-semibold text-gray-900 text-center mb-2"
+        >
+          {title}
+        </h3>
+
+        {/* Message */}
+        <p className="text-sm text-gray-600 text-center mb-6">
+          {message}
+        </p>
+
+        {/* Action buttons */}
+        <div className="flex gap-3">
           <button
             onClick={onCancel}
-            disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50"
+            className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
           >
             {cancelLabel}
           </button>
           <button
+            ref={confirmButtonRef}
             onClick={onConfirm}
-            disabled={loading}
-            className={`px-4 py-2 text-sm font-medium text-white rounded-lg disabled:opacity-50 flex items-center gap-2 ${
-              isDestructive
-                ? 'bg-red-600 hover:bg-red-700'
-                : 'bg-blue-800 hover:bg-blue-900'
-            }`}
+            className={`flex-1 px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${config.confirmBg}`}
           >
-            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {confirmLabel}
           </button>
         </div>
