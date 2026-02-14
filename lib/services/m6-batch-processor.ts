@@ -16,16 +16,8 @@
  * })
  */
 
-// TODO: Re-enable when legislation-pipeline is implemented
-// import { runPipeline, type PipelineResult, type PipelineOptions } from './legislation-pipeline'
+import { runPipeline, type PipelineResult, type PipelineOptions } from './legislation-pipeline'
 import type { CountryCode } from '@/lib/types'
-
-// Temporary placeholder types and functions
-type PipelineResult = any
-type PipelineOptions = any
-const runPipeline = async (...args: any[]): Promise<any> => {
-  throw new Error('legislation-pipeline not yet implemented')
-}
 
 // ══════════════════════════════════════════════════════════════
 // TYPES
