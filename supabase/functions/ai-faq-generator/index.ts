@@ -2,8 +2,14 @@
 // Generates 20 personalized FAQ items for employers based on industry and country
 // Provides practical SSM/PSI questions with legal basis and simple language
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { corsHeaders } from '../_shared/cors.ts'
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import Anthropic from "npm:@anthropic-ai/sdk@0.32.1";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
 
 interface FAQItem {
   question: string
@@ -27,8 +33,8 @@ interface RequestBody {
   max_tokens?: number
 }
 
-const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
 const DEFAULT_MAX_TOKENS = 8192
+const CLAUDE_MODEL = 'claude-sonnet-4-5-20250929'
 
 // Multi-locale prompts
 const LOCALE_CONFIGS: Record<string, {
@@ -155,7 +161,7 @@ Return ONLY a valid JSON object with this EXACT structure:
 
 Return ONLY the JSON object, no explanations, no markdown code blocks.`
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -272,56 +278,64 @@ serve(async (req) => {
       .replace(/{legislation_framework}/g, localeConfig.legislation_framework)
       .replace(/{examples}/g, localeConfig.examples)
 
-    // Call Claude API
+    // Call Claude API using Anthropic SDK
     console.log('Calling Claude API for FAQ generation...')
     console.log(`Industry: ${industry}, Country: ${country}, Locale: ${locale}`)
 
-    const claudeResponse = await fetch(CLAUDE_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
+    const anthropic = new Anthropic({
+      apiKey: apiKey,
+    });
+
+    let claudeData: any;
+    let extractedText: string;
+
+    try {
+      const message = await anthropic.messages.create({
+        model: CLAUDE_MODEL,
         max_tokens: max_tokens,
+        temperature: 0.7,
         messages: [
           {
             role: 'user',
             content: fullPrompt,
           },
         ],
-      }),
-    })
+      });
 
-    if (!claudeResponse.ok) {
-      const errorText = await claudeResponse.text()
-      console.error('Claude API error:', errorText)
+      const content = message.content[0];
+      if (content.type !== 'text') {
+        throw new Error('Unexpected response type from Claude API');
+      }
+
+      extractedText = content.text;
+      claudeData = {
+        usage: message.usage,
+        model: message.model,
+      };
+
+    } catch (apiError) {
+      console.error('Claude API error:', apiError);
       return new Response(
         JSON.stringify({
           error: 'AI service error',
-          details: `Status ${claudeResponse.status}`,
+          details: apiError instanceof Error ? apiError.message : 'Unknown error',
         }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
-      )
+      );
     }
 
-    const claudeData = await claudeResponse.json()
-    const extractedText = claudeData.content?.[0]?.text
-
     if (!extractedText) {
-      console.error('No text in Claude response:', claudeData)
+      console.error('No text in Claude response');
       return new Response(
         JSON.stringify({ error: 'No response from AI service' }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
-      )
+      );
     }
 
     // Parse FAQ response
@@ -462,7 +476,7 @@ serve(async (req) => {
         },
         statistics,
         metadata: {
-          model: 'claude-sonnet-4-5-20250929',
+          model: CLAUDE_MODEL,
           tokens_used: claudeData.usage,
           generated_at: new Date().toISOString(),
         },
