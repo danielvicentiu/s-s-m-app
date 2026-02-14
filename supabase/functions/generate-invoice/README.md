@@ -86,12 +86,16 @@ Sunt setate automat de Supabase:
 - SUPABASE_URL
 - SUPABASE_SERVICE_ROLE_KEY
 
-## Notă: PDF Generation
+## PDF Generation
 
-Implementarea actuală generează HTML. Pentru producție, se recomandă:
-- Integrare cu serviciu extern (ex: PDFMonkey, DocRaptor)
-- Folosirea unei biblioteci Deno pentru PDF (ex: puppeteer-core cu headless Chrome)
-- Sau conversia HTML → PDF prin API dedicat
+Funcția folosește **pdf-lib** (v1.17.1) pentru generarea profesională de PDF-uri:
+- Layout A4 standard (595.28 x 841.89 points)
+- Font-uri embedded (Helvetica, Helvetica-Bold)
+- Brand colors (#2563eb blue pentru accente)
+- Header cu detalii provider și invoice
+- Tabel items cu coloane formatate
+- Secțiune totals cu TVA
+- Footer informativ
 
 ## Example Usage
 

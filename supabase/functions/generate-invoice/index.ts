@@ -1,5 +1,6 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3'
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { PDFDocument, rgb, StandardFonts } from 'npm:pdf-lib@1.17.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -31,7 +32,7 @@ interface InvoiceItem {
   total: number
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -99,7 +100,7 @@ serve(async (req) => {
     // Get subscription details
     const { data: subscription, error: subError } = await supabaseClient
       .from('subscriptions')
-      .select('*, plans(*)')
+      .select('*, subscription_plans(*)')
       .eq('organization_id', org_id)
       .eq('status', 'active')
       .single()
@@ -112,12 +113,12 @@ serve(async (req) => {
     const items: InvoiceItem[] = []
 
     // Base subscription
-    const basePriceRON = subscription.plans?.price_ron || 0
-    const basePriceEUR = subscription.plans?.price_eur || 0
+    const basePriceRON = subscription.subscription_plans?.price_ron || 0
+    const basePriceEUR = subscription.subscription_plans?.price_eur || 0
     const basePrice = currency === 'RON' ? basePriceRON : basePriceEUR
 
     items.push({
-      description: `Abonament ${subscription.plans?.name || 'Standard'} - ${period}`,
+      description: `Abonament ${subscription.subscription_plans?.name || 'Standard'} - ${period}`,
       quantity: 1,
       unit_price: basePrice,
       total: basePrice,
@@ -129,7 +130,7 @@ serve(async (req) => {
       .select('*', { count: 'exact', head: true })
       .eq('organization_id', org_id)
 
-    const includedUsers = subscription.plans?.max_users || 5
+    const includedUsers = subscription.subscription_plans?.max_users || 5
     const extraUsers = Math.max(0, (userCount || 0) - includedUsers)
 
     if (extraUsers > 0) {
@@ -156,7 +157,7 @@ serve(async (req) => {
     const invoiceNumber = `SSM-${period.replace('-', '')}-${org_id.substring(0, 8).toUpperCase()}`
 
     // Generate PDF
-    const pdfContent = generatePDFContent({
+    const pdfContent = await generatePDFContent({
       invoiceNumber,
       invoiceDate,
       period,
@@ -249,7 +250,7 @@ serve(async (req) => {
   }
 })
 
-function generatePDFContent(data: {
+async function generatePDFContent(data: {
   invoiceNumber: string
   invoiceDate: Date
   period: string
@@ -261,171 +262,273 @@ function generatePDFContent(data: {
   vatAmount: number
   total: number
   currency: string
-}): Uint8Array {
-  // Simple PDF generation using basic PDF structure
-  // For production, consider using a library like jsPDF or pdfkit
+}): Promise<Uint8Array> {
+  // Create a new PDF document
+  const pdfDoc = await PDFDocument.create()
+  const page = pdfDoc.addPage([595.28, 841.89]) // A4 size in points
 
-  const htmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      color: #333;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 40px;
-      border-bottom: 2px solid #2563eb;
-      padding-bottom: 20px;
-    }
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: #2563eb;
-    }
-    .invoice-details {
-      text-align: right;
-    }
-    .section {
-      margin-bottom: 30px;
-    }
-    .section-title {
-      font-weight: bold;
-      font-size: 14px;
-      margin-bottom: 10px;
-      color: #2563eb;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th {
-      background-color: #f3f4f6;
-      padding: 12px;
-      text-align: left;
-      font-weight: bold;
-      border-bottom: 2px solid #e5e7eb;
-    }
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .text-right {
-      text-align: right;
-    }
-    .totals {
-      margin-top: 30px;
-      float: right;
-      width: 300px;
-    }
-    .total-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-    }
-    .total-row.grand-total {
-      font-weight: bold;
-      font-size: 18px;
-      border-top: 2px solid #2563eb;
-      padding-top: 12px;
-      margin-top: 8px;
-    }
-    .footer {
-      margin-top: 60px;
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-      border-top: 1px solid #e5e7eb;
-      padding-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div>
-      <div class="logo">S-S-M.RO</div>
-      <p style="margin: 5px 0;">${data.provider.name}</p>
-      <p style="margin: 5px 0;">CUI: ${data.provider.cui || 'N/A'}</p>
-      <p style="margin: 5px 0;">Reg. Com.: ${data.provider.reg_com || 'N/A'}</p>
-      <p style="margin: 5px 0;">${data.provider.address || ''}</p>
-      <p style="margin: 5px 0;">${data.provider.city || ''}, ${data.provider.country || ''}</p>
-      <p style="margin: 5px 0;">Email: ${data.provider.email || ''}</p>
-      <p style="margin: 5px 0;">Tel: ${data.provider.phone || ''}</p>
-    </div>
-    <div class="invoice-details">
-      <h1 style="margin: 0 0 10px 0;">FACTURĂ</h1>
-      <p style="margin: 5px 0;"><strong>Nr:</strong> ${data.invoiceNumber}</p>
-      <p style="margin: 5px 0;"><strong>Data:</strong> ${data.invoiceDate.toLocaleDateString('ro-RO')}</p>
-      <p style="margin: 5px 0;"><strong>Perioada:</strong> ${data.period}</p>
-    </div>
-  </div>
+  // Load fonts
+  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+  const regularFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
 
-  <div class="section">
-    <div class="section-title">CLIENT</div>
-    <p style="margin: 5px 0;"><strong>${data.client.name}</strong></p>
-    <p style="margin: 5px 0;">CUI: ${data.client.cui || 'N/A'}</p>
-    <p style="margin: 5px 0;">Reg. Com.: ${data.client.reg_com || 'N/A'}</p>
-    <p style="margin: 5px 0;">${data.client.address || ''}</p>
-    <p style="margin: 5px 0;">${data.client.city || ''}, ${data.client.country || ''}</p>
-    ${data.client.email ? `<p style="margin: 5px 0;">Email: ${data.client.email}</p>` : ''}
-    ${data.client.phone ? `<p style="margin: 5px 0;">Tel: ${data.client.phone}</p>` : ''}
-  </div>
+  const { width, height } = page.getSize()
+  const margin = 50
+  let y = height - margin
 
-  <table>
-    <thead>
-      <tr>
-        <th>Descriere</th>
-        <th class="text-right">Cantitate</th>
-        <th class="text-right">Preț unitar</th>
-        <th class="text-right">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${data.items.map(item => `
-        <tr>
-          <td>${item.description}</td>
-          <td class="text-right">${item.quantity}</td>
-          <td class="text-right">${item.unit_price.toFixed(2)} ${data.currency}</td>
-          <td class="text-right">${item.total.toFixed(2)} ${data.currency}</td>
-        </tr>
-      `).join('')}
-    </tbody>
-  </table>
+  // Brand color
+  const brandBlue = rgb(0.145, 0.388, 0.922) // #2563eb
+  const textGray = rgb(0.2, 0.2, 0.2)
+  const lightGray = rgb(0.9, 0.9, 0.9)
 
-  <div class="totals">
-    <div class="total-row">
-      <span>Subtotal:</span>
-      <span>${data.subtotal.toFixed(2)} ${data.currency}</span>
-    </div>
-    <div class="total-row">
-      <span>TVA (${(data.vatRate * 100).toFixed(0)}%):</span>
-      <span>${data.vatAmount.toFixed(2)} ${data.currency}</span>
-    </div>
-    <div class="total-row grand-total">
-      <span>TOTAL:</span>
-      <span>${data.total.toFixed(2)} ${data.currency}</span>
-    </div>
-  </div>
+  // Header - Logo and Provider Info (LEFT)
+  page.drawText('S-S-M.RO', {
+    x: margin,
+    y: y,
+    size: 24,
+    font: boldFont,
+    color: brandBlue,
+  })
+  y -= 25
 
-  <div style="clear: both;"></div>
+  const providerInfo = [
+    data.provider.name,
+    `CUI: ${data.provider.cui || 'N/A'}`,
+    `Reg. Com.: ${data.provider.reg_com || 'N/A'}`,
+    data.provider.address || '',
+    `${data.provider.city || ''}, ${data.provider.country || ''}`,
+    `Email: ${data.provider.email || ''}`,
+    `Tel: ${data.provider.phone || ''}`,
+  ]
 
-  <div class="footer">
-    <p>Factură generată automat de platforma S-S-M.RO</p>
-    <p>Pentru orice întrebări, vă rugăm să ne contactați la ${data.provider.email}</p>
-  </div>
-</body>
-</html>
-  `
+  for (const line of providerInfo) {
+    if (line.trim()) {
+      page.drawText(line, {
+        x: margin,
+        y: y,
+        size: 9,
+        font: regularFont,
+        color: textGray,
+      })
+      y -= 14
+    }
+  }
 
-  // Convert HTML to PDF using basic structure
-  // In production, use a proper PDF library or external service
-  // For now, returning HTML as bytes (would need proper PDF conversion)
-  const encoder = new TextEncoder()
-  return encoder.encode(htmlContent)
+  // Invoice Details (RIGHT)
+  let rightY = height - margin
+  page.drawText('FACTURĂ', {
+    x: width - margin - 150,
+    y: rightY,
+    size: 20,
+    font: boldFont,
+    color: textGray,
+  })
+  rightY -= 30
+
+  const invoiceDetails = [
+    `Nr: ${data.invoiceNumber}`,
+    `Data: ${data.invoiceDate.toLocaleDateString('ro-RO')}`,
+    `Perioada: ${data.period}`,
+  ]
+
+  for (const line of invoiceDetails) {
+    page.drawText(line, {
+      x: width - margin - 150,
+      y: rightY,
+      size: 10,
+      font: regularFont,
+      color: textGray,
+    })
+    rightY -= 16
+  }
+
+  // Separator line
+  y = rightY - 20
+  page.drawLine({
+    start: { x: margin, y: y },
+    end: { x: width - margin, y: y },
+    thickness: 2,
+    color: brandBlue,
+  })
+
+  // Client Section
+  y -= 30
+  page.drawText('CLIENT', {
+    x: margin,
+    y: y,
+    size: 12,
+    font: boldFont,
+    color: brandBlue,
+  })
+  y -= 20
+
+  const clientInfo = [
+    data.client.name,
+    `CUI: ${data.client.cui || 'N/A'}`,
+    `Reg. Com.: ${data.client.reg_com || 'N/A'}`,
+    data.client.address || '',
+    `${data.client.city || ''}, ${data.client.country || ''}`,
+    data.client.email ? `Email: ${data.client.email}` : '',
+    data.client.phone ? `Tel: ${data.client.phone}` : '',
+  ]
+
+  for (const line of clientInfo) {
+    if (line.trim()) {
+      page.drawText(line, {
+        x: margin,
+        y: y,
+        size: 9,
+        font: regularFont,
+        color: textGray,
+      })
+      y -= 14
+    }
+  }
+
+  // Items Table
+  y -= 30
+  const tableTop = y
+  const colWidths = [250, 80, 100, 90]
+  const colX = [margin, margin + colWidths[0], margin + colWidths[0] + colWidths[1], margin + colWidths[0] + colWidths[1] + colWidths[2]]
+
+  // Table header background
+  page.drawRectangle({
+    x: margin,
+    y: y - 20,
+    width: width - 2 * margin,
+    height: 25,
+    color: lightGray,
+  })
+
+  // Table headers
+  const headers = ['Descriere', 'Cantitate', 'Preț unitar', 'Total']
+  headers.forEach((header, i) => {
+    page.drawText(header, {
+      x: colX[i] + 5,
+      y: y - 15,
+      size: 10,
+      font: boldFont,
+      color: textGray,
+    })
+  })
+
+  y -= 25
+
+  // Table rows
+  for (const item of data.items) {
+    y -= 20
+
+    const rowData = [
+      item.description,
+      item.quantity.toString(),
+      `${item.unit_price.toFixed(2)} ${data.currency}`,
+      `${item.total.toFixed(2)} ${data.currency}`,
+    ]
+
+    rowData.forEach((text, i) => {
+      const align = i === 0 ? 'left' : 'right'
+      const xPos = align === 'left' ? colX[i] + 5 : colX[i] + colWidths[i] - 5
+
+      page.drawText(text, {
+        x: xPos,
+        y: y,
+        size: 9,
+        font: regularFont,
+        color: textGray,
+      })
+    })
+
+    // Row separator
+    page.drawLine({
+      start: { x: margin, y: y - 5 },
+      end: { x: width - margin, y: y - 5 },
+      thickness: 0.5,
+      color: lightGray,
+    })
+  }
+
+  // Totals section
+  y -= 40
+  const totalsX = width - margin - 200
+
+  const totals = [
+    { label: 'Subtotal:', value: `${data.subtotal.toFixed(2)} ${data.currency}` },
+    { label: `TVA (${(data.vatRate * 100).toFixed(0)}%):`, value: `${data.vatAmount.toFixed(2)} ${data.currency}` },
+  ]
+
+  for (const total of totals) {
+    page.drawText(total.label, {
+      x: totalsX,
+      y: y,
+      size: 10,
+      font: regularFont,
+      color: textGray,
+    })
+
+    page.drawText(total.value, {
+      x: width - margin - 5,
+      y: y,
+      size: 10,
+      font: regularFont,
+      color: textGray,
+    })
+
+    y -= 18
+  }
+
+  // Grand total with separator
+  page.drawLine({
+    start: { x: totalsX, y: y + 10 },
+    end: { x: width - margin, y: y + 10 },
+    thickness: 2,
+    color: brandBlue,
+  })
+
+  y -= 8
+
+  page.drawText('TOTAL:', {
+    x: totalsX,
+    y: y,
+    size: 14,
+    font: boldFont,
+    color: textGray,
+  })
+
+  page.drawText(`${data.total.toFixed(2)} ${data.currency}`, {
+    x: width - margin - 5,
+    y: y,
+    size: 14,
+    font: boldFont,
+    color: textGray,
+  })
+
+  // Footer
+  y = margin + 40
+  page.drawLine({
+    start: { x: margin, y: y },
+    end: { x: width - margin, y: y },
+    thickness: 0.5,
+    color: lightGray,
+  })
+
+  y -= 20
+  page.drawText('Factură generată automat de platforma S-S-M.RO', {
+    x: margin + (width - 2 * margin) / 2 - 150,
+    y: y,
+    size: 9,
+    font: regularFont,
+    color: rgb(0.4, 0.4, 0.4),
+  })
+
+  y -= 14
+  page.drawText(`Pentru orice întrebări, vă rugăm să ne contactați la ${data.provider.email}`, {
+    x: margin + (width - 2 * margin) / 2 - 180,
+    y: y,
+    size: 9,
+    font: regularFont,
+    color: rgb(0.4, 0.4, 0.4),
+  })
+
+  // Save the PDF
+  const pdfBytes = await pdfDoc.save()
+  return pdfBytes
 }
