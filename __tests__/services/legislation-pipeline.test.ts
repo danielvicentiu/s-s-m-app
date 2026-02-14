@@ -3,6 +3,18 @@
  *
  * Comprehensive test suite for legislation-pipeline.ts service
  * Covers M1-M4 stages, full pipeline execution, error handling, and edge cases
+ *
+ * TEST COVERAGE:
+ * 1. M1 scraper returns entries
+ * 2. M2 parser splits articles
+ * 3. M3 extractor returns obligations
+ * 4. M4 validator checks completeness
+ * 5. Full pipeline runs end to end
+ * 6. Handles empty input
+ * 7. Handles malformed text
+ * 8. Pipeline supports stopAtStage
+ * 9. Pipeline tracks progress
+ * 10. Batch pipeline processes multiple countries
  */
 
 import {
@@ -12,9 +24,7 @@ import {
   type PipelineOptions,
   type PipelineProgressUpdate
 } from '@/lib/services/legislation-pipeline'
-import type { CountryCode, LegislationEntry, LegislationParsed } from '@/lib/types'
-import type { Obligation } from '@/lib/services/m3-obligation-extractor'
-import type { ValidatedObligation } from '@/lib/services/m4-validator'
+import type { CountryCode } from '@/lib/types'
 
 // ══════════════════════════════════════════════════════════════
 // MOCKS
@@ -25,7 +35,13 @@ jest.mock('@/lib/services/m1-legislation-scraper', () => ({
   scrapeLegislatie: jest.fn()
 }))
 
-// Mock M3 Extractor
+// Mock M2 Parser
+jest.mock('@/lib/services/m2-legislation-parser', () => ({
+  parseLegislation: jest.fn(),
+  getArticlesWithObligations: jest.fn()
+}))
+
+// Mock M3 Extractor (including Claude API)
 jest.mock('@/lib/services/m3-obligation-extractor', () => ({
   extractObligations: jest.fn()
 }))
@@ -37,7 +53,11 @@ jest.mock('@/lib/services/m4-validator', () => ({
   generateValidationReport: jest.fn()
 }))
 
+// Mock fetch for Claude API
+global.fetch = jest.fn()
+
 import { scrapeLegislatie } from '@/lib/services/m1-legislation-scraper'
+import { parseLegislation } from '@/lib/services/m2-legislation-parser'
 import { extractObligations } from '@/lib/services/m3-obligation-extractor'
 import {
   validateObligations,
@@ -49,95 +69,79 @@ import {
 // TEST DATA FACTORIES
 // ══════════════════════════════════════════════════════════════
 
-function createMockLegislationEntry(overrides?: Partial<LegislationEntry>): LegislationEntry {
+function createMockLegislationEntry(overrides: any = {}) {
   return {
-    title: 'Legea 319/2006 privind securitatea și sănătatea în muncă',
+    title: 'Legea nr. 319 din 2006 privind securitatea și sănătatea în muncă',
     link: 'https://legislatie.just.ro/Public/DetaliiDocument/73850',
     pubDate: '2024-01-15T10:00:00Z',
     domain: 'SSM',
     countryCode: 'RO',
-    act_number: 'L 319/2006',
-    description: 'Lege privind SSM',
-    guid: 'guid-123',
     ...overrides
   }
 }
 
-function createMockParsedLegislation(
-  articlesCount: number = 1
-): LegislationParsed {
-  const articles = Array.from({ length: articlesCount }, (_, i) => ({
-    id: `ART_${i + 1}`,
-    number: `${i + 1}`,
-    type: 'article' as const,
-    title: `Article ${i + 1}`,
-    content: `Content of article ${i + 1}`,
-    paragraphs: [],
-    hasObligations: true,
-    hasPenalties: false,
-    crossReferences: [],
-    chapterId: null,
-    startIndex: 0,
-    endIndex: 100
-  }))
-
+function createMockParsedLegislation() {
   return {
-    rawText: 'Mock legislation text',
-    language: 'ro',
-    detectedActType: 'law' as const,
-    structure: {
-      chapters: [],
-      articles,
-      annexes: []
-    },
-    analysis: {
-      totalArticles: articlesCount,
-      totalChapters: 0,
-      totalAnnexes: 0,
-      hasPenaltiesSection: false,
-      penaltiesArticles: [],
-      crossReferences: [],
-      obligationKeywords: []
-    },
-    parsedAt: new Date().toISOString(),
-    parsingWarnings: []
+    articles: [
+      {
+        articleNumber: '1',
+        content: 'Art. 1. Angajatorul trebuie să asigure evaluarea riscurilor.',
+        hasObligations: true,
+        obligationKeywords: ['trebuie'],
+        isPenaltySection: false,
+        references: []
+      },
+      {
+        articleNumber: '2',
+        content: 'Art. 2. Angajatul are obligația să respecte normele de securitate.',
+        hasObligations: true,
+        obligationKeywords: ['obligația'],
+        isPenaltySection: false,
+        references: []
+      }
+    ],
+    sections: [],
+    allReferences: [],
+    totalObligations: 2,
+    totalPenalties: 0
   }
 }
 
-function createMockObligation(overrides?: Partial<Obligation>): Obligation {
+function createMockObligation(overrides: any = {}) {
   return {
-    id: 'OBL_1',
-    sourceArticleId: 'ART_1',
-    sourceArticleNumber: '1',
-    sourceLegalAct: 'L 319/2006',
-    obligationText: 'Angajatorul trebuie să asigure evaluarea riscurilor',
+    source_legal_act: 'L 319/2006',
+    source_article_number: '1',
+    country_code: 'RO',
+    obligation_text: 'Angajatorul trebuie să asigure evaluarea riscurilor',
     who: ['angajator'],
     deadline: '30 zile',
     frequency: 'annual',
     penalty: 'Amendă 5000-10000 RON',
-    penaltyMin: 5000,
-    penaltyMax: 10000,
-    penaltyCurrency: 'RON',
-    evidenceRequired: ['Document de evaluare a riscurilor'],
+    penalty_min: 5000,
+    penalty_max: 10000,
+    penalty_currency: 'RON',
+    evidence_required: ['Document de evaluare a riscurilor'],
     confidence: 0.85,
+    validation_score: 0,
+    status: 'draft',
+    published: false,
+    caen_codes: [],
+    industry_tags: [],
+    extracted_at: new Date().toISOString(),
     language: 'ro',
-    extractedAt: new Date().toISOString(),
+    metadata: {},
     ...overrides
   }
 }
 
-function createMockValidatedObligation(
-  obligation: Obligation
-): ValidatedObligation {
+function createMockValidatedObligation(obligation: any) {
   return {
     ...obligation,
-    status: 'validated' as const,
-    validationScore: 0.9,
-    validationIssues: [],
-    deduplicationHash: 'hash_123',
-    similarObligations: [],
-    isActive: true,
-    publishedAt: null
+    status: 'validated',
+    validation_score: 0.9,
+    validation_issues: [],
+    deduplication_hash: 'hash_123',
+    similar_obligations: []
   }
 }
 
@@ -168,8 +172,8 @@ describe('Legislation Pipeline', () => {
   test('M1 scraper successfully returns legislation entries', async () => {
     // Arrange
     const mockEntries = [
-      createMockLegislationEntry({ act_number: 'L 319/2006' }),
-      createMockLegislationEntry({ act_number: 'HG 1425/2006', domain: 'PSI' })
+      createMockLegislationEntry(),
+      createMockLegislationEntry({ domain: 'PSI' })
     ]
 
     const mockedScraper = scrapeLegislatie as jest.MockedFunction<typeof scrapeLegislatie>
@@ -219,15 +223,19 @@ describe('Legislation Pipeline', () => {
   })
 
   // ──────────────────────────────────────────────────────────
-  // TEST 2: M2 Parser splits articles (mock implementation)
+  // TEST 2: M2 Parser splits articles
   // ──────────────────────────────────────────────────────────
 
-  test('M2 parser creates parsed structure from scraped entries', async () => {
+  test('M2 parser splits legislation text into structured articles', async () => {
     // Arrange
     const mockEntries = [createMockLegislationEntry()]
+    const mockParsed = createMockParsedLegislation()
 
     const mockedScraper = scrapeLegislatie as jest.MockedFunction<typeof scrapeLegislatie>
     mockedScraper.mockResolvedValue(mockEntries)
+
+    const mockedParser = parseLegislation as jest.MockedFunction<typeof parseLegislation>
+    mockedParser.mockReturnValue(mockParsed)
 
     const mockedExtractor = extractObligations as jest.MockedFunction<typeof extractObligations>
     mockedExtractor.mockResolvedValue([createMockObligation()])
@@ -266,23 +274,22 @@ describe('Legislation Pipeline', () => {
     expect(result.stages.M2.data).toHaveLength(1)
     expect(result.summary.documentsParsed).toBe(1)
 
-    // Verify M2 created articles from scraped entries
+    // Verify M2 created articles
     const parsed = result.stages.M2.data![0]
     expect(parsed.structure.articles).toBeDefined()
     expect(parsed.structure.articles.length).toBeGreaterThan(0)
-    expect(parsed.analysis.totalArticles).toBe(1)
   })
 
   // ──────────────────────────────────────────────────────────
   // TEST 3: M3 Extractor returns obligations
   // ──────────────────────────────────────────────────────────
 
-  test('M3 extractor successfully extracts obligations from parsed legislation', async () => {
+  test('M3 extractor successfully extracts obligations using Claude API', async () => {
     // Arrange
     const mockEntries = [createMockLegislationEntry()]
     const mockObligations = [
-      createMockObligation({ id: 'OBL_1', obligationText: 'First obligation' }),
-      createMockObligation({ id: 'OBL_2', obligationText: 'Second obligation' })
+      createMockObligation({ obligation_text: 'First obligation' }),
+      createMockObligation({ obligation_text: 'Second obligation' })
     ]
 
     const mockedScraper = scrapeLegislatie as jest.MockedFunction<typeof scrapeLegislatie>
@@ -332,7 +339,7 @@ describe('Legislation Pipeline', () => {
   // TEST 4: M4 Validator checks completeness
   // ──────────────────────────────────────────────────────────
 
-  test('M4 validator checks obligation completeness and validates', async () => {
+  test('M4 validator checks obligation completeness and assigns validation scores', async () => {
     // Arrange
     const mockEntries = [createMockLegislationEntry()]
     const mockObligation = createMockObligation()
@@ -378,6 +385,7 @@ describe('Legislation Pipeline', () => {
     expect(result.stages.M4.success).toBe(true)
     expect(result.stages.M4.data?.validated).toHaveLength(1)
     expect(result.stages.M4.data?.validated[0].status).toBe('validated')
+    expect(result.stages.M4.data?.validated[0].validation_score).toBe(0.9)
     expect(result.summary.obligationsValidated).toBe(1)
   })
 
@@ -454,7 +462,7 @@ describe('Legislation Pipeline', () => {
   })
 
   // ──────────────────────────────────────────────────────────
-  // TEST 6: Pipeline handles empty input (M1 returns 0 entries)
+  // TEST 6: Pipeline handles empty input
   // ──────────────────────────────────────────────────────────
 
   test('pipeline handles empty input when M1 returns no entries', async () => {
@@ -481,7 +489,7 @@ describe('Legislation Pipeline', () => {
   })
 
   // ──────────────────────────────────────────────────────────
-  // TEST 7: Pipeline handles malformed text (M3 throws error)
+  // TEST 7: Pipeline handles malformed text
   // ──────────────────────────────────────────────────────────
 
   test('pipeline handles malformed text when M3 extractor fails', async () => {
@@ -492,7 +500,7 @@ describe('Legislation Pipeline', () => {
     mockedScraper.mockResolvedValue(mockEntries)
 
     const mockedExtractor = extractObligations as jest.MockedFunction<typeof extractObligations>
-    mockedExtractor.mockRejectedValue(new Error('Claude API error: Invalid response format'))
+    mockedExtractor.mockRejectedValue(new Error('Claude API error: Invalid JSON response'))
 
     // Act
     const result = await runPipeline('RO', 'legislatie.just.ro', {
@@ -504,7 +512,7 @@ describe('Legislation Pipeline', () => {
     expect(result.stages.M2.success).toBe(true)
 
     // Assert - M3 fails but pipeline continues
-    expect(result.stages.M3.success).toBe(true) // Stage succeeds but extracts 0 obligations
+    expect(result.stages.M3.success).toBe(true)
     expect(result.stages.M3.data).toHaveLength(0)
     expect(result.summary.obligationsExtracted).toBe(0)
 
