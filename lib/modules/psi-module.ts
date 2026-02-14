@@ -105,7 +105,7 @@ export const psiModule: IModule = {
   icon: 'Flame',
   category: 'standalone',
   is_base: false,
-  depends_on: [], // No dependencies - standalone module
+  depends_on: ['ssm-core'], // Depends on SSM Core for employee and training infrastructure
   incompatible: [], // Compatible with all other modules
 
   /**
