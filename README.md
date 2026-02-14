@@ -1,4 +1,18 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# s-s-m.ro — Platformă SSM/PSI
+
+[![CI Pipeline](https://github.com/USERNAME/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/USERNAME/REPO/actions/workflows/ci.yml)
+
+Platformă digitală pentru consultanți și firme în domeniul Securității și Sănătății în Muncă (SSM) și Situații de Incendiu (PSI).
+
+🚀 **Live:** [https://app.s-s-m.ro](https://app.s-s-m.ro)
+
+## Stack Tehnologic
+
+- **Framework:** Next.js 14 (App Router)
+- **Database:** Supabase (PostgreSQL + Auth + Storage)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Deploy:** Vercel
 
 ## Getting Started
 
