@@ -15,6 +15,9 @@ export interface Organization {
   exposure_score: 'necalculat' | 'scazut' | 'mediu' | 'ridicat' | 'critic'
   preferred_channels: string[]
   cooperation_status: 'active' | 'warning' | 'uncooperative'
+  country_code?: CountryCode
+  caen_codes?: string[]
+  industry_tags?: string[]
   created_at: string
   updated_at: string
 }
