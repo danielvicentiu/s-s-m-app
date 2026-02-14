@@ -27,27 +27,46 @@ POST /functions/v1/ai-incident-analyzer
 ```json
 {
   "incident_description": "Angajat a căzut de pe scară în timpul lucrului la înălțime",
-  "location": "Depozit, zona de rafturi înalte",
-  "conditions": "Pardoseală umedă, iluminare insuficientă, scară deteriorată",
-  "injuries": "Fractură gleznă, contuzii multiple",
-  "witnesses": "2 colegi prezenți în zonă",
-  "additional_context": "Incident s-a produs la sfârșitul programului",
-  "max_tokens": 4096
+  "incident_location": "Depozit, zona de rafturi înalte",
+  "incident_conditions": [
+    {
+      "type": "weather",
+      "description": "Pardoseală umedă din cauza ploii"
+    },
+    {
+      "type": "lighting",
+      "description": "Iluminare insuficientă în zonă"
+    },
+    {
+      "type": "equipment_state",
+      "description": "Scară deteriorată, trepte slăbite"
+    }
+  ],
+  "incident_date": "2026-02-13T15:30:00Z",
+  "injured_person_role": "Operator depozit",
+  "injury_severity": "severe",
+  "witnesses_count": 2,
+  "equipment_involved": ["Scară metalică", "Echipament protecție"],
+  "additional_context": "Incident s-a produs la sfârșitul programului, angajatul avea experiență de 3 ani",
+  "max_tokens": 6144
 }
 ```
 
 ### Required Parameters
 
-- `incident_description` (string): Detailed description of what happened (minimum 20 characters)
-- `location` (string): Where the incident occurred
-- `conditions` (string): Environmental/workplace conditions at time of incident
+- `incident_description` (string): Detailed description of what happened (minimum 10 characters)
+- `incident_location` (string): Where the incident occurred
+- `incident_conditions` (array): Array of condition objects with `type` and `description`
 
 ### Optional Parameters
 
-- `injuries` (string): Description of injuries sustained
-- `witnesses` (string): Information about witnesses
+- `incident_date` (string): ISO date string (default: current date)
+- `injured_person_role` (string): Job position of injured person
+- `injury_severity` (string): "minor" | "moderate" | "severe" | "fatal" | "none"
+- `witnesses_count` (number): Number of witnesses
+- `equipment_involved` (array): Array of equipment/machinery names
 - `additional_context` (string): Any additional relevant information
-- `max_tokens` (number): Maximum tokens for AI response (100-8192, default: 4096)
+- `max_tokens` (number): Maximum tokens for AI response (2000-16000, default: 6144)
 
 ## Response Format
 
@@ -56,67 +75,87 @@ POST /functions/v1/ai-incident-analyzer
   "success": true,
   "analysis": {
     "incident_summary": "Angajat a suferit o cădere de la înălțime...",
-    "severity_assessment": "serious",
+    "severity_assessment": {
+      "actual_severity": "Fractură gleznă, contuzii multiple, necesită spitalizare",
+      "potential_severity": "Cădere de la înălțime mai mare putea cauza leziuni grave cap/coloană sau deces",
+      "severity_factors": ["Lipsa echipament protecție cădere", "Scară deteriorată", "Suprafață umedă"]
+    },
     "root_causes": [
       {
-        "cause": "Utilizarea unei scări deteriorate, neînlocuită la timp",
-        "likelihood": "primary",
-        "explanation": "Cauza directă a accidentului, echipamentul defect ar fi trebuit scos din uz"
+        "category": "Equipment Failure",
+        "description": "Utilizarea unei scări deteriorate, neînlocuită la timp",
+        "likelihood": "very_likely",
+        "evidence": "Scara avea trepte slăbite și nu fusese inspectată de 6 luni"
       }
     ],
     "contributing_factors": [
       {
-        "factor": "Iluminare insuficientă în zona de lucru",
-        "category": "technical",
+        "factor": "Iluminare insuficientă",
+        "description": "Zona de lucru avea sub 50 lux, sub minimul legal de 200 lux",
         "impact_level": "high"
       }
     ],
-    "immediate_actions": [
+    "immediate_corrective_actions": [
       {
-        "action": "Scoaterea imediată din uz a tuturor scărilor deteriorate",
+        "action": "Scoaterea din uz a tuturor scărilor deteriorate",
+        "description": "Identificare și etichetare imediată a echipamentelor defecte, înlocuire urgentă",
         "priority": "immediate",
-        "responsible_party": "Responsabil SSM",
-        "estimated_timeframe": "imediat"
+        "implementation_timeframe": "imediat",
+        "responsible_party": "Manager SSM + Sef depozit",
+        "estimated_cost": "2000-3000 RON (scări noi)",
+        "effectiveness_rating": 5
       }
     ],
-    "preventive_measures": [
+    "long_term_preventive_measures": [
       {
-        "measure": "Implementare program de inspecție zilnică a echipamentelor",
-        "type": "administrative",
-        "effectiveness": "high",
-        "implementation_cost": "low"
+        "measure": "Program de inspecție zilnică a echipamentelor",
+        "description": "Implementare checklist zilnic pentru toate echipamentele de lucru la înălțime",
+        "implementation_type": "organizational",
+        "implementation_timeframe": "1-2 luni",
+        "estimated_cost": "500-1000 RON (formare + proceduri)",
+        "expected_impact": "Reducere cu 80% a incidentelor legate de echipamente defecte",
+        "legal_requirement": true,
+        "legal_references": ["Legea 319/2006 Art. 7", "HG 1425/2006"]
       }
     ],
-    "similar_incidents": [
+    "similar_historical_incidents": [
       {
-        "description": "Căzături de la înălțime în depozite și hale industriale",
-        "common_factors": ["echipament defect", "lipsa inspecțiilor", "condiții de iluminare"],
-        "lessons_learned": "Inspecția regulată și înlocuirea echipamentelor este esențială"
+        "incident_type": "Căzături de la înălțime în depozite",
+        "common_pattern": "Echipament deteriorat + condiții de iluminare slabe + presiune timp",
+        "key_differences": "În acest caz scara era vizibil deteriorată dar totuși utilizată",
+        "lessons_learned": "Inspecția regulată și cultura de oprire a lucrului în condiții nesigure"
       }
     ],
-    "legal_implications": [
-      "Art. 7, Legea 319/2006 - Angajatorul trebuie să asigure echipamente în stare bună de funcționare",
-      "Art. 12, HG 1425/2006 - Obligația de investigare a tuturor accidentelor de muncă"
+    "investigation_recommendations": [
+      "Fotografiere completă a locului incidentului și echipamentului",
+      "Interviuri cu toți martorii în primele 24 ore",
+      "Verificare registru inspecții echipamente ultimele 6 luni",
+      "Analiza condiții iluminare cu luxmetru",
+      "Raport complet ITM în termen legal"
     ],
-    "recommendations_summary": "Accidentul a fost cauzat de utilizarea unei scări deteriorate..."
+    "training_recommendations": [
+      "Instruire SSM pentru toți angajații depozit privind lucrul la înălțime",
+      "Formare identificare echipamente defecte și procedură raportare",
+      "Training First Aid pentru supervizori",
+      "Sesiune conștientizare despre dreptul de refuz în condiții nesigure"
+    ],
+    "legal_compliance_notes": "Conform Legea 319/2006 și HG 1425/2006, angajatorul trebuie să notifice ITM în 24 ore pentru accident grav. Investigația trebuie finalizată în 15 zile lucrătoare. Raportul de anchetă se păstrează minim 10 ani. Riscul de amendă ITM: 10.000-20.000 RON pentru echipament defect + posibile sancțiuni pentru condiții de lucru nesigure."
   },
   "statistics": {
     "root_causes_count": 3,
-    "primary_causes": 1,
-    "contributing_factors_count": 6,
-    "high_impact_factors": 3,
+    "contributing_factors_count": 5,
     "immediate_actions_count": 5,
-    "urgent_actions": 3,
-    "preventive_measures_count": 8,
-    "high_effectiveness_measures": 5,
-    "similar_incidents_found": 3,
-    "legal_references_count": 4
+    "preventive_measures_count": 6,
+    "similar_incidents_found": 2,
+    "immediate_priority_actions": 2,
+    "high_impact_factors": 3
   },
-  "input_parameters": {
-    "location": "Depozit, zona de rafturi înalte",
-    "conditions": "Pardoseală umedă, iluminare insuficientă, scară deteriorată",
-    "has_injuries": true,
-    "has_witnesses": true
+  "input_summary": {
+    "incident_location": "Depozit, zona de rafturi înalte",
+    "incident_date": "13.02.2026",
+    "conditions_analyzed": 3,
+    "equipment_involved": 2,
+    "has_injury": true
   },
   "metadata": {
     "model": "claude-sonnet-4-5-20250929",
@@ -124,7 +163,7 @@ POST /functions/v1/ai-incident-analyzer
       "input_tokens": 1234,
       "output_tokens": 2345
     },
-    "analyzed_at": "2026-02-13T10:30:00.000Z"
+    "generated_at": "2026-02-13T10:30:00.000Z"
   }
 }
 ```
@@ -132,22 +171,28 @@ POST /functions/v1/ai-incident-analyzer
 ## Analysis Components
 
 ### Severity Assessment
-- `minor`: First aid only, no lost time
-- `moderate`: Medical treatment, temporary disability
-- `serious`: Hospitalization, significant injury
-- `critical`: Life-threatening, permanent disability
-- `catastrophic`: Fatality or multiple serious injuries
+Structured assessment with:
+- `actual_severity`: What actually happened (injuries, damage)
+- `potential_severity`: Worst case scenario that could have occurred
+- `severity_factors`: Array of factors affecting severity
+
+### Root Cause Categories
+- `Human Factor`: Training gaps, fatigue, competence, communication
+- `Equipment Failure`: Maintenance, design, deterioration
+- `Organizational`: Procedures, supervision, safety culture, resources
+- `Environmental`: Lighting, noise, weather, housekeeping
+- `Design Flaw`: Inherent design issues in equipment/processes
 
 ### Root Cause Likelihood
-- `primary`: Main direct cause of the incident
-- `secondary`: Important contributing cause
-- `contributing`: Additional factors that enabled the incident
+- `very_likely`: Strong evidence this was the root cause
+- `likely`: Probable root cause based on available evidence
+- `possible`: Could be a root cause, needs further investigation
+- `unlikely`: Less likely but worth considering
 
-### Contributing Factor Categories
-- `human`: Human behavior, fatigue, training gaps
-- `technical`: Equipment, tools, technology failures
-- `organizational`: Procedures, policies, management systems
-- `environmental`: Lighting, temperature, workspace conditions
+### Contributing Factor Impact
+- `high`: Significant contribution to incident occurrence
+- `medium`: Moderate contribution
+- `low`: Minor contribution but still relevant
 
 ### Action Priorities
 - `immediate`: Must be done right now (within hours)
@@ -156,12 +201,10 @@ POST /functions/v1/ai-incident-analyzer
 - `medium`: Should be done within 1 month
 
 ### Preventive Measure Types
-Following hierarchy of controls:
-1. `engineering`: Physical changes, guards, automation (most effective)
-2. `administrative`: Procedures, training, work permits
-3. `ppe`: Personal protective equipment (least effective)
-4. `training`: Skills development, awareness
-5. `procedural`: Updated procedures and protocols
+- `technical`: Engineering controls, equipment modifications
+- `organizational`: Procedures, policies, management systems
+- `behavioral`: Safety culture, awareness, supervision
+- `training`: Skills development, competence building
 
 ## Environment Variables
 
@@ -171,8 +214,9 @@ Following hierarchy of controls:
 
 ### 400 Bad Request
 - Missing or invalid required parameters
-- Incident description too short (< 20 characters)
-- Invalid max_tokens value
+- Incident description too short (< 10 characters)
+- Invalid incident_conditions (must be array with type and description)
+- Invalid max_tokens value (must be 2000-16000)
 
 ### 405 Method Not Allowed
 - Non-POST request method
@@ -196,16 +240,35 @@ const response = await fetch(
     },
     body: JSON.stringify({
       incident_description: 'Angajat a fost lovit de un palet în timpul operațiunilor de încărcare cu stivuitorul',
-      location: 'Zona de încărcare, rampa 3',
-      conditions: 'Trafic intens, vizibilitate redusă din cauza ploii, zonă fără delimitare clară',
-      injuries: 'Traumatism membrului inferior, necesită transport la spital',
-      witnesses: '3 angajați prezenți, operator stivuitor și 2 muncitori',
+      incident_location: 'Zona de încărcare, rampa 3',
+      incident_conditions: [
+        {
+          type: 'weather',
+          description: 'Ploaie torențială, vizibilitate redusă sub 10 metri'
+        },
+        {
+          type: 'traffic',
+          description: 'Trafic intens de stivuitoare, 3 unități active simultan'
+        },
+        {
+          type: 'workspace',
+          description: 'Zonă fără delimitare clară între pietoni și vehicule'
+        }
+      ],
+      incident_date: '2026-02-13T14:20:00Z',
+      injured_person_role: 'Muncitor depozit',
+      injury_severity: 'moderate',
+      witnesses_count: 3,
+      equipment_involved: ['Stivuitor Linde', 'Palet EUR'],
+      additional_context: 'Operator stivuitor avea 5 ani experiență, angajatul rănit era nou (2 săptămâni)',
     }),
   }
 )
 
 const data = await response.json()
 console.log('Analysis:', data.analysis)
+console.log('Root Causes:', data.analysis.root_causes)
+console.log('Immediate Actions:', data.analysis.immediate_corrective_actions)
 console.log('Statistics:', data.statistics)
 ```
 

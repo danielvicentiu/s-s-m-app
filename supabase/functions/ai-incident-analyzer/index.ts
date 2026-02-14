@@ -1,159 +1,239 @@
 // AI Incident Analyzer Edge Function
-// Analyzes workplace incidents to identify root causes, contributing factors,
-// and corrective/preventive measures using Claude API
+// Analyzes workplace SSM/PSI incidents to identify root causes, contributing factors,
+// immediate corrective actions, long-term preventive measures, and similar historical patterns
+// Uses Claude API to provide comprehensive incident investigation insights
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 
-interface RootCause {
-  cause: string
-  likelihood: 'primary' | 'secondary' | 'contributing'
-  explanation: string
-}
-
-interface ContributingFactor {
-  factor: string
-  category: 'human' | 'technical' | 'organizational' | 'environmental'
-  impact_level: 'high' | 'medium' | 'low'
-}
-
-interface CorrectiveAction {
-  action: string
-  priority: 'immediate' | 'urgent' | 'high' | 'medium'
-  responsible_party: string
-  estimated_timeframe: string
-}
-
-interface PreventiveMeasure {
-  measure: string
-  type: 'engineering' | 'administrative' | 'ppe' | 'training' | 'procedural'
-  effectiveness: 'high' | 'medium' | 'low'
-  implementation_cost: 'low' | 'medium' | 'high'
-}
-
-interface SimilarIncident {
+interface IncidentCondition {
+  type: string // e.g., "weather", "lighting", "noise_level", "temperature", "equipment_state"
   description: string
-  common_factors: string[]
-  lessons_learned: string
-}
-
-interface IncidentAnalysis {
-  incident_summary: string
-  severity_assessment: 'minor' | 'moderate' | 'serious' | 'critical' | 'catastrophic'
-  root_causes: RootCause[]
-  contributing_factors: ContributingFactor[]
-  immediate_actions: CorrectiveAction[]
-  preventive_measures: PreventiveMeasure[]
-  similar_incidents: SimilarIncident[]
-  legal_implications: string[]
-  recommendations_summary: string
 }
 
 interface RequestBody {
-  incident_description: string
-  location: string
-  conditions: string
-  injuries?: string
-  witnesses?: string
-  additional_context?: string
+  incident_description: string // Detailed description of what happened
+  incident_location: string // Where it occurred (e.g., "zona productie", "depozit", "santier")
+  incident_conditions: IncidentCondition[] // Environmental/situational conditions
+  incident_date?: string // ISO date string
+  injured_person_role?: string // Job position of injured person (if applicable)
+  injury_severity?: 'minor' | 'moderate' | 'severe' | 'fatal' | 'none' // Injury severity
+  witnesses_count?: number // Number of witnesses
+  equipment_involved?: string[] // Equipment/machinery involved
+  additional_context?: string // Any other relevant information
   max_tokens?: number
 }
 
+interface RootCause {
+  category: string // e.g., "Human Factor", "Equipment Failure", "Organizational", "Environmental"
+  description: string // Clear explanation in Romanian
+  likelihood: 'very_likely' | 'likely' | 'possible' | 'unlikely' // How likely this was the root cause
+  evidence: string // Why we believe this is a root cause
+}
+
+interface ContributingFactor {
+  factor: string // Short name
+  description: string // Explanation in Romanian
+  impact_level: 'high' | 'medium' | 'low' // How much it contributed
+}
+
+interface CorrectiveAction {
+  action: string // Short title
+  description: string // Detailed explanation in Romanian
+  priority: 'immediate' | 'urgent' | 'high' | 'medium' // Priority level
+  implementation_timeframe: string // e.g., "imediat", "24 ore", "7 zile"
+  responsible_party: string // Who should implement (e.g., "manager SSM", "supervizor productie")
+  estimated_cost: string // Cost estimate in RON or description
+  effectiveness_rating: number // 1-5 (how effective this action would be)
+}
+
+interface PreventiveMeasure {
+  measure: string // Short title
+  description: string // Detailed explanation in Romanian
+  implementation_type: 'technical' | 'organizational' | 'behavioral' | 'training' // Type of measure
+  implementation_timeframe: string // e.g., "1-3 luni", "6 luni", "continuu"
+  estimated_cost: string // Cost estimate
+  expected_impact: string // What improvement we expect to see
+  legal_requirement: boolean // Is this legally mandated?
+  legal_references?: string[] // Relevant laws if applicable
+}
+
+interface SimilarIncident {
+  incident_type: string // Type of similar incident
+  common_pattern: string // What pattern is common
+  key_differences: string // How it differs from current incident
+  lessons_learned: string // What should be learned from historical patterns
+}
+
+interface IncidentAnalysis {
+  incident_summary: string // Brief summary of the incident in Romanian
+  severity_assessment: {
+    actual_severity: string // What actually happened
+    potential_severity: string // What could have happened (worst case)
+    severity_factors: string[] // What made it severe or could have made it worse
+  }
+  root_causes: RootCause[]
+  contributing_factors: ContributingFactor[]
+  immediate_corrective_actions: CorrectiveAction[]
+  long_term_preventive_measures: PreventiveMeasure[]
+  similar_historical_incidents: SimilarIncident[]
+  investigation_recommendations: string[] // How to conduct full investigation
+  training_recommendations: string[] // What training should be provided
+  legal_compliance_notes: string // Legal obligations following incident (in Romanian)
+}
+
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
-const DEFAULT_MAX_TOKENS = 4096
+const DEFAULT_MAX_TOKENS = 6144
 
-const INCIDENT_ANALYSIS_PROMPT = `You are a Romanian SSM/PSI (Occupational Health & Safety / Fire Safety) expert specialized in incident investigation and root cause analysis.
+const INCIDENT_ANALYSIS_PROMPT = `You are a senior Romanian SSM/PSI (Occupational Health & Safety / Fire Safety) incident investigation expert with 20+ years of experience in root cause analysis and accident prevention.
 
-Analyze the following workplace incident using established investigation methodologies (5 Whys, Fishbone, Swiss Cheese Model).
+Analyze the following workplace incident and provide a comprehensive investigation report.
 
 **INCIDENT DETAILS:**
 - Description: {incident_description}
-- Location: {location}
-- Conditions: {conditions}
-{injuries}
-{witnesses}
+- Location: {incident_location}
+- Date: {incident_date}
+{injured_person_role}
+{injury_severity}
+{witnesses_count}
+{equipment_involved}
+
+**CONDITIONS AT TIME OF INCIDENT:**
+{incident_conditions}
+
 {additional_context}
 
 **YOUR TASK:**
-Conduct a comprehensive incident analysis following Romanian SSM/PSI investigation standards (Legea 319/2006, Legea 307/2006).
+Conduct a thorough incident investigation following Romanian legislation (Legea 319/2006, HG 1425/2006) and international best practices (ISO 45001, ILO guidelines).
 
-Provide:
+Use systematic investigation methods including:
+- 5 Whys analysis
+- Fishbone/Ishikawa diagram thinking (Man, Machine, Method, Material, Environment)
+- Swiss Cheese Model (multiple failures alignment)
+- Human Factors Analysis (HFACS framework)
 
-1. **incident_summary** - Brief professional summary of what happened (2-3 sentences in Romanian)
+Provide the following analysis:
 
-2. **severity_assessment** - Use EXACTLY one of: "minor", "moderate", "serious", "critical", "catastrophic"
-   - minor: First aid only, no lost time
-   - moderate: Medical treatment, temporary disability
-   - serious: Hospitalization, significant injury
-   - critical: Life-threatening, permanent disability
-   - catastrophic: Fatality or multiple serious injuries
+1. **incident_summary** - Brief 2-3 sentence summary of what happened (in Romanian)
 
-3. **root_causes** - Array of 2-5 identified root causes (not symptoms):
-   {
-     "cause": "string (in Romanian, specific and actionable)",
-     "likelihood": "primary" | "secondary" | "contributing",
-     "explanation": "string (why this is considered a root cause)"
-   }
+2. **severity_assessment** - Assess the severity:
+   - **actual_severity** - What actually happened (injuries, damage, etc.)
+   - **potential_severity** - Worst case scenario that could have occurred
+   - **severity_factors** - Array of factors that affected severity (e.g., "PPE usage", "quick response", "lack of guards")
 
-4. **contributing_factors** - Array of 3-8 factors that enabled the incident:
-   {
-     "factor": "string (in Romanian)",
-     "category": "human" | "technical" | "organizational" | "environmental",
-     "impact_level": "high" | "medium" | "low"
-   }
+3. **root_causes** - Identify 2-4 ROOT CAUSES (not symptoms). For each:
+   - **category** - "Human Factor" | "Equipment Failure" | "Organizational" | "Environmental" | "Design Flaw"
+   - **description** - Clear explanation in Romanian (why this is a root cause)
+   - **likelihood** - "very_likely" | "likely" | "possible" | "unlikely"
+   - **evidence** - What evidence supports this as root cause
 
-5. **immediate_actions** - Array of 3-6 immediate corrective actions needed NOW:
-   {
-     "action": "string (specific, actionable in Romanian)",
-     "priority": "immediate" | "urgent" | "high" | "medium",
-     "responsible_party": "string (role/department)",
-     "estimated_timeframe": "string (e.g., 'imediat', '24 ore', '1 săptămână')"
-   }
+4. **contributing_factors** - Identify 3-6 factors that contributed but weren't root causes:
+   - **factor** - Short name (e.g., "Zgomot excesiv", "Grabă", "Lipsa instruire")
+   - **description** - Explanation in Romanian
+   - **impact_level** - "high" | "medium" | "low"
 
-6. **preventive_measures** - Array of 4-10 long-term preventive measures:
-   {
-     "measure": "string (specific prevention strategy in Romanian)",
-     "type": "engineering" | "administrative" | "ppe" | "training" | "procedural",
-     "effectiveness": "high" | "medium" | "low",
-     "implementation_cost": "low" | "medium" | "high"
-   }
-   - Prioritize hierarchy of controls: engineering > administrative > PPE
+5. **immediate_corrective_actions** - 3-5 actions to take RIGHT NOW to prevent recurrence:
+   - **action** - Short title (e.g., "Oprire echipament defect")
+   - **description** - Detailed explanation in Romanian
+   - **priority** - "immediate" | "urgent" | "high" | "medium"
+   - **implementation_timeframe** - e.g., "imediat", "24 ore", "48 ore", "7 zile"
+   - **responsible_party** - Who implements (e.g., "manager SSM", "sef productie", "tehnician")
+   - **estimated_cost** - Cost in RON or description (e.g., "cost minim", "500-1000 RON")
+   - **effectiveness_rating** - 1-5 (5 = most effective)
 
-7. **similar_incidents** - Array of 2-4 similar historical incidents (generic, industry-wide):
-   {
-     "description": "string (brief description in Romanian)",
-     "common_factors": ["string", ...] (2-3 common factors),
-     "lessons_learned": "string (key lesson from that incident)"
-   }
+6. **long_term_preventive_measures** - 4-6 systemic improvements for long-term prevention:
+   - **measure** - Short title
+   - **description** - Detailed explanation in Romanian
+   - **implementation_type** - "technical" | "organizational" | "behavioral" | "training"
+   - **implementation_timeframe** - e.g., "1-3 luni", "3-6 luni", "continuu"
+   - **estimated_cost** - Cost estimate in RON
+   - **expected_impact** - What improvement we expect
+   - **legal_requirement** - true if legally mandated, false if recommended
+   - **legal_references** - Array of laws if applicable (e.g., ["Legea 319/2006"])
 
-8. **legal_implications** - Array of 2-5 relevant Romanian legal obligations/requirements:
-   - Reference specific articles from Legea 319/2006, Legea 307/2006, HG 1425/2006, etc.
-   - Include reporting requirements, investigation timelines, penalties if applicable
+7. **similar_historical_incidents** - 2-3 similar incident patterns from SSM/PSI history:
+   - **incident_type** - Type of similar incident
+   - **common_pattern** - What pattern repeats
+   - **key_differences** - How this incident differs
+   - **lessons_learned** - Key lessons from historical patterns
 
-9. **recommendations_summary** - Executive summary for management (3-5 sentences in Romanian):
-   - What went wrong, why, and what MUST change
+8. **investigation_recommendations** - Array of 3-5 steps for conducting full investigation (in Romanian)
 
-**IMPORTANT GUIDELINES:**
-- Be thorough and professional - this is a formal investigation
-- Focus on systemic issues, not individual blame
-- Root causes should be actionable and specific
-- Use Romanian terminology and language throughout
-- Consider both immediate causes and underlying organizational factors
-- Reference Romanian SSM/PSI legislation where relevant
-- Prioritize worker safety in all recommendations
-- Be realistic about implementation costs and timeframes
+9. **training_recommendations** - Array of 3-4 specific training needs identified (in Romanian)
+
+10. **legal_compliance_notes** - Brief paragraph on legal obligations following this incident (reporting requirements, ITM notification, etc.) in Romanian
+
+**IMPORTANT CONSIDERATIONS:**
+- Distinguish ROOT CAUSES (fundamental reasons) from SYMPTOMS (surface-level observations)
+- Apply "5 Whys" thinking - dig deeper than obvious answers
+- Consider human factors (fatigue, stress, competence, communication)
+- Consider organizational factors (safety culture, procedures, supervision, resources)
+- Consider technical factors (equipment design, maintenance, guards)
+- Consider environmental factors (lighting, noise, weather, housekeeping)
+- Be specific and actionable in recommendations
+- Prioritize based on effectiveness and ease of implementation
+- Follow Romanian legal requirements for incident investigation
+- Use clear Romanian language for all text fields
+- Be thorough but realistic
+- Consider both immediate and systemic solutions
 
 Return ONLY a valid JSON object with this exact structure:
 {
   "incident_summary": "string",
-  "severity_assessment": "minor" | "moderate" | "serious" | "critical" | "catastrophic",
-  "root_causes": [RootCause],
-  "contributing_factors": [ContributingFactor],
-  "immediate_actions": [CorrectiveAction],
-  "preventive_measures": [PreventiveMeasure],
-  "similar_incidents": [SimilarIncident],
-  "legal_implications": ["string", ...],
-  "recommendations_summary": "string"
+  "severity_assessment": {
+    "actual_severity": "string",
+    "potential_severity": "string",
+    "severity_factors": ["string"]
+  },
+  "root_causes": [
+    {
+      "category": "string",
+      "description": "string",
+      "likelihood": "very_likely|likely|possible|unlikely",
+      "evidence": "string"
+    }
+  ],
+  "contributing_factors": [
+    {
+      "factor": "string",
+      "description": "string",
+      "impact_level": "high|medium|low"
+    }
+  ],
+  "immediate_corrective_actions": [
+    {
+      "action": "string",
+      "description": "string",
+      "priority": "immediate|urgent|high|medium",
+      "implementation_timeframe": "string",
+      "responsible_party": "string",
+      "estimated_cost": "string",
+      "effectiveness_rating": 1-5
+    }
+  ],
+  "long_term_preventive_measures": [
+    {
+      "measure": "string",
+      "description": "string",
+      "implementation_type": "technical|organizational|behavioral|training",
+      "implementation_timeframe": "string",
+      "estimated_cost": "string",
+      "expected_impact": "string",
+      "legal_requirement": boolean,
+      "legal_references": ["string"]
+    }
+  ],
+  "similar_historical_incidents": [
+    {
+      "incident_type": "string",
+      "common_pattern": "string",
+      "key_differences": "string",
+      "lessons_learned": "string"
+    }
+  ],
+  "investigation_recommendations": ["string"],
+  "training_recommendations": ["string"],
+  "legal_compliance_notes": "string"
 }
 
 Return ONLY the JSON object, no explanations or markdown.`
@@ -180,18 +260,21 @@ serve(async (req) => {
     const body: RequestBody = await req.json()
     const {
       incident_description,
-      location,
-      conditions,
-      injuries = '',
-      witnesses = '',
+      incident_location,
+      incident_conditions,
+      incident_date = new Date().toISOString(),
+      injured_person_role = '',
+      injury_severity = '',
+      witnesses_count = 0,
+      equipment_involved = [],
       additional_context = '',
       max_tokens = DEFAULT_MAX_TOKENS,
     } = body
 
     // Validate input
-    if (!incident_description || typeof incident_description !== 'string') {
+    if (!incident_description || typeof incident_description !== 'string' || incident_description.trim().length < 10) {
       return new Response(
-        JSON.stringify({ error: 'Missing or invalid incident_description parameter' }),
+        JSON.stringify({ error: 'Missing or invalid incident_description parameter (must be at least 10 characters)' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -199,9 +282,9 @@ serve(async (req) => {
       )
     }
 
-    if (incident_description.length < 20) {
+    if (!incident_location || typeof incident_location !== 'string') {
       return new Response(
-        JSON.stringify({ error: 'Incident description too short (minimum 20 characters)' }),
+        JSON.stringify({ error: 'Missing or invalid incident_location parameter' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -209,9 +292,9 @@ serve(async (req) => {
       )
     }
 
-    if (!location || typeof location !== 'string') {
+    if (!Array.isArray(incident_conditions)) {
       return new Response(
-        JSON.stringify({ error: 'Missing or invalid location parameter' }),
+        JSON.stringify({ error: 'Missing or invalid incident_conditions parameter (must be array)' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -219,20 +302,23 @@ serve(async (req) => {
       )
     }
 
-    if (!conditions || typeof conditions !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Missing or invalid conditions parameter' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      )
+    // Validate each condition
+    for (const condition of incident_conditions) {
+      if (!condition.type || !condition.description) {
+        return new Response(
+          JSON.stringify({ error: 'Each incident condition must have type and description' }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        )
+      }
     }
 
     // Validate max_tokens
-    if (max_tokens < 100 || max_tokens > 8192) {
+    if (max_tokens < 2000 || max_tokens > 16000) {
       return new Response(
-        JSON.stringify({ error: 'max_tokens must be between 100 and 8192' }),
+        JSON.stringify({ error: 'max_tokens must be between 2000 and 16000' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -253,24 +339,52 @@ serve(async (req) => {
       )
     }
 
-    // Construct full prompt
-    const injuriesStr = injuries ? `\n- Injuries: ${injuries}` : ''
-    const witnessesStr = witnesses ? `\n- Witnesses: ${witnesses}` : ''
-    const additionalContextStr = additional_context
-      ? `\n- Additional Context: ${additional_context}`
+    // Format conditions
+    const conditionsText = incident_conditions.length > 0
+      ? incident_conditions
+          .map(c => `- ${c.type}: ${c.description}`)
+          .join('\n')
+      : 'No specific conditions documented.'
+
+    // Format optional fields
+    const injuredRoleText = injured_person_role
+      ? `- Injured Person Role: ${injured_person_role}`
       : ''
 
+    const injurySeverityText = injury_severity
+      ? `- Injury Severity: ${injury_severity}`
+      : ''
+
+    const witnessesText = witnesses_count > 0
+      ? `- Witnesses: ${witnesses_count}`
+      : ''
+
+    const equipmentText = equipment_involved.length > 0
+      ? `- Equipment Involved: ${equipment_involved.join(', ')}`
+      : ''
+
+    const contextText = additional_context
+      ? `\n**ADDITIONAL CONTEXT:**\n${additional_context}`
+      : ''
+
+    // Format date for display
+    const displayDate = incident_date ? new Date(incident_date).toLocaleDateString('ro-RO') : 'unknown'
+
+    // Construct full prompt
     const fullPrompt = INCIDENT_ANALYSIS_PROMPT
       .replace('{incident_description}', incident_description)
-      .replace('{location}', location)
-      .replace('{conditions}', conditions)
-      .replace('{injuries}', injuriesStr)
-      .replace('{witnesses}', witnessesStr)
-      .replace('{additional_context}', additionalContextStr)
+      .replace('{incident_location}', incident_location)
+      .replace('{incident_date}', displayDate)
+      .replace('{injured_person_role}', injuredRoleText)
+      .replace('{injury_severity}', injurySeverityText)
+      .replace('{witnesses_count}', witnessesText)
+      .replace('{equipment_involved}', equipmentText)
+      .replace('{incident_conditions}', conditionsText)
+      .replace('{additional_context}', contextText)
 
     // Call Claude API
     console.log('Calling Claude API for incident analysis...')
-    console.log(`Incident: ${incident_description.substring(0, 100)}...`)
+    console.log(`Parameters: location=${incident_location}, conditions=${incident_conditions.length}`)
 
     const claudeResponse = await fetch(CLAUDE_API_URL, {
       method: 'POST',
@@ -332,106 +446,94 @@ serve(async (req) => {
       analysis = JSON.parse(cleanedText)
 
       // Validate structure
-      if (!analysis.incident_summary || !analysis.severity_assessment) {
-        throw new Error('Missing incident_summary or severity_assessment')
+      if (
+        !analysis.incident_summary ||
+        !analysis.severity_assessment ||
+        !Array.isArray(analysis.root_causes) ||
+        !Array.isArray(analysis.contributing_factors) ||
+        !Array.isArray(analysis.immediate_corrective_actions) ||
+        !Array.isArray(analysis.long_term_preventive_measures) ||
+        !Array.isArray(analysis.similar_historical_incidents) ||
+        !Array.isArray(analysis.investigation_recommendations) ||
+        !Array.isArray(analysis.training_recommendations) ||
+        !analysis.legal_compliance_notes
+      ) {
+        throw new Error('Invalid incident analysis structure')
       }
 
-      if (!Array.isArray(analysis.root_causes) || analysis.root_causes.length === 0) {
-        throw new Error('Missing or invalid root_causes')
+      // Validate severity_assessment
+      if (
+        !analysis.severity_assessment.actual_severity ||
+        !analysis.severity_assessment.potential_severity ||
+        !Array.isArray(analysis.severity_assessment.severity_factors)
+      ) {
+        throw new Error('Invalid severity_assessment structure')
       }
 
-      if (!Array.isArray(analysis.contributing_factors) || analysis.contributing_factors.length === 0) {
-        throw new Error('Missing or invalid contributing_factors')
+      // Validate root causes (should have at least 1)
+      if (analysis.root_causes.length === 0) {
+        throw new Error('No root causes identified')
       }
 
-      if (!Array.isArray(analysis.immediate_actions) || analysis.immediate_actions.length === 0) {
-        throw new Error('Missing or invalid immediate_actions')
-      }
-
-      if (!Array.isArray(analysis.preventive_measures) || analysis.preventive_measures.length === 0) {
-        throw new Error('Missing or invalid preventive_measures')
-      }
-
-      if (!Array.isArray(analysis.similar_incidents)) {
-        throw new Error('Missing or invalid similar_incidents')
-      }
-
-      if (!Array.isArray(analysis.legal_implications)) {
-        throw new Error('Missing or invalid legal_implications')
-      }
-
-      if (!analysis.recommendations_summary) {
-        throw new Error('Missing recommendations_summary')
-      }
-
-      // Validate severity assessment
-      const validSeverities = ['minor', 'moderate', 'serious', 'critical', 'catastrophic']
-      if (!validSeverities.includes(analysis.severity_assessment)) {
-        throw new Error(`Invalid severity_assessment: ${analysis.severity_assessment}`)
-      }
-
-      // Validate root causes
-      const validLikelihoods = ['primary', 'secondary', 'contributing']
       analysis.root_causes.forEach((cause, index) => {
-        if (!cause.cause || !cause.likelihood || !cause.explanation) {
+        if (!cause.category || !cause.description || !cause.likelihood || !cause.evidence) {
           throw new Error(`Invalid root cause structure at index ${index}`)
-        }
-        if (!validLikelihoods.includes(cause.likelihood)) {
-          throw new Error(`Invalid likelihood at root cause ${index}: ${cause.likelihood}`)
         }
       })
 
       // Validate contributing factors
-      const validCategories = ['human', 'technical', 'organizational', 'environmental']
-      const validImpactLevels = ['high', 'medium', 'low']
       analysis.contributing_factors.forEach((factor, index) => {
-        if (!factor.factor || !factor.category || !factor.impact_level) {
+        if (!factor.factor || !factor.description || !factor.impact_level) {
           throw new Error(`Invalid contributing factor structure at index ${index}`)
-        }
-        if (!validCategories.includes(factor.category)) {
-          throw new Error(`Invalid category at factor ${index}: ${factor.category}`)
-        }
-        if (!validImpactLevels.includes(factor.impact_level)) {
-          throw new Error(`Invalid impact_level at factor ${index}: ${factor.impact_level}`)
         }
       })
 
-      // Validate immediate actions
-      const validPriorities = ['immediate', 'urgent', 'high', 'medium']
-      analysis.immediate_actions.forEach((action, index) => {
-        if (!action.action || !action.priority || !action.responsible_party || !action.estimated_timeframe) {
-          throw new Error(`Invalid immediate action structure at index ${index}`)
+      // Validate immediate corrective actions
+      if (analysis.immediate_corrective_actions.length === 0) {
+        throw new Error('No immediate corrective actions identified')
+      }
+
+      analysis.immediate_corrective_actions.forEach((action, index) => {
+        if (
+          !action.action ||
+          !action.description ||
+          !action.priority ||
+          !action.implementation_timeframe ||
+          !action.responsible_party ||
+          !action.estimated_cost ||
+          typeof action.effectiveness_rating !== 'number'
+        ) {
+          throw new Error(`Invalid corrective action structure at index ${index}`)
         }
-        if (!validPriorities.includes(action.priority)) {
-          throw new Error(`Invalid priority at action ${index}: ${action.priority}`)
+        if (action.effectiveness_rating < 1 || action.effectiveness_rating > 5) {
+          throw new Error(`Invalid effectiveness_rating at index ${index}: ${action.effectiveness_rating}`)
         }
       })
 
       // Validate preventive measures
-      const validTypes = ['engineering', 'administrative', 'ppe', 'training', 'procedural']
-      const validEffectiveness = ['high', 'medium', 'low']
-      const validCosts = ['low', 'medium', 'high']
-      analysis.preventive_measures.forEach((measure, index) => {
-        if (!measure.measure || !measure.type || !measure.effectiveness || !measure.implementation_cost) {
+      if (analysis.long_term_preventive_measures.length === 0) {
+        throw new Error('No long-term preventive measures identified')
+      }
+
+      analysis.long_term_preventive_measures.forEach((measure, index) => {
+        if (
+          !measure.measure ||
+          !measure.description ||
+          !measure.implementation_type ||
+          !measure.implementation_timeframe ||
+          !measure.estimated_cost ||
+          !measure.expected_impact ||
+          typeof measure.legal_requirement !== 'boolean'
+        ) {
           throw new Error(`Invalid preventive measure structure at index ${index}`)
-        }
-        if (!validTypes.includes(measure.type)) {
-          throw new Error(`Invalid type at measure ${index}: ${measure.type}`)
-        }
-        if (!validEffectiveness.includes(measure.effectiveness)) {
-          throw new Error(`Invalid effectiveness at measure ${index}: ${measure.effectiveness}`)
-        }
-        if (!validCosts.includes(measure.implementation_cost)) {
-          throw new Error(`Invalid implementation_cost at measure ${index}: ${measure.implementation_cost}`)
         }
       })
 
-      // Validate similar incidents
-      analysis.similar_incidents.forEach((incident, index) => {
-        if (!incident.description || !Array.isArray(incident.common_factors) || !incident.lessons_learned) {
-          throw new Error(`Invalid similar incident structure at index ${index}`)
-        }
-      })
+      // Sort corrective actions by priority
+      const priorityOrder = { immediate: 1, urgent: 2, high: 3, medium: 4 }
+      analysis.immediate_corrective_actions.sort(
+        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
+      )
 
     } catch (parseError) {
       console.error('Failed to parse incident analysis:', parseError)
@@ -449,21 +551,23 @@ serve(async (req) => {
       )
     }
 
-    console.log(`Successfully analyzed incident with severity: ${analysis.severity_assessment}`)
-    console.log(`Identified ${analysis.root_causes.length} root causes, ${analysis.immediate_actions.length} immediate actions, ${analysis.preventive_measures.length} preventive measures`)
+    console.log('Successfully generated incident analysis')
+    console.log(`Root causes: ${analysis.root_causes.length}, Contributing factors: ${analysis.contributing_factors.length}`)
+    console.log(`Corrective actions: ${analysis.immediate_corrective_actions.length}, Preventive measures: ${analysis.long_term_preventive_measures.length}`)
 
-    // Calculate analysis statistics
-    const statistics = {
+    // Calculate statistics
+    const stats = {
       root_causes_count: analysis.root_causes.length,
-      primary_causes: analysis.root_causes.filter(c => c.likelihood === 'primary').length,
       contributing_factors_count: analysis.contributing_factors.length,
-      high_impact_factors: analysis.contributing_factors.filter(f => f.impact_level === 'high').length,
-      immediate_actions_count: analysis.immediate_actions.length,
-      urgent_actions: analysis.immediate_actions.filter(a => a.priority === 'immediate' || a.priority === 'urgent').length,
-      preventive_measures_count: analysis.preventive_measures.length,
-      high_effectiveness_measures: analysis.preventive_measures.filter(m => m.effectiveness === 'high').length,
-      similar_incidents_found: analysis.similar_incidents.length,
-      legal_references_count: analysis.legal_implications.length,
+      immediate_actions_count: analysis.immediate_corrective_actions.length,
+      preventive_measures_count: analysis.long_term_preventive_measures.length,
+      similar_incidents_found: analysis.similar_historical_incidents.length,
+      immediate_priority_actions: analysis.immediate_corrective_actions.filter(
+        a => a.priority === 'immediate'
+      ).length,
+      high_impact_factors: analysis.contributing_factors.filter(
+        f => f.impact_level === 'high'
+      ).length,
     }
 
     // Return success response
@@ -471,17 +575,18 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         analysis: analysis,
-        statistics: statistics,
-        input_parameters: {
-          location,
-          conditions,
-          has_injuries: !!injuries,
-          has_witnesses: !!witnesses,
+        statistics: stats,
+        input_summary: {
+          incident_location,
+          incident_date: displayDate,
+          conditions_analyzed: incident_conditions.length,
+          equipment_involved: equipment_involved.length,
+          has_injury: !!injury_severity,
         },
         metadata: {
           model: 'claude-sonnet-4-5-20250929',
           tokens_used: claudeData.usage,
-          analyzed_at: new Date().toISOString(),
+          generated_at: new Date().toISOString(),
         },
       }),
       {
