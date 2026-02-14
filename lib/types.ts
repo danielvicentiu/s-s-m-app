@@ -463,3 +463,320 @@ export interface OrganizationObligation {
   match_score: number
   match_reason: string | null
 }
+
+// ── AUDIT INTERN ──
+
+export type AuditType = 'ssm_general' | 'psi' | 'gdpr' | 'iso_45001'
+export type AuditStatus = 'draft' | 'in_progress' | 'completed' | 'archived'
+export type AuditAnswer = 'compliant' | 'non_compliant' | 'partial' | 'na'
+export type ActionStatus = 'pending' | 'in_progress' | 'completed' | 'overdue'
+
+export interface AuditQuestion {
+  id: string
+  audit_type: AuditType
+  category: string
+  question_text: string
+  legal_reference: string | null
+  weight: number
+  display_order: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface Audit {
+  id: string
+  organization_id: string
+  audit_type: AuditType
+  audit_date: string
+  auditor_name: string
+  auditor_id: string | null
+
+  // Status and progress
+  status: AuditStatus
+  progress_percentage: number
+
+  // Scoring
+  total_questions: number
+  answered_questions: number
+  compliant_answers: number
+  partial_answers: number
+  non_compliant_answers: number
+  na_answers: number
+  compliance_score: number
+  weighted_score: number
+
+  // Results summary
+  findings: string[]
+  non_conformities: string[]
+  corrective_actions: string[]
+  recommendations: string[]
+
+  // Report
+  report_generated_at: string | null
+  report_url: string | null
+
+  // Metadata
+  notes: string | null
+  started_at: string
+  completed_at: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+
+  // Relations
+  organizations?: Organization
+}
+
+export interface AuditResponse {
+  id: string
+  audit_id: string
+  question_id: string
+
+  // Response
+  answer: AuditAnswer
+  comment: string | null
+
+  // Evidence
+  evidence_files: string[]
+  evidence_description: string | null
+
+  // Follow-up
+  requires_action: boolean
+  action_description: string | null
+  action_deadline: string | null
+  action_assigned_to: string | null
+  action_status: ActionStatus | null
+
+  // Metadata
+  answered_by: string | null
+  answered_at: string
+  created_at: string
+  updated_at: string
+
+  // Relations
+  audit_questions?: AuditQuestion
+}
+
+export const AUDIT_TYPE_LABELS: Record<AuditType, string> = {
+  'ssm_general': 'SSM General',
+  'psi': 'PSI (Prevenire Incendii)',
+  'gdpr': 'GDPR (Protecția Datelor)',
+  'iso_45001': 'ISO 45001'
+}
+
+export const AUDIT_STATUS_LABELS: Record<AuditStatus, string> = {
+  'draft': 'Draft',
+  'in_progress': 'În Progres',
+  'completed': 'Finalizat',
+  'archived': 'Arhivat'
+}
+
+export const AUDIT_ANSWER_LABELS: Record<AuditAnswer, string> = {
+  'compliant': 'DA (Conform)',
+  'non_compliant': 'NU (Neconform)',
+  'partial': 'Parțial',
+  'na': 'N/A (Nu se aplică)'
+}
+
+// ── CALENDAR EVENTS ──
+
+export type CalendarEventType =
+  | 'meeting'
+  | 'inspection'
+  | 'deadline'
+  | 'training_external'
+  | 'holiday'
+  | 'maintenance'
+  | 'other'
+
+export interface CalendarEvent {
+  id: string
+  organization_id: string
+
+  // Event details
+  title: string
+  description: string | null
+  event_type: CalendarEventType
+
+  // Date and time
+  start_date: string
+  end_date: string | null
+  all_day: boolean
+
+  // Relationships
+  related_employee_id: string | null
+  related_training_id: string | null
+  related_equipment_id: string | null
+  related_medical_id: string | null
+
+  // Display
+  color: string
+  location: string | null
+
+  // Reminders
+  reminder_minutes: number[] | null
+
+  // Metadata
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+export const CALENDAR_EVENT_TYPE_LABELS: Record<CalendarEventType, string> = {
+  'meeting': 'Întâlnire',
+  'inspection': 'Inspecție',
+  'deadline': 'Termen limită',
+  'training_external': 'Instruire externă',
+  'holiday': 'Sărbătoare/Concediu',
+  'maintenance': 'Mentenanță',
+  'other': 'Altul'
+}
+
+export const CALENDAR_EVENT_TYPE_COLORS: Record<CalendarEventType, string> = {
+  'meeting': '#3B82F6', // blue
+  'inspection': '#F59E0B', // amber
+  'deadline': '#EF4444', // red
+  'training_external': '#8B5CF6', // purple
+  'holiday': '#10B981', // green
+  'maintenance': '#6B7280', // gray
+  'other': '#6366F1' // indigo
+}
+
+// ── TRAINING RECORDS ──
+
+export type TrainingStatus = 'scheduled' | 'completed' | 'cancelled' | 'expired'
+
+export interface TrainingType {
+  id: string
+  name: string
+  description: string | null
+  frequency_months: number
+  legal_reference: string | null
+  is_mandatory: boolean
+  default_duration_hours: number | null
+  default_tematica: any[] // JSONB array
+  country_code: string
+  is_active: boolean
+  display_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface TrainingTematicaItem {
+  topic: string
+  duration_min: number
+  completed: boolean
+  notes?: string
+}
+
+export interface TrainingTestQuestion {
+  question: string
+  type: 'multiple_choice' | 'true_false' | 'open_ended'
+  options?: string[]
+  correct_answer: string
+  employee_answer?: string
+  points?: number
+}
+
+export interface TrainingAttachment {
+  name: string
+  url: string
+  size: number
+  uploaded_at: string
+}
+
+export interface Training {
+  id: string
+  organization_id: string
+  employee_id: string
+
+  // Training details
+  training_type_id: string
+  training_type: string
+  training_date: string
+  duration_hours: number | null
+
+  // Content
+  tematica_content: TrainingTematicaItem[]
+
+  // Test management
+  test_questions: TrainingTestQuestion[]
+  test_score: number | null
+  test_passed: boolean | null
+  test_taken_at: string | null
+
+  // Certificate
+  certificate_number: string | null
+  certificate_url: string | null
+  certificate_issued_at: string | null
+
+  // Next training
+  next_training_date: string | null
+
+  // Location and provider
+  location: string | null
+  external_provider: string | null
+
+  // Cost
+  cost: number | null
+  currency: string
+
+  // Trainer
+  trainer_name: string | null
+  trainer_id: string | null
+
+  // Status
+  status: TrainingStatus
+  is_compliant: boolean
+
+  // Notes and attachments
+  notes: string | null
+  attachments: TrainingAttachment[]
+
+  // Metadata
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+
+  // Relations (populated in queries)
+  training_types?: TrainingType
+  employees?: any
+  organizations?: Organization
+}
+
+export interface TrainingExpiringSoon extends Training {
+  employee_name: string
+  cnp_hash: string | null
+  organization_name: string
+  days_until_due: number
+  frequency_months: number
+}
+
+export interface TrainingCompletionStats {
+  organization_id: string
+  organization_name: string
+  employees_trained: number
+  total_trainings: number
+  completed_trainings: number
+  passed_tests: number
+  avg_test_score: number | null
+  total_training_cost: number | null
+  overdue_trainings: number
+}
+
+export const TRAINING_STATUS_LABELS: Record<TrainingStatus, string> = {
+  'scheduled': 'Programat',
+  'completed': 'Finalizat',
+  'cancelled': 'Anulat',
+  'expired': 'Expirat'
+}
+
+export const TRAINING_STATUS_COLORS: Record<TrainingStatus, string> = {
+  'scheduled': 'blue',
+  'completed': 'green',
+  'cancelled': 'gray',
+  'expired': 'red'
+}
