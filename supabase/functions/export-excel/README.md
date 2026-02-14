@@ -117,7 +117,7 @@ window.open(download_url, '_blank')
 
 ## Dependencies
 
-- `https://esm.sh/xlsx@0.18.5` - SheetJS for Excel generation
+- `https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs` - SheetJS for Excel generation
 - `@supabase/supabase-js@2.39.3` - Supabase client
 
 ## Notes
