@@ -1,58 +1,66 @@
 // app/[locale]/dashboard/obligations/page.tsx
-// Dashboard: Vizualizare Obligații Legale
-// Acces: consultant_ssm, firma_admin, angajat
+// Pagina completă obligații legale pentru organizație
+// Folosește ObligationsWidget în mod full (compact=false)
 
-import { redirect } from 'next/navigation';
-import { createSupabaseServer } from '@/lib/supabase/server';
-import { getOrgObligations, getOrgObligationStats } from '@/lib/services/obligation-publisher';
-import { ObligationsClient } from './ObligationsClient';
+import { createSupabaseServer } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import ObligationsWidget from '@/components/dashboard/ObligationsWidget'
 
-export default async function ObligationsPage() {
-  const supabase = await createSupabaseServer();
-  const { data: { user } } = await supabase.auth.getUser();
+export default async function ObligationsPage({ 
+  params 
+}: { 
+  params: Promise<{ locale: string }> 
+}) {
+  const { locale } = await params
+  const supabase = await createSupabaseServer()
 
-  if (!user) {
-    redirect('/login');
-  }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect(`/${locale}/login`)
 
-  // Get user's organization(s)
-  const { data: memberships } = await supabase
+  // Get user's organization from memberships
+  const { data: membership } = await supabase
     .from('memberships')
-    .select('organization_id, role')
+    .select('organization_id')
     .eq('user_id', user.id)
-    .eq('is_active', true);
+    .limit(1)
+    .single()
 
-  if (!memberships || memberships.length === 0) {
-    redirect('/unauthorized');
+  // Fallback: check user_preferences for selected_org
+  let orgId = membership?.organization_id
+
+  if (!orgId) {
+    const { data: prefs } = await supabase
+      .from('user_preferences')
+      .select('value')
+      .eq('user_id', user.id)
+      .eq('key', 'selected_org')
+      .single()
+
+    if (prefs?.value) {
+      try {
+        orgId = JSON.parse(prefs.value)
+      } catch {}
+    }
   }
 
-  const orgId = memberships[0].organization_id;
-
-  // Get organization details
-  const { data: org } = await supabase
-    .from('organizations')
-    .select('id, name, country_code')
-    .eq('id', orgId)
-    .single();
-
-  if (!org) {
-    redirect('/dashboard');
+  if (!orgId) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="text-center py-12 text-gray-500">
+          <p className="text-lg">Nu ești asociat la nicio organizație.</p>
+          <p className="text-sm mt-2">Contactează administratorul pentru a fi adăugat.</p>
+        </div>
+      </div>
+    )
   }
-
-  // Fetch obligations for this organization
-  const obligations = await getOrgObligations(orgId);
-  const stats = await getOrgObligationStats(orgId);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ObligationsClient
-        obligations={obligations}
-        stats={stats}
-        organizationName={org.name}
-        organizationId={orgId}
-        userId={user.id}
-        userRole={memberships[0].role}
+    <div className="max-w-4xl mx-auto p-6">
+      <ObligationsWidget 
+        organizationId={orgId} 
+        locale={locale} 
+        compact={false} 
       />
     </div>
-  );
+  )
 }
