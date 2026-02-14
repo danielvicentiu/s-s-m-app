@@ -1,7 +1,7 @@
 // lib/modules/reports-module.ts
 // OP-LEGO — Reports Module
 // Report generation, scheduled reports, export CSV/PDF/Excel, custom report builder, compliance dashboard
-// Data: 13 Februarie 2026
+// Data: 14 Februarie 2026 (Enhanced Version)
 
 import type { ModuleKey } from './types'
 
