@@ -36,19 +36,36 @@ export interface Membership {
   joined_at: string
 }
 
+export type ExamType =
+  | 'periodic'          // Control medical periodic
+  | 'angajare'         // Control la angajare
+  | 'reluare'          // Control la reluare activitate
+  | 'la_cerere'        // Control la cerere
+  | 'supraveghere'     // Control special de supraveghere
+  | 'post_accident'    // Control post-accident
+  | 'reevaluare'       // Reevaluare capacitate muncă
+
+export type RiskLevel = 'scazut' | 'mediu' | 'ridicat' | 'critic'
+
 export interface MedicalExamination {
   id: string
   organization_id: string
   employee_name: string
   cnp_hash: string | null
   job_title: string | null
-  examination_type: 'periodic' | 'angajare' | 'reluare' | 'la_cerere' | 'supraveghere'
+  examination_type: 'periodic' | 'angajare' | 'reluare' | 'la_cerere' | 'supraveghere' // Legacy field
+  exam_type: ExamType | null // Enhanced field with more options
   examination_date: string
   expiry_date: string
   result: 'apt' | 'apt_conditionat' | 'inapt_temporar' | 'inapt'
   restrictions: string | null
   doctor_name: string | null
+  doctor_specialization: string | null // New: specializarea medicului
   clinic_name: string | null
+  fitness_file_url: string | null // New: URL către certificatul medical
+  cost: number | null // New: costul examinării
+  next_exam_date: string | null // New: data următorului control (auto-calculată)
+  risk_level: RiskLevel | null // New: nivel risc pentru frecvența controalelor
   notes: string | null
   content_version: number
   legal_basis_version: string
