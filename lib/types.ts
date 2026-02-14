@@ -268,7 +268,8 @@ export interface ApiKey {
   key_hash: string
   key_prefix: string
   permissions: ApiKeyPermission[]
-  rate_limit_per_minute: number
+  rate_limit_per_hour: number
+  rate_limit_per_day: number
   last_used_at: string | null
   total_requests: number
   is_active: boolean
@@ -278,6 +279,7 @@ export interface ApiKey {
   updated_at: string
   revoked_at: string | null
   revoked_by: string | null
+  revoked_reason: string | null
 }
 
 export const COUNTRY_CURRENCIES: Record<CountryCode, Currency> = {
@@ -385,7 +387,8 @@ export interface ApiKey {
   key_hash: string
   key_prefix: string
   permissions: ApiKeyPermission[]
-  rate_limit_per_minute: number
+  rate_limit_per_hour: number
+  rate_limit_per_day: number
   last_used_at: string | null
   total_requests: number
   is_active: boolean
@@ -395,6 +398,7 @@ export interface ApiKey {
   updated_at: string
   revoked_at: string | null
   revoked_by: string | null
+  revoked_reason: string | null
 }
 
 export interface ApiKeyUsageLog {
@@ -405,11 +409,9 @@ export interface ApiKeyUsageLog {
   status_code: number | null
   ip_address: string | null
   user_agent: string | null
-  request_size_bytes: number | null
-  response_size_bytes: number | null
-  duration_ms: number | null
-  error_message: string | null
+  response_time_ms: number | null
   created_at: string
+  request_hour: string
 }
 
 // ── OBLIGATIONS (M5 Publishing Module) ──
@@ -465,4 +467,37 @@ export interface OrganizationObligation {
   assigned_by: string | null
   match_score: number
   match_reason: string | null
+}
+
+// ── AUDIT LOG ──
+
+export type AuditAction =
+  | 'employee_added'
+  | 'employee_updated'
+  | 'employee_deleted'
+  | 'training_completed'
+  | 'training_scheduled'
+  | 'document_generated'
+  | 'alert_resolved'
+  | 'alert_created'
+  | 'settings_changed'
+  | 'reges_sync'
+  | 'sso_configured'
+  | 'user_login'
+  | 'user_logout'
+  | string
+
+export interface AuditLog {
+  id: string
+  organization_id: string | null
+  user_id: string | null
+  action: AuditAction
+  entity_type: string | null
+  entity_id: string | null
+  old_value: any
+  new_value: any
+  metadata: Record<string, any>
+  ip_address: string | null
+  user_agent: string | null
+  created_at: string
 }
