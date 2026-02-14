@@ -1,0 +1,2576 @@
+openapi: 3.0.0
+
+info:
+  title: s-s-m.ro REST API
+  version: 1.0.0
+  description: |
+    API REST pentru platforma s-s-m.ro - digitizare compliance SSM și PSI pentru consultanți și firme din România, Bulgaria, Ungaria, Germania.
+
+    ## Autentificare
+    API-ul suportă două metode de autentificare:
+    - **Bearer Token (JWT)**: Token JWT de la Supabase Auth pentru utilizatori autentificați
+    - **API Key**: Chei API generate pentru integrări externe
+
+    ## Paginare
+    Toate endpoint-urile de listare suportă paginare prin parametrii:
+    - `page`: numărul paginii (default: 1)
+    - `limit`: număr de rezultate per pagină (default: 20, max: 100)
+
+    ## Sortare și Filtrare
+    Endpoint-urile de listare suportă:
+    - `sort_by`: câmp de sortare
+    - `sort_order`: `asc` sau `desc`
+    - Filtre specifice fiecărui endpoint (vezi documentația)
+
+    ## Rate Limiting
+    API Key-urile au rate limiting configurat per organizație (default: 100 req/min)
+
+    ## Versioning
+    API-ul este versionat prin URL (ex: `/api/v1/employees`)
+
+  contact:
+    name: s-s-m.ro Support
+    url: https://app.s-s-m.ro
+    email: support@s-s-m.ro
+  license:
+    name: Proprietar
+    url: https://app.s-s-m.ro/terms
+
+servers:
+  - url: https://app.s-s-m.ro
+    description: Production
+  - url: http://localhost:3000
+    description: Development
+
+security:
+  - bearerAuth: []
+  - apiKeyAuth: []
+
+tags:
+  - name: Organizations
+    description: Gestionare organizații (firme clienți)
+  - name: Employees
+    description: Gestionare angajați
+  - name: Trainings
+    description: Gestionare instruiri SSM/PSI
+  - name: Medical
+    description: Gestionare examene medicale
+  - name: Equipment
+    description: Gestionare echipamente de siguranță
+  - name: Documents
+    description: Gestionare documente generate
+  - name: Alerts
+    description: Gestionare alerte și notificări
+  - name: Compliance
+    description: Status conformitate și rapoarte
+  - name: Legislation
+    description: Legislație și obligații legale (M5 Publishing Module)
+  - name: Webhooks
+    description: Gestionare webhooks pentru notificări externe
+  - name: API Keys
+    description: Gestionare chei API pentru integrări
+  - name: Feature Flags
+    description: Gestionare feature flags
+  - name: Admin
+    description: Operații administrative
+
+# ══════════════════════════════════════════════════════════════════
+# PATHS - API ENDPOINTS
+# ══════════════════════════════════════════════════════════════════
+
+paths:
+
+  # ──────────────────────────────────────────────────────────────
+  # ORGANIZATIONS
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/organizations:
+    get:
+      summary: Listează organizații
+      description: Returnează lista paginată de organizații cu filtre și sortare opționale
+      tags: [Organizations]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [name, created_at, updated_at, cooperation_status, exposure_score, data_completeness]
+            default: created_at
+          description: Câmp de sortare
+        - $ref: '#/components/parameters/SortOrderParam'
+        - name: cooperation_status
+          in: query
+          schema:
+            type: string
+            enum: [active, warning, uncooperative]
+          description: Filtrare după status cooperare
+        - name: exposure_score
+          in: query
+          schema:
+            type: string
+            enum: [necalculat, scazut, mediu, ridicat, critic]
+          description: Filtrare după scor expunere risc
+        - name: country_code
+          in: query
+          schema:
+            type: string
+            enum: [RO, BG, HU, DE, PL]
+          description: Filtrare după țară
+        - name: county
+          in: query
+          schema:
+            type: string
+          description: Filtrare după județ (România)
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Căutare în nume, CUI, adresă
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Creează organizație
+      description: Creează o organizație nouă (doar pentru consultanți)
+      tags: [Organizations]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 255
+                  example: SC Exemplu SRL
+                cui:
+                  type: string
+                  nullable: true
+                  example: RO12345678
+                address:
+                  type: string
+                  nullable: true
+                  example: Str. Exemplu nr. 1, București
+                county:
+                  type: string
+                  nullable: true
+                  example: București
+                country_code:
+                  type: string
+                  enum: [RO, BG, HU, DE, PL]
+                  default: RO
+                contact_email:
+                  type: string
+                  format: email
+                  nullable: true
+                contact_phone:
+                  type: string
+                  nullable: true
+                preferred_channels:
+                  type: array
+                  items:
+                    type: string
+                    enum: [email, whatsapp, sms, push]
+                  default: [email]
+                cooperation_status:
+                  type: string
+                  enum: [active, warning, uncooperative]
+                  default: active
+                exposure_score:
+                  type: string
+                  enum: [necalculat, scazut, mediu, ridicat, critic]
+                  default: necalculat
+      responses:
+        '201':
+          description: Organizație creată cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/organizations/{id}:
+    get:
+      summary: Detalii organizație
+      description: Returnează detaliile complete ale unei organizații
+      tags: [Organizations]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    patch:
+      summary: Actualizează organizație
+      description: Actualizează detaliile unei organizații
+      tags: [Organizations]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                cui:
+                  type: string
+                  nullable: true
+                address:
+                  type: string
+                  nullable: true
+                county:
+                  type: string
+                  nullable: true
+                contact_email:
+                  type: string
+                  format: email
+                  nullable: true
+                contact_phone:
+                  type: string
+                  nullable: true
+                preferred_channels:
+                  type: array
+                  items:
+                    type: string
+                cooperation_status:
+                  type: string
+                  enum: [active, warning, uncooperative]
+                exposure_score:
+                  type: string
+                  enum: [necalculat, scazut, mediu, ridicat, critic]
+      responses:
+        '200':
+          description: Organizație actualizată cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      summary: Șterge organizație
+      description: Șterge o organizație (soft delete)
+      tags: [Organizations]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Organizație ștearsă cu succes
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  # ──────────────────────────────────────────────────────────────
+  # EMPLOYEES
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/employees:
+    get:
+      summary: Listează angajați
+      description: Returnează lista paginată de angajați cu filtre, sortare și căutare
+      tags: [Employees]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [full_name, hire_date, created_at, job_title, nationality, cor_code]
+            default: hire_date
+        - $ref: '#/components/parameters/SortOrderParam'
+        - name: organization_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filtrare după organizație
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          description: Filtrare după status activ
+        - name: nationality
+          in: query
+          schema:
+            type: string
+          description: Filtrare după naționalitate (RO, BG, HU, DE, PL)
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Căutare în nume, email, telefon, funcție, CNP
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    post:
+      summary: Creează angajat
+      description: Creează un angajat nou cu validare CNP și email
+      tags: [Employees]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [organization_id, full_name]
+              properties:
+                organization_id:
+                  type: string
+                  format: uuid
+                full_name:
+                  type: string
+                  minLength: 2
+                  maxLength: 255
+                  example: Popescu Ion
+                cnp:
+                  type: string
+                  nullable: true
+                  description: Cod Numeric Personal (13 cifre)
+                  pattern: '^\d{13}$'
+                  example: '1234567890123'
+                email:
+                  type: string
+                  format: email
+                  nullable: true
+                phone:
+                  type: string
+                  nullable: true
+                job_title:
+                  type: string
+                  nullable: true
+                  example: Inginer
+                cor_code:
+                  type: string
+                  nullable: true
+                  description: Clasificarea Ocupațiilor din România
+                nationality:
+                  type: string
+                  default: RO
+                hire_date:
+                  type: string
+                  format: date
+                  nullable: true
+                termination_date:
+                  type: string
+                  format: date
+                  nullable: true
+                is_active:
+                  type: boolean
+                  default: true
+                user_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  description: Link către cont user dacă angajatul are acces în app
+      responses:
+        '201':
+          description: Angajat creat cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/employees/{id}:
+    get:
+      summary: Detalii angajat
+      description: Returnează detaliile complete ale unui angajat
+      tags: [Employees]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Actualizează angajat
+      description: Actualizează detaliile unui angajat
+      tags: [Employees]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                cnp:
+                  type: string
+                  nullable: true
+                email:
+                  type: string
+                  format: email
+                  nullable: true
+                phone:
+                  type: string
+                  nullable: true
+                job_title:
+                  type: string
+                  nullable: true
+                cor_code:
+                  type: string
+                  nullable: true
+                nationality:
+                  type: string
+                hire_date:
+                  type: string
+                  format: date
+                  nullable: true
+                termination_date:
+                  type: string
+                  format: date
+                  nullable: true
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Angajat actualizat cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Șterge angajat
+      description: Șterge un angajat (soft delete)
+      tags: [Employees]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Angajat șters cu succes
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────────────────────
+  # TRAININGS
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/trainings:
+    get:
+      summary: Listează instruiri
+      description: Returnează lista paginată de atribuiri de instruire cu join-uri pentru angajați și module
+      tags: [Trainings]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [assigned_at, due_date, completed_at, created_at, status]
+            default: assigned_at
+        - $ref: '#/components/parameters/SortOrderParam'
+        - name: worker_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filtrare după angajat
+        - name: module_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filtrare după modul instruire
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [assigned, in_progress, completed, overdue, expired, exempted]
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [ssm, psi, su, nis2, custom]
+        - name: training_type
+          in: query
+          schema:
+            type: string
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Căutare în nume angajat
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TrainingAssignment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      summary: Creează atribuiri instruire
+      description: Creează atribuiri de instruire pentru mai mulți angajați
+      tags: [Trainings]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [organization_id, module_id, worker_ids, assigned_by]
+              properties:
+                organization_id:
+                  type: string
+                  format: uuid
+                module_id:
+                  type: string
+                  format: uuid
+                worker_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+                assigned_by:
+                  type: string
+                  format: uuid
+                due_date:
+                  type: string
+                  format: date
+                  nullable: true
+                notes:
+                  type: string
+                  nullable: true
+      responses:
+        '201':
+          description: Atribuiri create cu succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TrainingAssignment'
+                  count:
+                    type: integer
+                  skipped:
+                    type: integer
+                    description: Număr de angajați care aveau deja atribuiri active
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/trainings/{id}:
+    get:
+      summary: Detalii atribuire instruire
+      description: Returnează detaliile complete ale unei atribuiri de instruire
+      tags: [Trainings]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingAssignment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Actualizează atribuire instruire
+      description: Actualizează status, date și note pentru o atribuire
+      tags: [Trainings]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [assigned, in_progress, completed, overdue, expired, exempted]
+                due_date:
+                  type: string
+                  format: date
+                  nullable: true
+                completed_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+                notes:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Atribuire actualizată cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingAssignment'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Șterge atribuire instruire
+      description: Șterge o atribuire de instruire
+      tags: [Trainings]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Atribuire ștearsă cu succes
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────────────────────
+  # COMPLIANCE
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/compliance:
+    get:
+      summary: Status conformitate
+      description: Returnează scorul și statusul de conformitate pentru o organizație
+      tags: [Compliance]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplianceStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────────────────────
+  # LEGISLATION
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/legislation:
+    get:
+      summary: Listează legislație
+      description: |
+        Returnează lista paginată de obligații legale publicate cu filtrare după țară, domeniu și status.
+        Utilizatorii obișnuiți văd doar obligații publicate, adminii pot vedea toate statusurile.
+      tags: [Legislation]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [created_at, published_at, source_legal_act, confidence, extracted_at]
+            default: published_at
+        - $ref: '#/components/parameters/SortOrderParam'
+        - name: country_code
+          in: query
+          schema:
+            type: string
+            enum: [RO, BG, HU, DE, PL]
+          description: Filtrare după țară
+        - name: domain
+          in: query
+          schema:
+            type: string
+            enum: [ssm, psi, gdpr, labor, environmental, construction, transport, food_safety, other]
+          description: Filtrare după domeniu (caută în industry_tags)
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, validated, approved, published, archived]
+          description: Filtrare după status (doar admin pentru non-published)
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Căutare în obligation_text și source_legal_act
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Obligation'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      summary: Declanșează pipeline legislație (Admin)
+      description: |
+        Pornește pipeline-ul de scraping și procesare legislație pentru o țară.
+        Doar administratorii pot apela acest endpoint.
+      tags: [Legislation, Admin]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [country_code]
+              properties:
+                country_code:
+                  type: string
+                  enum: [RO, BG, HU, DE, PL]
+                  description: Țara pentru care se rulează pipeline-ul
+                source:
+                  type: string
+                  description: URL RSS feed (opțional, se folosește default-ul țării)
+                options:
+                  type: object
+                  properties:
+                    sinceDays:
+                      type: integer
+                      default: 7
+                      description: Câte zile înapoi să scrapeze
+                    maxEntries:
+                      type: integer
+                      default: 100
+                      description: Număr maxim de intrări de procesat
+                    dryRun:
+                      type: boolean
+                      default: false
+                      description: Rulare test fără scriere în DB
+                    stopAtStage:
+                      type: string
+                      enum: [M1, M2, M3, M4]
+                      description: Oprește pipeline-ul la un stadiu specific
+                    notifyOrganizations:
+                      type: boolean
+                      default: true
+                      description: Notifică organizațiile despre obligații noi
+      responses:
+        '202':
+          description: Pipeline pornit cu succes (procesare asincronă)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  pipeline_id:
+                    type: string
+                  country_code:
+                    type: string
+                  source:
+                    type: string
+                  started_at:
+                    type: string
+                    format: date-time
+                  options:
+                    type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/legislation/{id}:
+    get:
+      summary: Detalii obligație legală
+      description: Returnează detaliile complete ale unei obligații legale
+      tags: [Legislation]
+      security:
+        - bearerAuth: []
+        - apiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Obligation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Actualizează obligație (Admin)
+      description: Actualizează detaliile unei obligații legale (doar admin)
+      tags: [Legislation, Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [draft, validated, approved, published, archived]
+                published:
+                  type: boolean
+                obligation_text:
+                  type: string
+                who:
+                  type: array
+                  items:
+                    type: string
+                deadline:
+                  type: string
+                  nullable: true
+                frequency:
+                  type: string
+                  enum: [annual, biannual, monthly, quarterly, on_demand, once]
+                  nullable: true
+                penalty:
+                  type: string
+                  nullable: true
+                caen_codes:
+                  type: array
+                  items:
+                    type: string
+                industry_tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Obligație actualizată cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Obligation'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/legislation/organizations/{orgId}:
+    get:
+      summary: Obligații pentru organizație
+      description: Returnează lista de obligații atribuite unei organizații specifice
+      tags: [Legislation]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, acknowledged, compliant, non_compliant]
+          description: Filtrare după status conformitate organizație
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrganizationObligation'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # ──────────────────────────────────────────────────────────────
+  # WEBHOOKS
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/webhooks:
+    get:
+      summary: Listează webhooks
+      description: Returnează lista de webhooks pentru o organizație cu statistici de livrare
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Webhook'
+                        - type: object
+                          properties:
+                            stats:
+                              type: object
+                              properties:
+                                success_count:
+                                  type: integer
+                                failed_count:
+                                  type: integer
+                            last_delivery:
+                              $ref: '#/components/schemas/WebhookDeliveryLog'
+                              nullable: true
+                  count:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      summary: Creează webhook
+      description: Înregistrează un webhook nou pentru evenimente specifice
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [organizationId, url, events]
+              properties:
+                organizationId:
+                  type: string
+                  format: uuid
+                url:
+                  type: string
+                  format: uri
+                  description: URL-ul unde vor fi trimise notificările
+                events:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - employee.created
+                      - employee.updated
+                      - employee.deleted
+                      - training.created
+                      - training.completed
+                      - medical.created
+                      - medical.expiring
+                      - medical.expired
+                      - equipment.created
+                      - equipment.expiring
+                      - equipment.expired
+                      - alert.created
+                      - incident.created
+                      - penalty.created
+                      - compliance.status_changed
+                  minItems: 1
+                  description: Lista de evenimente pentru care se trimite webhook
+      responses:
+        '201':
+          description: Webhook creat cu succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhook:
+                    $ref: '#/components/schemas/Webhook'
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/webhooks/{id}:
+    get:
+      summary: Detalii webhook
+      description: Returnează detaliile unui webhook
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Actualizează webhook
+      description: Actualizează URL, evenimente sau status activ al unui webhook
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                events:
+                  type: array
+                  items:
+                    type: string
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Webhook actualizat cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Șterge webhook
+      description: Șterge un webhook (soft delete)
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Webhook șters cu succes
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/webhooks/{id}/test:
+    post:
+      summary: Testează webhook
+      description: Trimite un event de test către webhook
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Test trimis cu succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  delivery:
+                    $ref: '#/components/schemas/WebhookDeliveryLog'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/webhooks/{id}/logs:
+    get:
+      summary: Loguri livrare webhook
+      description: Returnează istoricul de livrări pentru un webhook
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, success, failed]
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebhookDeliveryLog'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/webhooks/{id}/retry:
+    post:
+      summary: Retrimitere webhook eșuat
+      description: Retrimite un event de webhook care a eșuat
+      tags: [Webhooks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID-ul delivery log-ului de retriat
+      responses:
+        '200':
+          description: Retrimitere inițiată cu succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  delivery:
+                    $ref: '#/components/schemas/WebhookDeliveryLog'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────────────────────
+  # API KEYS
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/api-keys:
+    get:
+      summary: Listează API Keys
+      description: Returnează lista de chei API pentru organizație
+      tags: [API Keys]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+                  count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      summary: Creează API Key
+      description: Generează o cheie API nouă cu permisiuni specifice
+      tags: [API Keys]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [organization_id, name, permissions]
+              properties:
+                organization_id:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 100
+                description:
+                  type: string
+                  nullable: true
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - read:employees
+                      - write:employees
+                      - read:trainings
+                      - write:trainings
+                      - read:medical
+                      - write:medical
+                      - read:equipment
+                      - write:equipment
+                      - read:alerts
+                      - write:alerts
+                      - read:documents
+                      - write:documents
+                      - read:reports
+                      - webhook:manage
+                      - admin:all
+                  minItems: 1
+                rate_limit_per_minute:
+                  type: integer
+                  default: 100
+                  minimum: 10
+                  maximum: 1000
+                expires_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+      responses:
+        '201':
+          description: API Key creată cu succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_key:
+                    $ref: '#/components/schemas/ApiKey'
+                  key:
+                    type: string
+                    description: Cheia API completă (se afișează o singură dată!)
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/api-keys/{id}:
+    get:
+      summary: Detalii API Key
+      description: Returnează detaliile unei chei API
+      tags: [API Keys]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Actualizează API Key
+      description: Actualizează permisiuni, rate limit sau status activ
+      tags: [API Keys]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                rate_limit_per_minute:
+                  type: integer
+                is_active:
+                  type: boolean
+                expires_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+      responses:
+        '200':
+          description: API Key actualizată cu succes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Revocă API Key
+      description: Revocă permanent o cheie API
+      tags: [API Keys]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: API Key revocată cu succes
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/api-keys/{id}/rotate:
+    post:
+      summary: Rotație API Key
+      description: Generează o cheie nouă păstrând aceleași permisiuni
+      tags: [API Keys]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Cheie rotită cu succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_key:
+                    $ref: '#/components/schemas/ApiKey'
+                  key:
+                    type: string
+                    description: Cheia API nouă (se afișează o singură dată!)
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────────────────────
+  # FEATURE FLAGS
+  # ──────────────────────────────────────────────────────────────
+
+  /api/v1/feature-flags:
+    get:
+      summary: Listează feature flags
+      description: Returnează lista de feature flags cu override-uri pentru organizație
+      tags: [Feature Flags]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: organization_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Opțional - filtrează cu override-uri pentru organizație
+      responses:
+        '200':
+          description: Succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FeatureFlag'
+                  count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/feature-flags/overrides:
+    post:
+      summary: Setează override feature flag (Admin)
+      description: Setează un override specific pentru organizație
+      tags: [Feature Flags, Admin]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [organization_id, flag_key, enabled]
+              properties:
+                organization_id:
+                  type: string
+                  format: uuid
+                flag_key:
+                  type: string
+                enabled:
+                  type: boolean
+      responses:
+        '200':
+          description: Override setat cu succes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  override:
+                    type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+# ══════════════════════════════════════════════════════════════════
+# COMPONENTS - SCHEMAS, PARAMETERS, RESPONSES
+# ══════════════════════════════════════════════════════════════════
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT de la Supabase Auth. Se obține prin autentificare la /api/auth/login
+
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Cheie API generată pentru integrări externe. Se gestionează prin /api/v1/api-keys
+
+  # ──────────────────────────────────────────────────────────────
+  # SCHEMAS
+  # ──────────────────────────────────────────────────────────────
+
+  schemas:
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        cui:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        county:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          enum: [RO, BG, HU, DE, PL]
+          default: RO
+        contact_email:
+          type: string
+          format: email
+          nullable: true
+        contact_phone:
+          type: string
+          nullable: true
+        preferred_channels:
+          type: array
+          items:
+            type: string
+            enum: [email, whatsapp, sms, push]
+        cooperation_status:
+          type: string
+          enum: [active, warning, uncooperative]
+        exposure_score:
+          type: string
+          enum: [necalculat, scazut, mediu, ridicat, critic]
+        data_completeness:
+          type: integer
+          minimum: 0
+          maximum: 100
+        employee_count:
+          type: integer
+          nullable: true
+        caen_codes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        industry_tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+        cnp:
+          type: string
+          nullable: true
+          description: Cod Numeric Personal (13 cifre)
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        job_title:
+          type: string
+          nullable: true
+        cor_code:
+          type: string
+          nullable: true
+          description: Clasificarea Ocupațiilor din România
+        nationality:
+          type: string
+          default: RO
+        hire_date:
+          type: string
+          format: date
+          nullable: true
+        termination_date:
+          type: string
+          format: date
+          nullable: true
+        is_active:
+          type: boolean
+        user_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        organizations:
+          type: object
+          nullable: true
+          description: Join cu organizația (când e inclus)
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            cui:
+              type: string
+              nullable: true
+
+    TrainingAssignment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        worker_id:
+          type: string
+          format: uuid
+        module_id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+          format: uuid
+          nullable: true
+        assigned_by:
+          type: string
+          format: uuid
+        assigned_at:
+          type: string
+          format: date-time
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          enum: [assigned, in_progress, completed, overdue, expired, exempted]
+        notes:
+          type: string
+          nullable: true
+        workers:
+          type: object
+          nullable: true
+          description: Join cu angajatul
+          properties:
+            id:
+              type: string
+              format: uuid
+            full_name:
+              type: string
+            email:
+              type: string
+              nullable: true
+            job_title:
+              type: string
+              nullable: true
+            is_active:
+              type: boolean
+        modules:
+          type: object
+          nullable: true
+          description: Join cu modulul instruire
+          properties:
+            id:
+              type: string
+              format: uuid
+            code:
+              type: string
+            title:
+              type: string
+            category:
+              type: string
+              enum: [ssm, psi, su, nis2, custom]
+            training_type:
+              type: string
+            duration_minutes_required:
+              type: integer
+            is_mandatory:
+              type: boolean
+
+    ComplianceStatus:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        compliance_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+          description: Scor general de conformitate (0-100)
+        breakdown:
+          type: object
+          properties:
+            medical:
+              type: object
+              properties:
+                score:
+                  type: number
+                total:
+                  type: integer
+                expired:
+                  type: integer
+                expiring:
+                  type: integer
+                valid:
+                  type: integer
+            equipment:
+              type: object
+              properties:
+                score:
+                  type: number
+                total:
+                  type: integer
+                expired:
+                  type: integer
+                expiring:
+                  type: integer
+                valid:
+                  type: integer
+            trainings:
+              type: object
+              properties:
+                score:
+                  type: number
+                total:
+                  type: integer
+                completed:
+                  type: integer
+                in_progress:
+                  type: integer
+                overdue:
+                  type: integer
+        last_updated:
+          type: string
+          format: date-time
+        alerts_count:
+          type: integer
+          description: Număr de alerte active
+
+    Obligation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        source_legal_act:
+          type: string
+          description: Actul normativ sursă (ex "Legea 319/2006")
+        source_article_id:
+          type: string
+          nullable: true
+        source_article_number:
+          type: string
+          nullable: true
+        country_code:
+          type: string
+          enum: [RO, BG, HU, DE, PL]
+        obligation_text:
+          type: string
+          description: Textul obligației extrase
+        who:
+          type: array
+          items:
+            type: string
+          description: Cine are obligația (ex "angajatori cu >50 angajați")
+        deadline:
+          type: string
+          nullable: true
+          description: Deadline-ul obligației
+        frequency:
+          type: string
+          enum: [annual, biannual, monthly, quarterly, on_demand, once]
+          nullable: true
+        penalty:
+          type: string
+          nullable: true
+          description: Textul penalității
+        penalty_min:
+          type: number
+          nullable: true
+        penalty_max:
+          type: number
+          nullable: true
+        penalty_currency:
+          type: string
+          nullable: true
+        evidence_required:
+          type: array
+          items:
+            type: string
+          description: Liste de documente/probe necesare
+        confidence:
+          type: number
+          format: float
+          description: Confidence score AI (0-1)
+        validation_score:
+          type: number
+          format: float
+          description: Scor validare (0-1)
+        status:
+          type: string
+          enum: [draft, validated, approved, published, archived]
+        published:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        caen_codes:
+          type: array
+          items:
+            type: string
+          description: Coduri CAEN aplicabile
+        industry_tags:
+          type: array
+          items:
+            type: string
+          description: Tag-uri domenii (ssm, psi, gdpr, etc.)
+        extracted_at:
+          type: string
+          format: date-time
+        validated_at:
+          type: string
+          format: date-time
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        approved_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        language:
+          type: string
+          default: ro
+        deduplication_hash:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties: true
+
+    OrganizationObligation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        obligation_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, acknowledged, compliant, non_compliant]
+        assigned_at:
+          type: string
+          format: date-time
+        acknowledged_at:
+          type: string
+          format: date-time
+          nullable: true
+        acknowledged_by:
+          type: string
+          format: uuid
+          nullable: true
+        compliant_at:
+          type: string
+          format: date-time
+          nullable: true
+        compliant_by:
+          type: string
+          format: uuid
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        evidence_urls:
+          type: array
+          items:
+            type: string
+        assigned_by:
+          type: string
+          format: uuid
+          nullable: true
+        match_score:
+          type: number
+          format: float
+          description: Scor match organizație-obligație (0-1)
+        match_reason:
+          type: string
+          nullable: true
+
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+          description: Lista de evenimente la care webhook-ul e subscris
+        secret:
+          type: string
+          description: Secret pentru semnarea payload-ului (doar la creare)
+        is_active:
+          type: boolean
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    WebhookDeliveryLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+          description: Tipul evenimentului (ex "employee.created")
+        payload:
+          type: object
+          additionalProperties: true
+        status:
+          type: string
+          enum: [pending, success, failed]
+        http_status_code:
+          type: integer
+          nullable: true
+        response_body:
+          type: string
+          nullable: true
+        error_message:
+          type: string
+          nullable: true
+        attempts:
+          type: integer
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        key_prefix:
+          type: string
+          description: Primele 8 caractere ale cheii (pentru identificare)
+        permissions:
+          type: array
+          items:
+            type: string
+            enum:
+              - read:employees
+              - write:employees
+              - read:trainings
+              - write:trainings
+              - read:medical
+              - write:medical
+              - read:equipment
+              - write:equipment
+              - read:alerts
+              - write:alerts
+              - read:documents
+              - write:documents
+              - read:reports
+              - webhook:manage
+              - admin:all
+        rate_limit_per_minute:
+          type: integer
+          default: 100
+        last_used_at:
+          type: string
+          format: date-time
+          nullable: true
+        total_requests:
+          type: integer
+          default: 0
+        is_active:
+          type: boolean
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        revoked_at:
+          type: string
+          format: date-time
+          nullable: true
+        revoked_by:
+          type: string
+          format: uuid
+          nullable: true
+
+    FeatureFlag:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Identificator unique flag (ex "M5_PUBLISHING")
+        enabled:
+          type: boolean
+          description: Status global
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        organization_override:
+          type: boolean
+          nullable: true
+          description: Override specific pentru organizație (dacă există)
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Pagina curentă
+        limit:
+          type: integer
+          description: Rezultate per pagină
+        total:
+          type: integer
+          description: Total rezultate
+        totalPages:
+          type: integer
+          description: Total pagini
+
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Tipul erorii
+        message:
+          type: string
+          description: Mesaj human-readable în română
+        code:
+          type: string
+          description: Cod eroare machine-readable
+        details:
+          type: object
+          additionalProperties: true
+          description: Detalii suplimentare (ex validare Zod)
+
+  # ──────────────────────────────────────────────────────────────
+  # PARAMETERS
+  # ──────────────────────────────────────────────────────────────
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      description: Numărul paginii
+
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+      description: Număr de rezultate per pagină
+
+    SortOrderParam:
+      name: sort_order
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+      description: Direcție sortare
+
+  # ──────────────────────────────────────────────────────────────
+  # RESPONSES
+  # ──────────────────────────────────────────────────────────────
+
+  responses:
+    Unauthorized:
+      description: Nu ești autentificat
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: Unauthorized
+            message: Trebuie să fii autentificat pentru a accesa această resursă
+            code: AUTH_REQUIRED
+
+    Forbidden:
+      description: Nu ai permisiunea să accesezi această resursă
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: Forbidden
+            message: Nu ai permisiunea să accesezi această resursă
+            code: INSUFFICIENT_PERMISSIONS
+
+    NotFound:
+      description: Resursa nu a fost găsită
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: Not Found
+            message: Resursa solicitată nu a fost găsită
+            code: NOT_FOUND
+
+    ValidationError:
+      description: Date de intrare invalide
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: Validation Error
+            message: Date de intrare invalide
+            code: VALIDATION_ERROR
+            details:
+              full_name: Required
+              email: Invalid email format
+
+    Conflict:
+      description: Conflict - resursa există deja
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: Conflict
+            message: Resursa există deja
+            code: DUPLICATE_ENTRY
+
+    InternalError:
+      description: Eroare internă de server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+          example:
+            error: Internal Server Error
+            message: A apărut o eroare neprevăzută
+            code: INTERNAL_ERROR
