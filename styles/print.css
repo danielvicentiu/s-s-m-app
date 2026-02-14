@@ -1,0 +1,444 @@
+/* Print Stylesheet for s-s-m.ro Platform */
+
+@media print {
+  /* Page setup */
+  @page {
+    size: A4 portrait;
+    margin: 1.5cm 1cm 1.5cm 1cm;
+  }
+
+  /* Reset */
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Body and root */
+  html,
+  body {
+    width: 100%;
+    height: auto;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide navigation and UI elements */
+  nav,
+  header,
+  footer,
+  aside,
+  [role="navigation"],
+  [role="banner"],
+  .no-print,
+  .print-hidden {
+    display: none !important;
+  }
+
+  /* Hide sidebar and navigation components */
+  [class*="sidebar"],
+  [class*="Sidebar"],
+  [class*="navigation"],
+  [class*="Navigation"],
+  [class*="header"],
+  [class*="Header"],
+  [class*="bottomNav"],
+  [class*="BottomNav"],
+  [class*="mobile"],
+  [class*="Mobile"] {
+    display: none !important;
+  }
+
+  /* Hide buttons and interactive elements */
+  button,
+  [type="button"],
+  [type="submit"],
+  [role="button"],
+  .btn,
+  [class*="button"],
+  [class*="Button"] {
+    display: none !important;
+  }
+
+  /* Show only print-specific buttons if any */
+  .print-only,
+  .print-show {
+    display: block !important;
+  }
+
+  /* Main content full width */
+  main,
+  [role="main"],
+  .main-content,
+  [class*="content"],
+  [class*="Content"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  /* Remove dashboard layout constraints */
+  [class*="dashboard"],
+  [class*="Dashboard"],
+  .container,
+  [class*="container"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Print header with logo */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 20pt;
+    padding-bottom: 10pt;
+    border-bottom: 2pt solid #000;
+  }
+
+  .print-header img {
+    max-height: 40pt;
+    width: auto;
+  }
+
+  .print-header h1 {
+    font-size: 16pt;
+    font-weight: bold;
+    margin: 10pt 0 5pt 0;
+  }
+
+  .print-header .subtitle {
+    font-size: 10pt;
+    color: #666;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 18pt;
+    font-weight: bold;
+    margin: 0 0 12pt 0;
+    page-break-after: avoid;
+  }
+
+  h2 {
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 16pt 0 10pt 0;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 12pt 0 8pt 0;
+    page-break-after: avoid;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 10pt 0 6pt 0;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Links */
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666;
+  }
+
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+
+  /* Lists */
+  ul,
+  ol {
+    margin: 0 0 8pt 15pt;
+    padding: 0;
+  }
+
+  li {
+    margin: 0 0 4pt 0;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 12pt 0;
+    font-size: 9pt;
+    page-break-inside: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  thead th {
+    font-weight: bold;
+    background: #f5f5f5 !important;
+    border: 1pt solid #000;
+    padding: 6pt 8pt;
+    text-align: left;
+  }
+
+  tbody tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  tbody td {
+    border: 1pt solid #ddd;
+    padding: 5pt 8pt;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f9f9f9 !important;
+  }
+
+  /* Page breaks */
+  .page-break,
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .avoid-break,
+  .no-break {
+    page-break-inside: avoid;
+  }
+
+  /* Cards and sections */
+  [class*="card"],
+  [class*="Card"],
+  section,
+  article {
+    border: 1pt solid #ddd;
+    padding: 10pt;
+    margin: 0 0 12pt 0;
+    page-break-inside: avoid;
+  }
+
+  /* Status badges */
+  [class*="badge"],
+  [class*="Badge"],
+  [class*="status"],
+  [class*="Status"] {
+    border: 1pt solid #000;
+    padding: 2pt 6pt;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+  }
+
+  /* Forms - show data only */
+  input,
+  textarea,
+  select {
+    border: none;
+    border-bottom: 1pt solid #ddd;
+    padding: 2pt 0;
+    font-size: 10pt;
+  }
+
+  label {
+    font-weight: bold;
+    font-size: 9pt;
+    display: block;
+    margin-bottom: 2pt;
+  }
+
+  /* Grid layouts */
+  [class*="grid"] {
+    display: block !important;
+  }
+
+  [class*="grid"] > * {
+    display: block !important;
+    margin-bottom: 8pt;
+  }
+
+  /* Flex layouts */
+  [class*="flex"] {
+    display: block !important;
+  }
+
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Charts and graphs - ensure visibility */
+  canvas,
+  svg {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Empty states and loading indicators */
+  [class*="loading"],
+  [class*="Loading"],
+  [class*="spinner"],
+  [class*="Spinner"],
+  [class*="skeleton"],
+  [class*="Skeleton"],
+  [class*="empty"],
+  [class*="Empty"] {
+    display: none !important;
+  }
+
+  /* Modals and overlays */
+  [class*="modal"],
+  [class*="Modal"],
+  [class*="dialog"],
+  [class*="Dialog"],
+  [class*="overlay"],
+  [class*="Overlay"],
+  [class*="backdrop"],
+  [class*="Backdrop"] {
+    display: none !important;
+  }
+
+  /* Tooltips and popovers */
+  [class*="tooltip"],
+  [class*="Tooltip"],
+  [class*="popover"],
+  [class*="Popover"],
+  [role="tooltip"] {
+    display: none !important;
+  }
+
+  /* Tabs - show all content */
+  [role="tabpanel"] {
+    display: block !important;
+  }
+
+  [role="tablist"] {
+    display: none !important;
+  }
+
+  /* Accordion - expand all */
+  [class*="accordion"] [class*="content"],
+  [class*="Accordion"] [class*="Content"] {
+    display: block !important;
+    height: auto !important;
+  }
+
+  /* Utility classes */
+  .print-page-break {
+    page-break-before: always;
+  }
+
+  .print-no-break {
+    page-break-inside: avoid;
+  }
+
+  .print-mt {
+    margin-top: 12pt;
+  }
+
+  .print-mb {
+    margin-bottom: 12pt;
+  }
+
+  /* Footer for each page */
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8pt;
+    color: #666;
+    border-top: 1pt solid #ddd;
+    padding-top: 5pt;
+  }
+
+  /* Date and timestamp */
+  .print-date {
+    font-size: 9pt;
+    color: #666;
+    margin-bottom: 12pt;
+  }
+
+  /* Signature blocks */
+  .signature-block {
+    margin-top: 30pt;
+    page-break-inside: avoid;
+  }
+
+  .signature-line {
+    border-top: 1pt solid #000;
+    width: 200pt;
+    margin-top: 20pt;
+    padding-top: 5pt;
+    font-size: 9pt;
+  }
+
+  /* QR codes and barcodes */
+  .qr-code,
+  .barcode {
+    page-break-inside: avoid;
+    max-width: 100pt;
+  }
+
+  /* Color adjustments for better print visibility */
+  .text-blue-600,
+  .text-blue-500 {
+    color: #000 !important;
+  }
+
+  .bg-blue-50,
+  .bg-gray-50,
+  .bg-gray-100 {
+    background: #f5f5f5 !important;
+  }
+
+  /* Ensure important content is visible */
+  .print-important {
+    font-weight: bold;
+    font-size: 11pt;
+  }
+
+  /* Remove shadows, rounded corners for print */
+  * {
+    border-radius: 0 !important;
+  }
+}
