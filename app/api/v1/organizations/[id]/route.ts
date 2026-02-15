@@ -11,7 +11,7 @@ import {
   ApiContext
 } from '@/lib/api/middleware'
 import { organizationSchema } from '@/lib/middleware/validation'
-import { withErrorHandler } from '@/lib/middleware/error-handler'
+import { withErrorHandling } from '@/lib/middleware/error-handler'
 
 /**
  * @openapi
@@ -51,7 +51,7 @@ export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  return withAuth(withErrorHandler(async (req: NextRequest, apiContext: ApiContext) => {
+  return withAuth(withErrorHandling(async (req: NextRequest, apiContext: ApiContext) => {
     const supabase = await createSupabaseServer()
     const { id: organizationId } = await context.params
 
@@ -169,7 +169,7 @@ export async function PATCH(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  return withAuth(withErrorHandler(async (req: NextRequest, apiContext: ApiContext) => {
+  return withAuth(withErrorHandling(async (req: NextRequest, apiContext: ApiContext) => {
     const supabase = await createSupabaseServer()
     const { id: organizationId } = await context.params
 
@@ -322,7 +322,7 @@ export async function DELETE(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  return withAuth(withErrorHandler(async (req: NextRequest, apiContext: ApiContext) => {
+  return withAuth(withErrorHandling(async (req: NextRequest, apiContext: ApiContext) => {
     const supabase = await createSupabaseServer()
     const { id: organizationId } = await context.params
 

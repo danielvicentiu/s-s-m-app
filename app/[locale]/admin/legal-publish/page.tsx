@@ -53,7 +53,7 @@ export default async function LegalPublishPage({
 
   return (
     <LegalPublishClient
-      obligations={approvedObligations || []}
+      obligations={(approvedObligations || []).map((o: any) => ({ ...o, legal_acts: Array.isArray(o.legal_acts) ? o.legal_acts[0] : o.legal_acts }))}
       organizations={organizations || []}
       recentBatches={recentBatches || []}
       publishedMap={publishedMap}

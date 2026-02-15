@@ -13,7 +13,7 @@ import {
   ApiContext
 } from '@/lib/api/middleware'
 import { organizationSchema } from '@/lib/middleware/validation'
-import { withErrorHandler } from '@/lib/middleware/error-handler'
+import { withErrorHandling } from '@/lib/middleware/error-handler'
 
 /**
  * @openapi
@@ -94,7 +94,7 @@ import { withErrorHandler } from '@/lib/middleware/error-handler'
  *       500:
  *         $ref: '#/components/responses/InternalError'
  */
-export const GET = withAuth(withErrorHandler(async (req: NextRequest, context: ApiContext) => {
+export const GET = withAuth(withErrorHandling(async (req: NextRequest, context: ApiContext) => {
   const supabase = await createSupabaseServer()
   const { searchParams } = new URL(req.url)
 
@@ -256,7 +256,7 @@ export const GET = withAuth(withErrorHandler(async (req: NextRequest, context: A
  *       500:
  *         $ref: '#/components/responses/InternalError'
  */
-export const POST = withAuth(withErrorHandler(async (req: NextRequest, context: ApiContext) => {
+export const POST = withAuth(withErrorHandling(async (req: NextRequest, context: ApiContext) => {
   const supabase = await createSupabaseServer()
 
   // Parse and validate request body

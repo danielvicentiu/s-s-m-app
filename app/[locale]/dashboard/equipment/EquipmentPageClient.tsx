@@ -447,15 +447,8 @@ export default function EquipmentPageClient() {
             description={debouncedSearch || filterCategory !== 'all' || filterStatus !== 'all'
               ? "Încercați să modificați filtrele de căutare"
               : "Adăugați primul echipament pentru a începe"}
-            action={
-              <button
-                onClick={() => router.push('/dashboard/equipment/add')}
-                className="mt-4 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
-              >
-                <Plus className="w-5 h-5" />
-                Adaugă echipament
-              </button>
-            }
+            onAction={() => router.push("/dashboard/equipment/add")}
+            actionLabel="Adaugă echipament"
           />
         ) : viewMode === 'table' ? (
           // Table View
@@ -574,7 +567,7 @@ export default function EquipmentPageClient() {
                               <div className="text-sm text-gray-700">{fmtDate(nextInspection)}</div>
                               {inspectionStatus !== 'valid' && (
                                 <StatusBadge
-                                  variant={inspectionStatus === 'expired' ? 'error' : 'warning'}
+                                  status={inspectionStatus === 'expired' ? 'expired' : 'expiring'}
                                   label={inspectionStatus === 'expired' ? 'Expirat' : 'Expiră curând'}
                                 />
                               )}
@@ -585,7 +578,7 @@ export default function EquipmentPageClient() {
                         </td>
                         <td className="px-6 py-4">
                           <StatusBadge
-                            variant={getStatusBadgeVariant(item.status)}
+                            status={item.status as any}
                             label={getStatusLabel(item.status)}
                           />
                         </td>
@@ -619,7 +612,7 @@ export default function EquipmentPageClient() {
                       <p className="text-sm text-gray-600">{item.equipment_types?.category || '—'}</p>
                     </div>
                     <StatusBadge
-                      variant={getStatusBadgeVariant(item.status)}
+                      status={item.status as any}
                       label={getStatusLabel(item.status)}
                     />
                   </div>
@@ -652,7 +645,7 @@ export default function EquipmentPageClient() {
                           <span className="font-medium text-gray-900">{fmtDate(nextInspection)}</span>
                           {inspectionStatus !== 'valid' && (
                             <StatusBadge
-                              variant={inspectionStatus === 'expired' ? 'error' : 'warning'}
+                              status={inspectionStatus === 'expired' ? 'expired' : 'expiring'}
                               label={inspectionStatus === 'expired' ? 'Expirat' : 'Expiră'}
                             />
                           )}
