@@ -150,7 +150,7 @@ export function getDaysUntilExpiry(expiryDate: string): number {
 // ── ADMIN CONFIGURABIL: Tabele master date per țară ──
 
 export type CountryCode = 'RO' | 'BG' | 'HU' | 'DE' | 'PL'
-export type LegislationDomain = 'ssm' | 'psi' | 'gdpr' | 'labor' | 'environmental' | 'other'
+export type LegislationDomain = 'SSM' | 'PSI' | 'GDPR' | 'LABOR' | 'OTHER'
 export type Currency = 'RON' | 'BGN' | 'HUF' | 'EUR' | 'PLN'
 export type ObligationFrequency = 'annual' | 'biannual' | 'monthly' | 'quarterly' | 'on_demand' | 'once'
 export type AlertSeverity = 'info' | 'warning' | 'critical' | 'expired'

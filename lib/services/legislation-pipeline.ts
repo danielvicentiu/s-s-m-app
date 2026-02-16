@@ -123,7 +123,7 @@ export interface PipelineResult {
   stages: {
     M1: StageResult<LegislationEntry[]>
     M2: StageResult<LegislationParsed[]>
-    M3: StageResult<Obligation[]>
+    M3: StageResult<Partial<Obligation>[]>
     M4: StageResult<{
       validated: ValidatedObligation[]
       published: PublishResult
@@ -389,7 +389,7 @@ export async function runPipeline(
     // STAGE M3: OBLIGATION EXTRACTION
     // ──────────────────────────────────────────────────────────
 
-    let obligationsData: Obligation[] = []
+    let obligationsData: Partial<Obligation>[] = []
 
     if (!resumeFromStage || ['M1', 'M2', 'M3'].includes(resumeFromStage)) {
       result.stages.M3 = await executeStage(
@@ -401,7 +401,7 @@ export async function runPipeline(
             message: `Extracting obligations from ${parsedData.length} documents`
           })
 
-          const allObligations: Obligation[] = []
+          const allObligations: Partial<Obligation>[] = []
 
           for (let i = 0; i < parsedData.length; i++) {
             const parsed = parsedData[i]
@@ -422,6 +422,7 @@ export async function runPipeline(
               const obligations = await extractObligations(
                 parsed,
                 legalActName,
+                country,
                 options.anthropicApiKey
               )
 

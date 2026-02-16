@@ -21,7 +21,9 @@
  */
 
 import type { CountryCode, Obligation, ObligationFrequency } from '@/lib/types'
-import type { LegislationParsed, LegislationArticle } from './m2-legislation-parser'
+// TODO: Create m2-legislation-parser module with proper types
+type LegislationParsed = any
+type LegislationArticle = any
 
 // ══════════════════════════════════════════════════════════════
 // TYPES

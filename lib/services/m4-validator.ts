@@ -20,8 +20,7 @@
  * const published = await publishObligations(validated, legislationId)
  */
 
-import type { ObligationFrequency, CountryCode } from '@/lib/types'
-import type { Obligation } from './m3-obligation-extractor'
+import type { ObligationFrequency, CountryCode, Obligation } from '@/lib/types'
 
 // ══════════════════════════════════════════════════════════════
 // TYPES
@@ -76,7 +75,7 @@ export interface ValidationReport {
  * Validates a batch of obligations with comprehensive checks
  */
 export async function validateObligations(
-  obligations: Obligation[]
+  obligations: Partial<Obligation>[]
 ): Promise<ValidatedObligation[]> {
   console.log(`[M4 Validator] Starting validation for ${obligations.length} obligations`)
   const startTime = Date.now()
@@ -110,12 +109,13 @@ export async function validateObligations(
 /**
  * Validates a single obligation for completeness and quality
  */
-function validateSingleObligation(obligation: Obligation): ValidatedObligation {
+function validateSingleObligation(obligation: Partial<Obligation>): ValidatedObligation {
   const issues: ValidationIssue[] = []
   let score = 1.0
+  const obl = obligation as any
 
   // 1. Check required fields
-  if (!obligation.obligationText || obligation.obligationText.trim().length < 10) {
+  if (!obl.obligationText || obl.obligationText.trim().length < 10) {
     issues.push({
       field: 'obligationText',
       severity: 'error',
@@ -125,7 +125,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
     score -= 0.3
   }
 
-  if (!obligation.sourceArticleId || !obligation.sourceArticleNumber) {
+  if (!obl.sourceArticleId || !obl.sourceArticleNumber) {
     issues.push({
       field: 'sourceArticleId',
       severity: 'error',
@@ -135,7 +135,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
     score -= 0.3
   }
 
-  if (!obligation.sourceLegalAct) {
+  if (!obl.sourceLegalAct) {
     issues.push({
       field: 'sourceLegalAct',
       severity: 'error',
@@ -145,7 +145,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
   }
 
   // 2. Check who field
-  if (!obligation.who || obligation.who.length === 0) {
+  if (!obl.who || obl.who.length === 0) {
     issues.push({
       field: 'who',
       severity: 'warning',
@@ -153,7 +153,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
       suggestion: 'Adaugă: angajator, angajat, ITM, etc.'
     })
     score -= 0.1
-  } else if (obligation.who.includes('unknown') || obligation.who.includes('neclar')) {
+  } else if (obl.who.includes('unknown') || obl.who.includes('neclar')) {
     issues.push({
       field: 'who',
       severity: 'warning',
@@ -164,7 +164,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
   }
 
   // 3. Check frequency
-  if (!obligation.frequency || obligation.frequency === 'unknown') {
+  if (!obl.frequency || obl.frequency === 'unknown') {
     issues.push({
       field: 'frequency',
       severity: 'info',
@@ -175,7 +175,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
   }
 
   // 4. Check deadline consistency with frequency
-  if (obligation.frequency && obligation.frequency !== 'unknown' && !obligation.deadline) {
+  if (obl.frequency && obl.frequency !== 'unknown' && !obl.deadline) {
     issues.push({
       field: 'deadline',
       severity: 'info',
@@ -184,9 +184,9 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
   }
 
   // 5. Check penalty data quality
-  if (obligation.penalty) {
-    if (obligation.penaltyMin && obligation.penaltyMax) {
-      if (obligation.penaltyMin > obligation.penaltyMax) {
+  if (obl.penalty) {
+    if (obl.penaltyMin && obl.penaltyMax) {
+      if (obl.penaltyMin > obl.penaltyMax) {
         issues.push({
           field: 'penalty',
           severity: 'error',
@@ -196,7 +196,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
         score -= 0.15
       }
 
-      if (!obligation.penaltyCurrency) {
+      if (!obl.penaltyCurrency) {
         issues.push({
           field: 'penaltyCurrency',
           severity: 'warning',
@@ -209,7 +209,7 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
   }
 
   // 6. Check evidence requirements
-  if (!obligation.evidenceRequired || obligation.evidenceRequired.length === 0) {
+  if (!obl.evidenceRequired || obl.evidenceRequired.length === 0) {
     issues.push({
       field: 'evidenceRequired',
       severity: 'info',
@@ -220,18 +220,18 @@ function validateSingleObligation(obligation: Obligation): ValidatedObligation {
   }
 
   // 7. Check text quality
-  const textQualityIssues = validateTextQuality(obligation.obligationText)
+  const textQualityIssues = validateTextQuality(obl.obligationText)
   if (textQualityIssues.length > 0) {
     issues.push(...textQualityIssues)
     score -= 0.1 * textQualityIssues.length
   }
 
   // 8. Check confidence score
-  if (obligation.confidence < 0.5) {
+  if (obl.confidence < 0.5) {
     issues.push({
       field: 'confidence',
       severity: 'warning',
-      message: `Scor de încredere scăzut (${obligation.confidence.toFixed(2)})`,
+      message: `Scor de încredere scăzut (${obl.confidence.toFixed(2)})`,
       suggestion: 'Verifică manual obligația înainte de publicare'
     })
     score -= 0.1
@@ -312,7 +312,7 @@ function validateTextQuality(text: string): ValidationIssue[] {
  */
 function generateObligationHash(obligation: Obligation): string {
   // Normalize text for comparison
-  const normalizedText = obligation.obligationText
+  const normalizedText = obl.obligationText
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .replace(/[.,!?;:]/g, '')
@@ -321,10 +321,10 @@ function generateObligationHash(obligation: Obligation): string {
   // Create hash components
   const components = [
     normalizedText,
-    obligation.sourceLegalAct,
-    obligation.sourceArticleNumber,
-    obligation.who.sort().join(','),
-    obligation.frequency || 'unknown'
+    obl.sourceLegalAct,
+    obl.sourceArticleNumber,
+    obl.who.sort().join(','),
+    obl.frequency || 'unknown'
   ].join('|')
 
   // Simple hash function (for real implementation, use crypto)
@@ -358,21 +358,21 @@ function deduplicateObligations(
   const deduplicated: ValidatedObligation[] = []
 
   for (const obligation of obligations) {
-    const existing = seen.get(obligation.deduplicationHash)
+    const existing = seen.get(obl.deduplicationHash)
 
     if (!existing) {
       // New unique obligation
-      seen.set(obligation.deduplicationHash, obligation)
+      seen.set(obl.deduplicationHash, obligation)
       deduplicated.push(obligation)
     } else {
       // Duplicate found - merge with better quality version
-      if (obligation.validationScore > existing.validationScore ||
-          obligation.confidence > existing.confidence) {
+      if (obl.validationScore > existing.validationScore ||
+          obl.confidence > existing.confidence) {
         // Replace with better version
         const index = deduplicated.indexOf(existing)
         if (index !== -1) {
           deduplicated[index] = obligation
-          seen.set(obligation.deduplicationHash, obligation)
+          seen.set(obl.deduplicationHash, obligation)
         }
       }
       // else: keep existing, discard duplicate
@@ -399,15 +399,15 @@ async function detectSimilarObligations(
 
     // Check against other obligations in the batch
     for (const other of obligations) {
-      if (other.id === obligation.id) continue
+      if (other.id === obl.id) continue
 
       const similarity = calculateTextSimilarity(
-        obligation.obligationText,
+        obl.obligationText,
         other.obligationText
       )
 
       // If very similar (>0.8) but different hash, flag as similar
-      if (similarity > 0.8 && obligation.deduplicationHash !== other.deduplicationHash) {
+      if (similarity > 0.8 && obl.deduplicationHash !== other.deduplicationHash) {
         similar.push(other.id)
       }
     }
@@ -456,23 +456,23 @@ function normalizeForComparison(text: string): string {
  * Calculates final validation score combining multiple factors
  */
 function calculateFinalScore(obligation: ValidatedObligation): ValidatedObligation {
-  let finalScore = obligation.validationScore
+  let finalScore = obl.validationScore
 
   // Adjust based on number of errors
-  const errorCount = obligation.validationIssues.filter(i => i.severity === 'error').length
-  const warningCount = obligation.validationIssues.filter(i => i.severity === 'warning').length
+  const errorCount = obl.validationIssues.filter(i => i.severity === 'error').length
+  const warningCount = obl.validationIssues.filter(i => i.severity === 'warning').length
 
   // Errors significantly impact score
   finalScore -= errorCount * 0.15
   finalScore -= warningCount * 0.05
 
   // Boost score if has similar obligations (indicates consistency)
-  if (obligation.similarObligations.length > 0) {
+  if (obl.similarObligations.length > 0) {
     finalScore += 0.05
   }
 
   // Adjust based on original confidence
-  finalScore = (finalScore * 0.7) + (obligation.confidence * 0.3)
+  finalScore = (finalScore * 0.7) + (obl.confidence * 0.3)
 
   // Normalize to 0-1
   finalScore = Math.max(0, Math.min(1, finalScore))
@@ -542,17 +542,17 @@ export async function publishObligations(
       }
 
       result.publishedCount++
-      result.publishedIds.push(obligation.id)
+      result.publishedIds.push(obl.id)
 
-      console.log(`[M4 Publisher] Published obligation ${obligation.id} (score: ${obligation.validationScore.toFixed(2)})`)
+      console.log(`[M4 Publisher] Published obligation ${obl.id} (score: ${obl.validationScore.toFixed(2)})`)
 
     } catch (error) {
       result.failedCount++
       result.errors.push({
-        obligationId: obligation.id,
+        obligationId: obl.id,
         error: error instanceof Error ? error.message : 'Unknown error'
       })
-      console.error(`[M4 Publisher] Failed to publish ${obligation.id}:`, error)
+      console.error(`[M4 Publisher] Failed to publish ${obl.id}:`, error)
     }
   }
 
