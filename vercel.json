@@ -3,11 +3,18 @@
     {
       "path": "/api/alerts/check",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/legislative-import/ro-check",
+      "schedule": "0 3 * * *"
     }
   ],
   "functions": {
     "app/api/admin/legal-batch/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/legislative-import/ro-check/route.ts": {
+      "maxDuration": 120
     }
   }
 }
