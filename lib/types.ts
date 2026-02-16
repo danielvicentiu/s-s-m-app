@@ -42,21 +42,71 @@ export interface Membership {
 export interface MedicalExamination {
   id: string
   organization_id: string
+  employee_id?: string | null // NEW: FK to employees (nullable for backward compatibility)
   employee_name: string
   cnp_hash: string | null
   job_title: string | null
-  examination_type: 'periodic' | 'angajare' | 'reluare' | 'la_cerere' | 'supraveghere'
+  examination_type: 'periodic' | 'angajare' | 'reluare' | 'la_cerere' | 'supraveghere' | 'fisa_aptitudine' | 'fisa_psihologica' | 'control_periodic' | 'control_angajare' | 'control_reluare' | 'vaccinare' | 'altul'
   examination_date: string
   expiry_date: string
-  result: 'apt' | 'apt_conditionat' | 'inapt_temporar' | 'inapt'
+  result: 'apt' | 'apt_conditionat' | 'inapt_temporar' | 'inapt' | 'in_asteptare'
   restrictions: string | null
   doctor_name: string | null
   clinic_name: string | null
   notes: string | null
+  // M3 MEDICAL tracking fields
+  validity_months?: number // Default 12
+  risk_factors?: string[] | null // Array of risk factors
+  next_examination_date?: string | null // Calculated expiry date
+  document_number?: string | null // Certificate/document number
+  document_storage_path?: string | null // Path to stored PDF
+  location_id?: string | null
+  file_url?: string | null // Legacy field for backward compatibility
   content_version: number
   legal_basis_version: string
   created_at: string
   updated_at: string
+  // Relations (populated by joins)
+  employees?: {
+    id: string
+    full_name: string
+    job_title: string | null
+    cor_code: string | null
+  }
+  organizations?: {
+    id: string
+    name: string
+    cui: string | null
+  }
+}
+
+// M3 MEDICAL: Appointment scheduling interface
+export interface MedicalAppointment {
+  id: string
+  employee_id: string
+  organization_id: string
+  appointment_date: string // DATE
+  appointment_time?: string | null // TIME
+  clinic_name?: string | null
+  clinic_address?: string | null
+  examination_type: 'periodic' | 'angajare' | 'reluare' | 'la_cerere' | 'supraveghere' | 'fisa_aptitudine' | 'fisa_psihologica' | 'control_periodic' | 'control_angajare' | 'control_reluare' | 'vaccinare' | 'altul'
+  status: 'programat' | 'confirmat' | 'efectuat' | 'anulat' | 'reprogramat'
+  notes?: string | null
+  created_by?: string | null
+  created_at: string
+  updated_at: string
+  // Relations (populated by joins)
+  employees?: {
+    id: string
+    full_name: string
+    job_title: string | null
+    cor_code: string | null
+  }
+  organizations?: {
+    id: string
+    name: string
+    cui: string | null
+  }
 }
 
 export interface SafetyEquipment {
