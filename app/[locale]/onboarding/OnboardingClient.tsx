@@ -1,78 +1,66 @@
+// app/[locale]/onboarding/OnboardingClient.tsx
+// Onboarding Flow — 3 Steps: CUI Lookup → Organization Details → Confirmation
+// Integrates with ANAF API for auto-complete
+
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from '@/i18n/navigation'
+import { useRouter } from 'next/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
-import { Check, ArrowRight, ArrowLeft, Building2, Users, Upload, CheckCircle, X, Loader2, Search } from 'lucide-react'
+import { Building2, Check, ArrowRight, ArrowLeft, Loader2, Search, AlertCircle, CheckCircle, Upload, Users } from 'lucide-react'
 import { validateCUI, formatCUI } from '@/lib/utils/cuiValidation'
 import { fetchCompanyDataFromANAF } from '@/lib/services/anafApi'
 
 interface Props {
   user: { id: string; email: string }
+  isConsultant: boolean
 }
 
-interface Employee {
-  fullName: string
-  cnp: string
-  jobTitle: string
-  corCode: string
+interface OrganizationForm {
+  name: string
+  cui: string
+  caen: string
+  address: string
+  county: string
+  employee_count_estimate: number
+  contact_email: string
+  contact_phone: string
 }
 
-export default function OnboardingClient({ user }: Props) {
+export default function OnboardingClient({ user, isConsultant }: Props) {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [orgId, setOrgId] = useState<string | null>(null)
-  const [isAnimating, setIsAnimating] = useState(false)
 
-  // Step 1: Date firmă
-  const [formData, setFormData] = useState({
+  // Step 1: CUI Lookup
+  const [cuiInput, setCuiInput] = useState('')
+  const [cuiError, setCuiError] = useState('')
+  const [loadingANAF, setLoadingANAF] = useState(false)
+  const [anafData, setAnafData] = useState<any>(null)
+  const [duplicateOrg, setDuplicateOrg] = useState<{ id: string; name: string; cui: string } | null>(null)
+
+  // Step 2: Organization Details
+  const [formData, setFormData] = useState<OrganizationForm>({
     name: '',
     cui: '',
     caen: '',
     address: '',
     county: '',
-    contactEmail: user.email,
-    contactPhone: '',
+    employee_count_estimate: 10,
+    contact_email: user.email,
+    contact_phone: '',
   })
 
-  // CUI validation and ANAF autocomplete
-  const [cuiError, setCuiError] = useState<string>('')
-  const [loadingANAF, setLoadingANAF] = useState(false)
-  const [anafSuggestion, setAnafSuggestion] = useState<string>('')
-
-  // Step 2: Angajați
-  const [employees, setEmployees] = useState<Employee[]>([])
-  const [currentEmployee, setCurrentEmployee] = useState<Employee>({
-    fullName: '',
-    cnp: '',
-    jobTitle: '',
-    corCode: '',
-  })
-
-  // Step 3: Documente (optional)
-  const [documents, setDocuments] = useState<File[]>([])
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-
-    // Reset CUI error când user modifică câmpul
-    if (name === 'cui') {
-      setCuiError('')
-      setAnafSuggestion('')
-    }
-  }
-
-  // Validare CUI în timp real (blur event)
-  const handleCUIBlur = async () => {
-    const cui = formData.cui.trim()
+  // Handle CUI lookup
+  const handleCUILookup = async () => {
+    const cui = cuiInput.trim()
     if (!cui) {
-      setCuiError('')
+      setCuiError('Introduceți CUI-ul firmei')
       return
     }
 
-    // Validare check digit
+    // Validate CUI format
     const validation = validateCUI(cui)
     if (!validation.valid) {
       setCuiError(validation.message)
@@ -80,276 +68,299 @@ export default function OnboardingClient({ user }: Props) {
     }
 
     setCuiError('')
-
-    // Interogare ANAF pentru autocomplete
     setLoadingANAF(true)
-    setAnafSuggestion('')
+    setAnafData(null)
+    setDuplicateOrg(null)
 
     try {
-      const anafData = await fetchCompanyDataFromANAF(validation.cleanedCUI || cui)
+      // Check for duplicate CUI in database
+      const supabase = createSupabaseBrowser()
+      const cleanCUI = formatCUI(cui)
 
-      if (anafData) {
-        setAnafSuggestion('Firmă găsită în registrul ANAF')
+      const { data: existing } = await supabase
+        .from('organizations')
+        .select('id, name, cui')
+        .eq('cui', cleanCUI)
+        .maybeSingle()
 
-        // Completare automată dacă câmpurile sunt goale
-        setFormData(prev => ({
-          ...prev,
-          cui: formatCUI(anafData.cui),
-          name: prev.name || anafData.name,
-          address: prev.address || anafData.address,
-          county: prev.county || anafData.county,
-          contactPhone: prev.contactPhone || anafData.phone,
-        }))
+      if (existing) {
+        setDuplicateOrg(existing)
+        setCuiError('Această firmă există deja în platformă')
+        return
+      }
+
+      // Fetch from ANAF
+      const anafResponse = await fetchCompanyDataFromANAF(cleanCUI)
+
+      if (anafResponse) {
+        setAnafData(anafResponse)
+        // Pre-fill form data
+        setFormData({
+          ...formData,
+          cui: cleanCUI,
+          name: anafResponse.name || '',
+          address: anafResponse.address || '',
+          county: anafResponse.county || '',
+          caen: anafResponse.caen_code || '',
+          contact_phone: anafResponse.phone || '',
+        })
+        setStep(2)
       } else {
-        setAnafSuggestion('CUI valid, dar nu a fost găsit în registrul ANAF')
+        // ANAF not found, but CUI is valid - allow manual entry
+        setFormData({
+          ...formData,
+          cui: cleanCUI,
+        })
+        setCuiError('CUI valid, dar nu a fost găsit în registrul ANAF. Veți completa datele manual.')
+        // Still allow to proceed
+        setTimeout(() => {
+          setCuiError('')
+          setStep(2)
+        }, 2000)
       }
     } catch (error) {
-      console.error('ANAF error:', error)
-      setAnafSuggestion('Eroare la verificarea ANAF (vei putea completa manual)')
+      console.error('CUI lookup error:', error)
+      setCuiError('Eroare la verificarea ANAF. Încercați din nou.')
     } finally {
       setLoadingANAF(false)
     }
   }
 
-  // Tranziție animată între pași
-  const transitionToStep = (newStep: number) => {
-    setIsAnimating(true)
-    setTimeout(() => {
-      setStep(newStep)
-      setIsAnimating(false)
-    }, 300)
+  // Handle form input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'employee_count_estimate' ? parseInt(value) || 0 : value,
+    }))
   }
 
-  const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentEmployee(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+  // Validate Step 2
+  const canSaveOrganization =
+    formData.name.trim() &&
+    formData.cui.trim() &&
+    formData.caen.trim() &&
+    formData.address.trim() &&
+    formData.employee_count_estimate > 0
 
-  const addEmployee = () => {
-    if (!currentEmployee.fullName || !currentEmployee.cnp || !currentEmployee.jobTitle) {
-      alert('Completează toate câmpurile obligatorii')
+  // Save organization and create membership
+  const handleSaveOrganization = async () => {
+    if (!canSaveOrganization) {
+      alert('Completați toate câmpurile obligatorii')
       return
-    }
-
-    const cnpRegex = /^[0-9]{13}$/
-    if (!cnpRegex.test(currentEmployee.cnp)) {
-      alert('CNP-ul trebuie să conțină exact 13 cifre')
-      return
-    }
-
-    setEmployees([...employees, currentEmployee])
-    setCurrentEmployee({ fullName: '', cnp: '', jobTitle: '', corCode: '' })
-  }
-
-  const removeEmployee = (index: number) => {
-    setEmployees(employees.filter((_, i) => i !== index))
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setDocuments(Array.from(e.target.files))
-    }
-  }
-
-  const canProceedStep1 = formData.name && formData.cui && formData.caen && formData.address && !cuiError
-
-  async function handleStep1Complete() {
-    // Validare finală CUI înainte de salvare
-    if (formData.cui) {
-      const validation = validateCUI(formData.cui)
-      if (!validation.valid) {
-        setCuiError(validation.message)
-        alert('CUI invalid. Corectează eroarea înainte de a continua.')
-        return
-      }
     }
 
     setLoading(true)
     const supabase = createSupabaseBrowser()
 
-    try{
-      // 1. Insert organization
+    try {
+      // 1. Create organization
       const { data: org, error: orgError } = await supabase
         .from('organizations')
         .insert({
-          name: formData.name,
-          cui: formData.cui,
-          address: formData.address,
-          county: formData.county || null,
-          contact_email: formData.contactEmail,
-          contact_phone: formData.contactPhone || null,
-          data_completeness: 25,
+          name: formData.name.trim(),
+          cui: formData.cui.trim(),
+          address: formData.address.trim(),
+          county: formData.county.trim() || null,
+          contact_email: formData.contact_email.trim() || null,
+          contact_phone: formData.contact_phone.trim() || null,
+          data_completeness: 40,
           exposure_score: 'necalculat',
           preferred_channels: ['email'],
           cooperation_status: 'active',
+          country_code: 'RO',
         })
         .select()
         .single()
 
-      if (orgError) throw orgError
+      if (orgError) {
+        console.error('Organization insert error:', orgError)
+        throw new Error('Eroare la salvarea organizației')
+      }
 
-      // 2. Create membership (user → organization)
+      // 2. Create membership
+      // If consultant, role is consultant_ssm; otherwise firma_admin
+      const membershipRole = isConsultant ? 'consultant_ssm' : 'firma_admin'
+
       const { error: memberError } = await supabase.from('memberships').insert({
         user_id: user.id,
         organization_id: org.id,
-        role: 'firma_admin',
+        role: membershipRole,
         is_active: true,
       })
 
-      if (memberError) throw memberError
-
-      setOrgId(org.id)
-      transitionToStep(2)
-    } catch (error) {
-      console.error('Onboarding error:', error)
-      alert('Eroare la salvare. Verifică datele și încearcă din nou.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleStep2Complete() {
-    if (employees.length === 0) {
-      alert('Adaugă cel puțin un angajat pentru a continua')
-      return
-    }
-
-    setLoading(true)
-    const supabase = createSupabaseBrowser()
-
-    try {
-      // Insert employees
-      const employeesToInsert = employees.map(emp => ({
-        organization_id: orgId,
-        full_name: emp.fullName,
-        cnp: emp.cnp,
-        job_title: emp.jobTitle,
-        cor_code: emp.corCode || null,
-        is_active: true,
-      }))
-
-      const { error: empError } = await supabase.from('employees').insert(employeesToInsert)
-
-      if (empError) throw empError
-
-      transitionToStep(3)
-    } catch (error) {
-      console.error('Error saving employees:', error)
-      alert('Eroare la salvarea angajaților. Încearcă din nou.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleFinalSubmit() {
-    setLoading(true)
-    const supabase = createSupabaseBrowser()
-
-    try {
-      // Upload documents if any
-      if (documents.length > 0) {
-        for (const file of documents) {
-          const fileName = `${orgId}/${Date.now()}_${file.name}`
-          const { error: uploadError } = await supabase.storage
-            .from('documents')
-            .upload(fileName, file)
-
-          if (uploadError) {
-            console.warn('Document upload warning:', uploadError)
-          }
-        }
+      if (memberError) {
+        console.error('Membership insert error:', memberError)
+        throw new Error('Eroare la crearea accesului')
       }
 
-      // Update organization completeness
-      await supabase
-        .from('organizations')
-        .update({ data_completeness: 75 })
-        .eq('id', orgId)
-
-      // Redirect to dashboard
-      router.push('/dashboard')
+      setOrgId(org.id)
+      setStep(3)
     } catch (error) {
-      console.error('Final submit error:', error)
-      alert('Eroare la finalizare. Redirecționăm către dashboard...')
-      router.push('/dashboard')
+      console.error('Save organization error:', error)
+      alert(error instanceof Error ? error.message : 'Eroare la salvare. Încercați din nou.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Header */}
-      <header className="border-b border-gray-200 bg-white">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <h1 className="text-2xl font-black text-gray-900">s-s-m.ro</h1>
+      <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="max-w-2xl mx-auto px-6 py-5">
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white">s-s-m.ro</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Bine ați venit! Să configurăm firma dvs.</p>
         </div>
       </header>
 
-      {/* Progress Stepper - Îmbunătățit */}
-      <div className="max-w-4xl mx-auto px-6 pt-8 pb-6">
-        <div className="flex items-center justify-between">
+      {/* Progress Steps */}
+      <div className="max-w-2xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-center mb-12">
           {[
-            { num: 1, label: 'Date firmă', icon: Building2 },
-            { num: 2, label: 'Angajați', icon: Users },
-            { num: 3, label: 'Documente', icon: Upload },
-            { num: 4, label: 'Confirmare', icon: CheckCircle },
+            { num: 1, label: 'CUI Lookup' },
+            { num: 2, label: 'Detalii organizație' },
+            { num: 3, label: 'Confirmare' },
           ].map((s, idx) => (
-            <div key={s.num} className="flex items-center flex-1">
-              <div className="flex flex-col items-center flex-1">
-                {/* Circle with number or check */}
-                <div className="relative">
-                  <div
-                    className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center font-black text-lg transition-all duration-300 ${
-                      step >= s.num
-                        ? 'bg-blue-600 text-white shadow-lg ring-4 ring-blue-100'
-                        : 'bg-gray-200 text-gray-400'
-                    }`}
-                  >
-                    {step > s.num ? (
-                      <Check className="w-6 h-6 md:w-7 md:h-7" />
-                    ) : (
-                      <span className="text-lg md:text-xl">{s.num}</span>
-                    )}
-                  </div>
-                  {/* Active pulse animation */}
-                  {step === s.num && (
-                    <div className="absolute inset-0 rounded-full bg-blue-600 animate-ping opacity-25" />
-                  )}
-                </div>
-                {/* Label */}
-                <span
-                  className={`text-xs md:text-sm font-bold mt-2 text-center transition-colors duration-300 ${
-                    step >= s.num ? 'text-blue-600' : 'text-gray-400'
+            <div key={s.num} className="flex items-center">
+              <div className="flex flex-col items-center">
+                <div
+                  className={`flex items-center justify-center w-12 h-12 rounded-full font-bold transition-all ${
+                    step >= s.num
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-400'
                   }`}
                 >
-                  {s.label}
-                </span>
+                  {step > s.num ? <Check className="h-6 w-6" /> : s.num}
+                </div>
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-2">{s.label}</span>
               </div>
-              {/* Connector line */}
-              {idx < 3 && (
+              {idx < 2 && (
                 <div
-                  className={`h-1.5 flex-1 mx-2 md:mx-3 rounded-full transition-all duration-300 ${
-                    step > s.num ? 'bg-blue-600' : 'bg-gray-200'
+                  className={`w-24 h-1 mx-2 transition-all ${
+                    step > s.num ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 />
               )}
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 pb-20">
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 shadow-lg">
-          {/* Step 1: Date firmă */}
+        {/* Step Content */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl p-8">
+          {/* STEP 1: CUI Lookup */}
           {step === 1 && (
-            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
-              <h2 className="text-3xl font-black text-gray-900 mb-2">Date firmă</h2>
-              <p className="text-gray-600 mb-8">Completează informațiile despre organizația ta</p>
+            <div className="space-y-6">
+              <div className="text-center">
+                <Building2 className="h-16 w-16 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Introduceți CUI-ul firmei</h2>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Vom căuta automat datele firmei în registrul ANAF
+                </p>
+              </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  CUI (Cod Unic de Înregistrare)
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={cuiInput}
+                    onChange={(e) => {
+                      setCuiInput(e.target.value)
+                      setCuiError('')
+                      setDuplicateOrg(null)
+                    }}
+                    onKeyPress={(e) => e.key === 'Enter' && handleCUILookup()}
+                    placeholder="Ex: RO12345678 sau 12345678"
+                    className={`w-full px-4 py-3 rounded-lg border ${
+                      cuiError
+                        ? 'border-red-300 dark:border-red-700'
+                        : 'border-gray-300 dark:border-gray-600'
+                    } bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-600`}
+                  />
+                  {loadingANAF && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
+                    </div>
+                  )}
+                </div>
+                {cuiError && (
+                  <div className="mt-2 flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+                    <AlertCircle className="h-4 w-4" />
+                    {cuiError}
+                  </div>
+                )}
+                {duplicateOrg && (
+                  <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                    <p className="text-sm font-semibold text-yellow-900 dark:text-yellow-100 mb-2">
+                      Firma există deja în platformă
+                    </p>
+                    <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
+                      {duplicateOrg.name} (CUI: {duplicateOrg.cui})
+                    </p>
+                    <button
+                      onClick={() => router.push(`/dashboard?org=${duplicateOrg.id}`)}
+                      className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      Accesează dashboard →
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={handleCUILookup}
+                disabled={loadingANAF || !cuiInput.trim()}
+                className="w-full px-6 py-3 rounded-lg text-base font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+              >
+                {loadingANAF ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Verificare ANAF...
+                  </>
+                ) : (
+                  <>
+                    <Search className="h-5 w-5" />
+                    Caută firmă
+                  </>
+                )}
+              </button>
+
+              <div className="text-center pt-4">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Vom verifica automat datele în registrul ANAF al Ministerului Finanțelor
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: Organization Details */}
+          {step === 2 && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Detalii organizație</h2>
+                <p className="text-gray-500 dark:text-gray-400">
+                  {anafData
+                    ? 'Datele au fost completate automat din ANAF. Verificați și editați dacă e necesar.'
+                    : 'Completați manual datele organizației.'}
+                </p>
+              </div>
+
+              {anafData && (
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  <span className="text-sm font-semibold text-green-900 dark:text-green-100">
+                    Firmă găsită în registrul ANAF
+                  </span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Denumire firmă */}
+                <div className="col-span-2">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
                     Denumire firmă <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -357,432 +368,188 @@ export default function OnboardingClient({ user }: Props) {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Ex: S.C. EXEMPLE S.R.L."
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">
-                      CUI <span className="text-red-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        name="cui"
-                        value={formData.cui}
-                        onChange={handleInputChange}
-                        onBlur={handleCUIBlur}
-                        className={`w-full border rounded-lg px-4 py-3 pr-10 text-sm font-mono focus:outline-none focus:ring-2 transition-all ${
-                          cuiError
-                            ? 'border-red-500 focus:ring-red-500'
-                            : anafSuggestion
-                            ? 'border-green-500 focus:ring-green-500'
-                            : 'border-gray-300 focus:ring-blue-600'
-                        }`}
-                        placeholder="RO12345678"
-                        maxLength={12}
-                      />
-                      {loadingANAF && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                          <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
-                        </div>
-                      )}
-                      {!loadingANAF && anafSuggestion && !cuiError && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                          <Check className="w-5 h-5 text-green-600" />
-                        </div>
-                      )}
-                    </div>
-                    {cuiError && (
-                      <p className="text-xs text-red-600 mt-1 font-semibold">{cuiError}</p>
-                    )}
-                    {anafSuggestion && !cuiError && (
-                      <p className="text-xs text-green-600 mt-1 font-semibold flex items-center gap-1">
-                        <Check className="w-3 h-3" /> {anafSuggestion}
-                      </p>
-                    )}
-                    <p className="text-xs text-gray-500 mt-1">
-                      Validare automată cu check digit și ANAF
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">
-                      Cod CAEN <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="caen"
-                      value={formData.caen}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Ex: 4120"
-                    />
-                  </div>
+                {/* CUI */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    CUI <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="cui"
+                    value={formData.cui}
+                    readOnly
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-400 cursor-not-allowed"
+                  />
                 </div>
 
+                {/* CAEN principal */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
-                    Adresă <span className="text-red-500">*</span>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    CAEN principal <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="caen"
+                    value={formData.caen}
+                    onChange={handleInputChange}
+                    placeholder="Ex: 7112"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+
+                {/* Adresa sediu */}
+                <div className="col-span-2">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    Adresa sediu <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Ex: Strada Exemplului nr. 1, București"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Județ</label>
-                    <input
-                      type="text"
-                      name="county"
-                      value={formData.county}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Ex: București"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Telefon</label>
-                    <input
-                      type="tel"
-                      name="contactPhone"
-                      value={formData.contactPhone}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="+40 700 000 000"
-                    />
-                  </div>
+                {/* Județ */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Județ</label>
+                  <input
+                    type="text"
+                    name="county"
+                    value={formData.county}
+                    onChange={handleInputChange}
+                    placeholder="Ex: București"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
                 </div>
 
+                {/* Nr angajați estimat */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Email contact</label>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    Nr angajați estimat <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="employee_count_estimate"
+                    value={formData.employee_count_estimate}
+                    onChange={handleInputChange}
+                    min="1"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+
+                {/* Email contact */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    Email contact firmă
+                  </label>
                   <input
                     type="email"
-                    name="contactEmail"
-                    value={formData.contactEmail}
+                    name="contact_email"
+                    value={formData.contact_email}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 bg-gray-50"
-                    placeholder="contact@firma.ro"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* Step 2: Angajați */}
-          {step === 2 && (
-            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
-              <h2 className="text-3xl font-black text-gray-900 mb-2">Adaugă primii angajați</h2>
-              <p className="text-gray-600 mb-8">
-                Adaugă angajații pentru gestionarea conformității SSM
-              </p>
-
-              {/* Form adăugare angajat */}
-              <div className="bg-gray-50 rounded-xl p-6 mb-6 border-2 border-gray-200">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">
-                      Nume complet <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={currentEmployee.fullName}
-                      onChange={handleEmployeeChange}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Ex: Popescu Ion"
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">
-                        CNP <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="cnp"
-                        value={currentEmployee.cnp}
-                        onChange={handleEmployeeChange}
-                        maxLength={13}
-                        className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-mono"
-                        placeholder="1234567890123"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">
-                        Funcția <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="jobTitle"
-                        value={currentEmployee.jobTitle}
-                        onChange={handleEmployeeChange}
-                        className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Ex: Electrician"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">
-                      Cod COR (Clasificarea Ocupațiilor din România)
-                    </label>
-                    <input
-                      type="text"
-                      name="corCode"
-                      value={currentEmployee.corCode}
-                      onChange={handleEmployeeChange}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Ex: 742101"
-                    />
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={addEmployee}
-                    className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition"
-                  >
-                    Adaugă angajat
-                  </button>
-                </div>
-              </div>
-
-              {/* Listă angajați adăugați */}
-              {employees.length > 0 && (
+                {/* Telefon contact */}
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-4">
-                    Angajați adăugați ({employees.length})
-                  </h3>
-                  <div className="space-y-3">
-                    {employees.map((emp, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4"
-                      >
-                        <div className="flex-1">
-                          <div className="font-semibold text-gray-900">{emp.fullName}</div>
-                          <div className="text-sm text-gray-600">
-                            {emp.jobTitle} {emp.corCode && `• COR: ${emp.corCode}`}
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeEmployee(idx)}
-                          className="text-red-600 hover:text-red-700 p-2"
-                        >
-                          <X className="w-5 h-5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {employees.length === 0 && (
-                <p className="text-sm text-gray-500 text-center py-6">
-                  Nu ai adăugat niciun angajat încă
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Step 3: Documente (optional) */}
-          {step === 3 && (
-            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
-              <h2 className="text-3xl font-black text-gray-900 mb-2">Încarcă documente existente</h2>
-              <p className="text-gray-600 mb-8">
-                Opțional: Încarcă documente SSM/PSI existente (contracte, fișe medicale, evaluări de risc)
-              </p>
-
-              <div className="bg-gray-50 rounded-xl p-8 border-2 border-dashed border-gray-300 text-center">
-                <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <label className="cursor-pointer">
-                  <span className="text-blue-600 font-semibold hover:text-blue-700">
-                    Selectează fișiere
-                  </span>
-                  <span className="text-gray-600"> sau trage-le aici</span>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    Telefon contact
+                  </label>
                   <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="hidden"
-                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    type="tel"
+                    name="contact_phone"
+                    value={formData.contact_phone}
+                    onChange={handleInputChange}
+                    placeholder="Ex: 0721234567"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
-                </label>
-                <p className="text-xs text-gray-500 mt-2">
-                  PDF, DOC, DOCX, JPG, PNG (max 10MB per fișier)
-                </p>
+                </div>
               </div>
 
-              {documents.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="font-bold text-gray-900 mb-3">
-                    Fișiere selectate ({documents.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {documents.map((file, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3"
-                      >
-                        <span className="text-sm text-gray-700">{file.name}</span>
-                        <span className="text-xs text-gray-500">
-                          {(file.size / 1024).toFixed(1)} KB
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+              {isConsultant && (
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <p className="text-sm text-blue-900 dark:text-blue-100">
+                    <strong>Consultant SSM:</strong> Veți avea acces complet la această firmă ca și consultant.
+                  </p>
                 </div>
               )}
 
-              <p className="text-sm text-gray-500 mt-6 text-center">
-                Poți sări acest pas și adăuga documente mai târziu din dashboard
-              </p>
-            </div>
-          )}
-
-          {/* Step 4: Confirmare */}
-          {step === 4 && (
-            <div className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
-              <h2 className="text-3xl font-black text-gray-900 mb-2">Confirmare</h2>
-              <p className="text-gray-600 mb-8">Verifică datele înainte de finalizare</p>
-
-              <div className="space-y-6">
-                {/* Date firmă */}
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                  <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Building2 className="w-5 h-5 text-blue-600" />
-                    Date firmă
-                  </h3>
-                  <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-500">Denumire:</span>
-                      <p className="font-semibold text-gray-900">{formData.name}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-500">CUI:</span>
-                      <p className="font-semibold text-gray-900">{formData.cui}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-500">CAEN:</span>
-                      <p className="font-semibold text-gray-900">{formData.caen}</p>
-                    </div>
-                    <div className="md:col-span-2">
-                      <span className="text-gray-500">Adresă:</span>
-                      <p className="font-semibold text-gray-900">{formData.address}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Angajați */}
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                  <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-blue-600" />
-                    Angajați ({employees.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {employees.map((emp, idx) => (
-                      <div key={idx} className="text-sm">
-                        <span className="font-semibold text-gray-900">{emp.fullName}</span>
-                        <span className="text-gray-600"> — {emp.jobTitle}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Documente */}
-                {documents.length > 0 && (
-                  <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                    <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <Upload className="w-5 h-5 text-blue-600" />
-                      Documente încărcate ({documents.length})
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {documents.map((doc, idx) => (
-                        <span
-                          key={idx}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold"
-                        >
-                          <Check className="w-4 h-4" /> {doc.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              <div className="flex gap-4 pt-4">
+                <button
+                  onClick={() => setStep(1)}
+                  className="flex-1 px-6 py-3 rounded-lg text-base font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  Înapoi
+                </button>
+                <button
+                  onClick={handleSaveOrganization}
+                  disabled={!canSaveOrganization || loading}
+                  className="flex-1 px-6 py-3 rounded-lg text-base font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Salvare...
+                    </>
+                  ) : (
+                    <>
+                      Salvează organizația
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           )}
 
-          {/* Actions */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
-            {step > 1 ? (
-              <button
-                onClick={() => transitionToStep(step - 1)}
-                disabled={loading}
-                className="flex items-center gap-2 px-6 py-3 text-gray-600 hover:text-gray-900 font-semibold transition disabled:opacity-50"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                Înapoi
-              </button>
-            ) : (
-              <div />
-            )}
+          {/* STEP 3: Confirmation */}
+          {step === 3 && (
+            <div className="text-center space-y-6">
+              <div className="flex justify-center">
+                <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <CheckCircle className="h-12 w-12 text-green-600 dark:text-green-400" />
+                </div>
+              </div>
 
-            {step === 1 && (
-              <button
-                onClick={handleStep1Complete}
-                disabled={!canProceedStep1 || loading}
-                className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Se salvează...' : 'Continuă'}
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            )}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  Firma {formData.name} a fost adăugată cu succes!
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Contul dvs. este acum configurat și puteți începe să gestionați datele SSM/PSI.
+                </p>
+              </div>
 
-            {step === 2 && (
-              <button
-                onClick={handleStep2Complete}
-                disabled={loading}
-                className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                {loading ? 'Se salvează...' : 'Continuă'}
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            )}
+              <div className="grid grid-cols-2 gap-4 pt-6">
+                <button
+                  onClick={() => router.push(`/dashboard/import?org=${orgId}`)}
+                  className="px-6 py-3 rounded-lg text-base font-semibold border border-blue-600 text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition flex items-center justify-center gap-2"
+                >
+                  <Upload className="h-5 w-5" />
+                  Importă angajați
+                </button>
+                <button
+                  onClick={() => router.push(`/dashboard?org=${orgId}`)}
+                  className="px-6 py-3 rounded-lg text-base font-semibold bg-blue-600 text-white hover:bg-blue-700 transition flex items-center justify-center gap-2"
+                >
+                  <Users className="h-5 w-5" />
+                  Mergi la dashboard
+                </button>
+              </div>
 
-            {step === 3 && (
-              <button
-                onClick={() => transitionToStep(4)}
-                disabled={loading}
-                className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                {documents.length > 0 ? 'Continuă' : 'Sari peste'}
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            )}
-
-            {step === 4 && (
-              <button
-                onClick={handleFinalSubmit}
-                disabled={loading}
-                className="flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50 shadow-lg"
-              >
-                {loading ? 'Se finalizează...' : 'Finalizează și intră în dashboard'}
-                <CheckCircle className="w-5 h-5" />
-              </button>
-            )}
-          </div>
+              <div className="pt-4 text-xs text-gray-500 dark:text-gray-400">
+                Vă recomandăm să importați lista de angajați pentru a începe urmărirea conformității SSM/PSI.
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

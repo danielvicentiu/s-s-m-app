@@ -3,6 +3,7 @@
 
 import { createSupabaseServer } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { hasRole } from '@/lib/rbac'
 import OnboardingClient from './OnboardingClient'
 
 export default async function OnboardingPage() {
@@ -11,5 +12,13 @@ export default async function OnboardingPage() {
 
   if (!user) redirect('/login')
 
-  return <OnboardingClient user={{ id: user.id, email: user.email || '' }} />
+  // Check if user is consultant (server-side)
+  const isConsultant = await hasRole('consultant_ssm')
+
+  return (
+    <OnboardingClient
+      user={{ id: user.id, email: user.email || '' }}
+      isConsultant={isConsultant}
+    />
+  )
 }
