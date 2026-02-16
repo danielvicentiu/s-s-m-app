@@ -54,8 +54,8 @@ function StatusBadge({ status }: { status: string | null | undefined }) {
   const c = config[s] || config.never;
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium ${c.bg} ${c.text}`}>
-      <span className="text-[10px]">{c.icon}</span>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-mono font-semibold ${c.bg} ${c.text}`}>
+      <span className="text-xs">{c.icon}</span>
       {c.label}
     </span>
   );
@@ -215,7 +215,7 @@ export default function LegalImportAdmin() {
                 M7 Legislative Monitor
               </h1>
             </div>
-            <p className="text-sm text-zinc-500 ml-5">
+            <p className="text-sm text-zinc-400 ml-5">
               România · {stats.total} acte monitorizate · {stats.withText} cu text integral
             </p>
           </div>
@@ -249,23 +249,22 @@ export default function LegalImportAdmin() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          {[
-            { label: 'OK', value: stats.ok, color: 'emerald' },
-            { label: 'Modificate', value: stats.changed, color: 'amber' },
-            { label: 'Erori', value: stats.error, color: 'red' },
-            { label: 'Neverificate', value: stats.never, color: 'zinc' },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className={`rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3
-                hover:border-zinc-700 transition-colors cursor-default`}
-            >
-              <p className="text-xs text-zinc-500 mb-1">{s.label}</p>
-              <p className={`text-2xl font-semibold tracking-tight text-${s.color}-400`}>
-                {loading ? '—' : s.value}
-              </p>
-            </div>
-          ))}
+          <div className="rounded-xl border border-zinc-700 bg-zinc-900/60 px-5 py-4 hover:border-zinc-600 transition-colors">
+            <p className="text-sm text-zinc-400 mb-1">OK</p>
+            <p className="text-3xl font-bold tracking-tight text-emerald-400">{loading ? '—' : stats.ok}</p>
+          </div>
+          <div className="rounded-xl border border-zinc-700 bg-zinc-900/60 px-5 py-4 hover:border-zinc-600 transition-colors">
+            <p className="text-sm text-zinc-400 mb-1">Modificate</p>
+            <p className="text-3xl font-bold tracking-tight text-amber-400">{loading ? '—' : stats.changed}</p>
+          </div>
+          <div className="rounded-xl border border-zinc-700 bg-zinc-900/60 px-5 py-4 hover:border-zinc-600 transition-colors">
+            <p className="text-sm text-zinc-400 mb-1">Erori</p>
+            <p className="text-3xl font-bold tracking-tight text-red-400">{loading ? '—' : stats.error}</p>
+          </div>
+          <div className="rounded-xl border border-zinc-700 bg-zinc-900/60 px-5 py-4 hover:border-zinc-600 transition-colors">
+            <p className="text-sm text-zinc-400 mb-1">Neverificate</p>
+            <p className="text-3xl font-bold tracking-tight text-zinc-300">{loading ? '—' : stats.never}</p>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -293,7 +292,7 @@ export default function LegalImportAdmin() {
           <>
             {/* Filter */}
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-xs text-zinc-500">Filtrare:</span>
+              <span className="text-sm text-zinc-400">Filtrare:</span>
               {([
                 { key: 'all', label: 'Toate' },
                 { key: 'ok', label: 'OK' },
@@ -304,10 +303,10 @@ export default function LegalImportAdmin() {
                 <button
                   key={f.key}
                   onClick={() => setFilterStatus(f.key)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors
                     ${filterStatus === f.key
-                      ? 'bg-zinc-700 text-zinc-200'
-                      : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                      ? 'bg-zinc-700 text-zinc-100'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
                     }`}
                 >
                   {f.label}
@@ -318,15 +317,15 @@ export default function LegalImportAdmin() {
             {/* Table */}
             <div className="rounded-xl border border-zinc-800 overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-base">
                   <thead>
                     <tr className="bg-zinc-900/80 border-b border-zinc-800">
-                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Act</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Prioritate</th>
-                      <th className="text-center px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
-                      <th className="text-center px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Text</th>
-                      <th className="text-right px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Ultima verificare</th>
-                      <th className="text-right px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Acțiuni</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Act</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Prioritate</th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Status</th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Text</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Ultima verificare</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Acțiuni</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-800/60">
@@ -350,19 +349,19 @@ export default function LegalImportAdmin() {
                       filteredStatus.map((act) => (
                         <tr key={act.act_key} className="hover:bg-zinc-900/40 transition-colors">
                           <td className="px-4 py-3">
-                            <div className="font-medium text-zinc-200 text-xs">
+                            <div className="font-semibold text-zinc-100 text-sm">
                               {act.act_key}
                             </div>
-                            <div className="text-xs text-zinc-500 mt-0.5 max-w-xs truncate" title={act.act_full_name || ''}>
+                            <div className="text-sm text-zinc-400 mt-0.5 max-w-xs truncate" title={act.act_full_name || ''}>
                               {act.act_full_name || '—'}
                             </div>
                           </td>
                           <td className="px-4 py-3">
-                            <span className={`text-xs font-medium ${
+                            <span className={`text-sm font-semibold ${
                               act.priority === 'critical' ? 'text-red-400' :
                               act.priority === 'high' ? 'text-amber-400' :
-                              act.priority === 'normal' ? 'text-zinc-400' :
-                              'text-zinc-500'
+                              act.priority === 'normal' ? 'text-zinc-300' :
+                              'text-zinc-400'
                             }`}>
                               {act.priority || '—'}
                             </span>
@@ -372,13 +371,13 @@ export default function LegalImportAdmin() {
                           </td>
                           <td className="px-4 py-3 text-center">
                             {act.has_full_text ? (
-                              <span className="text-emerald-400 text-xs">✓ Da</span>
+                              <span className="text-emerald-400 text-sm font-medium">✓ Da</span>
                             ) : (
-                              <span className="text-zinc-600 text-xs">—</span>
+                              <span className="text-zinc-500 text-sm">—</span>
                             )}
                           </td>
                           <td className="px-4 py-3 text-right">
-                            <span className="text-xs text-zinc-500" title={act.last_checked_at || 'Niciodată'}>
+                            <span className="text-sm text-zinc-300" title={act.last_checked_at || 'Niciodată'}>
                               {timeAgo(act.last_checked_at)}
                             </span>
                           </td>
@@ -389,7 +388,7 @@ export default function LegalImportAdmin() {
                                   href={act.portal_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+                                  className="text-zinc-400 hover:text-zinc-200 transition-colors"
                                   title="Deschide sursa"
                                 >
                                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -400,9 +399,9 @@ export default function LegalImportAdmin() {
                               <button
                                 onClick={() => handleReImport(act.act_key)}
                                 disabled={actionLoading === act.act_key}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium
-                                  bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-zinc-600
-                                  text-zinc-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium
+                                  bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 hover:border-zinc-500
+                                  text-zinc-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 title={`Re-import ${act.act_key}`}
                               >
                                 {actionLoading === act.act_key ? (
@@ -433,13 +432,13 @@ export default function LegalImportAdmin() {
         {tab === 'logs' && (
           <>
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs text-zinc-500">
+              <span className="text-sm text-zinc-400">
                 Ultimele {logs.length} intrări
               </span>
               {logs.length >= logLimit && (
                 <button
                   onClick={() => { setLogLimit((l) => l + 50); }}
-                  className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+                  className="text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
                 >
                   Încarcă mai multe →
                 </button>
@@ -451,11 +450,11 @@ export default function LegalImportAdmin() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-zinc-900/80 border-b border-zinc-800">
-                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Timp</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Act</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Tip</th>
-                      <th className="text-center px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Mesaj</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Timp</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Act</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Tip</th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Status</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Mesaj</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-800/60">
@@ -475,7 +474,7 @@ export default function LegalImportAdmin() {
                       logs.map((log) => (
                         <tr key={log.id} className="hover:bg-zinc-900/40 transition-colors">
                           <td className="px-4 py-2.5">
-                            <span className="text-xs text-zinc-500 font-mono whitespace-nowrap">
+                            <span className="text-sm text-zinc-300 font-mono whitespace-nowrap">
                               {new Date(log.created_at).toLocaleString('ro-RO', {
                                 day: '2-digit',
                                 month: '2-digit',
@@ -486,16 +485,16 @@ export default function LegalImportAdmin() {
                             </span>
                           </td>
                           <td className="px-4 py-2.5">
-                            <span className="text-xs font-mono text-zinc-300">{log.act_key}</span>
+                            <span className="text-sm font-mono text-zinc-200">{log.act_key}</span>
                           </td>
                           <td className="px-4 py-2.5">
-                            <span className="text-xs text-zinc-400">{log.check_type}</span>
+                            <span className="text-sm text-zinc-300">{log.check_type}</span>
                           </td>
                           <td className="px-4 py-2.5 text-center">
                             <StatusBadge status={log.status} />
                           </td>
                           <td className="px-4 py-2.5">
-                            <span className="text-xs text-zinc-400 max-w-md truncate block" title={log.message || ''}>
+                            <span className="text-sm text-zinc-300 max-w-md truncate block" title={log.message || ''}>
                               {log.message || '—'}
                             </span>
                             {log.details && (
