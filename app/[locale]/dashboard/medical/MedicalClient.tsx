@@ -59,6 +59,7 @@ interface Props {
   medicalExams: MedicalExam[]
   employees: Employee[]
   organizations: Organization[]
+  selectedOrgId?: string
 }
 
 // ========== EMPTY FORM ==========
@@ -80,7 +81,7 @@ const emptyForm = {
 
 // ========== COMPONENT ==========
 
-export default function MedicalClient({ user, medicalExams, employees, organizations }: Props) {
+export default function MedicalClient({ user, medicalExams, employees, organizations, selectedOrgId }: Props) {
   const router = useRouter()
   const supabase = createClient()
 
@@ -89,8 +90,8 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
   const canUpdate = useHasPermission('medical', 'update')
   const canDelete = useHasPermission('medical', 'delete')
 
-  // State
-  const [filterOrg, setFilterOrg] = useState<string>('all')
+  // State (initialize filterOrg with selectedOrgId if provided)
+  const [filterOrg, setFilterOrg] = useState<string>(selectedOrgId || 'all')
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [showForm, setShowForm] = useState(false)
   const [formLoading, setFormLoading] = useState(false)

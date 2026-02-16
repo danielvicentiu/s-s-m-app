@@ -7,8 +7,14 @@ import { redirect } from 'next/navigation'
 import TrainingClient from './TrainingClient'
 import ModuleGate from '@/components/ModuleGate'
 
-export default async function TrainingPage({ params }: { params: Promise<{ locale: string }> }) {
+interface TrainingPageProps {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ org?: string }>
+}
+
+export default async function TrainingPage({ params, searchParams }: TrainingPageProps) {
   const { locale } = await params
+  const { org: urlOrgParam } = await searchParams
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
@@ -31,7 +37,11 @@ export default async function TrainingPage({ params }: { params: Promise<{ local
     .eq('user_id', user.id)
 
   let savedSelectedOrg = organizations[0]?.id || ''
-  if (prefsRows) {
+
+  // Priority: URL param > DB preference > first org
+  if (urlOrgParam && (urlOrgParam === 'all' || organizations.some((o: any) => o.id === urlOrgParam))) {
+    savedSelectedOrg = urlOrgParam
+  } else if (prefsRows) {
     const selectedOrgPref = prefsRows.find((r: any) => r.key === 'selected_org')
     if (selectedOrgPref) {
       try {

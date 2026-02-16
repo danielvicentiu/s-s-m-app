@@ -15,13 +15,8 @@ import { UserPlus, FileText } from 'lucide-react'
 import LanguageSelector from '@/components/LanguageSelector'
 import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
-
-interface OrgOption {
-  id: string
-  name: string
-  cui: string | null
-  employee_count?: number
-}
+import { OrgProvider, useOrg, type OrgOption } from '@/lib/contexts/OrgContext'
+import OrgSelector from '@/components/dashboard/OrgSelector'
 
 interface Props {
   user: { email: string; id: string }
@@ -42,6 +37,33 @@ export default function DashboardClient({
   valuePreviewMap = {}, isConsultant = false, initialPrefs = {},
   organizations, savedSelectedOrg = 'all'
 }: Props) {
+  return (
+    <OrgProvider
+      initialOrgs={organizations}
+      initialSelectedOrg={savedSelectedOrg}
+      userId={user.id}
+    >
+      <DashboardContent
+        user={user}
+        overview={overview}
+        alerts={alerts}
+        medicalExams={medicalExams}
+        equipment={equipment}
+        employees={employees}
+        valuePreviewMap={valuePreviewMap}
+        isConsultant={isConsultant}
+        initialPrefs={initialPrefs}
+        organizations={organizations}
+      />
+    </OrgProvider>
+  )
+}
+
+function DashboardContent({
+  user, overview, alerts, medicalExams, equipment, employees,
+  valuePreviewMap = {}, isConsultant = false, initialPrefs = {},
+  organizations
+}: Omit<Props, 'savedSelectedOrg'>) {
   // DEBUG: Log employees prop
   console.log('🔍 [DashboardClient] Employees prop:', {
     count: employees?.length || 0,
@@ -50,7 +72,7 @@ export default function DashboardClient({
   })
 
   const [activeTab, setActiveTab] = useState<'medical' | 'equipment' | 'employees'>('medical')
-  const [selectedOrg, setSelectedOrg] = useState<string>(savedSelectedOrg)
+  const { currentOrg: selectedOrg, setCurrentOrg: setSelectedOrg, selectedOrgData } = useOrg()
   const router = useRouter()
   const pathname = usePathname()
 
@@ -58,25 +80,13 @@ export default function DashboardClient({
   const [showRiskITM, setShowRiskITM] = useState(initialPrefs.show_risk_itm !== false)
   const [showValuePreview, setShowValuePreview] = useState(initialPrefs.show_value_preview !== false)
 
-  // Salvează preferință în Supabase
-  async function savePreference(key: string, value: boolean | string) {
+  // Salvează preferință în Supabase (for toggles only, org selection handled by context)
+  async function savePreference(key: string, value: boolean) {
     const supabase = createClient()
     await supabase.from('user_preferences').upsert(
       { user_id: user.id, key, value: JSON.stringify(value), updated_at: new Date().toISOString() },
       { onConflict: 'user_id,key' }
     )
-  }
-
-  function handleOrgChange(orgId: string) {
-    setSelectedOrg(orgId)
-    savePreference('selected_org', orgId)
-
-    // Update URL: remove param for 'all', add param for specific org
-    const newUrl = orgId === 'all'
-      ? pathname
-      : `${pathname}?org=${orgId}`
-
-    router.push(newUrl, { scroll: false })
   }
 
   function toggleRiskITM() {
@@ -111,9 +121,6 @@ export default function DashboardClient({
     filteredData: filteredEmployees
   })
 
-  const selectedOrgData = selectedOrg !== 'all'
-    ? organizations.find(o => o.id === selectedOrg)
-    : null
   const orgName = selectedOrgData?.name || filteredOverview[0]?.organization_name || 'Toate organizațiile'
   const orgCUI = selectedOrgData?.cui || filteredMedicalExams[0]?.organizations?.cui || ''
 
@@ -219,25 +226,19 @@ export default function DashboardClient({
       {/* ============ HEADER ============ */}
       <header className="bg-white dark:bg-gray-800 px-8 py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-black text-gray-900 dark:text-white">s-s-m.ro</h1>
-            {organizations.length <= 1 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` · ${organizations[0].cui}` : ''}
-              </p>
-            ) : (
-              <select
-                value={selectedOrg}
-                onChange={(e) => handleOrgChange(e.target.value)}
-                className="mt-1 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 max-w-xs"
-              >
-                <option value="all">Toate organizațiile ({organizations.length})</option>
-                {organizations.map((org) => (
-                  <option key={org.id} value={org.id}>
-                    {org.name} · {org.employee_count ?? 0} angajați
-                  </option>
-                ))}
-              </select>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-black text-gray-900 dark:text-white">s-s-m.ro</h1>
+              {organizations.length <= 1 && (
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {organizations[0]?.name || orgName}{organizations[0]?.cui ? ` · ${organizations[0].cui}` : ''}
+                </p>
+              )}
+            </div>
+            {organizations.length > 1 && (
+              <div className="mt-1">
+                <OrgSelector />
+              </div>
             )}
           </div>
           <div className="flex items-center gap-5">

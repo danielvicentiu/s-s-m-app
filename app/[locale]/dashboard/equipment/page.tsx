@@ -9,8 +9,14 @@ import { redirect } from 'next/navigation'
 import EquipmentClient from './EquipmentClient'
 import ModuleGate from '@/components/ModuleGate'
 
-export default async function EquipmentPage({ params }: { params: Promise<{ locale: string }> }) {
+interface EquipmentPageProps {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ org?: string }>
+}
+
+export default async function EquipmentPage({ params, searchParams }: EquipmentPageProps) {
   const { locale } = await params
+  const { org: selectedOrgId } = await searchParams
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
@@ -21,11 +27,17 @@ export default async function EquipmentPage({ params }: { params: Promise<{ loca
     .from('organizations')
     .select('id, name, cui, country_code')
 
-  // Fetch echipamente cu org
-  const { data: equipment } = await supabase
+  // Fetch echipamente cu org + optional filter
+  let equipmentQuery = supabase
     .from('safety_equipment')
     .select('*, organizations(name, cui)')
     .order('expiry_date', { ascending: true })
+
+  if (selectedOrgId && selectedOrgId !== 'all') {
+    equipmentQuery = equipmentQuery.eq('organization_id', selectedOrgId)
+  }
+
+  const { data: equipment } = await equipmentQuery
 
   // Fetch equipment_types pentru toate țările relevante
   const countryCodes = [...new Set(
@@ -51,6 +63,7 @@ export default async function EquipmentPage({ params }: { params: Promise<{ loca
         organizations={organizations || []}
         equipment={equipment || []}
         equipmentTypes={equipmentTypes || []}
+        selectedOrgId={selectedOrgId}
       />
     </ModuleGate>
   )

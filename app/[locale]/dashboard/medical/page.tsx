@@ -8,25 +8,43 @@ import { redirect } from 'next/navigation'
 import MedicalClient from './MedicalClient'
 import ModuleGate from '@/components/ModuleGate'
 
-export default async function MedicalPage({ params }: { params: Promise<{ locale: string }> }) {
+interface MedicalPageProps {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ org?: string }>
+}
+
+export default async function MedicalPage({ params, searchParams }: MedicalPageProps) {
   const { locale } = await params
+  const { org: selectedOrgId } = await searchParams
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 
-  // Fetch medical examinations cu join pe organizations + employees
-  const { data: medicalExams, error } = await supabase
+  // Build query with optional org filter
+  let medicalQuery = supabase
     .from('medical_examinations')
     .select('*, organizations(name, cui)')
     .order('expiry_date', { ascending: true })
 
-  // Fetch employees pentru dropdown în formular
-  const { data: employees } = await supabase
+  if (selectedOrgId && selectedOrgId !== 'all') {
+    medicalQuery = medicalQuery.eq('organization_id', selectedOrgId)
+  }
+
+  const { data: medicalExams, error } = await medicalQuery
+
+  // Fetch employees filtered by org if selected
+  let employeesQuery = supabase
     .from('employees')
     .select('id, full_name, job_title, organization_id, organizations(name)')
     .eq('is_active', true)
     .order('full_name')
+
+  if (selectedOrgId && selectedOrgId !== 'all') {
+    employeesQuery = employeesQuery.eq('organization_id', selectedOrgId)
+  }
+
+  const { data: employees } = await employeesQuery
 
   // Fetch organizations pentru filtru
   const { data: organizations } = await supabase
@@ -44,6 +62,7 @@ export default async function MedicalPage({ params }: { params: Promise<{ locale
         medicalExams={medicalExams || []}
         employees={employees || []}
         organizations={organizations || []}
+        selectedOrgId={selectedOrgId}
       />
     </ModuleGate>
   )

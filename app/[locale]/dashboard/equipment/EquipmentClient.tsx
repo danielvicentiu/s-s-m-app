@@ -20,6 +20,7 @@ interface Props {
   organizations: any[]
   equipment: any[]
   equipmentTypes: any[]
+  selectedOrgId?: string
 }
 
 // Hardcoded fallback pentru backward compatibility (dacă DB e gol)
