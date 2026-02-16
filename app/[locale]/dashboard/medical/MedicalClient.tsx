@@ -1,51 +1,39 @@
-// app/dashboard/medical/MedicalClient.tsx
-// M2 Medicina Muncii — CRUD complet
+// app/[locale]/dashboard/medical/MedicalClient.tsx
+// M3 Medicina Muncii — CRUD complet + Programări + Alerte
+// EXTENDED: API routes, tabs (records/appointments/alerts), new tracking fields
 // Folosește Component Kit: DataTable, FormModal, StatusBadge, EmptyState, ConfirmDialog
 // RBAC: Verificare permisiuni pentru butoane CRUD
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from '@/i18n/navigation'
-import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { DataTable, type DataTableColumn } from '@/components/ui/DataTable'
 import { FormModal } from '@/components/ui/FormModal'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { ArrowLeft, Stethoscope, Plus, Pencil, Trash2, Download } from 'lucide-react'
-// RBAC: Import hook-uri client-side pentru verificare permisiuni
+import {
+  ArrowLeft,
+  Stethoscope,
+  Plus,
+  Pencil,
+  Trash2,
+  Calendar,
+  AlertTriangle,
+  FileText,
+  Clock,
+} from 'lucide-react'
 import { useHasPermission } from '@/hooks/usePermission'
+import type { MedicalExamination, MedicalAppointment } from '@/lib/types'
 
 // ========== TYPES ==========
-
-interface MedicalExam {
-  id: string
-  organization_id: string
-  employee_id: string | null
-  employee_name: string
-  cnp_hash: string | null
-  job_title: string | null
-  examination_type: string
-  examination_date: string
-  expiry_date: string
-  result: string
-  restrictions: string | null
-  doctor_name: string | null
-  clinic_name: string | null
-  notes: string | null
-  content_version: number
-  legal_basis_version: string
-  location_id: string | null
-  organizations?: { name: string; cui: string }
-}
 
 interface Employee {
   id: string
   full_name: string
   job_title: string | null
   organization_id: string
-  organizations?: { name: string } | { name: string }[]
 }
 
 interface Organization {
@@ -54,17 +42,31 @@ interface Organization {
   cui: string
 }
 
+interface AlertRecord {
+  id: string
+  employee_name: string
+  full_name: string | null
+  job_title: string | null
+  examination_type: string
+  expiry_date: string
+  days_until_expiry: number | null
+  alert_level: 'urgent' | 'expirat' | 'atentie' | 'ok' | 'nedefinit'
+  organization_id: string
+}
+
 interface Props {
   user: { id: string; email: string }
-  medicalExams: MedicalExam[]
+  medicalExams: MedicalExamination[]
   employees: Employee[]
   organizations: Organization[]
   selectedOrgId?: string
 }
 
-// ========== EMPTY FORM ==========
+type TabType = 'records' | 'appointments' | 'alerts'
 
-const emptyForm = {
+// ========== CONSTANTS ==========
+
+const emptyRecordForm = {
   organization_id: '',
   employee_id: '',
   employee_name: '',
@@ -77,28 +79,92 @@ const emptyForm = {
   doctor_name: '',
   clinic_name: '',
   notes: '',
+  risk_factors: '',
+  document_number: '',
+  validity_months: 12,
+}
+
+const emptyAppointmentForm = {
+  organization_id: '',
+  employee_id: '',
+  appointment_date: '',
+  appointment_time: '',
+  clinic_name: '',
+  clinic_address: '',
+  examination_type: 'periodic',
+  status: 'programat',
+  notes: '',
+}
+
+const examTypes: Record<string, string> = {
+  periodic: 'Periodic',
+  angajare: 'Angajare',
+  reluare: 'Reluare',
+  la_cerere: 'La cerere',
+  control_periodic: 'Control periodic',
+  control_angajare: 'Control angajare',
+  fisa_aptitudine: 'Fișă aptitudine',
+  fisa_psihologica: 'Fișă psihologică',
+}
+
+const resultTypes: Record<string, string> = {
+  apt: 'Apt',
+  apt_conditionat: 'Apt condiționat',
+  inapt_temporar: 'Inapt temporar',
+  inapt: 'Inapt',
+  in_asteptare: 'În așteptare',
+}
+
+const appointmentStatuses: Record<string, string> = {
+  programat: 'Programat',
+  confirmat: 'Confirmat',
+  efectuat: 'Efectuat',
+  anulat: 'Anulat',
+  reprogramat: 'Reprogramat',
 }
 
 // ========== COMPONENT ==========
 
-export default function MedicalClient({ user, medicalExams, employees, organizations, selectedOrgId }: Props) {
+export default function MedicalClient({
+  user,
+  medicalExams,
+  employees,
+  organizations,
+  selectedOrgId,
+}: Props) {
   const router = useRouter()
-  const supabase = createClient()
 
-  // RBAC: Verificare permisiuni pentru butoane CRUD
+  // RBAC permissions
   const canCreate = useHasPermission('medical', 'create')
   const canUpdate = useHasPermission('medical', 'update')
   const canDelete = useHasPermission('medical', 'delete')
 
-  // State (initialize filterOrg with selectedOrgId if provided)
+  // Tab state
+  const [activeTab, setActiveTab] = useState<TabType>('records')
+
+  // Records state
   const [filterOrg, setFilterOrg] = useState<string>(selectedOrgId || 'all')
   const [filterStatus, setFilterStatus] = useState<string>('all')
-  const [showForm, setShowForm] = useState(false)
-  const [formLoading, setFormLoading] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState(emptyForm)
-  const [deleteTarget, setDeleteTarget] = useState<MedicalExam | null>(null)
-  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [showRecordForm, setShowRecordForm] = useState(false)
+  const [recordFormLoading, setRecordFormLoading] = useState(false)
+  const [editingRecordId, setEditingRecordId] = useState<string | null>(null)
+  const [recordForm, setRecordForm] = useState(emptyRecordForm)
+  const [deleteRecordTarget, setDeleteRecordTarget] = useState<MedicalExamination | null>(null)
+  const [deleteRecordLoading, setDeleteRecordLoading] = useState(false)
+
+  // Appointments state
+  const [appointments, setAppointments] = useState<MedicalAppointment[]>([])
+  const [appointmentsLoading, setAppointmentsLoading] = useState(false)
+  const [showAppointmentForm, setShowAppointmentForm] = useState(false)
+  const [appointmentFormLoading, setAppointmentFormLoading] = useState(false)
+  const [editingAppointmentId, setEditingAppointmentId] = useState<string | null>(null)
+  const [appointmentForm, setAppointmentForm] = useState(emptyAppointmentForm)
+  const [deleteAppointmentTarget, setDeleteAppointmentTarget] = useState<MedicalAppointment | null>(null)
+  const [deleteAppointmentLoading, setDeleteAppointmentLoading] = useState(false)
+
+  // Alerts state
+  const [alerts, setAlerts] = useState<AlertRecord[]>([])
+  const [alertsLoading, setAlertsLoading] = useState(false)
 
   // ========== HELPERS ==========
 
@@ -120,53 +186,143 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
     return `Valid ${diffDays} zile`
   }
 
-  function fmtDate(d: string | null): string {
+  function fmtDate(d: string | null | undefined): string {
     if (!d) return '—'
     return new Date(d).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })
   }
 
-  const examTypes: Record<string, string> = {
-    periodic: 'Periodic',
-    angajare: 'Angajare',
-    adaptare: 'Adaptare',
-    reluare: 'Reluare',
-    la_cerere: 'La cerere',
+  function fmtTime(t: string | null | undefined): string {
+    if (!t) return '—'
+    return t.slice(0, 5) // HH:MM
   }
 
-  const resultTypes: Record<string, string> = {
-    apt: 'Apt',
-    apt_conditionat: 'Apt condiționat',
-    inapt_temporar: 'Inapt temporar',
-    inapt: 'Inapt',
+  // ========== FETCH APPOINTMENTS ==========
+
+  async function fetchAppointments() {
+    if (activeTab !== 'appointments') return
+    try {
+      setAppointmentsLoading(true)
+      const params = new URLSearchParams()
+      if (filterOrg !== 'all') params.append('organization_id', filterOrg)
+
+      const res = await fetch(`/api/medical/appointments?${params.toString()}`)
+      if (!res.ok) throw new Error('Failed to fetch appointments')
+
+      const data = await res.json()
+      setAppointments(data.appointments || [])
+    } catch (err) {
+      console.error('[MEDICAL] Fetch appointments error:', err)
+    } finally {
+      setAppointmentsLoading(false)
+    }
   }
 
-  // ========== FILTERING ==========
+  // ========== FETCH ALERTS ==========
 
-  const filtered = medicalExams.filter((m) => {
+  async function fetchAlerts() {
+    if (activeTab !== 'alerts') return
+    try {
+      setAlertsLoading(true)
+      // Use v_medical_expiring view via a simple endpoint or direct query
+      // For now, calculate alerts client-side from medicalExams
+      const alertRecords: AlertRecord[] = medicalExams
+        .filter((exam) => {
+          if (filterOrg !== 'all' && exam.organization_id !== filterOrg) return false
+          if (!exam.expiry_date) return false
+          const days = Math.ceil(
+            (new Date(exam.expiry_date).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+          )
+          return days <= 60 // Show records expiring in 60 days or already expired
+        })
+        .map((exam) => {
+          const daysUntilExpiry = Math.ceil(
+            (new Date(exam.expiry_date).getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+          )
+          let alertLevel: 'urgent' | 'expirat' | 'atentie' | 'ok' | 'nedefinit'
+
+          if (!exam.expiry_date) {
+            alertLevel = 'nedefinit'
+          } else if (daysUntilExpiry < 0) {
+            alertLevel = 'expirat'
+          } else if (daysUntilExpiry <= 30) {
+            alertLevel = 'urgent'
+          } else {
+            alertLevel = 'atentie'
+          }
+
+          return {
+            id: exam.id,
+            employee_name: exam.employee_name,
+            full_name: exam.employees?.full_name || exam.employee_name,
+            job_title: exam.job_title,
+            examination_type: exam.examination_type,
+            expiry_date: exam.expiry_date,
+            days_until_expiry: daysUntilExpiry,
+            alert_level: alertLevel,
+            organization_id: exam.organization_id,
+          }
+        })
+        .sort((a, b) => {
+          // Sort by urgency: expired first, then by days ascending
+          if (a.alert_level === 'expirat' && b.alert_level !== 'expirat') return -1
+          if (a.alert_level !== 'expirat' && b.alert_level === 'expirat') return 1
+          return (a.days_until_expiry || 0) - (b.days_until_expiry || 0)
+        })
+
+      setAlerts(alertRecords)
+    } catch (err) {
+      console.error('[MEDICAL] Fetch alerts error:', err)
+    } finally {
+      setAlertsLoading(false)
+    }
+  }
+
+  // ========== EFFECTS ==========
+
+  useEffect(() => {
+    if (activeTab === 'appointments') {
+      fetchAppointments()
+    } else if (activeTab === 'alerts') {
+      fetchAlerts()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, filterOrg])
+
+  // ========== RECORDS FILTERING ==========
+
+  const filteredRecords = medicalExams.filter((m) => {
     if (filterOrg !== 'all' && m.organization_id !== filterOrg) return false
     if (filterStatus !== 'all' && getStatus(m.expiry_date) !== filterStatus) return false
     return true
   })
 
-  // Stats
-  const stats = {
+  // ========== RECORDS STATS ==========
+
+  const recordsStats = {
     total: medicalExams.length,
     expired: medicalExams.filter((m) => getStatus(m.expiry_date) === 'expired').length,
     expiring: medicalExams.filter((m) => getStatus(m.expiry_date) === 'expiring').length,
     valid: medicalExams.filter((m) => getStatus(m.expiry_date) === 'valid').length,
   }
 
-  // ========== FORM HANDLERS ==========
-
-  function openAdd() {
-    setEditingId(null)
-    setForm(emptyForm)
-    setShowForm(true)
+  const appointmentsStats = {
+    total: appointments.length,
+    programat: appointments.filter((a) => a.status === 'programat').length,
+    confirmat: appointments.filter((a) => a.status === 'confirmat').length,
+    efectuat: appointments.filter((a) => a.status === 'efectuat').length,
   }
 
-  function openEdit(exam: MedicalExam) {
-    setEditingId(exam.id)
-    setForm({
+  // ========== RECORDS FORM HANDLERS ==========
+
+  function openAddRecord() {
+    setEditingRecordId(null)
+    setRecordForm(emptyRecordForm)
+    setShowRecordForm(true)
+  }
+
+  function openEditRecord(exam: MedicalExamination) {
+    setEditingRecordId(exam.id)
+    setRecordForm({
       organization_id: exam.organization_id,
       employee_id: exam.employee_id || '',
       employee_name: exam.employee_name || '',
@@ -179,15 +335,17 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
       doctor_name: exam.doctor_name || '',
       clinic_name: exam.clinic_name || '',
       notes: exam.notes || '',
+      risk_factors: exam.risk_factors?.join(', ') || '',
+      document_number: exam.document_number || '',
+      validity_months: exam.validity_months || 12,
     })
-    setShowForm(true)
+    setShowRecordForm(true)
   }
 
-  // Auto-fill employee name + job when selecting employee
   function handleEmployeeSelect(employeeId: string) {
     const emp = employees.find((e) => e.id === employeeId)
     if (emp) {
-      setForm((f) => ({
+      setRecordForm((f) => ({
         ...f,
         employee_id: employeeId,
         employee_name: emp.full_name,
@@ -195,80 +353,168 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
         organization_id: emp.organization_id || f.organization_id,
       }))
     } else {
-      setForm((f) => ({ ...f, employee_id: employeeId }))
+      setRecordForm((f) => ({ ...f, employee_id: employeeId }))
     }
   }
 
-  async function handleSubmit() {
+  async function handleRecordSubmit() {
     try {
-      setFormLoading(true)
+      setRecordFormLoading(true)
 
       const payload = {
-        organization_id: form.organization_id || null,
-        employee_id: form.employee_id || null,
-        employee_name: form.employee_name,
-        job_title: form.job_title || null,
-        examination_type: form.examination_type,
-        examination_date: form.examination_date || null,
-        expiry_date: form.expiry_date || null,
-        result: form.result,
-        restrictions: form.restrictions || null,
-        doctor_name: form.doctor_name || null,
-        clinic_name: form.clinic_name || null,
-        notes: form.notes || null,
-        updated_at: new Date().toISOString(),
+        organization_id: recordForm.organization_id,
+        employee_id: recordForm.employee_id || null,
+        employee_name: recordForm.employee_name,
+        job_title: recordForm.job_title || null,
+        examination_type: recordForm.examination_type,
+        examination_date: recordForm.examination_date,
+        expiry_date: recordForm.expiry_date,
+        result: recordForm.result,
+        restrictions: recordForm.restrictions || null,
+        doctor_name: recordForm.doctor_name || null,
+        clinic_name: recordForm.clinic_name || null,
+        notes: recordForm.notes || null,
+        validity_months: recordForm.validity_months || 12,
+        risk_factors: recordForm.risk_factors
+          ? recordForm.risk_factors.split(',').map((s) => s.trim()).filter(Boolean)
+          : null,
+        document_number: recordForm.document_number || null,
+        next_examination_date: recordForm.expiry_date,
       }
 
-      if (editingId) {
-        const { error } = await supabase
-          .from('medical_examinations')
-          .update(payload)
-          .eq('id', editingId)
-
-        if (error) throw error
+      if (editingRecordId) {
+        const res = await fetch(`/api/medical/records/${editingRecordId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) throw new Error('Update failed')
       } else {
-        const { error } = await supabase
-          .from('medical_examinations')
-          .insert(payload)
-
-        if (error) throw error
+        const res = await fetch('/api/medical/records', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) throw new Error('Create failed')
       }
 
-      setShowForm(false)
-      setEditingId(null)
-      setForm(emptyForm)
+      setShowRecordForm(false)
+      setEditingRecordId(null)
+      setRecordForm(emptyRecordForm)
       router.refresh()
     } catch (err) {
-      console.error('[MEDICAL] Save error:', err)
+      console.error('[MEDICAL] Record save error:', err)
       alert('Eroare la salvare. Verifică datele și încearcă din nou.')
     } finally {
-      setFormLoading(false)
+      setRecordFormLoading(false)
     }
   }
 
-  async function handleDelete() {
-    if (!deleteTarget) return
+  async function handleRecordDelete() {
+    if (!deleteRecordTarget) return
     try {
-      setDeleteLoading(true)
-      const { error } = await supabase
-        .from('medical_examinations')
-        .delete()
-        .eq('id', deleteTarget.id)
+      setDeleteRecordLoading(true)
+      const res = await fetch(`/api/medical/records/${deleteRecordTarget.id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
 
-      if (error) throw error
-      setDeleteTarget(null)
+      setDeleteRecordTarget(null)
       router.refresh()
     } catch (err) {
-      console.error('[MEDICAL] Delete error:', err)
+      console.error('[MEDICAL] Record delete error:', err)
       alert('Eroare la ștergere.')
     } finally {
-      setDeleteLoading(false)
+      setDeleteRecordLoading(false)
     }
   }
 
-  // ========== TABLE COLUMNS ==========
+  // ========== APPOINTMENTS FORM HANDLERS ==========
 
-  const columns: DataTableColumn<MedicalExam>[] = [
+  function openAddAppointment() {
+    setEditingAppointmentId(null)
+    setAppointmentForm({ ...emptyAppointmentForm, organization_id: filterOrg !== 'all' ? filterOrg : '' })
+    setShowAppointmentForm(true)
+  }
+
+  function openEditAppointment(appt: MedicalAppointment) {
+    setEditingAppointmentId(appt.id)
+    setAppointmentForm({
+      organization_id: appt.organization_id,
+      employee_id: appt.employee_id,
+      appointment_date: appt.appointment_date,
+      appointment_time: appt.appointment_time || '',
+      clinic_name: appt.clinic_name || '',
+      clinic_address: appt.clinic_address || '',
+      examination_type: appt.examination_type,
+      status: appt.status,
+      notes: appt.notes || '',
+    })
+    setShowAppointmentForm(true)
+  }
+
+  async function handleAppointmentSubmit() {
+    try {
+      setAppointmentFormLoading(true)
+
+      const payload = {
+        organization_id: appointmentForm.organization_id,
+        employee_id: appointmentForm.employee_id,
+        appointment_date: appointmentForm.appointment_date,
+        appointment_time: appointmentForm.appointment_time || null,
+        clinic_name: appointmentForm.clinic_name || null,
+        clinic_address: appointmentForm.clinic_address || null,
+        examination_type: appointmentForm.examination_type,
+        status: appointmentForm.status,
+        notes: appointmentForm.notes || null,
+      }
+
+      if (editingAppointmentId) {
+        const res = await fetch(`/api/medical/appointments/${editingAppointmentId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) throw new Error('Update failed')
+      } else {
+        const res = await fetch('/api/medical/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (!res.ok) throw new Error('Create failed')
+      }
+
+      setShowAppointmentForm(false)
+      setEditingAppointmentId(null)
+      setAppointmentForm(emptyAppointmentForm)
+      fetchAppointments()
+    } catch (err) {
+      console.error('[MEDICAL] Appointment save error:', err)
+      alert('Eroare la salvare programare.')
+    } finally {
+      setAppointmentFormLoading(false)
+    }
+  }
+
+  async function handleAppointmentDelete() {
+    if (!deleteAppointmentTarget) return
+    try {
+      setDeleteAppointmentLoading(true)
+      const res = await fetch(`/api/medical/appointments/${deleteAppointmentTarget.id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
+
+      setDeleteAppointmentTarget(null)
+      fetchAppointments()
+    } catch (err) {
+      console.error('[MEDICAL] Appointment delete error:', err)
+      alert('Eroare la ștergere programare.')
+    } finally {
+      setDeleteAppointmentLoading(false)
+    }
+  }
+
+  // ========== RECORDS TABLE COLUMNS ==========
+
+  const recordsColumns: DataTableColumn<MedicalExamination>[] = [
     {
       key: 'employee_name',
       label: 'Angajat',
@@ -312,6 +558,7 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
           apt_conditionat: 'bg-yellow-50 text-yellow-700',
           inapt_temporar: 'bg-orange-50 text-orange-700',
           inapt: 'bg-red-50 text-red-700',
+          in_asteptare: 'bg-gray-50 text-gray-700',
         }
         return (
           <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${colors[row.result] || 'bg-gray-50 text-gray-700'}`}>
@@ -337,20 +584,18 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
       sortable: false,
       render: (row) => (
         <div className="flex items-center gap-1">
-          {/* RBAC: Buton "Editează" vizibil doar dacă user are permisiune 'update' pe 'medical' */}
           {canUpdate && (
             <button
-              onClick={() => openEdit(row)}
+              onClick={() => openEditRecord(row)}
               className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600"
               title="Editează"
             >
               <Pencil className="h-4 w-4" />
             </button>
           )}
-          {/* RBAC: Buton "Șterge" vizibil doar dacă user are permisiune 'delete' pe 'medical' */}
           {canDelete && (
             <button
-              onClick={() => setDeleteTarget(row)}
+              onClick={() => setDeleteRecordTarget(row)}
               className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-red-600"
               title="Șterge"
             >
@@ -362,14 +607,164 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
     },
   ]
 
+  // ========== APPOINTMENTS TABLE COLUMNS ==========
+
+  const appointmentsColumns: DataTableColumn<MedicalAppointment>[] = [
+    {
+      key: 'appointment_date',
+      label: 'Data',
+      render: (row) => (
+        <div>
+          <div className="font-medium text-gray-900">{fmtDate(row.appointment_date)}</div>
+          <div className="text-xs text-gray-400">{fmtTime(row.appointment_time)}</div>
+        </div>
+      ),
+    },
+    {
+      key: 'employee',
+      label: 'Angajat',
+      render: (row) => (
+        <div>
+          <div className="font-medium text-gray-900">{row.employees?.full_name || '—'}</div>
+          <div className="text-xs text-gray-400">{row.employees?.job_title || ''}</div>
+        </div>
+      ),
+    },
+    {
+      key: 'examination_type',
+      label: 'Tip',
+      render: (row) => (
+        <span className="text-sm text-gray-600">
+          {examTypes[row.examination_type] || row.examination_type}
+        </span>
+      ),
+    },
+    {
+      key: 'clinic_name',
+      label: 'Clinică',
+      render: (row) => <span className="text-sm text-gray-600">{row.clinic_name || '—'}</span>,
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (row) => {
+        const colors: Record<string, string> = {
+          programat: 'bg-blue-50 text-blue-700',
+          confirmat: 'bg-green-50 text-green-700',
+          efectuat: 'bg-gray-50 text-gray-700',
+          anulat: 'bg-red-50 text-red-700',
+          reprogramat: 'bg-yellow-50 text-yellow-700',
+        }
+        return (
+          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${colors[row.status]}`}>
+            {appointmentStatuses[row.status] || row.status}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'actions',
+      label: '',
+      sortable: false,
+      render: (row) => (
+        <div className="flex items-center gap-1">
+          {canUpdate && (
+            <button
+              onClick={() => openEditAppointment(row)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-blue-600"
+              title="Editează"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+          )}
+          {canDelete && (
+            <button
+              onClick={() => setDeleteAppointmentTarget(row)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-red-600"
+              title="Șterge"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      ),
+    },
+  ]
+
+  // ========== ALERTS TABLE COLUMNS ==========
+
+  const alertsColumns: DataTableColumn<AlertRecord>[] = [
+    {
+      key: 'employee_name',
+      label: 'Angajat',
+      render: (row) => (
+        <div>
+          <div className="font-medium text-gray-900">{row.full_name || row.employee_name}</div>
+          <div className="text-xs text-gray-400">{row.job_title || '—'}</div>
+        </div>
+      ),
+    },
+    {
+      key: 'examination_type',
+      label: 'Tip',
+      render: (row) => (
+        <span className="text-sm text-gray-600">
+          {examTypes[row.examination_type] || row.examination_type}
+        </span>
+      ),
+    },
+    {
+      key: 'expiry_date',
+      label: 'Data expirare',
+      render: (row) => <span className="text-sm text-gray-600">{fmtDate(row.expiry_date)}</span>,
+    },
+    {
+      key: 'days_until_expiry',
+      label: 'Zile rămase',
+      render: (row) => {
+        const days = row.days_until_expiry || 0
+        const color = days < 0 ? 'text-red-600' : days <= 30 ? 'text-orange-500' : 'text-yellow-600'
+        return (
+          <span className={`font-semibold ${color}`}>
+            {days < 0 ? `Expirat ${Math.abs(days)}z` : `${days}z`}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'alert_level',
+      label: 'Prioritate',
+      render: (row) => {
+        const colors: Record<string, string> = {
+          expirat: 'bg-red-50 text-red-700',
+          urgent: 'bg-orange-50 text-orange-700',
+          atentie: 'bg-yellow-50 text-yellow-700',
+          ok: 'bg-green-50 text-green-700',
+          nedefinit: 'bg-gray-50 text-gray-700',
+        }
+        const labels: Record<string, string> = {
+          expirat: 'Expirat',
+          urgent: 'Urgent',
+          atentie: 'Atenție',
+          ok: 'OK',
+          nedefinit: 'Nedefinit',
+        }
+        return (
+          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${colors[row.alert_level]}`}>
+            {labels[row.alert_level]}
+          </span>
+        )
+      },
+    },
+  ]
+
   // ========== RENDER ==========
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       {/* HEADER */}
       <header className="bg-white border-b border-gray-200 px-8 py-4">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push('/dashboard')}
@@ -382,138 +777,299 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
                 <Stethoscope className="h-5 w-5 text-blue-600" />
                 Medicina Muncii
               </h1>
-              <p className="text-sm text-gray-400">Fișe de aptitudine — management complet</p>
+              <p className="text-sm text-gray-400">
+                {activeTab === 'records' && 'Fișe de aptitudine — management complet'}
+                {activeTab === 'appointments' && 'Programări examene medicale'}
+                {activeTab === 'alerts' && 'Alerte expirare fișe medicale'}
+              </p>
             </div>
           </div>
-          {/* RBAC: Buton "Adaugă" vizibil doar dacă user are permisiune 'create' pe 'medical' */}
           {canCreate && (
             <button
-              onClick={openAdd}
+              onClick={activeTab === 'records' ? openAddRecord : openAddAppointment}
               className="bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              Adaugă fișă
+              {activeTab === 'records' && 'Adaugă fișă'}
+              {activeTab === 'appointments' && 'Programează'}
             </button>
           )}
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-8 py-6 space-y-5">
+      <main className="max-w-7xl mx-auto px-8 py-6 space-y-5">
+        {/* TABS */}
+        <div className="flex items-center gap-2 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('records')}
+            className={`px-4 py-2.5 font-medium text-sm border-b-2 transition ${
+              activeTab === 'records'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <FileText className="h-4 w-4 inline mr-1.5" />
+            Fișe medicale
+          </button>
+          <button
+            onClick={() => setActiveTab('appointments')}
+            className={`px-4 py-2.5 font-medium text-sm border-b-2 transition ${
+              activeTab === 'appointments'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Calendar className="h-4 w-4 inline mr-1.5" />
+            Programări
+          </button>
+          <button
+            onClick={() => setActiveTab('alerts')}
+            className={`px-4 py-2.5 font-medium text-sm border-b-2 transition ${
+              activeTab === 'alerts'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <AlertTriangle className="h-4 w-4 inline mr-1.5" />
+            Alerte
+            {alerts.length > 0 && (
+              <span className="ml-1.5 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-500 text-white">
+                {alerts.length}
+              </span>
+            )}
+          </button>
+        </div>
 
         {/* STAT CARDS */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
-            <div className="text-3xl font-black text-gray-900">{stats.total}</div>
-            <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">Total fișe</div>
+        {activeTab === 'records' && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+              <div className="text-3xl font-black text-gray-900">{recordsStats.total}</div>
+              <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
+                Total fișe
+              </div>
+            </div>
+            <div className="bg-red-50 rounded-xl border border-red-100 p-4 text-center">
+              <div className="text-3xl font-black text-red-600">{recordsStats.expired}</div>
+              <div className="text-xs font-semibold text-red-500 uppercase tracking-widest mt-1">
+                Expirate
+              </div>
+            </div>
+            <div className="bg-orange-50 rounded-xl border border-orange-100 p-4 text-center">
+              <div className="text-3xl font-black text-orange-500">{recordsStats.expiring}</div>
+              <div className="text-xs font-semibold text-orange-500 uppercase tracking-widest mt-1">
+                Expiră &lt;30 zile
+              </div>
+            </div>
+            <div className="bg-green-50 rounded-xl border border-green-100 p-4 text-center">
+              <div className="text-3xl font-black text-green-600">{recordsStats.valid}</div>
+              <div className="text-xs font-semibold text-green-600 uppercase tracking-widest mt-1">
+                Valide
+              </div>
+            </div>
           </div>
-          <div className="bg-red-50 rounded-xl border border-red-100 p-4 text-center">
-            <div className="text-3xl font-black text-red-600">{stats.expired}</div>
-            <div className="text-xs font-semibold text-red-500 uppercase tracking-widest mt-1">Expirate</div>
+        )}
+
+        {activeTab === 'appointments' && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+              <div className="text-3xl font-black text-gray-900">{appointmentsStats.total}</div>
+              <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
+                Total programări
+              </div>
+            </div>
+            <div className="bg-blue-50 rounded-xl border border-blue-100 p-4 text-center">
+              <div className="text-3xl font-black text-blue-600">{appointmentsStats.programat}</div>
+              <div className="text-xs font-semibold text-blue-500 uppercase tracking-widest mt-1">
+                Programate
+              </div>
+            </div>
+            <div className="bg-green-50 rounded-xl border border-green-100 p-4 text-center">
+              <div className="text-3xl font-black text-green-600">{appointmentsStats.confirmat}</div>
+              <div className="text-xs font-semibold text-green-600 uppercase tracking-widest mt-1">
+                Confirmate
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-xl border border-gray-100 p-4 text-center">
+              <div className="text-3xl font-black text-gray-600">{appointmentsStats.efectuat}</div>
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-widest mt-1">
+                Efectuate
+              </div>
+            </div>
           </div>
-          <div className="bg-orange-50 rounded-xl border border-orange-100 p-4 text-center">
-            <div className="text-3xl font-black text-orange-500">{stats.expiring}</div>
-            <div className="text-xs font-semibold text-orange-500 uppercase tracking-widest mt-1">Expiră &lt;30 zile</div>
-          </div>
-          <div className="bg-green-50 rounded-xl border border-green-100 p-4 text-center">
-            <div className="text-3xl font-black text-green-600">{stats.valid}</div>
-            <div className="text-xs font-semibold text-green-600 uppercase tracking-widest mt-1">Valide</div>
-          </div>
-        </div>
+        )}
 
         {/* FILTERS */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <select
-            value={filterOrg}
-            onChange={(e) => setFilterOrg(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
-          >
-            <option value="all">Toate organizațiile</option>
-            {organizations.map((o) => (
-              <option key={o.id} value={o.id}>{o.name} ({o.cui})</option>
-            ))}
-          </select>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
-          >
-            <option value="all">Toate statusurile</option>
-            <option value="expired">Expirate</option>
-            <option value="expiring">Expiră curând</option>
-            <option value="valid">Valide</option>
-          </select>
-        </div>
+        {(activeTab === 'records' || activeTab === 'alerts') && (
+          <div className="flex flex-col sm:flex-row gap-3">
+            <select
+              value={filterOrg}
+              onChange={(e) => setFilterOrg(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
+            >
+              <option value="all">Toate organizațiile</option>
+              {organizations.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name} ({o.cui})
+                </option>
+              ))}
+            </select>
+            {activeTab === 'records' && (
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
+              >
+                <option value="all">Toate statusurile</option>
+                <option value="expired">Expirate</option>
+                <option value="expiring">Expiră curând</option>
+                <option value="valid">Valide</option>
+              </select>
+            )}
+          </div>
+        )}
 
-        {/* TABLE or EMPTY STATE */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          {filtered.length === 0 && medicalExams.length === 0 ? (
-            <EmptyState
-              icon={Stethoscope}
-              title="Nicio fișă medicală"
-              description="Adaugă prima fișă de aptitudine pentru angajați."
-              actionLabel="+ Adaugă fișă"
-              onAction={openAdd}
-            />
-          ) : (
-            <DataTable
-              columns={columns}
-              data={filtered}
-              emptyMessage="Nicio fișă corespunde filtrelor selectate."
-            />
-          )}
-        </div>
+        {/* CONTENT BY TAB */}
+        {activeTab === 'records' && (
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            {filteredRecords.length === 0 && medicalExams.length === 0 ? (
+              <EmptyState
+                icon={Stethoscope}
+                title="Nicio fișă medicală"
+                description="Adaugă prima fișă de aptitudine pentru angajați."
+                actionLabel="+ Adaugă fișă"
+                onAction={openAddRecord}
+              />
+            ) : (
+              <DataTable
+                columns={recordsColumns}
+                data={filteredRecords}
+                emptyMessage="Nicio fișă corespunde filtrelor selectate."
+              />
+            )}
+          </div>
+        )}
+
+        {activeTab === 'appointments' && (
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            {appointmentsLoading ? (
+              <div className="p-8 text-center text-gray-500">
+                <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
+                Se încarcă programările...
+              </div>
+            ) : appointments.length === 0 ? (
+              <EmptyState
+                icon={Calendar}
+                title="Nicio programare"
+                description="Programează prima examinare medicală pentru angajați."
+                actionLabel="+ Programează"
+                onAction={openAddAppointment}
+              />
+            ) : (
+              <DataTable
+                columns={appointmentsColumns}
+                data={appointments}
+                emptyMessage="Nicio programare."
+              />
+            )}
+          </div>
+        )}
+
+        {activeTab === 'alerts' && (
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            {alertsLoading ? (
+              <div className="p-8 text-center text-gray-500">
+                <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
+                Se încarcă alertele...
+              </div>
+            ) : alerts.length === 0 ? (
+              <EmptyState
+                icon={AlertTriangle}
+                title="Nicio alertă"
+                description="Nu există fișe care expiră în următoarele 60 de zile."
+              />
+            ) : (
+              <>
+                <div className="p-4 bg-red-50 border-b border-red-100">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-red-900">Atenție!</h3>
+                      <p className="text-sm text-red-700 mt-0.5">
+                        {alerts.length} fișe medicale expiră sau sunt expirate. Contactează angajații pentru reprogramare.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <DataTable
+                  columns={alertsColumns}
+                  data={alerts}
+                  emptyMessage="Nicio alertă."
+                />
+              </>
+            )}
+          </div>
+        )}
       </main>
 
-      {/* ========== FORM MODAL ========== */}
+      {/* ========== RECORDS FORM MODAL ========== */}
       <FormModal
-        title={editingId ? 'Editează fișa medicală' : 'Adaugă fișă medicală'}
-        isOpen={showForm}
-        onClose={() => { setShowForm(false); setEditingId(null); setForm(emptyForm) }}
-        onSubmit={handleSubmit}
-        loading={formLoading}
-        submitLabel={editingId ? 'Salvează modificările' : 'Adaugă fișa'}
+        title={editingRecordId ? 'Editează fișa medicală' : 'Adaugă fișă medicală'}
+        isOpen={showRecordForm}
+        onClose={() => {
+          setShowRecordForm(false)
+          setEditingRecordId(null)
+          setRecordForm(emptyRecordForm)
+        }}
+        onSubmit={handleRecordSubmit}
+        loading={recordFormLoading}
+        submitLabel={editingRecordId ? 'Salvează modificările' : 'Adaugă fișa'}
       >
         {/* Organizație */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Organizație *</label>
           <select
-            value={form.organization_id}
-            onChange={(e) => setForm((f) => ({ ...f, organization_id: e.target.value }))}
+            value={recordForm.organization_id}
+            onChange={(e) => setRecordForm((f) => ({ ...f, organization_id: e.target.value }))}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
             required
           >
             <option value="">Selectează organizația</option>
             {organizations.map((o) => (
-              <option key={o.id} value={o.id}>{o.name} ({o.cui})</option>
+              <option key={o.id} value={o.id}>
+                {o.name} ({o.cui})
+              </option>
             ))}
           </select>
         </div>
 
-        {/* Angajat — dropdown sau manual */}
+        {/* Angajat */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Angajat</label>
           <select
-            value={form.employee_id}
+            value={recordForm.employee_id}
             onChange={(e) => handleEmployeeSelect(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
           >
             <option value="">Selectează sau completează manual ↓</option>
             {employees
-              .filter((e) => !form.organization_id || e.organization_id === form.organization_id)
+              .filter((e) => !recordForm.organization_id || e.organization_id === recordForm.organization_id)
               .map((e) => (
-                <option key={e.id} value={e.id}>{e.full_name} — {e.job_title || 'fără funcție'}</option>
+                <option key={e.id} value={e.id}>
+                  {e.full_name} — {e.job_title || 'fără funcție'}
+                </option>
               ))}
           </select>
         </div>
 
-        {/* Nume angajat (manual) */}
+        {/* Nume angajat + Funcție */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Nume angajat *</label>
             <input
               type="text"
-              value={form.employee_name}
-              onChange={(e) => setForm((f) => ({ ...f, employee_name: e.target.value }))}
+              value={recordForm.employee_name}
+              onChange={(e) => setRecordForm((f) => ({ ...f, employee_name: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
               placeholder="Popescu Ion"
               required
@@ -523,8 +1079,8 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
             <label className="block text-sm font-medium text-gray-700 mb-1">Funcție</label>
             <input
               type="text"
-              value={form.job_title}
-              onChange={(e) => setForm((f) => ({ ...f, job_title: e.target.value }))}
+              value={recordForm.job_title}
+              onChange={(e) => setRecordForm((f) => ({ ...f, job_title: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
               placeholder="Operator CNC"
             />
@@ -536,24 +1092,28 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Tip examinare *</label>
             <select
-              value={form.examination_type}
-              onChange={(e) => setForm((f) => ({ ...f, examination_type: e.target.value }))}
+              value={recordForm.examination_type}
+              onChange={(e) => setRecordForm((f) => ({ ...f, examination_type: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
             >
               {Object.entries(examTypes).map(([k, v]) => (
-                <option key={k} value={k}>{v}</option>
+                <option key={k} value={k}>
+                  {v}
+                </option>
               ))}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Rezultat *</label>
             <select
-              value={form.result}
-              onChange={(e) => setForm((f) => ({ ...f, result: e.target.value }))}
+              value={recordForm.result}
+              onChange={(e) => setRecordForm((f) => ({ ...f, result: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
             >
               {Object.entries(resultTypes).map(([k, v]) => (
-                <option key={k} value={k}>{v}</option>
+                <option key={k} value={k}>
+                  {v}
+                </option>
               ))}
             </select>
           </div>
@@ -565,8 +1125,8 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
             <label className="block text-sm font-medium text-gray-700 mb-1">Data examinare *</label>
             <input
               type="date"
-              value={form.examination_date}
-              onChange={(e) => setForm((f) => ({ ...f, examination_date: e.target.value }))}
+              value={recordForm.examination_date}
+              onChange={(e) => setRecordForm((f) => ({ ...f, examination_date: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
               required
             />
@@ -575,8 +1135,8 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
             <label className="block text-sm font-medium text-gray-700 mb-1">Data expirare *</label>
             <input
               type="date"
-              value={form.expiry_date}
-              onChange={(e) => setForm((f) => ({ ...f, expiry_date: e.target.value }))}
+              value={recordForm.expiry_date}
+              onChange={(e) => setRecordForm((f) => ({ ...f, expiry_date: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
               required
             />
@@ -589,8 +1149,8 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
             <label className="block text-sm font-medium text-gray-700 mb-1">Doctor</label>
             <input
               type="text"
-              value={form.doctor_name}
-              onChange={(e) => setForm((f) => ({ ...f, doctor_name: e.target.value }))}
+              value={recordForm.doctor_name}
+              onChange={(e) => setRecordForm((f) => ({ ...f, doctor_name: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
               placeholder="Dr. Ionescu"
             />
@@ -599,8 +1159,8 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
             <label className="block text-sm font-medium text-gray-700 mb-1">Clinică</label>
             <input
               type="text"
-              value={form.clinic_name}
-              onChange={(e) => setForm((f) => ({ ...f, clinic_name: e.target.value }))}
+              value={recordForm.clinic_name}
+              onChange={(e) => setRecordForm((f) => ({ ...f, clinic_name: e.target.value }))}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
               placeholder="Policlinica Sănătatea"
             />
@@ -612,19 +1172,64 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
           <label className="block text-sm font-medium text-gray-700 mb-1">Restricții</label>
           <input
             type="text"
-            value={form.restrictions}
-            onChange={(e) => setForm((f) => ({ ...f, restrictions: e.target.value }))}
+            value={recordForm.restrictions}
+            onChange={(e) => setRecordForm((f) => ({ ...f, restrictions: e.target.value }))}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
-            placeholder="Ex: fără efort fizic intens, fără lucru la înălțime"
+            placeholder="Ex: fără efort fizic intens"
           />
+        </div>
+
+        {/* M3 NEW FIELDS */}
+        <div className="border-t border-gray-200 pt-3">
+          <div className="text-sm font-semibold text-gray-700 mb-2">Detalii suplimentare (M3)</div>
+
+          {/* Factori risc */}
+          <div className="mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Factori de risc (separați prin virgulă)
+            </label>
+            <input
+              type="text"
+              value={recordForm.risk_factors}
+              onChange={(e) => setRecordForm((f) => ({ ...f, risk_factors: e.target.value }))}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+              placeholder="Ex: zgomot, chimice, efort fizic"
+            />
+          </div>
+
+          {/* Document number + Validitate */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nr. document</label>
+              <input
+                type="text"
+                value={recordForm.document_number}
+                onChange={(e) => setRecordForm((f) => ({ ...f, document_number: e.target.value }))}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+                placeholder="Ex: FA-2024-001"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Validitate (luni)</label>
+              <input
+                type="number"
+                value={recordForm.validity_months}
+                onChange={(e) => setRecordForm((f) => ({ ...f, validity_months: parseInt(e.target.value) || 12 }))}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+                placeholder="12"
+                min="1"
+                max="60"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Note */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Observații</label>
           <textarea
-            value={form.notes}
-            onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
+            value={recordForm.notes}
+            onChange={(e) => setRecordForm((f) => ({ ...f, notes: e.target.value }))}
             rows={2}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800 resize-none"
             placeholder="Note suplimentare..."
@@ -632,16 +1237,169 @@ export default function MedicalClient({ user, medicalExams, employees, organizat
         </div>
       </FormModal>
 
-      {/* ========== DELETE CONFIRM ========== */}
+      {/* ========== APPOINTMENTS FORM MODAL ========== */}
+      <FormModal
+        title={editingAppointmentId ? 'Editează programarea' : 'Programează examen'}
+        isOpen={showAppointmentForm}
+        onClose={() => {
+          setShowAppointmentForm(false)
+          setEditingAppointmentId(null)
+          setAppointmentForm(emptyAppointmentForm)
+        }}
+        onSubmit={handleAppointmentSubmit}
+        loading={appointmentFormLoading}
+        submitLabel={editingAppointmentId ? 'Salvează' : 'Programează'}
+      >
+        {/* Organizație */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Organizație *</label>
+          <select
+            value={appointmentForm.organization_id}
+            onChange={(e) => setAppointmentForm((f) => ({ ...f, organization_id: e.target.value }))}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+            required
+          >
+            <option value="">Selectează organizația</option>
+            {organizations.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.name} ({o.cui})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Angajat */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Angajat *</label>
+          <select
+            value={appointmentForm.employee_id}
+            onChange={(e) => setAppointmentForm((f) => ({ ...f, employee_id: e.target.value }))}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+            required
+          >
+            <option value="">Selectează angajatul</option>
+            {employees
+              .filter((e) => !appointmentForm.organization_id || e.organization_id === appointmentForm.organization_id)
+              .map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.full_name} — {e.job_title || 'fără funcție'}
+                </option>
+              ))}
+          </select>
+        </div>
+
+        {/* Data + Ora */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Data *</label>
+            <input
+              type="date"
+              value={appointmentForm.appointment_date}
+              onChange={(e) => setAppointmentForm((f) => ({ ...f, appointment_date: e.target.value }))}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Ora</label>
+            <input
+              type="time"
+              value={appointmentForm.appointment_time}
+              onChange={(e) => setAppointmentForm((f) => ({ ...f, appointment_time: e.target.value }))}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+            />
+          </div>
+        </div>
+
+        {/* Tip + Status */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tip examinare *</label>
+            <select
+              value={appointmentForm.examination_type}
+              onChange={(e) => setAppointmentForm((f) => ({ ...f, examination_type: e.target.value }))}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+            >
+              {Object.entries(examTypes).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select
+              value={appointmentForm.status}
+              onChange={(e) => setAppointmentForm((f) => ({ ...f, status: e.target.value }))}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+            >
+              {Object.entries(appointmentStatuses).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Clinică + Adresă */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Clinică</label>
+          <input
+            type="text"
+            value={appointmentForm.clinic_name}
+            onChange={(e) => setAppointmentForm((f) => ({ ...f, clinic_name: e.target.value }))}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+            placeholder="Policlinica Sănătatea"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Adresă clinică</label>
+          <input
+            type="text"
+            value={appointmentForm.clinic_address}
+            onChange={(e) => setAppointmentForm((f) => ({ ...f, clinic_address: e.target.value }))}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
+            placeholder="Str. Sănătății nr. 10, Cluj-Napoca"
+          />
+        </div>
+
+        {/* Note */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Observații</label>
+          <textarea
+            value={appointmentForm.notes}
+            onChange={(e) => setAppointmentForm((f) => ({ ...f, notes: e.target.value }))}
+            rows={2}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800 resize-none"
+            placeholder="Note programare..."
+          />
+        </div>
+      </FormModal>
+
+      {/* ========== DELETE RECORD CONFIRM ========== */}
       <ConfirmDialog
         title="Șterge fișa medicală"
-        message={`Sigur vrei să ștergi fișa pentru "${deleteTarget?.employee_name || ''}"? Acțiunea este ireversibilă.`}
+        message={`Sigur vrei să ștergi fișa pentru "${deleteRecordTarget?.employee_name || ''}"? Acțiunea este ireversibilă.`}
         confirmLabel="Șterge definitiv"
-        isOpen={deleteTarget !== null}
-        onConfirm={handleDelete}
-        onCancel={() => setDeleteTarget(null)}
+        isOpen={deleteRecordTarget !== null}
+        onConfirm={handleRecordDelete}
+        onCancel={() => setDeleteRecordTarget(null)}
         isDestructive={true}
-        loading={deleteLoading}
+        loading={deleteRecordLoading}
+      />
+
+      {/* ========== DELETE APPOINTMENT CONFIRM ========== */}
+      <ConfirmDialog
+        title="Șterge programarea"
+        message="Sigur vrei să ștergi această programare? Acțiunea este ireversibilă."
+        confirmLabel="Șterge"
+        isOpen={deleteAppointmentTarget !== null}
+        onConfirm={handleAppointmentDelete}
+        onCancel={() => setDeleteAppointmentTarget(null)}
+        isDestructive={true}
+        loading={deleteAppointmentLoading}
       />
     </div>
   )
