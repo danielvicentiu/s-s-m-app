@@ -166,6 +166,13 @@ function parseLegalText(raw: string): FormattedSegment[] {
 
   // Step 1: Insert line breaks before structural markers glued to previous text
   let text = raw
+    // Separate roman numeral from subtitle glued to it:
+    // "Capitolul IDispoziții generale" → "Capitolul I\nDispoziții generale"
+    // "Capitolul IIObligațiile" → "Capitolul II\nObligațiile"
+    // Must run BEFORE the Capitol break insertion
+    .replace(/(Capitolul\s+)((?:IX|IV|V?I{1,3}|VI{1,3}|X{1,3}|\d+))([A-ZĂÂÎȘȚ][a-zăâîșț])/gi, '$1$2\n$3')
+    .replace(/(Sec[țţ]iunea\s+(?:a\s+)?)(\d+(?:-a)?|[IVXLCDM]+)([A-ZĂÂÎȘȚ][a-zăâîșț])/gi, '$1$2\n$3')
+    // Break before structural markers glued to previous text
     .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Capitolul\s+[IVXLCDM\d]+)/gi, '\n\n$1')
     .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Sec[țţ]iunea\s+[\da-z]+)/gi, '\n\n$1')
     .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Articolul\s+[\dIVXLCDM]+)/gi, '\n\n$1')
@@ -289,23 +296,23 @@ function FormattedLegalContent({ text, searchTerm }: { text: string; searchTerm:
   };
 
   const styleMap: Record<string, string> = {
-    title:     'text-lg font-bold text-white mt-0 mb-3 leading-tight border-b border-zinc-700 pb-3',
-    emitent:   'text-xs font-semibold text-zinc-500 uppercase tracking-widest',
-    publicare: 'text-xs text-zinc-500 italic mb-4',
-    nota:      'text-sm text-amber-300/70 italic bg-amber-950/20 border-l-2 border-amber-600/40 pl-3 py-2 my-3 rounded-r',
-    capitol:   'text-base font-bold text-emerald-300 uppercase tracking-wide mt-8 mb-2 pt-4 border-t border-zinc-700/60',
+    title:     'text-lg font-bold text-slate-100 mt-0 mb-3 leading-tight border-b border-slate-600 pb-3',
+    emitent:   'text-xs font-semibold text-slate-400 uppercase tracking-widest',
+    publicare: 'text-xs text-slate-400 italic mb-4',
+    nota:      'text-sm text-amber-200/80 italic bg-amber-950/20 border-l-2 border-amber-500/40 pl-3 py-2 my-3 rounded-r',
+    capitol:   'text-base font-bold text-emerald-300 uppercase tracking-wide mt-8 mb-2 pt-4 border-t border-slate-600/60',
     sectiune:  'text-sm font-bold text-cyan-300 uppercase tracking-wide mt-6 mb-2',
     articol:   'text-sm font-bold text-blue-300 mt-5 mb-1.5 pl-0',
-    alineat:   'text-sm text-zinc-300 leading-relaxed pl-4 my-1',
-    litera:    'text-sm text-zinc-400 leading-relaxed pl-8 my-0.5',
-    punct:     'text-sm text-zinc-400 leading-relaxed pl-6 my-0.5',
-    separator: 'border-t border-zinc-700/40 my-4',
-    text:      'text-sm text-zinc-300 leading-relaxed my-1',
+    alineat:   'text-sm text-slate-200 leading-relaxed pl-4 my-1',
+    litera:    'text-sm text-slate-300 leading-relaxed pl-8 my-0.5',
+    punct:     'text-sm text-slate-300 leading-relaxed pl-6 my-0.5',
+    separator: 'border-t border-slate-600/40 my-4',
+    text:      'text-sm text-slate-200 leading-relaxed my-1',
   };
 
   const getStyle = (seg: FormattedSegment) => {
     if (seg.type === 'capitol' && seg.level === 0) {
-      return 'text-lg font-black text-white uppercase tracking-wider mt-10 mb-3 pt-6 border-t-2 border-emerald-500/30';
+      return 'text-lg font-black text-slate-100 uppercase tracking-wider mt-10 mb-3 pt-6 border-t-2 border-emerald-500/30';
     }
     return styleMap[seg.type] || styleMap.text;
   };
@@ -422,9 +429,9 @@ function PreviewModal({ data, onClose }: { data: PreviewData; onClose: () => voi
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col">
+      <div className="relative bg-slate-800 border border-slate-600 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-zinc-700">
+        <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-slate-600">
           <div className="min-w-0">
             <h2 className="text-lg font-bold text-white truncate">{data.act_key}</h2>
             <p className="text-sm text-zinc-400 mt-0.5">{data.title}</p>
@@ -443,7 +450,7 @@ function PreviewModal({ data, onClose }: { data: PreviewData; onClose: () => voi
         </div>
 
         {/* Search + View Toggle */}
-        <div className="px-4 sm:px-5 py-3 border-b border-zinc-800 flex items-center gap-3">
+        <div className="px-4 sm:px-5 py-3 border-b border-slate-700 flex items-center gap-3">
           <div className="relative flex-1">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -487,7 +494,7 @@ function PreviewModal({ data, onClose }: { data: PreviewData; onClose: () => voi
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-850" style={{ backgroundColor: '#1a2332' }}>
           {viewMode === 'formatted' ? (
             <FormattedLegalContent text={data.full_text} searchTerm={searchTerm} />
           ) : (
@@ -501,7 +508,7 @@ function PreviewModal({ data, onClose }: { data: PreviewData; onClose: () => voi
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-5 py-3 border-t border-zinc-700 flex items-center justify-between">
+        <div className="px-4 sm:px-5 py-3 border-t border-slate-600 flex items-center justify-between">
           <p className="text-xs text-zinc-500">
             {viewMode === 'formatted' ? 'Vizualizare structurată' : 'Text brut'} · Ctrl+F nativ
           </p>
