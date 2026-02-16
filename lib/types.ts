@@ -437,3 +437,130 @@ export interface OrganizationObligation {
   match_score: number
   match_reason: string | null
 }
+
+// ── M2_PSI: Fire Safety Equipment Tracking ──
+
+export type PSIEquipmentType =
+  | 'stingator'
+  | 'hidrant_interior'
+  | 'hidrant_exterior'
+  | 'detector_fum'
+  | 'detector_co'
+  | 'alarma_incendiu'
+  | 'iluminat_urgenta'
+  | 'sistem_stingere'
+  | 'altul'
+
+export type PSIEquipmentStatus =
+  | 'operational'
+  | 'needs_inspection'
+  | 'needs_repair'
+  | 'out_of_service'
+
+export type PSIInspectionResult =
+  | 'conform'
+  | 'conform_cu_observatii'
+  | 'neconform'
+
+export type PSIAlertLevel =
+  | 'expired'
+  | 'critical'
+  | 'warning'
+  | 'info'
+  | 'ok'
+
+export interface PSIEquipment {
+  id: string
+  organization_id: string
+  equipment_type: PSIEquipmentType
+  identifier: string
+  location: string | null
+  manufacturer: string | null
+  model: string | null
+  manufacture_date: string | null
+  installation_date: string | null
+  last_inspection_date: string | null
+  next_inspection_date: string | null
+  capacity: string | null
+  agent_type: string | null
+  status: PSIEquipmentStatus
+  notes: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  // Joined data (optional)
+  organizations?: {
+    id: string
+    name: string
+    cui: string | null
+  }
+}
+
+export interface PSIInspection {
+  id: string
+  equipment_id: string
+  organization_id: string
+  inspection_date: string
+  inspector_name: string
+  inspector_license: string | null
+  result: PSIInspectionResult
+  findings: string | null
+  next_inspection_date: string
+  bulletin_number: string | null
+  bulletin_storage_path: string | null
+  created_by: string | null
+  created_at: string
+  // Joined data (optional)
+  psi_equipment?: PSIEquipment
+}
+
+export interface PSIAlertItem {
+  id: string
+  equipment_id: string
+  equipment_type: PSIEquipmentType
+  identifier: string
+  location: string | null
+  next_inspection_date: string
+  days_until_due: number
+  alert_level: PSIAlertLevel
+  organization_id: string
+  organization_name: string
+  organization_cui: string | null
+}
+
+// Helper: Romanian labels for PSI equipment types
+export const PSI_EQUIPMENT_TYPE_LABELS: Record<PSIEquipmentType, string> = {
+  'stingator': 'Stingător',
+  'hidrant_interior': 'Hidrant interior',
+  'hidrant_exterior': 'Hidrant exterior',
+  'detector_fum': 'Detector fum',
+  'detector_co': 'Detector CO',
+  'alarma_incendiu': 'Alarmă incendiu',
+  'iluminat_urgenta': 'Iluminat urgență',
+  'sistem_stingere': 'Sistem stingere',
+  'altul': 'Altul'
+}
+
+// Helper: Romanian labels for PSI equipment status
+export const PSI_EQUIPMENT_STATUS_LABELS: Record<PSIEquipmentStatus, string> = {
+  'operational': 'Operațional',
+  'needs_inspection': 'Necesită inspecție',
+  'needs_repair': 'Necesită reparație',
+  'out_of_service': 'Scos din funcțiune'
+}
+
+// Helper: Romanian labels for PSI inspection results
+export const PSI_INSPECTION_RESULT_LABELS: Record<PSIInspectionResult, string> = {
+  'conform': 'Conform',
+  'conform_cu_observatii': 'Conform cu observații',
+  'neconform': 'Neconform'
+}
+
+// Helper: Romanian labels for PSI alert levels
+export const PSI_ALERT_LEVEL_LABELS: Record<PSIAlertLevel, string> = {
+  'expired': 'Expirat',
+  'critical': '30 zile',
+  'warning': '60 zile',
+  'info': '90 zile',
+  'ok': 'La zi'
+}

@@ -162,3 +162,64 @@ export const trainingQuerySchema = z.object({
 })
 
 export type TrainingQueryParams = z.infer<typeof trainingQuerySchema>
+
+/**
+ * Schema: Create PSI Equipment
+ */
+export const createPSIEquipmentSchema = z.object({
+  organization_id: z.string().uuid('ID organizație invalid'),
+  equipment_type: z.enum([
+    'stingator',
+    'hidrant_interior',
+    'hidrant_exterior',
+    'detector_fum',
+    'detector_co',
+    'alarma_incendiu',
+    'iluminat_urgenta',
+    'sistem_stingere',
+    'altul'
+  ]),
+  identifier: z.string().min(1, 'Identificator obligatoriu').max(100),
+  location: z.string().optional().nullable(),
+  manufacturer: z.string().optional().nullable(),
+  model: z.string().optional().nullable(),
+  manufacture_date: z.string().optional().nullable(),
+  installation_date: z.string().optional().nullable(),
+  last_inspection_date: z.string().optional().nullable(),
+  next_inspection_date: z.string().optional().nullable(),
+  capacity: z.string().optional().nullable(),
+  agent_type: z.string().optional().nullable(),
+  status: z.enum(['operational', 'needs_inspection', 'needs_repair', 'out_of_service'])
+    .optional()
+    .default('operational'),
+  notes: z.string().optional().nullable()
+})
+
+export type CreatePSIEquipmentInput = z.infer<typeof createPSIEquipmentSchema>
+
+/**
+ * Schema: Update PSI Equipment (partial)
+ */
+export const updatePSIEquipmentSchema = createPSIEquipmentSchema
+  .partial()
+  .omit({ organization_id: true })
+
+export type UpdatePSIEquipmentInput = z.infer<typeof updatePSIEquipmentSchema>
+
+/**
+ * Schema: Create PSI Inspection
+ */
+export const createPSIInspectionSchema = z.object({
+  equipment_id: z.string().uuid('ID echipament invalid'),
+  organization_id: z.string().uuid('ID organizație invalid'),
+  inspection_date: z.string(),
+  inspector_name: z.string().min(2, 'Nume inspector obligatoriu'),
+  inspector_license: z.string().optional().nullable(),
+  result: z.enum(['conform', 'conform_cu_observatii', 'neconform']),
+  findings: z.string().optional().nullable(),
+  next_inspection_date: z.string(),
+  bulletin_number: z.string().optional().nullable(),
+  bulletin_storage_path: z.string().optional().nullable()
+})
+
+export type CreatePSIInspectionInput = z.infer<typeof createPSIInspectionSchema>
