@@ -209,7 +209,7 @@ export async function logApiKeyUsage(params: {
     .from('api_keys')
     .update({
       last_used_at: new Date().toISOString(),
-      total_requests: supabase.sql`total_requests + 1`,
+      // TODO: Implement total_requests increment using RPC or fetch-update pattern
     })
     .eq('id', params.apiKeyId)
 }

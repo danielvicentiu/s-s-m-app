@@ -274,21 +274,33 @@ export const POST = withAuth(withErrorHandling(async (req: NextRequest, context:
     )
   }
 
-  // Validate with Zod schema
-  const validation = organizationSchema.safeParse(body)
-  if (!validation.success) {
+  // Validate input
+  const validation = organizationSchema.validate(body)
+  if (!validation.valid) {
     return NextResponse.json(
       {
         error: 'Validation Error',
         message: 'Date de intrare invalide',
         code: 'VALIDATION_ERROR',
-        details: validation.error.format()
+        details: validation.errors
       } as ApiError,
       { status: 400 }
     )
   }
 
-  const validatedData = validation.data
+  let validatedData
+  try {
+    validatedData = organizationSchema.parse(body)
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: 'Validation Error',
+        message: error instanceof Error ? error.message : 'Date de intrare invalide',
+        code: 'VALIDATION_ERROR'
+      } as ApiError,
+      { status: 400 }
+    )
+  }
 
   // Check for duplicate CUI if provided
   if (validatedData.cui) {

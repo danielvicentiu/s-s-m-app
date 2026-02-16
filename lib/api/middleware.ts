@@ -25,9 +25,9 @@ export interface ApiError {
  * Verifies user is authenticated via Supabase Auth
  */
 export function withAuth(
-  handler: (req: NextRequest, context: ApiContext) => Promise<NextResponse>
-) {
-  return async (req: NextRequest): Promise<NextResponse> => {
+  handler: (req: NextRequest, context: ApiContext) => Promise<Response>
+): (req: NextRequest) => Promise<Response> {
+  return async (req: NextRequest): Promise<Response> => {
     try {
       const supabase = await createSupabaseServer()
       const { data: { user }, error: authError } = await supabase.auth.getUser()

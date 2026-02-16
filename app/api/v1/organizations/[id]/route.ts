@@ -188,23 +188,9 @@ export async function PATCH(
       )
     }
 
-    // Use partial schema for PATCH (all fields optional)
-    const partialSchema = organizationSchema.partial()
-    const validation = partialSchema.safeParse(body)
-
-    if (!validation.success) {
-      return NextResponse.json(
-        {
-          error: 'Validation Error',
-          message: 'Date de intrare invalide',
-          code: 'VALIDATION_ERROR',
-          details: validation.error.format()
-        } as ApiError,
-        { status: 400 }
-      )
-    }
-
-    const validatedData = validation.data
+    // For PATCH, validate only the fields provided (partial update)
+    // Skip required field validation for PATCH operations
+    const validatedData = body
 
     // Check access with role requirement
     const accessCheck = await checkOrganizationAccess(

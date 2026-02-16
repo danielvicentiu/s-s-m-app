@@ -272,7 +272,7 @@ function mapActType(tipAct: string): string {
 }
 
 async function logImport(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   reference: string,
   status: string,
   contentHash: string | null,

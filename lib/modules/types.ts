@@ -151,6 +151,21 @@ export const TRANSLATION_QUALITY_LABELS: Record<string, { label: string; emoji: 
   ai: { label: 'AI', emoji: '🤖' },
 }
 
+// ── Module Capabilities and Hooks ──
+
+export interface ModuleCapability {
+  id: string
+  name: string
+  description: string
+  permissions: string[]
+}
+
+export interface ModuleHook {
+  event: string
+  handler: string
+  description: string
+}
+
 // ── Helpers ──
 
 export function isModuleActive(module: OrganizationModule): boolean {

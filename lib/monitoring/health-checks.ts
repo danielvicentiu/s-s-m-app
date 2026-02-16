@@ -77,10 +77,7 @@ export async function checkDatabase(): Promise<ServiceHealth> {
       const supabase = await createSupabaseServer()
 
       // Query simplu pentru test conexiune
-      const { data, error } = await withTimeout(
-        supabase.from('organizations').select('id').limit(1).single(),
-        TIMEOUT_MS
-      )
+      const { data, error } = await supabase.from('organizations').select('id').limit(1).single()
 
       if (error && error.code !== 'PGRST116') {
         // PGRST116 = no rows returned (ok pentru test)

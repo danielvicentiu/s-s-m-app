@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Bell, CheckCircle2, AlertTriangle, Smartphone, Zap, Globe } from 'lucide-react';
 
 export default function MobilePreviewSection() {
@@ -55,18 +54,8 @@ export default function MobilePreviewSection() {
           <div className="relative flex justify-center lg:justify-end">
             {/* Floating notifications */}
             {notifications.map((notification, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, scale: 0.5, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{
-                  delay: notification.delay,
-                  duration: 0.5,
-                  repeat: Infinity,
-                  repeatType: 'reverse',
-                  repeatDelay: 3,
-                }}
-                viewport={{ once: false }}
                 className={`absolute z-10 ${
                   notification.position === 'top-left'
                     ? 'top-8 left-4 sm:left-12'
@@ -83,15 +72,11 @@ export default function MobilePreviewSection() {
                     {notification.text}
                   </span>
                 </div>
-              </motion.div>
+              </div>
             ))}
 
             {/* Phone mockup */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
+            <div
               className="relative"
             >
               {/* Phone frame */}
@@ -166,17 +151,12 @@ export default function MobilePreviewSection() {
 
               {/* Glow effect */}
               <div className="absolute inset-0 bg-blue-500/20 blur-3xl -z-10 scale-95" />
-            </motion.div>
+            </div>
           </div>
 
           {/* Right side - Content */}
           <div className="text-center lg:text-left">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
+            <div>
               <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
                 <Globe className="w-4 h-4" />
                 <span>Disponibil pe toate platformele</span>
@@ -196,12 +176,8 @@ export default function MobilePreviewSection() {
               {/* Features list */}
               <div className="space-y-6">
                 {features.map((feature, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
                     className="flex items-start gap-4"
                   >
                     <div className="bg-blue-100 p-3 rounded-xl flex-shrink-0">
@@ -215,10 +191,10 @@ export default function MobilePreviewSection() {
                         {feature.description}
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

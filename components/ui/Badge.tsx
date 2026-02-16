@@ -2,7 +2,6 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 export type BadgeVariant = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
-export type StatusType = 'valid' | 'expiring' | 'expired' | 'active' | 'inactive' | 'pending';
 export type BadgeSize = 'sm' | 'md';
 
 export interface BadgeProps {
@@ -73,13 +72,16 @@ export function Badge({
 }
 
 // Predefined status mappings
-export type StatusType = 'active' | 'expired' | 'pending' | 'draft';
+export type StatusType = 'active' | 'expired' | 'pending' | 'draft' | 'valid' | 'expiring' | 'inactive';
 
 const statusMapping: Record<StatusType, { variant: BadgeVariant; label: string }> = {
   active: { variant: 'success', label: 'Activ' },
   expired: { variant: 'danger', label: 'Expirat' },
   pending: { variant: 'warning', label: '├Än a╚Öteptare' },
   draft: { variant: 'neutral', label: 'Draft' },
+  valid: { variant: 'success', label: 'Valid' },
+  expiring: { variant: 'warning', label: 'Expiră' },
+  inactive: { variant: 'neutral', label: 'Inactiv' },
 };
 
 export interface StatusBadgeProps {

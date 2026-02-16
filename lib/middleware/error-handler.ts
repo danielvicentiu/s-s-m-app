@@ -136,9 +136,9 @@ export function handleApiError(
  *   return Response.json({ data });
  * });
  */
-export function withErrorHandling<T extends any[], R>(
+export function withErrorHandling<T extends any[]>(
   handler: (...args: T) => Promise<Response>
-) {
+): (...args: T) => Promise<Response> {
   return async (...args: T): Promise<Response> => {
     try {
       return await handler(...args);

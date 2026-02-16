@@ -150,6 +150,7 @@ export function getDaysUntilExpiry(expiryDate: string): number {
 // ── ADMIN CONFIGURABIL: Tabele master date per țară ──
 
 export type CountryCode = 'RO' | 'BG' | 'HU' | 'DE' | 'PL'
+export type LegislationDomain = 'ssm' | 'psi' | 'gdpr' | 'labor' | 'environmental' | 'other'
 export type Currency = 'RON' | 'BGN' | 'HUF' | 'EUR' | 'PLN'
 export type ObligationFrequency = 'annual' | 'biannual' | 'monthly' | 'quarterly' | 'on_demand' | 'once'
 export type AlertSeverity = 'info' | 'warning' | 'critical' | 'expired'
@@ -318,16 +319,22 @@ export type WebhookEventType =
   | 'employee.deleted'
   | 'training.created'
   | 'training.completed'
+  | 'training.due'
   | 'medical.created'
   | 'medical.expiring'
   | 'medical.expired'
   | 'equipment.created'
   | 'equipment.expiring'
   | 'equipment.expired'
+  | 'equipment.inspection_due'
   | 'alert.created'
+  | 'alert.triggered'
   | 'incident.created'
   | 'penalty.created'
   | 'compliance.status_changed'
+  | 'compliance.changed'
+  | 'document.uploaded'
+  | 'organization.updated'
 
 export type WebhookStatus = 'pending' | 'success' | 'failed'
 

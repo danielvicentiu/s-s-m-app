@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface MonitorStatus {
@@ -68,7 +68,10 @@ function timeAgo(dateStr: string | null): string {
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 export default function LegalImportAdmin() {
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   const [tab, setTab] = useState<TabType>('status');
   const [statusData, setStatusData] = useState<MonitorStatus[]>([]);

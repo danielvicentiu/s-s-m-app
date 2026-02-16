@@ -819,12 +819,12 @@ export const defaultDPIATemplate: Omit<DPIATemplate, 'id' | 'organizationId' | '
 // MODULE DEFINITION
 // ===========================
 
-export const gdprModule: ModuleDefinition = {
+export const gdprModule = {
   id: 'gdpr',
   name: 'GDPR Compliance',
   description: 'Comprehensive GDPR compliance management: data processing registers, consent management, data subject rights, DPIA, breach notifications, and DPO dashboard',
   version: '1.0.0',
-  category: 'compliance',
+  category: 'premium',
   dependencies: ['ssm-core', 'documents'],
   capabilities: gdprCapabilities,
   hooks: gdprHooks,

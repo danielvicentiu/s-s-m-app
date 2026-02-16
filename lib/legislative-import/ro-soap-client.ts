@@ -131,7 +131,7 @@ function parseSearchResults(xml: string): LegislativeActResult[] {
 
   // Extract XML blocks for each act — adapt to actual response structure
   const actPattern = /<[^>]*?(?:DocumentId|ActId)[^>]*?>[\s\S]*?(?:<\/[^>]*?Result>|<\/[^>]*?Act>)/g;
-  const blocks = xml.match(actPattern) || [];
+  const blocks: string[] = xml.match(actPattern) || [];
 
   // Fallback: try splitting on repeating patterns
   if (blocks.length === 0) {

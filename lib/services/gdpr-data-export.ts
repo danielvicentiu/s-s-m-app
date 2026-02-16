@@ -85,9 +85,10 @@ export async function generateDataExport(
         .eq('organization_id', organizationId)
         .single()
 
-      const isAdmin = userRole?.roles?.name === 'super_admin' ||
-                      userRole?.roles?.name === 'consultant_ssm' ||
-                      userRole?.roles?.name === 'firma_admin'
+      const roleName = (userRole?.roles as any)?.name
+      const isAdmin = roleName === 'super_admin' ||
+                      roleName === 'consultant_ssm' ||
+                      roleName === 'firma_admin'
 
       if (!isAdmin) {
         return { success: false, error: 'Unauthorized: can only export own data' }

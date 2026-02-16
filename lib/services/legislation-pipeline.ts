@@ -26,13 +26,16 @@
 
 import type {
   CountryCode,
-  LegislationEntry,
   LegislationDomain,
-  LegislationParsed
+  Obligation
 } from '@/lib/types'
 
+// TODO: Move these types to @/lib/types
+type LegislationEntry = any
+type LegislationParsed = any
+
 import { scrapeLegislatie } from './m1-legislation-scraper'
-import { extractObligations, type Obligation } from './m3-obligation-extractor'
+import { extractObligations } from './m3-obligation-extractor'
 import {
   validateObligations,
   publishObligations,

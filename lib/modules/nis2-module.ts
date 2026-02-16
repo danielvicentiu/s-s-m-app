@@ -994,7 +994,7 @@ export const defaultNIS2Controls: Omit<NIS2Assessment['riskManagement'][0], 'sta
 // MODULE DEFINITION
 // ===========================
 
-export const nis2Module: ModuleDefinition = {
+export const nis2Module = {
   id: 'nis2',
   name: 'NIS2 Cybersecurity',
   description: 'NIS2 Directive compliance: cybersecurity risk assessment, incident reporting (24h/72h), supply chain security, encryption, access control audits, and training tracking',
