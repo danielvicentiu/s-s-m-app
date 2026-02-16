@@ -194,7 +194,7 @@ export async function checkAndImportAct(act: MonitoredAct): Promise<ImportResult
     };
 
   } catch (error) {
-    const errMsg = error instanceof Error ? error.message : String(error);
+    const errMsg = error instanceof Error ? error.message : (typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error));
 
     // Update monitor with error
     await supabase
