@@ -1,29 +1,53 @@
 // app/[locale]/dashboard/import/page.tsx
-// Import Wizard — 4 steps: Upload → Column Mapping → Preview → Confirm Import
-// Supports: employees, trainings, medical_records, safety_equipment
-// Data: 2026-02-14
+// CSV/Excel Employee Import Wizard
+// 4 steps: Upload → Column Mapping → Validation & Preview → Import
+// Integrates with organization selector via URL params
 
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import ImportClient from './ImportClient'
+import ImportWizardClient from './ImportWizardClient'
 
-export default async function ImportPage({ params }: { params: Promise<{ locale: string }> }) {
+interface ImportPageProps {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ org?: string }>
+}
+
+export default async function ImportPage({ params, searchParams }: ImportPageProps) {
   const { locale } = await params
+  const { org: selectedOrgId } = await searchParams
   const supabase = await createSupabaseServer()
   const { user, orgs, error: authError } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 
-  // Fetch organizații pentru dropdown
-  const { data: organizations } = await supabase
-    .from('organizations')
-    .select('id, name, cui, country_code')
-    .order('name', { ascending: true })
+  // Fetch organizations for user
+  const organizations = (orgs || [])
+    .map((m: any) => m.organization)
+    .filter(Boolean)
+
+  if (organizations.length === 0) {
+    redirect('/onboarding')
+  }
+
+  // Determine selected organization
+  // Priority: URL param > first org
+  let currentOrgId = selectedOrgId || organizations[0]?.id
+
+  // If URL param is invalid, use first org
+  if (currentOrgId && currentOrgId !== 'all' && !organizations.some((o: any) => o.id === currentOrgId)) {
+    currentOrgId = organizations[0]?.id
+  }
+
+  // Import requires a specific organization (not "all")
+  if (!currentOrgId || currentOrgId === 'all') {
+    redirect(`/${locale}/dashboard/import?org=${organizations[0].id}`)
+  }
 
   return (
-    <ImportClient
+    <ImportWizardClient
       user={{ id: user.id, email: user.email || '' }}
-      organizations={organizations || []}
+      organizations={organizations}
+      selectedOrgId={currentOrgId}
       locale={locale}
     />
   )
