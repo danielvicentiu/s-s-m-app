@@ -63,7 +63,7 @@ export async function PATCH(
     // Get user's organization and role
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id, role')
+      .select('organization_id, role')
       .eq('user_id', user.id)
       .single();
 
@@ -126,7 +126,7 @@ export async function DELETE(
     // Get user's organization and role
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id, role')
+      .select('organization_id, role')
       .eq('user_id', user.id)
       .single();
 

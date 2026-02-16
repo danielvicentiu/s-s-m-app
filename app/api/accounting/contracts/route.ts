@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     // Get user's organization
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id')
+      .select('organization_id')
       .eq('user_id', user.id)
       .single();
 
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     if (currency) filters.currency = currency;
 
     const accountingService = new AccountingService(supabase);
-    const contracts = await accountingService.getContracts(membership.org_id, filters);
+    const contracts = await accountingService.getContracts(membership.organization_id, filters);
 
     return NextResponse.json({ contracts });
   } catch (error) {
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     // Get user's organization
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id, role')
+      .select('organization_id, role')
       .eq('user_id', user.id)
       .single();
 
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const contractInput: CreateContractInput = {
-      org_id: membership.org_id,
+      org_id: membership.organization_id,
       client_name: body.client_name,
       client_cui: body.client_cui,
       client_j_number: body.client_j_number,
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
       try {
         await accountingService.generateStandardDeadlines(
           contract.id,
-          membership.org_id,
+          membership.organization_id,
           contractInput.services
         );
       } catch (error) {

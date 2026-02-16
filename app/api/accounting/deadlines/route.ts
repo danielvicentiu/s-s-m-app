@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     // Get user's organization
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id')
+      .select('organization_id')
       .eq('user_id', user.id)
       .single();
 
@@ -46,12 +46,12 @@ export async function GET(request: NextRequest) {
     // Handle special views
     if (view === 'upcoming') {
       const days = parseInt(searchParams.get('days') || '7', 10);
-      const deadlines = await accountingService.getUpcomingDeadlines(membership.org_id, days);
+      const deadlines = await accountingService.getUpcomingDeadlines(membership.organization_id, days);
       return NextResponse.json({ deadlines });
     }
 
     if (view === 'overdue') {
-      const deadlines = await accountingService.getOverdueDeadlines(membership.org_id);
+      const deadlines = await accountingService.getOverdueDeadlines(membership.organization_id);
       return NextResponse.json({ deadlines });
     }
 
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     if (toDate) filters.to_date = toDate;
     if (deadlineType) filters.deadline_type = deadlineType as any;
 
-    const deadlines = await accountingService.getDeadlines(membership.org_id, filters);
+    const deadlines = await accountingService.getDeadlines(membership.organization_id, filters);
 
     return NextResponse.json({ deadlines });
   } catch (error) {
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
     // Get user's organization
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id, role')
+      .select('organization_id, role')
       .eq('user_id', user.id)
       .single();
 
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const deadlineInput: CreateDeadlineInput = {
-      org_id: membership.org_id,
+      org_id: membership.organization_id,
       contract_id: body.contract_id,
       deadline_type: body.deadline_type,
       title: body.title,
@@ -147,7 +147,7 @@ export async function PATCH(request: NextRequest) {
     // Get user's organization and role
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id, role')
+      .select('organization_id, role')
       .eq('user_id', user.id)
       .single();
 

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     // Get user's organization
     const { data: membership } = await supabase
       .from('memberships')
-      .select('org_id')
+      .select('organization_id')
       .eq('user_id', user.id)
       .single();
 
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     }
 
     const accountingService = new AccountingService(supabase);
-    const stats = await accountingService.getDashboardStats(membership.org_id);
+    const stats = await accountingService.getDashboardStats(membership.organization_id);
 
     return NextResponse.json({ stats });
   } catch (error) {
