@@ -49,14 +49,14 @@ type FilterStatus = 'all' | 'never' | 'ok' | 'changed' | 'error';
 function StatusBadge({ status, size = 'md' }: { status: string | null | undefined; size?: 'sm' | 'md' }) {
   const s = status || 'never';
   const config: Record<string, { bg: string; text: string; icon: string; label: string }> = {
-    ok:        { bg: 'bg-emerald-500/20', text: 'text-emerald-300', icon: '✓', label: 'OK' },
-    changed:   { bg: 'bg-amber-500/20',   text: 'text-amber-300',   icon: '△', label: 'CHANGED' },
-    error:     { bg: 'bg-red-500/20',     text: 'text-red-300',     icon: '✕', label: 'ERROR' },
-    never:     { bg: 'bg-zinc-600/20',    text: 'text-zinc-400',    icon: '—', label: 'NEVER' },
-    success:   { bg: 'bg-emerald-500/20', text: 'text-emerald-300', icon: '✓', label: 'SUCCESS' },
-    no_change: { bg: 'bg-zinc-600/20',    text: 'text-zinc-400',    icon: '=', label: 'NO CHANGE' },
-    unchanged: { bg: 'bg-zinc-600/20',    text: 'text-zinc-400',    icon: '=', label: 'UNCHANGED' },
-    new:       { bg: 'bg-blue-500/20',    text: 'text-blue-300',    icon: '+', label: 'NEW' },
+    ok:        { bg: 'bg-emerald-500/30', text: 'text-emerald-200', icon: '✓', label: 'OK' },
+    changed:   { bg: 'bg-amber-500/30',   text: 'text-amber-200',   icon: '△', label: 'CHANGED' },
+    error:     { bg: 'bg-red-500/30',     text: 'text-red-200',     icon: '✕', label: 'ERROR' },
+    never:     { bg: 'bg-zinc-600/30',    text: 'text-zinc-300',    icon: '—', label: 'NEVER' },
+    success:   { bg: 'bg-emerald-500/30', text: 'text-emerald-200', icon: '✓', label: 'SUCCESS' },
+    no_change: { bg: 'bg-zinc-600/30',    text: 'text-zinc-300',    icon: '=', label: 'NO CHANGE' },
+    unchanged: { bg: 'bg-zinc-600/30',    text: 'text-zinc-300',    icon: '=', label: 'UNCHANGED' },
+    new:       { bg: 'bg-blue-500/30',    text: 'text-blue-200',    icon: '+', label: 'NEW' },
   };
   const c = config[s] || config.never;
   const cls = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-3 py-1.5 text-sm';
@@ -72,10 +72,10 @@ function StatusBadge({ status, size = 'md' }: { status: string | null | undefine
 function PriorityBadge({ priority }: { priority: string | null }) {
   const p = priority || 'normal';
   const cls: Record<string, string> = {
-    critical: 'bg-red-500/15 text-red-300 border-red-500/30',
-    high:     'bg-amber-500/15 text-amber-300 border-amber-500/30',
-    normal:   'bg-zinc-600/15 text-zinc-300 border-zinc-500/30',
-    low:      'bg-zinc-700/15 text-zinc-400 border-zinc-600/30',
+    critical: 'bg-red-500/30 text-red-200 border-red-400/50',
+    high:     'bg-amber-500/30 text-amber-200 border-amber-400/50',
+    normal:   'bg-zinc-600/25 text-zinc-300 border-zinc-500/40',
+    low:      'bg-zinc-700/20 text-zinc-400 border-zinc-600/30',
   };
   return (
     <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-semibold uppercase border ${cls[p] || cls.normal}`}>
@@ -86,18 +86,18 @@ function PriorityBadge({ priority }: { priority: string | null }) {
 
 // ——— Domain Tags —————————————————————————————————————————————————————
 const TAG_COLORS: Record<string, string> = {
-  SSM:                    'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  PSI:                    'bg-orange-500/20 text-orange-300 border-orange-500/30',
-  GDPR:                   'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  Fiscal:                 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  TVA:                    'bg-teal-500/20 text-teal-300 border-teal-500/30',
-  'Dreptul Muncii':       'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-  Micro:                  'bg-pink-500/20 text-pink-300 border-pink-500/30',
-  'Cod Fiscal':           'bg-emerald-500/15 text-emerald-400 border-emerald-500/25',
-  'Cod Procedură Fiscală':'bg-lime-500/15 text-lime-300 border-lime-500/25',
-  'Legea Societăților':   'bg-sky-500/15 text-sky-300 border-sky-500/25',
-  'Taxa logistică':       'bg-rose-500/15 text-rose-300 border-rose-500/25',
-  Legislație:             'bg-zinc-500/20 text-zinc-300 border-zinc-500/30',
+  SSM:                    'bg-blue-500/30 text-blue-200 border-blue-400/50',
+  PSI:                    'bg-orange-500/30 text-orange-200 border-orange-400/50',
+  GDPR:                   'bg-purple-500/30 text-purple-200 border-purple-400/50',
+  Fiscal:                 'bg-emerald-500/30 text-emerald-200 border-emerald-400/50',
+  TVA:                    'bg-teal-500/30 text-teal-200 border-teal-400/50',
+  'Dreptul Muncii':       'bg-cyan-500/30 text-cyan-200 border-cyan-400/50',
+  Micro:                  'bg-pink-500/30 text-pink-200 border-pink-400/50',
+  'Cod Fiscal':           'bg-emerald-500/30 text-emerald-200 border-emerald-400/50',
+  'Cod Procedură Fiscală':'bg-lime-500/30 text-lime-200 border-lime-400/50',
+  'Legea Societăților':   'bg-sky-500/30 text-sky-200 border-sky-400/50',
+  'Taxa logistică':       'bg-rose-500/30 text-rose-200 border-rose-400/50',
+  Legislație:             'bg-zinc-500/30 text-zinc-200 border-zinc-400/50',
 };
 
 function DomainTags({ tags }: { tags: string[] | null }) {
