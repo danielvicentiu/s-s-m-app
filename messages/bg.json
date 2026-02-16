@@ -181,6 +181,17 @@
       "aboutPlatform": "За платформата"
     }
   },
+  "breadcrumb": {
+    "home": "Начало",
+    "dashboard": "Табло",
+    "medical": "Трудова медицина",
+    "equipment": "Оборудване",
+    "training": "Обучение",
+    "employees": "Служители",
+    "profile": "Профил",
+    "reges": "REGES",
+    "angajat-nou": "Нов служител"
+  },
   "footer": {
     "description": "Дигитална платформа за съответствие ЗБУТ и ПБ. Трудова медицина, ПБ оборудване, автоматични известия.",
     "email": "contact@s-s-m.ro",

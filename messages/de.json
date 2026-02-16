@@ -181,6 +181,17 @@
       "aboutPlatform": "Über die Plattform"
     }
   },
+  "breadcrumb": {
+    "home": "Startseite",
+    "dashboard": "Dashboard",
+    "medical": "Arbeitsmedizin",
+    "equipment": "Ausrüstung",
+    "training": "Schulung",
+    "employees": "Mitarbeiter",
+    "profile": "Profil",
+    "reges": "REGES",
+    "angajat-nou": "Neuer Mitarbeiter"
+  },
   "footer": {
     "description": "Digitale Plattform für Arbeitssicherheits- und Brandschutz-Compliance.",
     "email": "contact@s-s-m.ro",

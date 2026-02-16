@@ -16,6 +16,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { ArrowLeft, Stethoscope, Plus, Pencil, Trash2, Download } from 'lucide-react'
 // RBAC: Import hook-uri client-side pentru verificare permisiuni
 import { useHasPermission } from '@/hooks/usePermission'
+import AutoBreadcrumb from '@/components/navigation/AutoBreadcrumb'  // 🆕 Breadcrumb
 
 // ========== TYPES ==========
 

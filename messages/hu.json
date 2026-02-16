@@ -181,6 +181,17 @@
       "aboutPlatform": "A platformról"
     }
   },
+  "breadcrumb": {
+    "home": "Főoldal",
+    "dashboard": "Irányítópult",
+    "medical": "Munkaegészségügy",
+    "equipment": "Felszerelések",
+    "training": "Képzés",
+    "employees": "Munkavállalók",
+    "profile": "Profil",
+    "reges": "REGES",
+    "angajat-nou": "Új munkavállaló"
+  },
   "footer": {
     "description": "Digitális platform munkavédelmi és tűzvédelmi megfeleléshez.",
     "email": "contact@s-s-m.ro",

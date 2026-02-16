@@ -181,6 +181,17 @@
       "aboutPlatform": "O platformie"
     }
   },
+  "breadcrumb": {
+    "home": "Strona główna",
+    "dashboard": "Panel",
+    "medical": "Medycyna pracy",
+    "equipment": "Wyposażenie",
+    "training": "Szkolenie",
+    "employees": "Pracownicy",
+    "profile": "Profil",
+    "reges": "REGES",
+    "angajat-nou": "Nowy pracownik"
+  },
   "footer": {
     "description": "Platforma cyfrowa dla zgodności BHP i ochrony przeciwpożarowej. Medycyna pracy, sprzęt przeciwpożarowy, automatyczne alerty.",
     "email": "contact@s-s-m.ro",

@@ -181,6 +181,17 @@
       "aboutPlatform": "About platform"
     }
   },
+  "breadcrumb": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "medical": "Occupational Health",
+    "equipment": "Equipment",
+    "training": "Training",
+    "employees": "Employees",
+    "profile": "Profile",
+    "reges": "REGES",
+    "angajat-nou": "New Employee"
+  },
   "footer": {
     "description": "Digital platform for OHS & Fire Safety compliance. Occupational health, fire safety equipment, automated alerts.",
     "email": "contact@s-s-m.ro",

@@ -181,6 +181,17 @@
       "aboutPlatform": "Despre platformă"
     }
   },
+  "breadcrumb": {
+    "home": "Acasă",
+    "dashboard": "Dashboard",
+    "medical": "Medicina Muncii",
+    "equipment": "Echipamente",
+    "training": "Instruire",
+    "employees": "Angajați",
+    "profile": "Profil",
+    "reges": "REGES",
+    "angajat-nou": "Angajat Nou"
+  },
   "footer": {
     "description": "Platformă digitală pentru conformitate SSM & PSI. Medicina muncii, echipamente PSI, alerte automate.",
     "email": "contact@s-s-m.ro",
