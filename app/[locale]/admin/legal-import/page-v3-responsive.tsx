@@ -211,7 +211,7 @@ export default function LegalImportAdmin() {
 
   // ——— Render ————————————————————————————————————————————————————————
   return (
-    <div className="min-h-screen bg-zinc-900 text-zinc-100">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100">
       {/* Toast */}
       {toast && (
         <div className={`fixed top-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-sm z-50 px-4 py-3 rounded-lg text-sm font-medium shadow-2xl border
@@ -274,14 +274,14 @@ export default function LegalImportAdmin() {
             <p className="text-xs sm:text-sm text-red-400/80 font-medium">Erori</p>
             <p className="text-2xl sm:text-3xl font-bold text-red-300 mt-0.5">{loading ? '—' : stats.error}</p>
           </div>
-          <div className="rounded-xl border border-zinc-600/50 bg-zinc-800/50 px-4 py-3">
+          <div className="rounded-xl border border-zinc-700/50 bg-zinc-900/50 px-4 py-3">
             <p className="text-xs sm:text-sm text-zinc-400 font-medium">Neverificate</p>
             <p className="text-2xl sm:text-3xl font-bold text-zinc-200 mt-0.5">{loading ? '—' : stats.never}</p>
           </div>
         </div>
 
         {/* ——— TABS ———————————————————————————————————————————————————— */}
-        <div className="flex items-center gap-1 mb-5 border-b border-zinc-700">
+        <div className="flex items-center gap-1 mb-5 border-b border-zinc-800">
           {(['status', 'logs'] as TabType[]).map((t) => (
             <button
               key={t}
@@ -335,7 +335,7 @@ export default function LegalImportAdmin() {
                 {/* ——— MOBILE: Card Layout ——————————————————————————————— */}
                 <div className="sm:hidden space-y-2">
                   {filteredStatus.map((act) => (
-                    <div key={act.act_key} className="rounded-xl border border-zinc-700 bg-zinc-800/60 p-4">
+                    <div key={act.act_key} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
                       {/* Top row: key + status */}
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="min-w-0">
@@ -355,7 +355,7 @@ export default function LegalImportAdmin() {
                       </div>
 
                       {/* Actions row */}
-                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-zinc-700/50">
+                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-zinc-800/60">
                         {act.portal_url && (
                           <a
                             href={act.portal_url}
@@ -390,11 +390,11 @@ export default function LegalImportAdmin() {
                 </div>
 
                 {/* ——— DESKTOP: Table Layout ————————————————————————————— */}
-                <div className="hidden sm:block rounded-xl border border-zinc-700 overflow-hidden">
+                <div className="hidden sm:block rounded-xl border border-zinc-800 overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="bg-zinc-800/80 border-b border-zinc-700">
+                        <tr className="bg-zinc-900/80 border-b border-zinc-800">
                           <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Act</th>
                           <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Prioritate</th>
                           <th className="text-center px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Status</th>
@@ -403,9 +403,9 @@ export default function LegalImportAdmin() {
                           <th className="text-right px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Acțiuni</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-zinc-700/40">
+                      <tbody className="divide-y divide-zinc-800/50">
                         {filteredStatus.map((act) => (
-                          <tr key={act.act_key} className="hover:bg-zinc-800/60 transition-colors">
+                          <tr key={act.act_key} className="hover:bg-zinc-900/50 transition-colors">
                             <td className="px-5 py-4">
                               <p className="font-semibold text-white text-sm">{act.act_key}</p>
                               <p className="text-sm text-zinc-400 mt-0.5 max-w-xs truncate">{act.act_full_name || '—'}</p>
@@ -501,7 +501,7 @@ export default function LegalImportAdmin() {
                 {/* ——— MOBILE: Log Cards ————————————————————————————————— */}
                 <div className="sm:hidden space-y-2">
                   {logs.map((log) => (
-                    <div key={log.id} className="rounded-xl border border-zinc-700 bg-zinc-800/60 p-3.5">
+                    <div key={log.id} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5">
                       <div className="flex items-center justify-between gap-2 mb-2">
                         <span className="text-sm font-bold text-white font-mono">{log.act_key}</span>
                         <StatusBadge status={log.status} size="sm" />
@@ -533,11 +533,11 @@ export default function LegalImportAdmin() {
                 </div>
 
                 {/* ——— DESKTOP: Log Table ———————————————————————————————— */}
-                <div className="hidden sm:block rounded-xl border border-zinc-700 overflow-hidden">
+                <div className="hidden sm:block rounded-xl border border-zinc-800 overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="bg-zinc-800/80 border-b border-zinc-700">
+                        <tr className="bg-zinc-900/80 border-b border-zinc-800">
                           <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Timp</th>
                           <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Act</th>
                           <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Tip</th>
@@ -545,9 +545,9 @@ export default function LegalImportAdmin() {
                           <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-300 uppercase tracking-wider">Mesaj</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-zinc-700/40">
+                      <tbody className="divide-y divide-zinc-800/50">
                         {logs.map((log) => (
-                          <tr key={log.id} className="hover:bg-zinc-800/60 transition-colors">
+                          <tr key={log.id} className="hover:bg-zinc-900/50 transition-colors">
                             <td className="px-5 py-3">
                               <span className="text-sm text-zinc-300 font-mono whitespace-nowrap">
                                 {new Date(log.created_at).toLocaleString('ro-RO', {
@@ -592,7 +592,7 @@ export default function LegalImportAdmin() {
         )}
 
         {/* Footer */}
-        <div className="mt-8 pt-5 border-t border-zinc-700/50 text-center">
+        <div className="mt-8 pt-5 border-t border-zinc-800/50 text-center">
           <p className="text-xs text-zinc-600">
             M7 Legislative Monitor · s-s-m.ro · CRON daily · Manual override
           </p>
