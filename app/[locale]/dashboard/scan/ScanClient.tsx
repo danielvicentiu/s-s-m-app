@@ -1,8 +1,9 @@
 'use client';
 
 /**
- * ScanClient - Universal Document Scan with OCR + AI Extraction
+ * ScanClient - Universal Document Scan with Batch Processing
  * Multi-step wizard pentru scan și extragere date documente SSM/PSI/contabilitate
+ * Cu suport pentru procesare în batch a mai multor documente
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -19,24 +20,47 @@ const CATEGORIES: Record<string, { label_ro: string; label_en: string }> = {
   accounting: { label_ro: 'Contabilitate', label_en: 'Accounting' },
 };
 
-type Step = 'select-type' | 'upload' | 'preview' | 'result';
+type Step = 'select-type' | 'upload' | 'processing' | 'results';
+type ProcessStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+interface FileItem {
+  id: string;
+  file: File;
+  preview: string;
+  base64: string;
+  size: number;
+  status: ProcessStatus;
+  extractedData?: Record<string, string>;
+  confidenceScore?: number;
+  scanId?: string;
+  error?: string;
+}
+
+interface ProcessingStats {
+  total: number;
+  completed: number;
+  failed: number;
+  processing: number;
+}
 
 export default function ScanClient() {
   const [currentStep, setCurrentStep] = useState<Step>('select-type');
   const [templates, setTemplates] = useState<ScanTemplate[]>([]);
   const [categorizedTemplates, setCategorizedTemplates] = useState<TemplateCategory[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<ScanTemplate | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
-  const [extractedData, setExtractedData] = useState<Record<string, string>>({});
-  const [confidenceScore, setConfidenceScore] = useState<number | null>(null);
-  const [scanId, setScanId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [activeResultTab, setActiveResultTab] = useState<number>(0);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orgId, setOrgId] = useState<string | null>(null);
+  const [stats, setStats] = useState<ProcessingStats>({
+    total: 0,
+    completed: 0,
+    failed: 0,
+    processing: 0,
+  });
 
-  // Preia org_id curent
+  // Preia org_id curent - FIX BUG: organization_id instead of org_id
   useEffect(() => {
     async function fetchOrgId() {
       const supabase = createSupabaseBrowser();
@@ -48,12 +72,12 @@ export default function ScanClient() {
 
       const { data } = await supabase
         .from('memberships')
-        .select('org_id')
+        .select('organization_id')
         .eq('user_id', user.id)
         .single();
 
       if (data) {
-        setOrgId(data.org_id);
+        setOrgId(data.organization_id);
       }
     }
 
@@ -103,118 +127,196 @@ export default function ScanClient() {
     setCurrentStep('upload');
   };
 
-  // Handler pentru upload imagine
-  const handleFileChange = useCallback((file: File) => {
-    setImageFile(file);
+  // Conversie fișier în base64
+  const fileToBase64 = (file: File): Promise<{ preview: string; base64: string }> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        const preview = result;
+        const base64 = result.split(',')[1]; // Elimină prefix-ul "data:image/...;base64,"
+        resolve({ preview, base64 });
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Handler pentru adăugare fișiere multiple
+  const handleFilesAdd = async (newFiles: File[]) => {
     setError(null);
 
-    // Creează preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImagePreview(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-
-    // Convertește în base64 (fără prefix data:image/...)
-    const base64Reader = new FileReader();
-    base64Reader.onload = (e) => {
-      const result = e.target?.result as string;
-      const base64 = result.split(',')[1]; // Elimină prefix-ul "data:image/...;base64,"
-      setImageBase64(base64);
-    };
-    base64Reader.readAsDataURL(file);
-
-    setCurrentStep('preview');
-  }, []);
-
-  // Handler pentru drag & drop
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        if (file.size > 10 * 1024 * 1024) {
-          setError('Fișierul este prea mare. Mărime maximă: 10 MB');
-          return;
-        }
-        handleFileChange(file);
-      } else {
-        setError('Vă rugăm să încărcați o imagine (JPG, PNG, etc.)');
+    const validFiles: FileItem[] = [];
+    for (const file of newFiles) {
+      if (!file.type.startsWith('image/')) {
+        setError('Toate fișierele trebuie să fie imagini (JPG, PNG, etc.)');
+        continue;
       }
-    },
-    [handleFileChange]
-  );
+      if (file.size > 10 * 1024 * 1024) {
+        setError('Fișiere prea mari. Mărime maximă: 10 MB per fișier');
+        continue;
+      }
+
+      try {
+        const { preview, base64 } = await fileToBase64(file);
+        validFiles.push({
+          id: Math.random().toString(36).substring(7),
+          file,
+          preview,
+          base64,
+          size: file.size,
+          status: 'pending',
+        });
+      } catch (err) {
+        console.error('Error processing file:', err);
+      }
+    }
+
+    if (validFiles.length > 0) {
+      setFiles((prev) => [...prev, ...validFiles]);
+    }
+  };
+
+  // Handler pentru input file multiple
+  const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = e.target.files;
+    if (fileList) {
+      await handleFilesAdd(Array.from(fileList));
+    }
+  };
+
+  // Handler pentru drag & drop multiple
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const fileList = e.dataTransfer.files;
+    if (fileList) {
+      await handleFilesAdd(Array.from(fileList));
+    }
+  };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  // Handler pentru click upload
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 10 * 1024 * 1024) {
-        setError('Fișierul este prea mare. Mărime maximă: 10 MB');
-        return;
-      }
-      handleFileChange(file);
-    }
+  // Șterge un fișier individual
+  const handleRemoveFile = (fileId: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== fileId));
   };
 
-  // Handler pentru extragere date cu AI
-  const handleExtract = async () => {
-    if (!imageBase64 || !selectedTemplate || !orgId) {
-      setError('Lipsesc date necesare pentru extragere');
+  // Procesare secvențială a documentelor
+  const handleProcessBatch = async () => {
+    if (files.length === 0 || !selectedTemplate || !orgId) {
+      setError('Lipsesc date necesare pentru procesare');
       return;
     }
 
-    setIsLoading(true);
+    setIsProcessing(true);
+    setCurrentStep('processing');
     setError(null);
 
-    try {
-      const response = await fetch('/api/scan-pipeline/extract', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageBase64,
-          templateKey: selectedTemplate.template_key,
-          orgId,
-          filename: imageFile?.name || 'document.jpg',
-        }),
-      });
+    // Reset stats
+    setStats({
+      total: files.length,
+      completed: 0,
+      failed: 0,
+      processing: 0,
+    });
 
-      const data = await response.json();
+    // Procesează secvențial cu pauză de 500ms între requesturi
+    for (let i = 0; i < files.length; i++) {
+      const fileItem = files[i];
 
-      if (data.success) {
-        setExtractedData(data.extracted_data || {});
-        setConfidenceScore(data.confidence_score || 0);
-        setScanId(data.scan_id || null);
-        setCurrentStep('result');
-      } else {
-        setError(data.error || 'Eroare la extragerea datelor');
+      // Update status to processing
+      setFiles((prev) =>
+        prev.map((f) => (f.id === fileItem.id ? { ...f, status: 'processing' } : f))
+      );
+
+      setStats((prev) => ({ ...prev, processing: prev.processing + 1 }));
+
+      try {
+        const response = await fetch('/api/scan-pipeline/extract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: fileItem.base64,
+            templateKey: selectedTemplate.template_key,
+            orgId,
+            filename: fileItem.file.name,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setFiles((prev) =>
+            prev.map((f) =>
+              f.id === fileItem.id
+                ? {
+                    ...f,
+                    status: 'completed',
+                    extractedData: data.extracted_data || {},
+                    confidenceScore: data.confidence_score || 0,
+                    scanId: data.scan_id || undefined,
+                  }
+                : f
+            )
+          );
+          setStats((prev) => ({
+            ...prev,
+            completed: prev.completed + 1,
+            processing: prev.processing - 1,
+          }));
+        } else {
+          throw new Error(data.error || 'Eroare la extragere');
+        }
+      } catch (err) {
+        console.error('Process error:', err);
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.id === fileItem.id
+              ? {
+                  ...f,
+                  status: 'failed',
+                  error: err instanceof Error ? err.message : 'Eroare necunoscută',
+                }
+              : f
+          )
+        );
+        setStats((prev) => ({
+          ...prev,
+          failed: prev.failed + 1,
+          processing: prev.processing - 1,
+        }));
       }
-    } catch (err) {
-      console.error('Extract error:', err);
-      setError('Eroare la comunicarea cu serverul');
-    } finally {
-      setIsLoading(false);
+
+      // Pauză de 500ms între requesturi (mai puțin după ultimul)
+      if (i < files.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
     }
+
+    setIsProcessing(false);
+    setCurrentStep('results');
   };
 
   // Handler pentru editare câmp
-  const handleFieldChange = (key: string, value: string) => {
-    setExtractedData((prev) => ({ ...prev, [key]: value }));
+  const handleFieldChange = (fileId: string, key: string, value: string) => {
+    setFiles((prev) =>
+      prev.map((f) =>
+        f.id === fileId
+          ? { ...f, extractedData: { ...f.extractedData, [key]: value } }
+          : f
+      )
+    );
   };
 
-  // Handler pentru salvare finală (reviewed)
-  const handleSave = async () => {
-    if (!scanId || !orgId) return;
-
-    setIsLoading(true);
-    setError(null);
+  // Handler pentru salvare individuală
+  const handleSaveIndividual = async (fileId: string) => {
+    const fileItem = files.find((f) => f.id === fileId);
+    if (!fileItem || !fileItem.scanId || !orgId) return;
 
     try {
       const supabase = createSupabaseBrowser();
@@ -230,25 +332,21 @@ export default function ScanClient() {
       const { error: updateError } = await supabase
         .from('document_scans')
         .update({
-          extracted_data: extractedData,
+          extracted_data: fileItem.extractedData,
           status: 'reviewed',
           reviewed_by: user.id,
           reviewed_at: new Date().toISOString(),
         })
-        .eq('id', scanId);
+        .eq('id', fileItem.scanId);
 
       if (updateError) {
         throw updateError;
       }
 
-      // Success - reset la început
-      alert('Datele au fost salvate cu succes!');
-      resetWizard();
+      alert('Document salvat cu succes!');
     } catch (err) {
       console.error('Save error:', err);
-      setError('Eroare la salvarea datelor');
-    } finally {
-      setIsLoading(false);
+      setError('Eroare la salvarea documentului');
     }
   };
 
@@ -256,13 +354,10 @@ export default function ScanClient() {
   const resetWizard = () => {
     setCurrentStep('select-type');
     setSelectedTemplate(null);
-    setImageFile(null);
-    setImagePreview(null);
-    setImageBase64(null);
-    setExtractedData({});
-    setConfidenceScore(null);
-    setScanId(null);
+    setFiles([]);
+    setActiveResultTab(0);
     setError(null);
+    setStats({ total: 0, completed: 0, failed: 0, processing: 0 });
   };
 
   // Culoare badge pentru confidence score
@@ -272,8 +367,42 @@ export default function ScanClient() {
     return 'bg-red-100 text-red-800';
   };
 
+  // Culoare status badge
+  const getStatusColor = (status: ProcessStatus) => {
+    switch (status) {
+      case 'processing':
+        return 'bg-blue-100 text-blue-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'failed':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusLabel = (status: ProcessStatus) => {
+    switch (status) {
+      case 'processing':
+        return 'Se procesează...';
+      case 'completed':
+        return 'Finalizat';
+      case 'failed':
+        return 'Eroare';
+      default:
+        return 'În așteptare';
+    }
+  };
+
+  // Format file size
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Scan Documente Universal</h1>
@@ -321,11 +450,11 @@ export default function ScanClient() {
         </div>
       )}
 
-      {/* Step 2: Upload imagine */}
+      {/* Step 2: Upload multiple files */}
       {currentStep === 'upload' && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Pasul 2: Încarcă documentul</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Pasul 2: Încarcă documentele</h2>
             <button
               onClick={() => setCurrentStep('select-type')}
               className="text-sm text-blue-600 hover:text-blue-700"
@@ -340,14 +469,16 @@ export default function ScanClient() {
             </p>
           </div>
 
+          {/* Upload area */}
           <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
-            className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-blue-500 transition-colors cursor-pointer"
+            className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-blue-500 transition-colors cursor-pointer mb-6"
           >
             <input
               type="file"
               accept="image/*"
+              multiple
               onChange={handleFileInput}
               className="hidden"
               id="file-upload"
@@ -371,135 +502,311 @@ export default function ScanClient() {
                 drag & drop
               </p>
               <p className="mt-1 text-xs text-gray-500">
-                PNG, JPG, GIF până la 10 MB
+                PNG, JPG, GIF până la 10 MB · Selectare multiplă permisă
               </p>
             </label>
           </div>
-        </div>
-      )}
 
-      {/* Step 3: Preview + Extrage */}
-      {currentStep === 'preview' && imagePreview && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Pasul 3: Preview și extragere</h2>
-            <button
-              onClick={() => setCurrentStep('upload')}
-              className="text-sm text-blue-600 hover:text-blue-700"
-            >
-              ← Schimbă imaginea
-            </button>
-          </div>
-
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              <strong>Document:</strong> {selectedTemplate?.name_ro} ({imageFile?.name})
-            </p>
-          </div>
-
-          <div className="mb-6">
-            <img
-              src={imagePreview}
-              alt="Preview document"
-              className="max-w-full h-auto rounded-xl border border-gray-200"
-            />
-          </div>
-
-          <button
-            onClick={handleExtract}
-            disabled={isLoading}
-            className="w-full py-3 px-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
-          >
-            {isLoading ? 'Se procesează...' : 'Extrage date cu AI'}
-          </button>
-        </div>
-      )}
-
-      {/* Step 4: Rezultat - Câmpuri editabile */}
-      {currentStep === 'result' && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Pasul 4: Verifică și salvează</h2>
-            <button onClick={resetWizard} className="text-sm text-blue-600 hover:text-blue-700">
-              ← Scanează alt document
-            </button>
-          </div>
-
-          {/* Confidence Score */}
-          {confidenceScore !== null && (
-            <div className="mb-6 p-4 bg-gray-50 rounded-xl">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">Confidence Score:</span>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${getConfidenceBadgeColor(
-                    confidenceScore
-                  )}`}
+          {/* Files list with preview and delete */}
+          {files.length > 0 && (
+            <div className="space-y-3 mb-6">
+              <h3 className="text-sm font-medium text-gray-700">
+                Documente selectate ({files.length})
+              </h3>
+              {files.map((fileItem) => (
+                <div
+                  key={fileItem.id}
+                  className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg"
                 >
-                  {confidenceScore.toFixed(1)}%
-                </span>
-              </div>
-              <p className="text-xs text-gray-600 mt-2">
-                {confidenceScore >= 90 &&
-                  'Extragere de încredere ridicată. Verificați totuși datele înainte de salvare.'}
-                {confidenceScore >= 70 &&
-                  confidenceScore < 90 &&
-                  'Extragere moderată. Verificați cu atenție câmpurile.'}
-                {confidenceScore < 70 &&
-                  'Extragere incertă. Verificați și corectați manual datele.'}
-              </p>
+                  {/* Thumbnail */}
+                  <img
+                    src={fileItem.preview}
+                    alt={fileItem.file.name}
+                    className="w-16 h-16 object-cover rounded border border-gray-200"
+                  />
+
+                  {/* File info */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {fileItem.file.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{formatFileSize(fileItem.size)}</p>
+                  </div>
+
+                  {/* Delete button */}
+                  <button
+                    onClick={() => handleRemoveFile(fileItem.id)}
+                    className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    Șterge
+                  </button>
+                </div>
+              ))}
             </div>
           )}
 
-          {/* Câmpuri editabile */}
-          <div className="space-y-4 mb-6">
-            {selectedTemplate?.fields.map((field) => (
-              <div key={field.key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {field.label}
-                  {field.validation && (
-                    <span className="text-xs text-gray-500 ml-2">({field.validation})</span>
-                  )}
-                </label>
-                {field.type === 'select' && field.options ? (
-                  <select
-                    value={extractedData[field.key] || ''}
-                    onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">- Selectează -</option>
-                    {field.options.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                ) : field.type === 'number' ? (
-                  <input
-                    type="number"
-                    value={extractedData[field.key] || ''}
-                    onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    value={extractedData[field.key] || ''}
-                    onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                )}
+          {/* Process button */}
+          {files.length > 0 && (
+            <button
+              onClick={handleProcessBatch}
+              disabled={isProcessing}
+              className="w-full py-3 px-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
+            >
+              Procesează {files.length} {files.length === 1 ? 'document' : 'documente'}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Step 3: Processing with progress */}
+      {currentStep === 'processing' && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">
+            Procesare în curs...
+          </h2>
+
+          {/* Global progress bar */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-700">
+                Progres global: {stats.completed + stats.failed} / {stats.total}
+              </span>
+              <span className="text-sm font-medium text-gray-700">
+                {Math.round(((stats.completed + stats.failed) / stats.total) * 100)}%
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div
+                className="bg-blue-600 h-3 rounded-full transition-all duration-500 ease-out"
+                style={{
+                  width: `${((stats.completed + stats.failed) / stats.total) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Stats cards */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-center">
+              <p className="text-2xl font-bold text-green-800">{stats.completed}</p>
+              <p className="text-xs text-green-600">Reușite</p>
+            </div>
+            <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+              <p className="text-2xl font-bold text-red-800">{stats.failed}</p>
+              <p className="text-xs text-red-600">Eșuate</p>
+            </div>
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center">
+              <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
+              <p className="text-xs text-gray-600">Total</p>
+            </div>
+          </div>
+
+          {/* Files status list */}
+          <div className="space-y-2">
+            {files.map((fileItem) => (
+              <div
+                key={fileItem.id}
+                className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg"
+              >
+                <img
+                  src={fileItem.preview}
+                  alt={fileItem.file.name}
+                  className="w-12 h-12 object-cover rounded border border-gray-200"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {fileItem.file.name}
+                  </p>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                    fileItem.status
+                  )}`}
+                >
+                  {getStatusLabel(fileItem.status)}
+                </span>
               </div>
             ))}
           </div>
+        </div>
+      )}
 
-          {/* Buton salvare */}
-          <button
-            onClick={handleSave}
-            disabled={isLoading}
-            className="w-full py-3 px-4 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
-          >
-            {isLoading ? 'Se salvează...' : 'Salvează datele'}
-          </button>
+      {/* Step 4: Results with tabs and split view */}
+      {currentStep === 'results' && (
+        <div className="space-y-6">
+          {/* Summary cards */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-center">
+              <p className="text-2xl font-bold text-green-800">{stats.completed}</p>
+              <p className="text-xs text-green-600">Reușite</p>
+            </div>
+            <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+              <p className="text-2xl font-bold text-red-800">{stats.failed}</p>
+              <p className="text-xs text-red-600">Eșuate</p>
+            </div>
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center">
+              <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
+              <p className="text-xs text-gray-600">Total</p>
+            </div>
+          </div>
+
+          {/* Tabs navigation */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Rezultate procesare</h2>
+              <button onClick={resetWizard} className="text-sm text-blue-600 hover:text-blue-700">
+                ← Scanează alte documente
+              </button>
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto pb-2 mb-4 border-b border-gray-200">
+              {files.map((fileItem, index) => (
+                <button
+                  key={fileItem.id}
+                  onClick={() => setActiveResultTab(index)}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                    activeResultTab === index
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Doc {index + 1}
+                  {fileItem.status === 'completed' && ' ✓'}
+                  {fileItem.status === 'failed' && ' ✗'}
+                </button>
+              ))}
+            </div>
+
+            {/* Active tab content - Split view */}
+            {files[activeResultTab] && (
+              <div>
+                {files[activeResultTab].status === 'failed' ? (
+                  <div className="p-6 bg-red-50 border border-red-200 rounded-xl">
+                    <p className="font-medium text-red-800">Procesare eșuată</p>
+                    <p className="text-sm text-red-600 mt-1">
+                      {files[activeResultTab].error || 'Eroare necunoscută'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Left: Image preview */}
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">Document original</h3>
+                      <img
+                        src={files[activeResultTab].preview}
+                        alt={files[activeResultTab].file.name}
+                        className="w-full h-auto rounded-xl border border-gray-200"
+                      />
+                      <p className="text-xs text-gray-500 mt-2">
+                        {files[activeResultTab].file.name} ·{' '}
+                        {formatFileSize(files[activeResultTab].size)}
+                      </p>
+                    </div>
+
+                    {/* Right: Editable fields */}
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">Date extrase</h3>
+
+                      {/* Confidence score */}
+                      {files[activeResultTab].confidenceScore !== undefined && (
+                        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-medium text-gray-700">
+                              Confidence Score:
+                            </span>
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-semibold ${getConfidenceBadgeColor(
+                                files[activeResultTab].confidenceScore!
+                              )}`}
+                            >
+                              {files[activeResultTab].confidenceScore!.toFixed(1)}%
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Editable fields */}
+                      <div className="space-y-3 mb-4 max-h-96 overflow-y-auto">
+                        {selectedTemplate?.fields.map((field) => (
+                          <div key={field.key}>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                              {field.label}
+                              {field.validation && (
+                                <span className="text-xs text-gray-500 ml-1">
+                                  ({field.validation})
+                                </span>
+                              )}
+                            </label>
+                            {field.type === 'select' && field.options ? (
+                              <select
+                                value={
+                                  files[activeResultTab].extractedData?.[field.key] || ''
+                                }
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    files[activeResultTab].id,
+                                    field.key,
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">- Selectează -</option>
+                                {field.options.map((option) => (
+                                  <option key={option} value={option}>
+                                    {option}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : field.type === 'number' ? (
+                              <input
+                                type="number"
+                                value={
+                                  files[activeResultTab].extractedData?.[field.key] || ''
+                                }
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    files[activeResultTab].id,
+                                    field.key,
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            ) : (
+                              <input
+                                type="text"
+                                value={
+                                  files[activeResultTab].extractedData?.[field.key] || ''
+                                }
+                                onChange={(e) =>
+                                  handleFieldChange(
+                                    files[activeResultTab].id,
+                                    field.key,
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Save button */}
+                      <button
+                        onClick={() => handleSaveIndividual(files[activeResultTab].id)}
+                        disabled={!files[activeResultTab].scanId}
+                        className="w-full py-2 px-4 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
+                      >
+                        Salvează acest document
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
