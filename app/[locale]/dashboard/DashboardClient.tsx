@@ -101,6 +101,52 @@ function DashboardContent({
     savePreference('show_value_preview', next)
   }
 
+  // Monthly report
+  const [showMonthPicker, setShowMonthPicker] = useState(false)
+  const [downloadingReport, setDownloadingReport] = useState(false)
+
+  const handleDownloadMonthlyReport = async (month?: string) => {
+    if (selectedOrg === 'all') {
+      alert('Selectează o organizație specifică pentru a genera raport lunar.')
+      return
+    }
+
+    const reportMonth = month || new Date().toISOString().slice(0, 7) // YYYY-MM
+
+    try {
+      setDownloadingReport(true)
+      const response = await fetch('/api/generate-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          organizationId: selectedOrg,
+          month: reportMonth,
+          type: 'monthly',
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Eroare la generare raport')
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      const orgName = selectedOrgData?.name || 'Organizatie'
+      a.download = `Raport_${orgName.replace(/\s+/g, '_')}_${reportMonth}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      setShowMonthPicker(false)
+    } catch (err) {
+      alert(`Eroare la descărcare raport: ${err instanceof Error ? err.message : 'Necunoscută'}`)
+    } finally {
+      setDownloadingReport(false)
+    }
+  }
+
   // === FILTRARE PER ORGANIZAȚIE ===
   const filteredOverview = selectedOrg === 'all' ? overview
     : overview.filter((o: any) => o.organization_id === selectedOrg)
@@ -258,6 +304,49 @@ function DashboardContent({
                 <FileText className="h-4 w-4" />
                 <span>Generează Documente</span>
               </Link>
+
+              {/* Monthly Report Button */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowMonthPicker(!showMonthPicker)}
+                  disabled={downloadingReport || selectedOrg === 'all'}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 ${
+                    selectedOrg === 'all'
+                      ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                      : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                  }`}
+                  title={selectedOrg === 'all' ? 'Selectează o organizație pentru raport' : 'Descarcă raport lunar SSM/PSI'}
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>{downloadingReport ? 'Generează...' : 'Raport Lunar'}</span>
+                </button>
+
+                {/* Month picker dropdown */}
+                {showMonthPicker && !downloadingReport && (
+                  <div className="absolute top-full mt-2 right-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2 z-50 min-w-[200px]">
+                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                      Selectează luna
+                    </div>
+                    {[0, 1, 2, 3, 4, 5].map((offset) => {
+                      const date = new Date()
+                      date.setMonth(date.getMonth() - offset)
+                      const monthStr = date.toISOString().slice(0, 7)
+                      const monthLabel = date.toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' })
+                      return (
+                        <button
+                          key={monthStr}
+                          onClick={() => handleDownloadMonthlyReport(monthStr)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                        >
+                          {monthLabel}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
             {/* Toggle-uri panouri */}
             <div className="flex items-center gap-4 border-r border-gray-200 pr-5">

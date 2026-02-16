@@ -191,6 +191,36 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
     setRecordTestCorrect(0);
   };
 
+  // Download employee training record PDF
+  const handleDownloadTrainingRecord = async (workerId: string, workerName: string) => {
+    try {
+      const response = await fetch('/api/generate-fisa-employee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employeeId: workerId,
+          organizationId: selectedOrgId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Eroare la generare PDF');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Fisa_Instruire_${workerName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      alert(`Eroare la descărcare PDF: ${err instanceof Error ? err.message : 'Necunoscută'}`);
+    }
+  };
+
   const toggleWorkerSelection = (workerId: string) => {
     setAssignWorkerIds((prev) =>
       prev.includes(workerId)
@@ -480,12 +510,22 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                         )}
                       </span>
                     </div>
-                    <div className="text-right">
+                    <div className="flex items-center gap-3">
                       {ws.next_due && (
                         <span className="text-slate-400 text-xs">
                           Următoarea: {new Date(ws.next_due).toLocaleDateString('ro-RO')}
                         </span>
                       )}
+                      <button
+                        onClick={() => handleDownloadTrainingRecord(ws.worker_id, ws.worker_name)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-400 hover:text-blue-300 hover:bg-slate-800 rounded-lg transition-colors"
+                        title="Descarcă Fișa de Instruire ITM"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Fișă ITM
+                      </button>
                     </div>
                   </div>
                   {/* Compliance bar */}
