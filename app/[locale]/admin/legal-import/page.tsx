@@ -175,8 +175,10 @@ function parseLegalText(raw: string): FormattedSegment[] {
     // Break before structural markers glued to previous text
     .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Capitolul\s+[IVXLCDM\d]+)/gi, '\n\n$1')
     .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Sec[țţ]iunea\s+[\da-z]+)/gi, '\n\n$1')
-    .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Articolul\s+[\dIVXLCDM]+)/gi, '\n\n$1')
-    .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Art\.\s*[\dIVXLCDM]+)/gi, '\n\n$1')
+    .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Articolul\s+\d+)\b/gi, '\n\n$1')
+    .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Articolul\s+[IVXLCDM]+)\b/gi, '\n\n$1')
+    .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Art\.\s*\d+)\b/gi, '\n\n$1')
+    .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(Art\.\s*[IVXLCDM]+)\b/gi, '\n\n$1')
     .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"])(\(\d+\))/g, '\n$1')
     .replace(/(?<=[.;:])\s*([a-z]\))/g, '\n  $1')
     .replace(/(?<=[a-zăâîșțA-ZĂÂÎȘȚ.;:)"0-9])(TITLUL\s+[IVXLCDM\d]+)/g, '\n\n$1')
@@ -326,7 +328,7 @@ function FormattedLegalContent({ text, searchTerm }: { text: string; searchTerm:
 
         // Articolul: badge + content
         if (seg.type === 'articol') {
-          const match = seg.content.match(/^(Articolul|ARTICOLUL|Art\.)\s*([\dIVXLCDM]+)(.*)/i);
+          const match = seg.content.match(/^(Articolul|ARTICOLUL|Art\.)\s*(\d+|[IVXLCDM]+)(.*)/i);
           if (match) {
             return (
               <div key={i} className={getStyle(seg)}>
