@@ -252,7 +252,7 @@ function validateSingleObligation(obligation: Partial<Obligation>): ValidatedObl
     similarObligations: [],
     isActive: true,
     publishedAt: null
-  }
+  } as ValidatedObligation
 }
 
 /**
@@ -310,7 +310,8 @@ function validateTextQuality(text: string): ValidationIssue[] {
 /**
  * Generates a hash for deduplication based on normalized content
  */
-function generateObligationHash(obligation: Obligation): string {
+function generateObligationHash(obligation: Partial<Obligation>): string {
+  const obl = obligation as any
   // Normalize text for comparison
   const normalizedText = obl.obligationText
     .toLowerCase()
@@ -358,21 +359,21 @@ function deduplicateObligations(
   const deduplicated: ValidatedObligation[] = []
 
   for (const obligation of obligations) {
-    const existing = seen.get(obl.deduplicationHash)
+    const existing = seen.get(obligation.deduplicationHash)
 
     if (!existing) {
       // New unique obligation
-      seen.set(obl.deduplicationHash, obligation)
+      seen.set(obligation.deduplicationHash, obligation)
       deduplicated.push(obligation)
     } else {
       // Duplicate found - merge with better quality version
-      if (obl.validationScore > existing.validationScore ||
-          obl.confidence > existing.confidence) {
+      if (obligation.validationScore > existing.validationScore ||
+          obligation.confidence > existing.confidence) {
         // Replace with better version
         const index = deduplicated.indexOf(existing)
         if (index !== -1) {
           deduplicated[index] = obligation
-          seen.set(obl.deduplicationHash, obligation)
+          seen.set(obligation.deduplicationHash, obligation)
         }
       }
       // else: keep existing, discard duplicate
@@ -395,19 +396,21 @@ async function detectSimilarObligations(
   const result: ValidatedObligation[] = []
 
   for (const obligation of obligations) {
+    const obl = obligation as any
     const similar: string[] = []
 
     // Check against other obligations in the batch
     for (const other of obligations) {
-      if (other.id === obl.id) continue
+      const otherObl = other as any
+      if (other.id === obligation.id) continue
 
       const similarity = calculateTextSimilarity(
         obl.obligationText,
-        other.obligationText
+        otherObl.obligationText
       )
 
       // If very similar (>0.8) but different hash, flag as similar
-      if (similarity > 0.8 && obl.deduplicationHash !== other.deduplicationHash) {
+      if (similarity > 0.8 && obl.deduplicationHash !== otherObl.deduplicationHash) {
         similar.push(other.id)
       }
     }
@@ -456,6 +459,7 @@ function normalizeForComparison(text: string): string {
  * Calculates final validation score combining multiple factors
  */
 function calculateFinalScore(obligation: ValidatedObligation): ValidatedObligation {
+  const obl = obligation as any
   let finalScore = obl.validationScore
 
   // Adjust based on number of errors
@@ -542,17 +546,17 @@ export async function publishObligations(
       }
 
       result.publishedCount++
-      result.publishedIds.push(obl.id)
+      result.publishedIds.push(obligation.id)
 
-      console.log(`[M4 Publisher] Published obligation ${obl.id} (score: ${obl.validationScore.toFixed(2)})`)
+      console.log(`[M4 Publisher] Published obligation ${obligation.id} (score: ${(obligation as any).validationScore.toFixed(2)})`)
 
     } catch (error) {
       result.failedCount++
       result.errors.push({
-        obligationId: obl.id,
+        obligationId: obligation.id,
         error: error instanceof Error ? error.message : 'Unknown error'
       })
-      console.error(`[M4 Publisher] Failed to publish ${obl.id}:`, error)
+      console.error(`[M4 Publisher] Failed to publish ${obligation.id}:`, error)
     }
   }
 

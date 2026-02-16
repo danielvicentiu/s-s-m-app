@@ -258,6 +258,9 @@ export type ApiKeyPermission =
   | 'read:documents'
   | 'write:documents'
   | 'read:reports'
+  | 'read:incidents'
+  | 'write:incidents'
+  | 'read:compliance'
   | 'webhook:manage'
   | 'admin:all'
 
@@ -363,45 +366,6 @@ export interface WebhookDeliveryLog {
   attempts: number
   created_at: string
   delivered_at: string | null
-}
-
-// ── API KEYS ──
-
-export type ApiKeyPermission =
-  | 'read:employees'
-  | 'write:employees'
-  | 'read:trainings'
-  | 'write:trainings'
-  | 'read:medical'
-  | 'write:medical'
-  | 'read:equipment'
-  | 'write:equipment'
-  | 'read:documents'
-  | 'write:documents'
-  | 'read:alerts'
-  | 'read:incidents'
-  | 'write:incidents'
-  | 'read:compliance'
-  | 'admin:all'
-
-export interface ApiKey {
-  id: string
-  organization_id: string
-  name: string
-  description: string | null
-  key_hash: string
-  key_prefix: string
-  permissions: ApiKeyPermission[]
-  rate_limit_per_minute: number
-  last_used_at: string | null
-  total_requests: number
-  is_active: boolean
-  expires_at: string | null
-  created_by: string | null
-  created_at: string
-  updated_at: string
-  revoked_at: string | null
-  revoked_by: string | null
 }
 
 export interface ApiKeyUsageLog {

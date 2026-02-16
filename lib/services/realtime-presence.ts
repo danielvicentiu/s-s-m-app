@@ -124,7 +124,7 @@ export function trackPresence(
 
         // Remove channel if no more subscriptions
         setTimeout(() => {
-          if (channel.listeners?.['presence']?.length === 0) {
+          if ((channel as any).listeners?.['presence']?.length === 0) {
             supabase.removeChannel(channel)
             channelsMap.delete(channelName)
           }
@@ -162,7 +162,7 @@ export async function getOnlineUsers(orgId: string): Promise<PresenceUser[]> {
 
     if (!channel) {
       channel = supabase.channel(channelName)
-      channelsMap.set(channelName)
+      channelsMap.set(channelName, channel)
 
       // Subscribe to get presence state
       await new Promise<void>((resolve) => {
@@ -228,7 +228,7 @@ export function subscribeToPresence(
 
     if (!channel) {
       channel = supabase.channel(channelName)
-      channelsMap.set(channelName)
+      channelsMap.set(channelName, channel)
     }
 
     // Helper to extract online users from presence state
@@ -312,7 +312,7 @@ export async function broadcastToOrganization(
 
     if (!channel) {
       channel = supabase.channel(channelName)
-      channelsMap.set(channelName)
+      channelsMap.set(channelName, channel)
 
       // Subscribe first
       await new Promise<void>((resolve) => {
@@ -366,7 +366,7 @@ export function subscribeToBroadcast(
 
     if (!channel) {
       channel = supabase.channel(channelName)
-      channelsMap.set(channelName)
+      channelsMap.set(channelName, channel)
     }
 
     channel

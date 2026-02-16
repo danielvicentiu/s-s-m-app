@@ -4,7 +4,8 @@
 
 import Stripe from 'stripe'
 import { createSupabaseServer } from '@/lib/supabase/server'
-import type { SubscriptionPlan } from './stripe-lifecycle'
+// TODO: Create stripe-lifecycle module with proper types
+type SubscriptionPlan = 'starter' | 'professional' | 'enterprise'
 
 // ── CONFIGURARE STRIPE ──
 
@@ -26,7 +27,7 @@ export interface PlanLimits {
   }
 }
 
-export const PLAN_LIMITS: Record<SubscriptionPlan, PlanLimits> = {
+const PLAN_LIMITS_CONFIG = {
   starter: {
     employees: 50,
     documentsPerMonth: 100,
@@ -162,7 +163,7 @@ export async function trackEmployeeCount(
       return { success: false, error: 'Organization or customer not found' }
     }
 
-    const limits = PLAN_LIMITS[orgPlan.plan]
+    const limits = PLAN_LIMITS_CONFIG[orgPlan.plan]
     const meterEventName = limits.meterEvents.employees
 
     // Creează meter event în Stripe
@@ -213,7 +214,7 @@ export async function trackDocumentsGenerated(
       return { success: false, error: 'Organization or customer not found' }
     }
 
-    const limits = PLAN_LIMITS[orgPlan.plan]
+    const limits = PLAN_LIMITS_CONFIG[orgPlan.plan]
     const meterEventName = limits.meterEvents.documents
 
     // Creează meter event în Stripe
@@ -265,7 +266,7 @@ export async function trackStorageUsed(
     }
 
     const storageGB = bytesToGB(storageBytes)
-    const limits = PLAN_LIMITS[orgPlan.plan]
+    const limits = PLAN_LIMITS_CONFIG[orgPlan.plan]
     const meterEventName = limits.meterEvents.storage
 
     // Creează meter event în Stripe (trimite în GB)
@@ -386,7 +387,7 @@ export async function getUsageSummary(organizationId: string): Promise<UsageSumm
       return null
     }
 
-    const limits = PLAN_LIMITS[orgPlan.plan]
+    const limits = PLAN_LIMITS_CONFIG[orgPlan.plan]
     const { start, end } = getCurrentBillingPeriod()
 
     // 1. Număr angajați activi
@@ -494,5 +495,5 @@ export async function checkUsageLimits(
 
 export {
   stripe,
-  PLAN_LIMITS,
+  PLAN_LIMITS_CONFIG as PLAN_LIMITS,
 }
