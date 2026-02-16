@@ -3,21 +3,26 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// ——— Types ———————————————————————————————————————————————————————————
 interface MonitorStatus {
+  id: string;
   act_key: string;
-  act_full_name: string;
-  act_type: string;
-  act_number: string;
-  act_year: number;
-  domain: string;
-  source_url: string | null;
-  portal_id: string | null;
-  content_hash: string | null;
+  act_full_name: string | null;
+  act_type: string | null;
+  country_code: string;
+  priority: string | null;
+  is_active: boolean;
+  portal_id: number | null;
+  portal_url: string | null;
   last_checked_at: string | null;
-  last_changed_at: string | null;
-  check_status: 'never_checked' | 'ok' | 'changed' | 'error';
+  last_content_hash: string | null;
+  last_error: string | null;
+  consecutive_errors: number;
+  tags: string[] | null;
+  status: 'never' | 'ok' | 'changed' | 'error';
   has_full_text: boolean;
+  content_hash: string | null;
+  imported_at: string | null;
 }
 
 interface MonitorLog {
@@ -31,29 +36,32 @@ interface MonitorLog {
 }
 
 type TabType = 'status' | 'logs';
-type FilterStatus = 'all' | 'never_checked' | 'ok' | 'changed' | 'error';
+type FilterStatus = 'all' | 'never' | 'ok' | 'changed' | 'error';
 
-// ─── Status Badge ────────────────────────────────────────────────────────────
-function StatusBadge({ status }: { status: string }) {
-  const config: Record<string, { bg: string; text: string; icon: string }> = {
-    ok: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '✓' },
-    changed: { bg: 'bg-amber-500/15', text: 'text-amber-400', icon: '△' },
-    error: { bg: 'bg-red-500/15', text: 'text-red-400', icon: '✕' },
-    never_checked: { bg: 'bg-zinc-500/15', text: 'text-zinc-500', icon: '—' },
-    success: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '✓' },
-    no_change: { bg: 'bg-zinc-500/15', text: 'text-zinc-500', icon: '=' },
+// ——— Status Badge ————————————————————————————————————————————————————
+function StatusBadge({ status }: { status: string | null | undefined }) {
+  const s = status || 'never';
+  const config: Record<string, { bg: string; text: string; icon: string; label: string }> = {
+    ok: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '✓', label: 'OK' },
+    changed: { bg: 'bg-amber-500/15', text: 'text-amber-400', icon: '△', label: 'CHANGED' },
+    error: { bg: 'bg-red-500/15', text: 'text-red-400', icon: '✕', label: 'ERROR' },
+    never: { bg: 'bg-zinc-500/15', text: 'text-zinc-500', icon: '—', label: 'NEVER' },
+    success: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '✓', label: 'SUCCESS' },
+    no_change: { bg: 'bg-zinc-500/15', text: 'text-zinc-500', icon: '=', label: 'NO CHANGE' },
+    unchanged: { bg: 'bg-zinc-500/15', text: 'text-zinc-500', icon: '=', label: 'UNCHANGED' },
+    new: { bg: 'bg-blue-500/15', text: 'text-blue-400', icon: '+', label: 'NEW' },
   };
-  const c = config[status] || config.never_checked;
+  const c = config[s] || config.never;
 
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium ${c.bg} ${c.text}`}>
       <span className="text-[10px]">{c.icon}</span>
-      {status.replace('_', ' ').toUpperCase()}
+      {c.label}
     </span>
   );
 }
 
-// ─── Time Ago ────────────────────────────────────────────────────────────────
+// ——— Time Ago ————————————————————————————————————————————————————————
 function timeAgo(dateStr: string | null): string {
   if (!dateStr) return '—';
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -66,7 +74,7 @@ function timeAgo(dateStr: string | null): string {
   return `${days}z`;
 }
 
-// ─── Main Component ──────────────────────────────────────────────────────────
+// ——— Main Component —————————————————————————————————————————————————
 export default function LegalImportAdmin() {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -90,7 +98,7 @@ export default function LegalImportAdmin() {
     }
   }, [toast]);
 
-  // ─── Data Fetching ───────────────────────────────────────────────────────
+  // ——— Data Fetching —————————————————————————————————————————————————
   const fetchStatus = useCallback(async () => {
     const { data, error } = await supabase
       .from('v_monitor_status')
@@ -128,14 +136,14 @@ export default function LegalImportAdmin() {
     load();
   }, [fetchStatus, fetchLogs]);
 
-  // ─── Actions ─────────────────────────────────────────────────────────────
+  // ——— Actions ———————————————————————————————————————————————————————
   const handleReCheckAll = async () => {
     setActionLoading('re-check-all');
     try {
       const res = await fetch('/api/legislative-import/ro-check', { method: 'POST' });
       const data = await res.json();
       if (res.ok) {
-        setToast({ message: `Re-check complet: ${data.checked || 0} acte verificate`, type: 'success' });
+        setToast({ message: `Re-check complet: ${data.total || 0} acte verificate`, type: 'success' });
         await fetchStatus();
         await fetchLogs();
       } else {
@@ -167,22 +175,22 @@ export default function LegalImportAdmin() {
     }
   };
 
-  // ─── Filtered Data ───────────────────────────────────────────────────────
+  // ——— Filtered Data —————————————————————————————————————————————————
   const filteredStatus = filterStatus === 'all'
     ? statusData
-    : statusData.filter((s) => s.check_status === filterStatus);
+    : statusData.filter((s) => s.status === filterStatus);
 
-  // ─── Stats ───────────────────────────────────────────────────────────────
+  // ——— Stats —————————————————————————————————————————————————————————
   const stats = {
     total: statusData.length,
-    ok: statusData.filter((s) => s.check_status === 'ok').length,
-    changed: statusData.filter((s) => s.check_status === 'changed').length,
-    error: statusData.filter((s) => s.check_status === 'error').length,
-    never: statusData.filter((s) => s.check_status === 'never_checked').length,
+    ok: statusData.filter((s) => s.status === 'ok').length,
+    changed: statusData.filter((s) => s.status === 'changed').length,
+    error: statusData.filter((s) => s.status === 'error').length,
+    never: statusData.filter((s) => s.status === 'never').length,
     withText: statusData.filter((s) => s.has_full_text).length,
   };
 
-  // ─── Render ──────────────────────────────────────────────────────────────
+  // ——— Render ————————————————————————————————————————————————————————
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       {/* Toast */}
@@ -191,7 +199,7 @@ export default function LegalImportAdmin() {
           ${toast.type === 'success'
             ? 'bg-emerald-950 border-emerald-800 text-emerald-300'
             : 'bg-red-950 border-red-800 text-red-300'
-          } animate-in slide-in-from-top-2`}
+          }`}
         >
           {toast.message}
         </div>
@@ -280,23 +288,29 @@ export default function LegalImportAdmin() {
           ))}
         </div>
 
-        {/* ─── STATUS TAB ─────────────────────────────────────────────────── */}
+        {/* ——— STATUS TAB ——————————————————————————————————————————————— */}
         {tab === 'status' && (
           <>
             {/* Filter */}
             <div className="flex items-center gap-2 mb-4">
               <span className="text-xs text-zinc-500">Filtrare:</span>
-              {(['all', 'ok', 'changed', 'error', 'never_checked'] as FilterStatus[]).map((f) => (
+              {([
+                { key: 'all', label: 'Toate' },
+                { key: 'ok', label: 'OK' },
+                { key: 'changed', label: 'CHANGED' },
+                { key: 'error', label: 'ERROR' },
+                { key: 'never', label: 'Neverificate' },
+              ] as { key: FilterStatus; label: string }[]).map((f) => (
                 <button
-                  key={f}
-                  onClick={() => setFilterStatus(f)}
+                  key={f.key}
+                  onClick={() => setFilterStatus(f.key)}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors
-                    ${filterStatus === f
+                    ${filterStatus === f.key
                       ? 'bg-zinc-700 text-zinc-200'
                       : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
                     }`}
                 >
-                  {f === 'all' ? 'Toate' : f === 'never_checked' ? 'Neverificate' : f.toUpperCase()}
+                  {f.label}
                 </button>
               ))}
             </div>
@@ -308,7 +322,7 @@ export default function LegalImportAdmin() {
                   <thead>
                     <tr className="bg-zinc-900/80 border-b border-zinc-800">
                       <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Act</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Domeniu</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Prioritate</th>
                       <th className="text-center px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
                       <th className="text-center px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Text</th>
                       <th className="text-right px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider">Ultima verificare</th>
@@ -337,17 +351,24 @@ export default function LegalImportAdmin() {
                         <tr key={act.act_key} className="hover:bg-zinc-900/40 transition-colors">
                           <td className="px-4 py-3">
                             <div className="font-medium text-zinc-200 text-xs">
-                              {act.act_type.toUpperCase()} {act.act_number}/{act.act_year}
+                              {act.act_key}
                             </div>
-                            <div className="text-xs text-zinc-500 mt-0.5 max-w-xs truncate" title={act.act_full_name}>
-                              {act.act_full_name}
+                            <div className="text-xs text-zinc-500 mt-0.5 max-w-xs truncate" title={act.act_full_name || ''}>
+                              {act.act_full_name || '—'}
                             </div>
                           </td>
                           <td className="px-4 py-3">
-                            <span className="text-xs text-zinc-400">{act.domain}</span>
+                            <span className={`text-xs font-medium ${
+                              act.priority === 'critical' ? 'text-red-400' :
+                              act.priority === 'high' ? 'text-amber-400' :
+                              act.priority === 'normal' ? 'text-zinc-400' :
+                              'text-zinc-500'
+                            }`}>
+                              {act.priority || '—'}
+                            </span>
                           </td>
                           <td className="px-4 py-3 text-center">
-                            <StatusBadge status={act.check_status} />
+                            <StatusBadge status={act.status} />
                           </td>
                           <td className="px-4 py-3 text-center">
                             {act.has_full_text ? (
@@ -363,9 +384,9 @@ export default function LegalImportAdmin() {
                           </td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex items-center justify-end gap-2">
-                              {act.source_url && (
+                              {act.portal_url && (
                                 <a
-                                  href={act.source_url}
+                                  href={act.portal_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
@@ -408,7 +429,7 @@ export default function LegalImportAdmin() {
           </>
         )}
 
-        {/* ─── LOGS TAB ───────────────────────────────────────────────────── */}
+        {/* ——— LOGS TAB ———————————————————————————————————————————————— */}
         {tab === 'logs' && (
           <>
             <div className="flex items-center justify-between mb-4">
