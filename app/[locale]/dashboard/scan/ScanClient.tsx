@@ -9,6 +9,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
 import type { ScanTemplate, TemplateCategory } from '@/lib/scan-pipeline';
+import { validateCNP, validateCUI } from '@/lib/utils/validators';
 
 // Categorii pentru grupare template-uri
 const CATEGORIES: Record<string, { label_ro: string; label_en: string }> = {
@@ -34,6 +35,7 @@ interface FileItem {
   confidenceScore?: number;
   scanId?: string;
   error?: string;
+  validationErrors?: Record<string, string>; // Field validation errors (key -> error message)
 }
 
 interface ProcessingStats {
@@ -260,6 +262,7 @@ export default function ScanClient() {
                     extractedData: data.extracted_data || {},
                     confidenceScore: data.confidence_score || 0,
                     scanId: data.scan_id || undefined,
+                    validationErrors: data.validation_errors || undefined,
                   }
                 : f
             )
@@ -727,70 +730,82 @@ export default function ScanClient() {
 
                       {/* Editable fields */}
                       <div className="space-y-3 mb-4 max-h-96 overflow-y-auto">
-                        {selectedTemplate?.fields.map((field) => (
-                          <div key={field.key}>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
-                              {field.label}
-                              {field.validation && (
-                                <span className="text-xs text-gray-500 ml-1">
-                                  ({field.validation})
-                                </span>
+                        {selectedTemplate?.fields.map((field) => {
+                          const hasError = files[activeResultTab].validationErrors?.[field.key];
+                          const inputClassName = `w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 ${
+                            hasError
+                              ? 'border-red-300 focus:ring-red-500'
+                              : 'border-gray-300 focus:ring-blue-500'
+                          }`;
+
+                          return (
+                            <div key={field.key}>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                {field.label}
+                                {field.validation && (
+                                  <span className="text-xs text-gray-500 ml-1">
+                                    ({field.validation})
+                                  </span>
+                                )}
+                              </label>
+                              {field.type === 'select' && field.options ? (
+                                <select
+                                  value={
+                                    files[activeResultTab].extractedData?.[field.key] || ''
+                                  }
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      files[activeResultTab].id,
+                                      field.key,
+                                      e.target.value
+                                    )
+                                  }
+                                  className={inputClassName}
+                                >
+                                  <option value="">- Selectează -</option>
+                                  {field.options.map((option) => (
+                                    <option key={option} value={option}>
+                                      {option}
+                                    </option>
+                                  ))}
+                                </select>
+                              ) : field.type === 'number' ? (
+                                <input
+                                  type="number"
+                                  value={
+                                    files[activeResultTab].extractedData?.[field.key] || ''
+                                  }
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      files[activeResultTab].id,
+                                      field.key,
+                                      e.target.value
+                                    )
+                                  }
+                                  className={inputClassName}
+                                />
+                              ) : (
+                                <input
+                                  type="text"
+                                  value={
+                                    files[activeResultTab].extractedData?.[field.key] || ''
+                                  }
+                                  onChange={(e) =>
+                                    handleFieldChange(
+                                      files[activeResultTab].id,
+                                      field.key,
+                                      e.target.value
+                                    )
+                                  }
+                                  className={inputClassName}
+                                />
                               )}
-                            </label>
-                            {field.type === 'select' && field.options ? (
-                              <select
-                                value={
-                                  files[activeResultTab].extractedData?.[field.key] || ''
-                                }
-                                onChange={(e) =>
-                                  handleFieldChange(
-                                    files[activeResultTab].id,
-                                    field.key,
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              >
-                                <option value="">- Selectează -</option>
-                                {field.options.map((option) => (
-                                  <option key={option} value={option}>
-                                    {option}
-                                  </option>
-                                ))}
-                              </select>
-                            ) : field.type === 'number' ? (
-                              <input
-                                type="number"
-                                value={
-                                  files[activeResultTab].extractedData?.[field.key] || ''
-                                }
-                                onChange={(e) =>
-                                  handleFieldChange(
-                                    files[activeResultTab].id,
-                                    field.key,
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              />
-                            ) : (
-                              <input
-                                type="text"
-                                value={
-                                  files[activeResultTab].extractedData?.[field.key] || ''
-                                }
-                                onChange={(e) =>
-                                  handleFieldChange(
-                                    files[activeResultTab].id,
-                                    field.key,
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              />
-                            )}
-                          </div>
-                        ))}
+                              {hasError && (
+                                <p className="mt-1 text-xs text-red-600">{hasError}</p>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
 
                       {/* Save button */}

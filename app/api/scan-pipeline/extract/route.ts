@@ -133,6 +133,7 @@ export async function POST(request: NextRequest) {
         scan_id: scan.id,
         extracted_data: result.fields,
         confidence_score: result.confidence,
+        validation_errors: result.errors,
       };
 
       return NextResponse.json(response, { status: 200 });
