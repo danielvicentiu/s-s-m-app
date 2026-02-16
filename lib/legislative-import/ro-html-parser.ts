@@ -255,6 +255,7 @@ function stripHtml(html: string): string {
     .trim();
 }
 
-function computeHash(text: string): string {
+export function computeHash(text: string): string {
   return crypto.createHash('sha256').update(text, 'utf8').digest('hex');
 }
+
