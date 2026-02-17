@@ -1,34 +1,18 @@
 {
   "crons": [
-    {
-      "path": "/api/alerts/check",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/legislative-import/ro-check",
-      "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/cron/daily-check",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/daily-alerts",
-      "schedule": "0 7 * * 1"
-    }
+    { "path": "/api/alerts/check", "schedule": "0 6 * * *" },
+    { "path": "/api/legislative-import/ro-check", "schedule": "0 3 * * *" },
+    { "path": "/api/cron/daily-check", "schedule": "0 6 * * *" },
+    { "path": "/api/cron/daily-alerts", "schedule": "0 7 * * 1" },
+    { "path": "/api/cron/check-expiries", "schedule": "0 6 * * *" },
+    { "path": "/api/cron/monthly-report", "schedule": "0 8 1 * *" }
   ],
   "functions": {
-    "app/api/admin/legal-batch/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/legislative-import/ro-check/route.ts": {
-      "maxDuration": 120
-    },
-    "app/api/cron/daily-check/route.ts": {
-      "maxDuration": 120
-    },
-    "app/api/cron/daily-alerts/route.ts": {
-      "maxDuration": 300
-    }
+    "app/api/admin/legal-batch/route.ts": { "maxDuration": 300 },
+    "app/api/legislative-import/ro-check/route.ts": { "maxDuration": 120 },
+    "app/api/cron/daily-check/route.ts": { "maxDuration": 120 },
+    "app/api/cron/daily-alerts/route.ts": { "maxDuration": 300 },
+    "app/api/cron/check-expiries/route.ts": { "maxDuration": 300 },
+    "app/api/cron/monthly-report/route.ts": { "maxDuration": 120 }
   }
 }
