@@ -129,16 +129,18 @@ export default function ScanClient() {
       .order('created_at', { ascending: false })
       .limit(20);
     if (data) {
-      const docsWithUrls = data.map((doc) => {
+      const docsWithUrls = await Promise.all(data.map(async (doc) => {
         let imageUrl: string | undefined;
         if (doc.storage_path) {
-          const { data: urlData } = supabase.storage
+          const { data: signedData, error: signedError } = await supabase.storage
             .from('uploads')
-            .getPublicUrl(doc.storage_path);
-          imageUrl = urlData?.publicUrl;
+            .createSignedUrl(doc.storage_path, 3600);
+          if (!signedError && signedData?.signedUrl) {
+            imageUrl = signedData.signedUrl;
+          }
         }
         return { ...doc, imageUrl } as ReceivedDoc;
-      });
+      }));
       setReceivedDocs(docsWithUrls);
     }
   }, [orgId]);

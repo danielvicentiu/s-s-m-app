@@ -179,16 +179,9 @@ export async function POST(
     // 6. AI extraction pipeline (non-blocking)
     if (scan?.id) {
       try {
-        // 6a. Generate signed URL for the uploaded image
-        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
-          .from('uploads')
-          .createSignedUrl(storagePath, 3600)
+        // 6b. Call Claude Vision API using base64 (Claude API does not accept external URLs)
+        const base64String = Buffer.from(imageBytes).toString('base64')
 
-        if (signedUrlError || !signedUrlData?.signedUrl) {
-          throw new Error(`Failed to create signed URL: ${signedUrlError?.message}`)
-        }
-
-        // 6b. Call Claude Vision API
         const anthropicApiKey = process.env.ANTHROPIC_API_KEY
         if (!anthropicApiKey) {
           throw new Error('ANTHROPIC_API_KEY not configured')
@@ -212,8 +205,9 @@ export async function POST(
                   {
                     type: 'image',
                     source: {
-                      type: 'url',
-                      url: signedUrlData.signedUrl,
+                      type: 'base64',
+                      media_type: imageFile.type,
+                      data: base64String,
                     },
                   },
                   {
