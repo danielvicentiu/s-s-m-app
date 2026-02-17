@@ -614,3 +614,36 @@ export const PSI_ALERT_LEVEL_LABELS: Record<PSIAlertLevel, string> = {
   'info': '90 zile',
   'ok': 'La zi'
 }
+
+// ── REPORTS: Automated PDF/HTML Reports ──
+
+export type ReportType =
+  | 'situatie_ssm'
+  | 'situatie_psi'
+  | 'instruiri_luna'
+  | 'documente_expirate'
+
+export interface Report {
+  id: string
+  organization_id: string
+  report_type: ReportType
+  title: string
+  html_content: string
+  metadata: Record<string, any>
+  generated_by: string | null
+  created_at: string
+  // Joined data (optional)
+  organizations?: {
+    id: string
+    name: string
+    cui: string | null
+  }
+}
+
+// Helper: Romanian labels for report types
+export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
+  'situatie_ssm': 'Situație SSM Completă',
+  'situatie_psi': 'Situație PSI Completă',
+  'instruiri_luna': 'Instruiri Luna Curentă',
+  'documente_expirate': 'Documente Expirate'
+}
