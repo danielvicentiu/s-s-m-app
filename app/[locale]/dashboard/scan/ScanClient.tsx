@@ -46,6 +46,17 @@ interface ProcessingStats {
   processing: number;
 }
 
+interface ReceivedDoc {
+  id: string;
+  created_at: string;
+  status: string;
+  template_key: string | null;
+  storage_path: string | null;
+  original_filename: string | null;
+  created_by: string | null;
+  imageUrl?: string;
+}
+
 export default function ScanClient() {
   const [currentStep, setCurrentStep] = useState<Step>('select-type');
   const [templates, setTemplates] = useState<ScanTemplate[]>([]);
@@ -64,6 +75,7 @@ export default function ScanClient() {
     failed: 0,
     processing: 0,
   });
+  const [receivedDocs, setReceivedDocs] = useState<ReceivedDoc[]>([]);
 
   // Preia toate org_id-urile curentului user
   useEffect(() => {
@@ -105,6 +117,37 @@ export default function ScanClient() {
 
     fetchOrgId();
   }, []);
+
+  // Preia documente primite via portal
+  const fetchReceivedDocs = useCallback(async () => {
+    if (!orgId) return;
+    const supabase = createSupabaseBrowser();
+    const { data } = await supabase
+      .from('document_scans')
+      .select('id, created_at, status, template_key, storage_path, original_filename, created_by')
+      .eq('org_id', orgId)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (data) {
+      const docsWithUrls = data.map((doc) => {
+        let imageUrl: string | undefined;
+        if (doc.storage_path) {
+          const { data: urlData } = supabase.storage
+            .from('uploads')
+            .getPublicUrl(doc.storage_path);
+          imageUrl = urlData?.publicUrl;
+        }
+        return { ...doc, imageUrl } as ReceivedDoc;
+      });
+      setReceivedDocs(docsWithUrls);
+    }
+  }, [orgId]);
+
+  useEffect(() => {
+    fetchReceivedDocs();
+    const interval = setInterval(fetchReceivedDocs, 30000);
+    return () => clearInterval(interval);
+  }, [fetchReceivedDocs]);
 
   // Preia template-uri din API
   useEffect(() => {
@@ -999,6 +1042,117 @@ export default function ScanClient() {
           </div>
         </div>
       )}
+
+      {/* Documente primite via Portal Client */}
+      <div className="bg-white rounded-lg shadow p-4 mt-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Documente primite via Portal Client</h2>
+          <button
+            onClick={fetchReceivedDocs}
+            className="text-xs text-blue-600 hover:text-blue-700 px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+          >
+            ↻ Actualizează
+          </button>
+        </div>
+
+        {receivedDocs.length === 0 ? (
+          <p className="text-sm text-gray-500 text-center py-6">Niciun document primit încă.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Data upload
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Sursă
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tip document
+                  </th>
+                  <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Imagine
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {receivedDocs.map((doc) => {
+                  const statusColors: Record<string, string> = {
+                    pending: 'bg-yellow-100 text-yellow-800',
+                    completed: 'bg-green-100 text-green-800',
+                    reviewed: 'bg-green-100 text-green-800',
+                    error: 'bg-red-100 text-red-800',
+                  };
+                  const statusLabels: Record<string, string> = {
+                    pending: 'În așteptare',
+                    completed: 'Finalizat',
+                    reviewed: 'Revizuit',
+                    error: 'Eroare',
+                  };
+                  const source = doc.created_by ? 'Manual' : 'Portal';
+                  const statusColor = statusColors[doc.status] ?? 'bg-gray-100 text-gray-800';
+                  const statusLabel = statusLabels[doc.status] ?? doc.status;
+                  const uploadDate = new Date(doc.created_at).toLocaleString('ro-RO', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  });
+
+                  return (
+                    <tr
+                      key={doc.id}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="py-3 px-3 text-gray-700 whitespace-nowrap">{uploadDate}</td>
+                      <td className="py-3 px-3">
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            source === 'Portal'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {source}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
+                          {statusLabel}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-gray-600">
+                        {doc.template_key ?? (
+                          <span className="text-gray-400 italic">Nedetectat</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-3">
+                        {doc.imageUrl ? (
+                          <a
+                            href={doc.imageUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-700 hover:underline text-xs"
+                          >
+                            Vezi imagine ↗
+                          </a>
+                        ) : (
+                          <span className="text-gray-400 text-xs">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
