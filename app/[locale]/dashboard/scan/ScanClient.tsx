@@ -36,6 +36,7 @@ interface FileItem {
   scanId?: string;
   error?: string;
   validationErrors?: Record<string, string>; // Field validation errors (key -> error message)
+  detectedType?: string; // Pentru auto-detect: tipul detectat de AI
 }
 
 interface ProcessingStats {
@@ -125,6 +126,24 @@ export default function ScanClient() {
   // Handler pentru selectare template
   const handleTemplateSelect = (template: ScanTemplate) => {
     setSelectedTemplate(template);
+    setError(null);
+    setCurrentStep('upload');
+  };
+
+  // Handler pentru selectare auto-detect
+  const handleAutoDetectSelect = () => {
+    // Creează un template virtual pentru auto-detect
+    const autoDetectTemplate: ScanTemplate = {
+      id: 'auto_detect',
+      template_key: 'auto_detect',
+      name_ro: 'Auto-detect - AI detectează automat tipul',
+      name_en: 'Auto-detect - AI automatically detects type',
+      category: 'general',
+      fields: [],
+      extraction_prompt: null,
+      is_active: true,
+    };
+    setSelectedTemplate(autoDetectTemplate);
     setError(null);
     setCurrentStep('upload');
   };
@@ -263,6 +282,7 @@ export default function ScanClient() {
                     confidenceScore: data.confidence_score || 0,
                     scanId: data.scan_id || undefined,
                     validationErrors: data.validation_errors || undefined,
+                    detectedType: data.detected_type || undefined,
                   }
                 : f
             )
@@ -272,6 +292,14 @@ export default function ScanClient() {
             completed: prev.completed + 1,
             processing: prev.processing - 1,
           }));
+
+          // Dacă a fost auto-detect și avem template-uri, actualizăm selectedTemplate cu cel real
+          if (selectedTemplate?.template_key === 'auto_detect' && data.detected_type && templates.length > 0) {
+            const realTemplate = templates.find(t => t.template_key === data.detected_type);
+            if (realTemplate) {
+              setSelectedTemplate(realTemplate);
+            }
+          }
         } else {
           throw new Error(data.error || 'Eroare la extragere');
         }
@@ -428,6 +456,50 @@ export default function ScanClient() {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             Pasul 1: Selectează tipul de document
           </h2>
+
+          {/* Auto-detect option - PRIM buton cu stil distinct */}
+          <div className="mb-6">
+            <button
+              onClick={handleAutoDetectSelect}
+              className="w-full text-left p-5 border-2 border-blue-500 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 shadow-sm hover:shadow-md"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-900 text-base">
+                    ⚡ Auto-detect - Detectare Automată
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    AI detectează automat tipul documentului - Recomandat pentru viteză maximă
+                  </p>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          {/* Separator */}
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">sau selectează manual</span>
+            </div>
+          </div>
 
           <div className="space-y-6">
             {categorizedTemplates.map((category) => (
@@ -709,6 +781,33 @@ export default function ScanClient() {
                     {/* Right: Editable fields */}
                     <div>
                       <h3 className="text-sm font-medium text-gray-700 mb-2">Date extrase</h3>
+
+                      {/* Detected type (pentru auto-detect) */}
+                      {files[activeResultTab].detectedType && (
+                        <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <svg
+                              className="w-4 h-4 text-blue-600 flex-shrink-0"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 10V3L4 14h7v7l9-11h-7z"
+                              />
+                            </svg>
+                            <div className="flex-1">
+                              <p className="text-xs font-medium text-blue-900">Tip detectat automat:</p>
+                              <p className="text-xs text-blue-700 mt-0.5">
+                                {templates.find(t => t.template_key === files[activeResultTab].detectedType)?.name_ro || files[activeResultTab].detectedType}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       {/* Confidence score */}
                       {files[activeResultTab].confidenceScore !== undefined && (
