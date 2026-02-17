@@ -469,8 +469,8 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
         errors.push('Nume obligatoriu (min 2 caractere)')
       }
 
-      // Required: job_title (only for manual and contracte profiles, not for salariati)
-      if (currentProfile !== 'reges-salariati') {
+      // Required: job_title (only for manual profile)
+      if (currentProfile !== 'reges-salariati' && currentProfile !== 'reges-contracte') {
         if (!rowData.job_title || rowData.job_title.toString().trim().length < 2) {
           errors.push('Funcție obligatorie')
         }
