@@ -76,83 +76,83 @@ const EMPLOYEE_FIELDS = [
 const REGES_SALARIATI_PROFILE = {
   name: 'REGES Salariați',
   columnCount: 24,
-  description: '24 coloane - date personale angajați',
+  description: 'Export date personale angajați din REGES Online. 24 coloane - date personale, adresă, handicap, autorizații.',
   mappings: {
-    'Cod Salariat': 'employee_code',
+    'CNP': 'cnp',
     'Nume': 'last_name',
     'Prenume': 'first_name',
-    'CNP': 'cnp',
-    'Data Nasterii': 'birth_date',
-    'Cetatenie': 'citizenship',
-    'Nationalitate': 'nationality',
-    'Tara Nasterii': 'birth_country',
-    'Judet Nastere': 'birth_county',
-    'Localitate Nastere': 'birth_city',
-    'Strada': 'address_street',
-    'Numar': 'address_number',
-    'Bloc': 'address_block',
-    'Scara': 'address_staircase',
-    'Etaj': 'address_floor',
-    'Apartament': 'address_apartment',
-    'Cod Postal': 'postal_code',
-    'Judet Domiciliu': 'county',
-    'Localitate Domiciliu': 'city',
-    'Cod SIRUTA': 'siruta_code',
-    'Tip Carte Identitate': 'id_card_type',
+    'Data nașterii': 'birth_date',
+    'Naționalitate': 'nationality',
+    'Cod SIRUTA localitate': 'siruta_code',
+    'Tip carte identitate': 'id_card_type',
+    'Adresa': 'address',
     'Radiat': 'is_deregistered',
-    'Grad Invaliditate': 'disability_grade',
+    'Motiv radiere': 'deregistration_reason',
+    'CNP vechi': 'old_cnp',
+    'Grad invaliditate': 'disability_grade',
+    'Tip handicap': 'handicap_type',
+    'Grad handicap': 'handicap_grade',
+    'Dată certificat handicap': 'handicap_certificate_date',
+    'Dată valabilitate certificat handicap': 'handicap_certificate_validity',
+    'Tip apatrid': 'stateless_type',
+    'Țară domiciliu': 'residence_country',
+    'Număr autorizație': 'authorization_number',
+    'Tip autorizație': 'authorization_type',
+    'Tip autorizație excepție': 'authorization_exception_type',
+    'Dată început autorizație': 'authorization_start_date',
+    'Dată sfârșit autorizație': 'authorization_end_date',
     'SalariatId': 'reges_salariat_id',
   },
 }
 
 // L153 field names (columns 35-47 in REGES Contracte export — Legea 153/2017)
 const L153_FIELDS = [
-  'Anexa', 'Capitol', 'Litera', 'Clasificare', 'Functie L153',
-  'Specialitate Functie', 'Structura', 'Specialitate Structura',
-  'Grad Profesional', 'Gradatie', 'Denumire Alta Functie',
-  'Explicatie Functie', 'Alt Grad',
+  'Anexa L153', 'Capitol L153', 'Litera L153', 'Clasificare suplimentară L153',
+  'Funcție L153', 'Specialitate funcție L153', 'Structură aprobată L153',
+  'Specialitate structură aprobată L153', 'Grad profesional L153', 'Gradație L153',
+  'Denumire altă funcție L153', 'Explicație funcție L153', 'Alt grad profesional L153',
 ]
 
 // REGES Contracte profile (47 columns - employment contracts)
 const REGES_CONTRACTE_PROFILE = {
   name: 'REGES Contracte',
   columnCount: 47,
-  description: '47 coloane - contracte de muncă',
+  description: 'Export contracte de muncă din REGES Online. 47 coloane - contracte active sau încetate, salarizare, program, COR, L153.',
   mappings: {
-    'ID Salariat': 'reges_salariat_id',
-    'Cod Salariat': 'employee_code',
-    'Nume': 'last_name',
-    'Prenume': 'first_name',
-    'CNP': 'cnp',
-    'Numar Contract': 'contract_number',
-    'Data Consemnare': 'contract_registration_date',
-    'Data Inceput': 'hire_date',
-    'Data Sfarsit': 'contract_end_date',
+    'ID Contract': 'contract_id',
+    'Număr Contract': 'contract_number',
+    'Dată Consemnare': 'registration_date',
+    'Data Contract': 'contract_date',
+    'Data Început Contract': 'hire_date',
+    'Data Sfârșit Contract': 'contract_end_date',
     'Tip Contract': 'contract_type',
-    'Durata Contract': 'contract_duration',
-    'Stare': 'status',
-    'Motiv Incetare': 'termination_reason',
-    'Temei Legal Incetare': 'termination_legal_basis',
-    'Salariu Baza': 'base_salary',
-    'Valuta': 'salary_currency',
-    'Nr Ore Zi': 'hours_per_day',
-    'Nr Ore Saptamana': 'hours_per_week',
-    'Norma': 'work_norm',
-    'Tip Norma': 'norm_type',
-    'Loc Munca': 'workplace',
-    'Loc Munca Detalii': 'workplace_details',
-    'Pauza De Masa': 'lunch_break',
-    'Inceput Interval': 'shift_start',
-    'Sfarsit Interval': 'shift_end',
-    'Tip Tura': 'shift_type',
+    'Tip Durată': 'contract_duration',
+    'Tip Normă': 'work_norm',
+    'Salariu': 'base_salary',
+    'Monedă': 'salary_currency',
+    'Nivel Studii': 'education_level',
+    'Tip Loc Muncă': 'workplace_type',
+    'Județ Loc Muncă': 'workplace_county',
+    'Localitate Loc Muncă': 'workplace_city',
+    'ID Salariat': 'reges_salariat_id',
+    'CNP Salariat': 'cnp',
+    'Nume Salariat': 'last_name',
+    'Prenume Salariat': 'first_name',
+    'Stare Curentă': 'status',
+    'Radiat': 'is_deregistered',
+    'Motiv Radiere': 'deregistration_reason',
+    'Detalii': 'details',
+    'Normă Timp Muncă': 'work_time_norm',
+    'Repartizare Timp Muncă': 'work_time_distribution',
+    'Durată Timp Muncă': 'work_duration',
+    'Interval Timp': 'time_interval',
+    'Repartizare Muncă': 'work_schedule',
+    'Notă Repartizare Muncă': 'work_schedule_note',
+    'Început Interval': 'shift_start',
+    'Sfârșit Interval': 'shift_end',
+    'Tip Tură': 'shift_type',
     'Cod COR': 'cor_code',
     'Versiune COR': 'cor_version',
-    'Nivel Studii': 'education_level',
-    'Nivel Pregatire': 'training_level',
-    'Tip Functie': 'function_type',
-    'Denumire Functie': 'job_title',
-    'Nivel Ierarhic': 'hierarchy_level',
-    'Departament': 'department',
   },
 }
 
@@ -182,10 +182,10 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
 
   const str = rawValue.toString().trim()
 
-  // Tip Carte Identitate transformations
-  if (columnName === 'Tip Carte Identitate') {
+  // Tip carte identitate transformations
+  if (columnName === 'Tip carte identitate') {
     const mapping: Record<string, string> = {
-      'CarteIdentitate': 'CI',
+      'CarteIdentitate': 'Carte de identitate',
       'Pasaport': 'Pașaport',
       'PermisŞedere': 'Permis ședere',
       'PermisȘedere': 'Permis ședere',
@@ -195,8 +195,8 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
     return { value: transformed, transformed: transformed !== str }
   }
 
-  // Grad Invaliditate - "Fara" → null
-  if (columnName === 'Grad Invaliditate') {
+  // Grad invaliditate / Tip handicap / Grad handicap - "Fara" → null
+  if (columnName === 'Grad invaliditate' || columnName === 'Tip handicap' || columnName === 'Grad handicap') {
     if (str === 'Fara' || str === 'Fără' || str === '0') {
       return { value: null, transformed: true }
     }
@@ -215,7 +215,7 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
     return { value: Boolean(str), transformed: false }
   }
 
-  // Contract type transformations
+  // Contract type transformations (Tip Contract)
   if (columnName === 'Tip Contract') {
     const mapping: Record<string, string> = {
       'ContractIndividualMunca': 'CIM',
@@ -229,8 +229,8 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
     return { value: transformed, transformed: transformed !== str }
   }
 
-  // Contract duration transformations (Durata Contract)
-  if (columnName === 'Durata Contract') {
+  // Contract duration transformations (Tip Durată)
+  if (columnName === 'Tip Durată') {
     const mapping: Record<string, string> = {
       'Nedeterminata': 'Nedeterminată',
       'Determinata': 'Determinată',
@@ -239,8 +239,8 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
     return { value: transformed, transformed: transformed !== str }
   }
 
-  // Work norm transformations (Norma)
-  if (columnName === 'Norma') {
+  // Work norm transformations (Tip Normă)
+  if (columnName === 'Tip Normă') {
     const mapping: Record<string, string> = {
       'NormaIntreaga': 'Normă întreagă',
       'FractiuneNorma': 'Fracțiune normă',
@@ -250,8 +250,18 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
     return { value: transformed, transformed: transformed !== str }
   }
 
-  // Status - parse composite "Activ", "Încetat: DD-MM-YYYY", "Suspendat: DD-MM-YYYY"
-  if (columnName === 'Stare') {
+  // Work time norm transformations (Normă Timp Muncă)
+  if (columnName === 'Normă Timp Muncă') {
+    const mapping: Record<string, string> = {
+      'NormaIntreaga840': 'Normă întreagă (840h)',
+      'TimpPartial': 'Timp parțial',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Status - parse composite "Activ", "Încetat: DD-MM-YYYY", "Suspendat: DD-MM-YYYY" (Stare Curentă)
+  if (columnName === 'Stare Curentă') {
     if (str === 'Activ') {
       return { value: 'activ', transformed: true }
     }
@@ -266,8 +276,8 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
     return { value: str.toLowerCase(), transformed: false }
   }
 
-  // Salary - parse number (Salariu Baza)
-  if (columnName === 'Salariu Baza') {
+  // Salary - parse number (Salariu)
+  if (columnName === 'Salariu') {
     const num = parseFloat(str.replace(/\./g, '').replace(',', '.'))
     if (!isNaN(num)) {
       return { value: num, transformed: str !== num.toString() }
@@ -277,10 +287,15 @@ function transformValue(columnName: string, rawValue: any, profile: ImportProfil
 
   // Date fields - parse DD-MM-YYYY / DD.MM.YYYY → ISO YYYY-MM-DD
   if (
-    columnName === 'Data Nasterii' ||
-    columnName === 'Data Consemnare' ||
-    columnName === 'Data Inceput' ||
-    columnName === 'Data Sfarsit'
+    columnName === 'Data nașterii' ||
+    columnName === 'Dată certificat handicap' ||
+    columnName === 'Dată valabilitate certificat handicap' ||
+    columnName === 'Dată început autorizație' ||
+    columnName === 'Dată sfârșit autorizație' ||
+    columnName === 'Dată Consemnare' ||
+    columnName === 'Data Contract' ||
+    columnName === 'Data Început Contract' ||
+    columnName === 'Data Sfârșit Contract'
   ) {
     const parsed = parseDate(str)
     if (parsed) {
@@ -1037,7 +1052,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                         REGES Salariați
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        Export date personale angajați din REGES Online.
+                        Export date personale angajați din REGES Online. 24 coloane - date personale, adresă, handicap, autorizații.
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-500">
                         {REGES_SALARIATI_PROFILE.description}
@@ -1063,7 +1078,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                     <div className="flex-1">
                       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">REGES Contracte</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        Export contracte de muncă din REGES Online.
+                        Export contracte de muncă din REGES Online. 47 coloane - contracte active sau încetate, salarizare, program, COR, L153.
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-500">
                         {REGES_CONTRACTE_PROFILE.description}
