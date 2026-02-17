@@ -723,3 +723,39 @@ export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
   'instruiri_luna': 'Instruiri Luna Curentă',
   'documente_expirate': 'Documente Expirate'
 }
+
+// ── M7 LEGAL MONITOR: Legislative monitoring ──
+
+export type LegalActStatus = 'active' | 'inactive' | 'pending'
+export type MonitorLogStatus = 'success' | 'error' | 'no_change' | 'changed'
+
+export interface LegalActMonitor {
+  id: string
+  act_key: string
+  title: string
+  act_type: string
+  act_number: string | null
+  act_year: number | null
+  country_code: CountryCode
+  domain: LegislationDomain
+  current_version_date: string | null
+  last_checked_at: string | null
+  check_frequency_days: number
+  status: LegalActStatus
+  priority: 'critical' | 'high' | 'normal' | 'low'
+  needs_review: boolean
+  source_url: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface RoMonitorLog {
+  id: string
+  act_key: string
+  checked_at: string
+  status: MonitorLogStatus
+  details: string | null
+  version_date_found: string | null
+  error_message: string | null
+  duration_ms: number | null
+}
