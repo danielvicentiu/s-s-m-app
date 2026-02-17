@@ -59,7 +59,7 @@ const EMPLOYEE_FIELDS = [
   { field: 'first_name', label: 'Prenume', required: true },
   { field: 'last_name', label: 'Nume', required: true },
   { field: 'cnp', label: 'CNP', required: false },
-  { field: 'job_title', label: 'Funcție', required: true },
+  { field: 'job_title', label: 'Funcție', required: false },
   { field: 'department', label: 'Departament', required: false },
   { field: 'hire_date', label: 'Data angajării', required: false },
   { field: 'contract_end_date', label: 'Data sfârșit contract', required: false },
@@ -365,6 +365,14 @@ function parseDate(dateStr: string): Date | null {
   return null
 }
 
+// Hash CNP with SHA-256 for secure storage
+async function hashCNP(cnp: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(cnp)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
 export default function ImportWizardClient({ user, organizations, selectedOrgId, locale }: Props) {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -460,36 +468,34 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
         errors.push('Nume obligatoriu (min 2 caractere)')
       }
 
-      // Required: job_title (only for manual profile)
-      if (currentProfile !== 'reges-salariati' && currentProfile !== 'reges-contracte') {
-        if (!rowData.job_title || rowData.job_title.toString().trim().length < 2) {
-          errors.push('Funcție obligatorie')
-        }
-      }
-
-      // Optional: CNP validation
+      // Optional: CNP validation (warning only, cnp_hash can be null)
       if (rowData.cnp) {
         const cnpValidation = validateCNP(rowData.cnp.toString().trim())
         if (!cnpValidation.valid) {
           warnings.push(cnpValidation.error || 'CNP invalid')
         }
 
-        // Check for duplicates in this import
+        // Check for duplicates in this import batch
         if (existingCNPs.has(rowData.cnp.toString().trim())) {
           warnings.push('CNP duplicat în fișier')
         }
 
-        // Check for existing in database
-        const supabase = createSupabaseBrowser()
-        const { data: existing } = await supabase
-          .from('employees')
-          .select('id')
-          .eq('organization_id', selectedOrgId)
-          .eq('cnp', rowData.cnp.toString().trim())
-          .maybeSingle()
+        // Check for existing in database by cnp_hash
+        try {
+          const supabase = createSupabaseBrowser()
+          const cnpHash = await hashCNP(rowData.cnp.toString().trim())
+          const { data: existing } = await supabase
+            .from('employees')
+            .select('id')
+            .eq('organization_id', selectedOrgId)
+            .eq('cnp_hash', cnpHash)
+            .maybeSingle()
 
-        if (existing) {
-          warnings.push('CNP există deja în organizație')
+          if (existing) {
+            warnings.push('CNP există deja în organizație (va fi actualizat)')
+          }
+        } catch (e) {
+          console.error('Error checking cnp_hash in DB:', e)
         }
       }
 
@@ -817,33 +823,57 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
     setImportStats({ success: 0, failed: 0, total })
 
-    // Batch insert in chunks of 50
+    // Batch upsert in chunks of 50
     const chunkSize = 50
     for (let i = 0; i < validRows.length; i += chunkSize) {
       const chunk = validRows.slice(i, i + chunkSize)
-      const inserts = chunk.map((row) => ({
-        organization_id: selectedOrgId,
-        first_name: row.data.first_name?.toString().trim() || '',
-        last_name: row.data.last_name?.toString().trim() || '',
-        cnp: row.data.cnp?.toString().trim() || null,
-        job_title: row.data.job_title?.toString().trim() || '',
-        department: row.data.department?.toString().trim() || null,
-        hire_date: row.data.hire_date ? parseDate(row.data.hire_date)?.toISOString().split('T')[0] : null,
-        contract_end_date: row.data.contract_end_date ? parseDate(row.data.contract_end_date)?.toISOString().split('T')[0] : null,
-        email: row.data.email?.toString().trim() || null,
-        phone: row.data.phone?.toString().trim() || null,
-        cor_code: row.data.cor_code?.toString().trim() || null,
-        cor_title: row.data.cor_title?.toString().trim() || null,
-        contract_number: row.data.contract_number?.toString().trim() || null,
-        contract_type: row.data.contract_type?.toString().trim() || null,
-        status: row.data.status?.toString().toLowerCase() || 'active',
-        is_active: true,
-        metadata: row.data._metadata ? row.data._metadata : null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }))
 
-      const { error } = await supabase.from('employees').insert(inserts)
+      const inserts = await Promise.all(
+        chunk.map(async (row) => {
+          // Build full_name from last_name + first_name
+          const lastName = row.data.last_name?.toString().trim() || ''
+          const firstName = row.data.first_name?.toString().trim() || ''
+          const fullName = [lastName, firstName].filter(Boolean).join(' ')
+
+          // Hash CNP → cnp_hash (null if no CNP)
+          const cnpRaw = row.data.cnp?.toString().trim() || null
+          const cnpHash = cnpRaw ? await hashCNP(cnpRaw) : null
+
+          // Compute is_active and termination_date from status
+          const statusValue = row.data.status?.toString().toLowerCase() || 'activ'
+          const isActive = statusValue === 'activ'
+          let terminationDate: string | null = null
+          if (!isActive) {
+            const statusOriginal = row.data._transformations?.status?.original?.toString() || ''
+            if (statusOriginal.startsWith('Încetat:') || statusOriginal.startsWith('Incetat:')) {
+              const datePart = statusOriginal.replace(/^(Încetat|Incetat):\s*/, '').trim()
+              const parsed = parseDate(datePart)
+              if (parsed) terminationDate = parsed.toISOString().split('T')[0]
+            }
+          }
+
+          return {
+            organization_id: selectedOrgId,
+            full_name: fullName,
+            cnp_hash: cnpHash,
+            nationality: row.data.nationality?.toString().trim() || null,
+            job_title: row.data.job_title?.toString().trim() || null,
+            department: row.data.department?.toString().trim() || null,
+            hire_date: row.data.hire_date
+              ? parseDate(row.data.hire_date.toString())?.toISOString().split('T')[0] ?? null
+              : null,
+            email: row.data.email?.toString().trim() || null,
+            phone: row.data.phone?.toString().trim() || null,
+            cor_code: row.data.cor_code?.toString().trim() || null,
+            is_active: isActive,
+            termination_date: terminationDate,
+          }
+        })
+      )
+
+      const { error } = await supabase
+        .from('employees')
+        .upsert(inserts, { onConflict: 'organization_id,cnp_hash' })
 
       if (error) {
         console.error('Import chunk error:', error)
@@ -862,19 +892,23 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       setImportStats({ success, failed, total })
     }
 
-    // Log import to import_logs table
-    await supabase.from('import_logs').insert({
-      organization_id: selectedOrgId,
-      imported_by: user.id,
-      profile_used: profile,
-      file_name: file?.name || 'unknown',
-      file_size_kb: file ? Math.round(file.size / 1024) : 0,
-      total_rows: importRows.length,
-      imported_rows: success,
-      error_rows: failed,
-      warning_rows: importRows.filter((r) => r.validation.warnings.length > 0).length,
-      error_details: errorDetails,
-    })
+    // Log import to import_logs table (non-critical — ignore errors)
+    try {
+      await supabase.from('import_logs').insert({
+        organization_id: selectedOrgId,
+        imported_by: user.id,
+        profile_used: profile,
+        file_name: file?.name || 'unknown',
+        file_size_kb: file ? Math.round(file.size / 1024) : 0,
+        total_rows: importRows.length,
+        imported_rows: success,
+        error_rows: failed,
+        warning_rows: importRows.filter((r) => r.validation.warnings.length > 0).length,
+        error_details: errorDetails,
+      })
+    } catch (logErr) {
+      console.warn('import_logs insert failed (non-critical):', logErr)
+    }
 
     setImporting(false)
   }
