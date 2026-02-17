@@ -455,7 +455,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
   // Validate row
   const validateRow = useCallback(
-    async (rowData: Record<string, any>, rowNumber: number, existingCNPs: Set<string>): Promise<ValidationResult> => {
+    async (rowData: Record<string, any>, rowNumber: number, existingCNPs: Set<string>, currentProfile?: ImportProfile): Promise<ValidationResult> => {
       const errors: string[] = []
       const warnings: string[] = []
 
@@ -469,9 +469,11 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
         errors.push('Nume obligatoriu (min 2 caractere)')
       }
 
-      // Required: job_title
-      if (!rowData.job_title || rowData.job_title.toString().trim().length < 2) {
-        errors.push('Funcție obligatorie')
+      // Required: job_title (only for manual and contracte profiles, not for salariati)
+      if (currentProfile !== 'reges-salariati') {
+        if (!rowData.job_title || rowData.job_title.toString().trim().length < 2) {
+          errors.push('Funcție obligatorie')
+        }
       }
 
       // Optional: CNP validation
@@ -758,7 +760,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
     const cnpSet = new Set<string>()
     Promise.all(
       mapped.map(async (data, index) => {
-        const validation = await validateRow(data, index + headerRow + 1, cnpSet)
+        const validation = await validateRow(data, index + headerRow + 1, cnpSet, finalProfile)
         if (data.cnp) cnpSet.add(data.cnp.toString().trim())
         return {
           rowNumber: index + headerRow + 1,
