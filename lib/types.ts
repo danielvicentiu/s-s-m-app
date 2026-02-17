@@ -724,6 +724,7 @@ export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
   'documente_expirate': 'Documente Expirate'
 }
 
+
 // ── M7 LEGAL MONITOR: Legislative monitoring ──
 
 export type LegalActStatus = 'active' | 'inactive' | 'pending'
@@ -758,4 +759,85 @@ export interface RoMonitorLog {
   version_date_found: string | null
   error_message: string | null
   duration_ms: number | null
+
+// ── BATCH PROCESSING (M6) ──
+
+export type BatchJobType =
+  | 'expiry_check'
+  | 'alert_generation'
+  | 'compliance_check'
+  | 'data_cleanup'
+  | 'report_generation'
+
+export type BatchJobStatus =
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'cancelled'
+
+export interface BatchJob {
+  id: string
+  organization_id: string | null
+  job_type: BatchJobType
+  status: BatchJobStatus
+  total_items: number
+  processed_items: number
+  failed_items: number
+  results: Record<string, any>
+  error_message: string | null
+  created_by: string | null
+  created_at: string
+  completed_at: string | null
+}
+
+export interface BatchResult {
+  jobId: string
+  totalOrgs: number
+  totalExpired: number
+  totalExpiring: number
+  errors: Array<{
+    organizationId: string
+    organizationName: string
+    error: string
+  }>
+}
+
+export interface AlertSummary {
+  totalAlerts: number
+  perOrg: Record<string, number>
+}
+
+export interface ExpiryCheckResult {
+  organizationId: string
+  organizationName: string
+  medicalExpired: number
+  medicalExpiring: number
+  equipmentExpired: number
+  equipmentExpiring: number
+  iscirExpired: number
+  iscirExpiring: number
+  psiExpired: number
+  psiExpiring: number
+  totalExpired: number
+  totalExpiring: number
+}
+
+// Helper: Romanian labels for batch job types
+export const BATCH_JOB_TYPE_LABELS: Record<BatchJobType, string> = {
+  'expiry_check': 'Verificare Expirări',
+  'alert_generation': 'Generare Alerte',
+  'compliance_check': 'Verificare Conformitate',
+  'data_cleanup': 'Curățare Date',
+  'report_generation': 'Generare Rapoarte'
+}
+
+// Helper: Romanian labels for batch job status
+export const BATCH_JOB_STATUS_LABELS: Record<BatchJobStatus, string> = {
+  'pending': 'În așteptare',
+  'processing': 'În procesare',
+  'completed': 'Finalizat',
+  'failed': 'Eșuat',
+  'cancelled': 'Anulat'
+
 }
