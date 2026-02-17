@@ -65,29 +65,57 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Preia template-ul din baza de date
+    // 4. Dacă templateKey este 'auto_detect', detectează tipul documentului mai întâi
+    let actualTemplateKey = templateKey;
+    let detectedType: string | null = null;
+
+    if (templateKey === 'auto_detect') {
+      try {
+        const scanService = new ScanService(process.env.ANTHROPIC_API_KEY);
+        detectedType = await scanService.detectDocumentType(imageBase64);
+        actualTemplateKey = detectedType;
+      } catch (detectionError) {
+        console.error('Auto-detection error:', detectionError);
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Eroare la detectarea automată a tipului: ${
+              detectionError instanceof Error ? detectionError.message : 'Unknown error'
+            }`,
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 5. Preia template-ul din baza de date
     const { data: template, error: templateError } = await supabase
       .from('document_scan_templates')
       .select('*')
-      .eq('template_key', templateKey)
+      .eq('template_key', actualTemplateKey)
       .eq('is_active', true)
       .single();
 
     if (templateError || !template) {
       return NextResponse.json(
-        { success: false, error: `Template-ul ${templateKey} nu a fost găsit sau este inactiv` },
+        {
+          success: false,
+          error: `Template-ul ${actualTemplateKey} nu a fost găsit sau este inactiv${
+            detectedType ? ` (detectat automat: ${detectedType})` : ''
+          }`,
+        },
         { status: 404 }
       );
     }
 
     const scanTemplate = template as unknown as ScanTemplate;
 
-    // 5. Creează intrare în document_scans cu status 'processing'
+    // 6. Creează intrare în document_scans cu status 'processing'
     const { data: scan, error: scanError } = await supabase
       .from('document_scans')
       .insert({
         org_id: orgId,
-        template_key: templateKey,
+        template_key: actualTemplateKey,
         original_filename: filename,
         status: 'processing',
         created_by: user.id,
@@ -104,7 +132,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      // 6. Apelează ScanService pentru extragere AI
+      // 7. Apelează ScanService pentru extragere AI
       const scanService = new ScanService(process.env.ANTHROPIC_API_KEY);
       const result = await scanService.extractFromImage(
         imageBase64,
@@ -112,7 +140,7 @@ export async function POST(request: NextRequest) {
         scanTemplate.extraction_prompt || undefined
       );
 
-      // 7. Actualizează scan cu rezultatele
+      // 8. Actualizează scan cu rezultatele
       const { error: updateError } = await supabase
         .from('document_scans')
         .update({
@@ -127,13 +155,14 @@ export async function POST(request: NextRequest) {
         throw new Error('Failed to update scan record');
       }
 
-      // 8. Returnează rezultatul
+      // 9. Returnează rezultatul (cu detected_type dacă a fost auto-detect)
       const response: CreateScanResponse = {
         success: true,
         scan_id: scan.id,
         extracted_data: result.fields,
         confidence_score: result.confidence,
         validation_errors: result.errors,
+        detected_type: detectedType || undefined,
       };
 
       return NextResponse.json(response, { status: 200 });
