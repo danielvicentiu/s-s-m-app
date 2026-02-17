@@ -841,3 +841,4 @@ export const BATCH_JOB_STATUS_LABELS: Record<BatchJobStatus, string> = {
   'cancelled': 'Anulat'
 
 }
+
