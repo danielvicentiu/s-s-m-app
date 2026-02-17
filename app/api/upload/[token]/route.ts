@@ -176,6 +176,91 @@ export async function POST(
       // Non-fatal, continue
     }
 
+    // 6. AI extraction pipeline (non-blocking)
+    if (scan?.id) {
+      try {
+        // 6a. Generate signed URL for the uploaded image
+        const { data: signedUrlData, error: signedUrlError } = await supabase.storage
+          .from('uploads')
+          .createSignedUrl(storagePath, 3600)
+
+        if (signedUrlError || !signedUrlData?.signedUrl) {
+          throw new Error(`Failed to create signed URL: ${signedUrlError?.message}`)
+        }
+
+        // 6b. Call Claude Vision API
+        const anthropicApiKey = process.env.ANTHROPIC_API_KEY
+        if (!anthropicApiKey) {
+          throw new Error('ANTHROPIC_API_KEY not configured')
+        }
+
+        const aiResponse = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': anthropicApiKey,
+            'anthropic-version': '2023-06-01',
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 2000,
+            system: 'Esti un expert in extragerea datelor din documente romanesti. Analizeaza imaginea si extrage: tip_document (factura/bon fiscal/chitanta/extras bancar/contract/altul), furnizor_nume, furnizor_cui, data_document, suma_totala, tva, moneda, metoda_plata (numerar/card/transfer), descriere_produse, adresa_furnizor. Returneaza DOAR JSON valid fara markdown.',
+            messages: [
+              {
+                role: 'user',
+                content: [
+                  {
+                    type: 'image',
+                    source: {
+                      type: 'url',
+                      url: signedUrlData.signedUrl,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    text: 'Extrage datele din acest document.',
+                  },
+                ],
+              },
+            ],
+          }),
+        })
+
+        if (!aiResponse.ok) {
+          const errText = await aiResponse.text()
+          throw new Error(`Claude API error: ${aiResponse.status} - ${errText}`)
+        }
+
+        const aiData = await aiResponse.json()
+        const rawText: string = aiData.content?.[0]?.text || ''
+
+        // 6c. Parse JSON response
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/)
+        if (!jsonMatch) {
+          throw new Error('No JSON found in AI response')
+        }
+        const extractedData = JSON.parse(jsonMatch[0])
+
+        // 6d. Update document_scans with extracted data
+        const { error: updateError } = await supabase
+          .from('document_scans')
+          .update({
+            extracted_data: extractedData,
+            confidence_score: 85,
+            status: 'completed',
+            template_key: extractedData.tip_document || null,
+          })
+          .eq('id', scan.id)
+
+        if (updateError) {
+          console.error('[API] upload AI update scan error:', updateError)
+        }
+      } catch (aiErr: any) {
+        // 6e. Non-fatal: leave status as pending, log error
+        console.error('[API] upload AI extraction error:', aiErr)
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Documentul a fost trimis cu succes!',
