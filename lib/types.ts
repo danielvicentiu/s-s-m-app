@@ -648,6 +648,31 @@ export interface TrainingSession {
   }
 }
 
+// ── REPORTS: Automated PDF/HTML Reports ──
+
+export type ReportType =
+  | 'situatie_ssm'
+  | 'situatie_psi'
+  | 'instruiri_luna'
+  | 'documente_expirate'
+
+export interface Report {
+  id: string
+  organization_id: string
+  report_type: ReportType
+  title: string
+  html_content: string
+  metadata: Record<string, any>
+  generated_by: string | null
+  created_at: string
+  // Joined data (optional)
+  organizations?: {
+    id: string
+    name: string
+    cui: string | null
+  }
+}
+
 export interface TrainingCalendarItem {
   id: string
   organization_id: string
@@ -689,4 +714,12 @@ export const TRAINING_SESSION_STATUS_LABELS: Record<TrainingSessionStatus, strin
   'efectuat': 'Efectuat',
   'expirat': 'Expirat',
   'anulat': 'Anulat'
+}
+
+// Helper: Romanian labels for report types
+export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
+  'situatie_ssm': 'Situație SSM Completă',
+  'situatie_psi': 'Situație PSI Completă',
+  'instruiri_luna': 'Instruiri Luna Curentă',
+  'documente_expirate': 'Documente Expirate'
 }
