@@ -26,6 +26,7 @@ export interface ExtractionResult {
   fields: Record<string, string>;
   confidence: number;
   raw_response: string;
+  errors?: Record<string, string>; // Validation errors per field (key -> error message)
 }
 
 export type ScanStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'reviewed';
@@ -57,6 +58,7 @@ export interface CreateScanResponse {
   scan_id?: string;
   extracted_data?: Record<string, string>;
   confidence_score?: number;
+  validation_errors?: Record<string, string>;
   error?: string;
 }
 

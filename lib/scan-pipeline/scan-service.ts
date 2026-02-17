@@ -4,6 +4,7 @@
  */
 
 import type { ExtractionResult, TemplateField } from './types';
+import { validateCNP, validateCUI } from '@/lib/utils/validators';
 
 interface AnthropicMessage {
   role: 'user' | 'assistant';
@@ -111,13 +112,17 @@ export class ScanService {
       // Parsează JSON-ul din răspuns
       const extractedData = this.parseExtractionResponse(rawResponse, templateFields);
 
-      // Calculează confidence score bazat pe câmpuri completate
-      const confidence = this.calculateConfidence(extractedData, templateFields);
+      // Validează câmpurile CNP/CUI și colectează erori
+      const validationErrors = this.validateFields(extractedData, templateFields);
+
+      // Calculează confidence score bazat pe câmpuri completate și validări
+      const confidence = this.calculateConfidence(extractedData, templateFields, validationErrors);
 
       return {
         fields: extractedData,
         confidence,
         raw_response: rawResponse,
+        errors: Object.keys(validationErrors).length > 0 ? validationErrors : undefined,
       };
     } catch (error) {
       console.error('Error in extractFromImage:', error);
@@ -229,11 +234,47 @@ NU include explicații, comentarii sau text suplimentar. DOAR JSON-ul.`;
   }
 
   /**
-   * Calculează confidence score bazat pe câmpuri completate
+   * Validează câmpurile CNP/CUI folosind validatori cu check digit
+   */
+  private validateFields(
+    extractedData: Record<string, string>,
+    fields: TemplateField[]
+  ): Record<string, string> {
+    const errors: Record<string, string> = {};
+
+    for (const field of fields) {
+      const value = extractedData[field.key];
+
+      // Doar validăm câmpuri completate
+      if (!value || value.trim() === '') continue;
+
+      // Validare CNP
+      if (field.validation === 'cnp') {
+        const result = validateCNP(value);
+        if (!result.valid) {
+          errors[field.key] = result.error || 'CNP invalid';
+        }
+      }
+
+      // Validare CUI
+      if (field.validation === 'cui') {
+        const result = validateCUI(value);
+        if (!result.valid) {
+          errors[field.key] = result.error || 'CUI invalid';
+        }
+      }
+    }
+
+    return errors;
+  }
+
+  /**
+   * Calculează confidence score bazat pe câmpuri completate și validări
    */
   private calculateConfidence(
     extractedData: Record<string, string>,
-    fields: TemplateField[]
+    fields: TemplateField[],
+    validationErrors: Record<string, string> = {}
   ): number {
     if (fields.length === 0) return 0;
 
@@ -262,7 +303,12 @@ NU include explicații, comentarii sau text suplimentar. DOAR JSON-ul.`;
       }
     }
 
-    const score = (filledCount / totalWeight) * 100;
+    let score = (filledCount / totalWeight) * 100;
+
+    // Penalizare pentru erori de validare: -20 puncte per câmp invalid
+    const errorPenalty = Object.keys(validationErrors).length * 20;
+    score = Math.max(0, score - errorPenalty);
+
     return Math.min(Math.round(score * 100) / 100, 100); // Max 100, rotunjit la 2 decimale
   }
 
