@@ -842,3 +842,174 @@ export const BATCH_JOB_STATUS_LABELS: Record<BatchJobStatus, string> = {
 
 }
 
+// ── NIS2 CYBERSECURITY MODULE ──
+
+export type NIS2Category = 'essential' | 'important' | 'out_of_scope'
+export type NIS2AssessmentStatus = 'draft' | 'in_progress' | 'completed' | 'approved'
+export type NIS2ChecklistCategory =
+  | 'governance'
+  | 'risk_management'
+  | 'incident_handling'
+  | 'business_continuity'
+  | 'supply_chain'
+  | 'network_security'
+  | 'vulnerability_management'
+  | 'crypto_encryption'
+  | 'hr_security'
+  | 'access_control'
+  | 'asset_management'
+  | 'training_awareness'
+
+export type NIS2Priority = 'low' | 'medium' | 'high' | 'critical'
+
+export type NIS2IncidentType =
+  | 'ransomware'
+  | 'data_breach'
+  | 'ddos'
+  | 'phishing'
+  | 'malware'
+  | 'insider_threat'
+  | 'supply_chain_attack'
+  | 'unauthorized_access'
+  | 'system_failure'
+  | 'other'
+
+export type NIS2IncidentSeverity = 'low' | 'medium' | 'high' | 'critical'
+
+export type NIS2IncidentStatus =
+  | 'detected'
+  | 'investigating'
+  | 'contained'
+  | 'eradicated'
+  | 'recovered'
+  | 'closed'
+
+export interface NIS2Assessment {
+  id: string
+  organization_id: string
+  assessment_date: string
+  nis2_category: NIS2Category
+  sector: string | null
+  sub_sector: string | null
+  employee_count_range: '1-49' | '50-249' | '250+' | null
+  annual_turnover_range: 'under_10m' | '10m_50m' | 'over_50m' | null
+  overall_score: number
+  status: NIS2AssessmentStatus
+  completed_by: string | null
+  approved_by: string | null
+  approved_at: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface NIS2ChecklistItem {
+  id: string
+  assessment_id: string
+  category: NIS2ChecklistCategory
+  item_code: string
+  item_text: string
+  is_compliant: boolean
+  evidence: string | null
+  evidence_path: string | null
+  responsible_person: string | null
+  deadline: string | null
+  priority: NIS2Priority
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface NIS2Incident {
+  id: string
+  organization_id: string
+  incident_number: string
+  title: string
+  description: string
+  incident_date: string
+  detected_date: string
+  reported_date: string | null
+  incident_type: NIS2IncidentType
+  severity: NIS2IncidentSeverity
+  is_significant: boolean
+  affected_systems: string[]
+  affected_users_count: number
+  root_cause: string | null
+  immediate_actions: string | null
+  corrective_actions: string | null
+  reported_to_authority: boolean
+  authority_report_date: string | null
+  status: NIS2IncidentStatus
+  reported_by: string | null
+  closed_by: string | null
+  closed_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+// Label maps for NIS2 — Romanian labels
+
+export const NIS2_CATEGORY_LABELS: Record<NIS2Category, string> = {
+  essential: 'Entitate Esențială',
+  important: 'Entitate Importantă',
+  out_of_scope: 'În afara domeniului',
+}
+
+export const NIS2_ASSESSMENT_STATUS_LABELS: Record<NIS2AssessmentStatus, string> = {
+  draft: 'Ciornă',
+  in_progress: 'În curs',
+  completed: 'Finalizat',
+  approved: 'Aprobat',
+}
+
+export const NIS2_CHECKLIST_CATEGORY_LABELS: Record<NIS2ChecklistCategory, string> = {
+  governance: 'Guvernanță',
+  risk_management: 'Managementul Riscurilor',
+  incident_handling: 'Gestionare Incidente',
+  business_continuity: 'Continuitate Afaceri',
+  supply_chain: 'Lanț de Aprovizionare',
+  network_security: 'Securitate Rețea',
+  vulnerability_management: 'Managementul Vulnerabilităților',
+  crypto_encryption: 'Criptografie',
+  hr_security: 'Securitate HR',
+  access_control: 'Control Acces',
+  asset_management: 'Managementul Activelor',
+  training_awareness: 'Instruire și Conștientizare',
+}
+
+export const NIS2_PRIORITY_LABELS: Record<NIS2Priority, string> = {
+  low: 'Scăzut',
+  medium: 'Mediu',
+  high: 'Ridicat',
+  critical: 'Critic',
+}
+
+export const NIS2_INCIDENT_TYPE_LABELS: Record<NIS2IncidentType, string> = {
+  ransomware: 'Ransomware',
+  data_breach: 'Breșă de date',
+  ddos: 'Atac DDoS',
+  phishing: 'Phishing',
+  malware: 'Malware',
+  insider_threat: 'Amenințare internă',
+  supply_chain_attack: 'Atac lanț de aprovizionare',
+  unauthorized_access: 'Acces neautorizat',
+  system_failure: 'Defecțiune sistem',
+  other: 'Altele',
+}
+
+export const NIS2_INCIDENT_SEVERITY_LABELS: Record<NIS2IncidentSeverity, string> = {
+  low: 'Scăzut',
+  medium: 'Mediu',
+  high: 'Ridicat',
+  critical: 'Critic',
+}
+
+export const NIS2_INCIDENT_STATUS_LABELS: Record<NIS2IncidentStatus, string> = {
+  detected: 'Detectat',
+  investigating: 'În investigare',
+  contained: 'Izolat',
+  eradicated: 'Eradicat',
+  recovered: 'Recuperat',
+  closed: 'Închis',
+}
+
