@@ -36,3 +36,40 @@ TASK-URI AGENT (pregătește prompt-uri Claude Code):
 
 Stack: Next.js 14 + Supabase + Vercel + Tailwind
 DB: ~69 tabele, RLS enabled
+
+
+
+
+
+
+citeste astea. apoi vorbesc si cu ceilalti si ne coordonam, sa fie o decizie comuna, fara conflivte, si facem o prioritizare.
+
+Strategie migrare 100+ clienți în s-s-m.ro
+https://claude.ai/chat/8722e2f3-2265-4136-a7a1-44efa1fca13d
+
+Week 2 development priorities: M7 polish și module client-facing
+https://claude.ai/chat/327e7a86-67d3-4325-b46f-aab0c4af49ae
+
+Analiza detaliata a chaturilor si artefactelor
+https://claude.ai/chat/c677a590-0459-42f3-bc61-fd6a359a648b
+
+da titlu chat nou si context sa continuam!
+
+
+Deschide chat nou, paste-uiește contextul, și când Claude Code termină ce lucrează acum, scrii acolo "gata, verificăm și lansăm".
+
+
+
+```
+
+**Rulează asta ÎNTÂI.** Dacă main e la zi și clean, lansezi prompt-ul. Dacă sunt conflicte nemerge-uite, rezolvă-le înainte.
+
+**Sugestie suplimentară:** Adaugă la începutul promptului CC o linie:
+```
+IMPORTANT: Verifică starea curentă a app/[locale]/dashboard/import/ ÎNAINTE de a rescrie. 
+Dacă există ImportWizardClient.tsx funcțional, EXTINDE-L, nu-l șterge și rescrie de la zero.
+Păstrează orice funcționalitate existentă și adaugă mapare dinamică + profiluri REGES/REVISAL.
+
+
+
+
