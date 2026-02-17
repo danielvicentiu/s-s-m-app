@@ -759,7 +759,7 @@ export interface RoMonitorLog {
   version_date_found: string | null
   error_message: string | null
   duration_ms: number | null
-
+}
 // ── BATCH PROCESSING (M6) ──
 
 export type BatchJobType =
