@@ -452,10 +452,14 @@ export default function ScanClient() {
         </div>
         <button
           onClick={async () => {
+            if (!orgId) {
+              alert('Selecteaza o organizatie mai intai');
+              return;
+            }
             const res = await fetch('/api/upload/generate-link', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ label: 'Link client' }),
+              body: JSON.stringify({ label: 'Link client', organization_id: orgId }),
             });
             const data = await res.json();
             await navigator.clipboard.writeText(data.url);
