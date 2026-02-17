@@ -442,6 +442,34 @@ export default function ScanClient() {
         </p>
       </div>
 
+      {/* Mobile Client Portal */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg flex items-center justify-between">
+        <div>
+          <h3 className="font-semibold text-blue-900">Portal Client Mobil</h3>
+          <p className="text-sm text-blue-700">
+            Genereaza un link unic pentru ca clientul tau sa trimita documente direct de pe telefon fara cont.
+          </p>
+        </div>
+        <button
+          onClick={async () => {
+            const res = await fetch('/api/upload/generate-link', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ label: 'Link client' }),
+            });
+            const data = await res.json();
+            await navigator.clipboard.writeText(data.url);
+            alert('Link copiat in clipboard: ' + data.url);
+          }}
+          className="ml-4 flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors whitespace-nowrap"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          Generează link
+        </button>
+      </div>
+
       {/* Error Alert */}
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800">
