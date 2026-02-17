@@ -1,6 +1,6 @@
 // app/[locale]/dashboard/import/ImportWizardClient.tsx
-// CSV/Excel Employee Import Wizard — 4 Steps
-// Step 1: Upload | Step 2: Column Mapping | Step 3: Validation & Preview | Step 4: Import
+// Advanced Import Wizard with REGES/REVISAL profiles and dynamic mapping
+// Steps: Upload → Profile Selection → Column Mapping → Validation → Import
 
 'use client'
 
@@ -20,9 +20,11 @@ import {
   X,
   Check,
   Users,
+  Sparkles,
 } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import Papa from 'papaparse'
+import { parseString as parseXML } from 'xml2js'
 
 interface Props {
   user: { id: string; email: string }
@@ -30,6 +32,8 @@ interface Props {
   selectedOrgId: string
   locale: string
 }
+
+type ImportProfile = 'reges' | 'revisal' | 'manual'
 
 interface ColumnMapping {
   sourceColumn: string
@@ -53,36 +57,91 @@ interface ImportRow {
 const EMPLOYEE_FIELDS = [
   { field: 'first_name', label: 'Prenume', required: true },
   { field: 'last_name', label: 'Nume', required: true },
-  { field: 'cnp', label: 'CNP', required: true },
+  { field: 'cnp', label: 'CNP', required: false },
   { field: 'job_title', label: 'Funcție', required: true },
   { field: 'department', label: 'Departament', required: false },
   { field: 'hire_date', label: 'Data angajării', required: false },
+  { field: 'contract_end_date', label: 'Data sfârșit contract', required: false },
   { field: 'email', label: 'Email', required: false },
   { field: 'phone', label: 'Telefon', required: false },
   { field: 'cor_code', label: 'Cod COR', required: false },
+  { field: 'cor_title', label: 'Denumire COR', required: false },
+  { field: 'contract_number', label: 'Nr. contract', required: false },
+  { field: 'contract_type', label: 'Tip contract', required: false },
+  { field: 'status', label: 'Status', required: false },
 ]
 
-// Auto-detect patterns for Romanian columns
+// REGES Online profile (export CSV/Excel from reges.inspectiamuncii.ro)
+const REGES_PROFILE = {
+  name: 'REGES Online',
+  mappings: {
+    'Nume': 'last_name',
+    'Prenume': 'first_name',
+    'CNP': 'cnp',
+    'Cod COR': 'cor_code',
+    'Denumire COR': 'cor_title',
+    'Stare contract': 'status',
+    'Nr. contract': 'contract_number',
+    'Data început': 'hire_date',
+    'Data sfârșit': 'contract_end_date',
+    'Tip contract': 'contract_type',
+    'Departament': 'department',
+  },
+  dateFormat: 'YYYY-MM-DD',
+  statusMapping: {
+    'Activ': 'active',
+    'Suspendat': 'suspended',
+    'Încetat': 'terminated',
+    'Încetăt': 'terminated', // common typo
+  } as Record<string, string>,
+}
+
+// REVISAL profile (export XML from desktop app)
+const REVISAL_PROFILE = {
+  name: 'REVISAL (XML)',
+  isXML: true,
+  mappings: {
+    'NumeSalariat': 'last_name',
+    'PrenumeSalariat': 'first_name',
+    'CNP': 'cnp',
+    'CodCOR': 'cor_code',
+    'DataAngajare': 'hire_date',
+    'StareContract': 'status',
+    'TipContract': 'contract_type',
+    'NrContract': 'contract_number',
+  },
+  dateFormat: 'DD.MM.YYYY',
+  statusMapping: {
+    '1': 'active',
+    '2': 'suspended',
+    '3': 'terminated',
+  } as Record<string, string>,
+}
+
+// Fuzzy match patterns for auto-detection (Romanian/English)
 const COLUMN_PATTERNS: Record<string, string[]> = {
-  first_name: ['prenume', 'firstname', 'first_name', 'first name', 'nume_mic'],
-  last_name: ['nume', 'lastname', 'last_name', 'last name', 'nume familie'],
+  first_name: ['prenume', 'firstname', 'first_name', 'first name', 'nume_mic', 'prenumesalariat'],
+  last_name: ['nume', 'lastname', 'last_name', 'last name', 'nume familie', 'numesalariat'],
   cnp: ['cnp', 'pin', 'cod numeric', 'cod personal'],
   email: ['email', 'e-mail', 'mail', 'adresa email', 'adresă email'],
   phone: ['telefon', 'phone', 'tel', 'mobile', 'gsm', 'nr telefon'],
-  job_title: ['functie', 'funcție', 'job', 'job_title', 'position', 'pozitie', 'funcţie'],
-  department: ['departament', 'department', 'dept', 'sector', 'sectie'],
-  hire_date: ['data angajare', 'data angajării', 'hire_date', 'angajat la', 'start date', 'data_angajare'],
-  cor_code: ['cor', 'cod cor', 'cor_code', 'cod_cor'],
+  job_title: ['functie', 'funcție', 'job', 'job_title', 'position', 'pozitie', 'funcţie', 'post', 'ocupatie'],
+  department: ['departament', 'department', 'dept', 'sector', 'sectie', 'compartiment'],
+  hire_date: ['data angajare', 'data angajării', 'hire_date', 'angajat la', 'start date', 'data_angajare', 'data inceput', 'data început'],
+  contract_end_date: ['data sfarsit', 'data sfârșit', 'end_date', 'data_sfarsit', 'contract_end'],
+  cor_code: ['cor', 'cod cor', 'cor_code', 'cod_cor', 'codcor'],
+  cor_title: ['denumire cor', 'cor_title', 'denumirecor', 'titlu cor'],
+  contract_number: ['nr contract', 'contract_number', 'numar contract', 'nr. contract', 'nrcontract'],
+  contract_type: ['tip contract', 'contract_type', 'tipcontract', 'tip_contract'],
+  status: ['stare', 'status', 'activ', 'stare contract', 'starecontract'],
 }
 
 // CNP validation for Romania
 function validateCNP(cnp: string): { valid: boolean; error?: string } {
-  // Must be 13 digits
   if (!/^\d{13}$/.test(cnp)) {
     return { valid: false, error: 'CNP trebuie să conțină exact 13 cifre' }
   }
 
-  // Control digit algorithm
   const weights = [2, 7, 9, 1, 4, 6, 3, 5, 8, 2, 7, 9]
   let sum = 0
   for (let i = 0; i < 12; i++) {
@@ -103,30 +162,31 @@ function validateCNP(cnp: string): { valid: boolean; error?: string } {
 function parseDate(dateStr: string): Date | null {
   if (!dateStr) return null
 
-  // Try standard formats
+  const str = dateStr.toString().trim()
   const formats = [
-    /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/,  // DD.MM.YYYY
-    /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/,  // DD/MM/YYYY
-    /^(\d{4})-(\d{1,2})-(\d{1,2})$/,    // YYYY-MM-DD
+    /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/, // DD.MM.YYYY
+    /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, // DD/MM/YYYY
+    /^(\d{4})-(\d{1,2})-(\d{1,2})$/, // YYYY-MM-DD
+    /^(\d{1,2})-(\d{1,2})-(\d{4})$/, // DD-MM-YYYY
   ]
 
   for (const regex of formats) {
-    const match = dateStr.toString().match(regex)
+    const match = str.match(regex)
     if (match) {
       if (regex.source.startsWith('^(\\d{4})')) {
         // YYYY-MM-DD
-        const date = new Date(match[1] + '-' + match[2] + '-' + match[3])
+        const date = new Date(match[1] + '-' + match[2].padStart(2, '0') + '-' + match[3].padStart(2, '0'))
         if (!isNaN(date.getTime())) return date
       } else {
-        // DD.MM.YYYY or DD/MM/YYYY
-        const date = new Date(match[3] + '-' + match[2] + '-' + match[1])
+        // DD.MM.YYYY or DD/MM/YYYY or DD-MM-YYYY
+        const date = new Date(match[3] + '-' + match[2].padStart(2, '0') + '-' + match[1].padStart(2, '0'))
         if (!isNaN(date.getTime())) return date
       }
     }
   }
 
   // Try native Date parsing
-  const date = new Date(dateStr)
+  const date = new Date(str)
   if (!isNaN(date.getTime())) return date
 
   return null
@@ -138,6 +198,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
   // State
   const [step, setStep] = useState(1)
+  const [profile, setProfile] = useState<ImportProfile>('manual')
   const [file, setFile] = useState<File | null>(null)
   const [rawData, setRawData] = useState<any[]>([])
   const [columns, setColumns] = useState<string[]>([])
@@ -148,106 +209,140 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
   const [importStats, setImportStats] = useState({ success: 0, failed: 0, total: 0 })
   const [dragActive, setDragActive] = useState(false)
 
-  // Auto-detect column mapping
-  const autoDetectMapping = useCallback((sourceColumns: string[]): ColumnMapping[] => {
+  // Auto-detect column mapping (fuzzy match)
+  const autoDetectMapping = useCallback((sourceColumns: string[], selectedProfile: ImportProfile): ColumnMapping[] => {
     const mappings: ColumnMapping[] = []
 
-    EMPLOYEE_FIELDS.forEach((field) => {
-      const patterns = COLUMN_PATTERNS[field.field] || []
-      let matched = false
-
-      for (const col of sourceColumns) {
-        const normalized = col.toLowerCase().trim().replace(/[^a-z0-9]/g, '')
-        if (patterns.some((pattern) => normalized.includes(pattern.toLowerCase().replace(/[^a-z0-9]/g, '')))) {
+    // If REGES or REVISAL profile, use pre-configured mappings
+    if (selectedProfile === 'reges') {
+      Object.entries(REGES_PROFILE.mappings).forEach(([sourceCol, targetField]) => {
+        const found = sourceColumns.find((col) => col.trim() === sourceCol)
+        if (found) {
+          const fieldDef = EMPLOYEE_FIELDS.find((f) => f.field === targetField)
           mappings.push({
-            sourceColumn: col,
+            sourceColumn: found,
+            targetField: targetField,
+            required: fieldDef?.required || false,
+          })
+        }
+      })
+    } else if (selectedProfile === 'revisal') {
+      Object.entries(REVISAL_PROFILE.mappings).forEach(([sourceCol, targetField]) => {
+        const found = sourceColumns.find((col) => col.trim() === sourceCol)
+        if (found) {
+          const fieldDef = EMPLOYEE_FIELDS.find((f) => f.field === targetField)
+          mappings.push({
+            sourceColumn: found,
+            targetField: targetField,
+            required: fieldDef?.required || false,
+          })
+        }
+      })
+    } else {
+      // Manual profile: fuzzy match
+      EMPLOYEE_FIELDS.forEach((field) => {
+        const patterns = COLUMN_PATTERNS[field.field] || []
+        let matched = false
+
+        for (const col of sourceColumns) {
+          const normalized = col.toLowerCase().trim().replace(/[^a-z0-9]/g, '')
+          if (patterns.some((pattern) => normalized.includes(pattern.toLowerCase().replace(/[^a-z0-9]/g, '')))) {
+            mappings.push({
+              sourceColumn: col,
+              targetField: field.field,
+              required: field.required,
+            })
+            matched = true
+            break
+          }
+        }
+
+        if (!matched && field.required) {
+          mappings.push({
+            sourceColumn: '',
             targetField: field.field,
             required: field.required,
           })
-          matched = true
-          break
         }
-      }
-
-      if (!matched && field.required) {
-        mappings.push({
-          sourceColumn: '',
-          targetField: field.field,
-          required: field.required,
-        })
-      }
-    })
+      })
+    }
 
     return mappings
   }, [])
 
   // Validate row
-  const validateRow = useCallback(async (rowData: Record<string, any>, rowNumber: number, existingCNPs: Set<string>): Promise<ValidationResult> => {
-    const errors: string[] = []
-    const warnings: string[] = []
+  const validateRow = useCallback(
+    async (rowData: Record<string, any>, rowNumber: number, existingCNPs: Set<string>): Promise<ValidationResult> => {
+      const errors: string[] = []
+      const warnings: string[] = []
 
-    // Required: first_name
-    if (!rowData.first_name || rowData.first_name.toString().trim().length < 2) {
-      errors.push('Prenume obligatoriu (min 2 caractere)')
-    }
-
-    // Required: last_name
-    if (!rowData.last_name || rowData.last_name.toString().trim().length < 2) {
-      errors.push('Nume obligatoriu (min 2 caractere)')
-    }
-
-    // Required: CNP
-    if (!rowData.cnp) {
-      errors.push('CNP obligatoriu')
-    } else {
-      const cnpValidation = validateCNP(rowData.cnp.toString().trim())
-      if (!cnpValidation.valid) {
-        errors.push(cnpValidation.error || 'CNP invalid')
+      // Required: first_name
+      if (!rowData.first_name || rowData.first_name.toString().trim().length < 2) {
+        errors.push('Prenume obligatoriu (min 2 caractere)')
       }
 
-      // Check for duplicates in this import
-      if (existingCNPs.has(rowData.cnp.toString().trim())) {
-        warnings.push('CNP duplicat în fișier')
+      // Required: last_name
+      if (!rowData.last_name || rowData.last_name.toString().trim().length < 2) {
+        errors.push('Nume obligatoriu (min 2 caractere)')
       }
 
-      // Check for existing in database
-      const supabase = createSupabaseBrowser()
-      const { data: existing } = await supabase
-        .from('employees')
-        .select('id')
-        .eq('organization_id', selectedOrgId)
-        .eq('cnp', rowData.cnp.toString().trim())
-        .maybeSingle()
-
-      if (existing) {
-        warnings.push('CNP există deja în organizație')
+      // Required: job_title
+      if (!rowData.job_title || rowData.job_title.toString().trim().length < 2) {
+        errors.push('Funcție obligatorie')
       }
-    }
 
-    // Required: job_title
-    if (!rowData.job_title || rowData.job_title.toString().trim().length < 2) {
-      errors.push('Funcție obligatorie')
-    }
+      // Optional: CNP validation
+      if (rowData.cnp) {
+        const cnpValidation = validateCNP(rowData.cnp.toString().trim())
+        if (!cnpValidation.valid) {
+          warnings.push(cnpValidation.error || 'CNP invalid')
+        }
 
-    // Optional: email validation
-    if (rowData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rowData.email)) {
-      warnings.push('Format email invalid')
-    }
+        // Check for duplicates in this import
+        if (existingCNPs.has(rowData.cnp.toString().trim())) {
+          warnings.push('CNP duplicat în fișier')
+        }
 
-    // Optional: hire_date parsing
-    if (rowData.hire_date) {
-      const parsedDate = parseDate(rowData.hire_date)
-      if (!parsedDate) {
-        warnings.push('Format dată angajare invalid')
+        // Check for existing in database
+        const supabase = createSupabaseBrowser()
+        const { data: existing } = await supabase
+          .from('employees')
+          .select('id')
+          .eq('organization_id', selectedOrgId)
+          .eq('cnp', rowData.cnp.toString().trim())
+          .maybeSingle()
+
+        if (existing) {
+          warnings.push('CNP există deja în organizație')
+        }
       }
-    }
 
-    return {
-      valid: errors.length === 0,
-      errors,
-      warnings,
-    }
-  }, [selectedOrgId])
+      // Optional: email validation
+      if (rowData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rowData.email)) {
+        warnings.push('Format email invalid')
+      }
+
+      // Optional: hire_date parsing
+      if (rowData.hire_date) {
+        const parsedDate = parseDate(rowData.hire_date)
+        if (!parsedDate) {
+          warnings.push('Format dată angajare invalid')
+        }
+      }
+
+      // Optional: COR code format
+      if (rowData.cor_code && !/^\d{6}$/.test(rowData.cor_code.toString().trim())) {
+        warnings.push('Cod COR ar trebui să aibă 6 cifre')
+      }
+
+      return {
+        valid: errors.length === 0,
+        errors,
+        warnings,
+      }
+    },
+    [selectedOrgId]
+  )
 
   // Handle file upload via input
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -290,21 +385,46 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       let detectedColumns: string[] = []
 
       if (fileExt === 'csv') {
-        // Parse CSV (Papa Parse auto-detects encoding)
+        // Parse CSV with Papa Parse (auto-detects encoding and delimiter)
         const text = await uploadedFile.text()
         const parsed = Papa.parse(text, {
           header: true,
           skipEmptyLines: true,
+          dynamicTyping: false,
+          delimitersToGuess: [',', ';', '\t', '|'],
         })
 
         jsonData = parsed.data as any[]
         detectedColumns = parsed.meta.fields || []
+      } else if (fileExt === 'json') {
+        // Parse JSON
+        const text = await uploadedFile.text()
+        const data = JSON.parse(text)
+        jsonData = Array.isArray(data) ? data : [data]
+        detectedColumns = Object.keys(jsonData[0] || {})
+
+        // Auto-detect REGES JSON structure
+        if (detectedColumns.includes('Nume') && detectedColumns.includes('Cod COR')) {
+          setProfile('reges')
+        }
+      } else if (fileExt === 'xml') {
+        // Parse XML (REVISAL)
+        const text = await uploadedFile.text()
+        parseXML(text, { explicitArray: false }, (err, result) => {
+          if (err) throw err
+
+          // Extract employee data from REVISAL XML structure
+          const employees = result?.Salariati?.Salariat || []
+          jsonData = Array.isArray(employees) ? employees : [employees]
+          detectedColumns = Object.keys(jsonData[0] || {})
+          setProfile('revisal')
+        })
       } else {
-        // Parse Excel
+        // Parse Excel/ODS (SheetJS)
         const data = await uploadedFile.arrayBuffer()
-        const workbook = XLSX.read(data)
+        const workbook = XLSX.read(data, { type: 'array' })
         const worksheet = workbook.Sheets[workbook.SheetNames[0]]
-        jsonData = XLSX.utils.sheet_to_json(worksheet)
+        jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: false })
         detectedColumns = Object.keys(jsonData[0] || {})
       }
 
@@ -316,10 +436,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       setRawData(jsonData)
       setColumns(detectedColumns)
 
-      // Auto-detect mapping
-      const detected = autoDetectMapping(detectedColumns)
-      setMappings(detected)
-
+      // Move to profile selection
       setStep(2)
     } catch (error) {
       console.error('Error reading file:', error)
@@ -327,13 +444,44 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
     }
   }
 
-  // Step 2: Complete mapping
-  const handleMappingComplete = () => {
+  // Step 2: Profile selected → auto-map
+  const handleProfileSelect = (selectedProfile: ImportProfile) => {
+    setProfile(selectedProfile)
+
+    // Auto-detect mapping based on profile
+    const detected = autoDetectMapping(columns, selectedProfile)
+    setMappings(detected)
+
+    // If REGES or REVISAL, skip to validation (auto-mapped)
+    if (selectedProfile === 'reges' || selectedProfile === 'revisal') {
+      handleMappingComplete(detected, selectedProfile)
+    } else {
+      // Manual: show mapping step
+      setStep(3)
+    }
+  }
+
+  // Step 3: Complete mapping
+  const handleMappingComplete = (mappingsToUse?: ColumnMapping[], profileUsed?: ImportProfile) => {
+    const finalMappings = mappingsToUse || mappings
+    const finalProfile = profileUsed || profile
+
     const mapped = rawData.map((row) => {
       const mappedData: Record<string, any> = {}
-      mappings.forEach((mapping) => {
+      finalMappings.forEach((mapping) => {
         if (mapping.sourceColumn && mapping.sourceColumn !== '—') {
-          mappedData[mapping.targetField] = row[mapping.sourceColumn]
+          let value = row[mapping.sourceColumn]
+
+          // Apply status mapping for REGES/REVISAL
+          if (mapping.targetField === 'status' && value) {
+            if (finalProfile === 'reges') {
+              value = REGES_PROFILE.statusMapping[value] || value.toLowerCase()
+            } else if (finalProfile === 'revisal') {
+              value = REVISAL_PROFILE.statusMapping[value] || value
+            }
+          }
+
+          mappedData[mapping.targetField] = value
         }
       })
       return mappedData
@@ -353,13 +501,13 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       })
     ).then((validated) => {
       setImportRows(validated)
-      setStep(3)
+      setStep(4)
     })
   }
 
-  // Step 3: Start import
+  // Step 4: Start import
   const handleStartImport = async () => {
-    setStep(4)
+    setStep(5)
     setImporting(true)
 
     const supabase = createSupabaseBrowser()
@@ -367,6 +515,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
     const total = validRows.length
     let success = 0
     let failed = 0
+    const errorDetails: any[] = []
 
     setImportStats({ success: 0, failed: 0, total })
 
@@ -378,13 +527,18 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
         organization_id: selectedOrgId,
         first_name: row.data.first_name?.toString().trim() || '',
         last_name: row.data.last_name?.toString().trim() || '',
-        cnp: row.data.cnp?.toString().trim() || '',
+        cnp: row.data.cnp?.toString().trim() || null,
         job_title: row.data.job_title?.toString().trim() || '',
         department: row.data.department?.toString().trim() || null,
         hire_date: row.data.hire_date ? parseDate(row.data.hire_date)?.toISOString().split('T')[0] : null,
+        contract_end_date: row.data.contract_end_date ? parseDate(row.data.contract_end_date)?.toISOString().split('T')[0] : null,
         email: row.data.email?.toString().trim() || null,
         phone: row.data.phone?.toString().trim() || null,
         cor_code: row.data.cor_code?.toString().trim() || null,
+        cor_title: row.data.cor_title?.toString().trim() || null,
+        contract_number: row.data.contract_number?.toString().trim() || null,
+        contract_type: row.data.contract_type?.toString().trim() || null,
+        status: row.data.status?.toString().toLowerCase() || 'active',
         is_active: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -395,6 +549,12 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       if (error) {
         console.error('Import chunk error:', error)
         failed += chunk.length
+        chunk.forEach((row) => {
+          errorDetails.push({
+            row: row.rowNumber,
+            error: error.message,
+          })
+        })
       } else {
         success += chunk.length
       }
@@ -403,18 +563,26 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       setImportStats({ success, failed, total })
     }
 
+    // Log import to import_logs table
+    await supabase.from('import_logs').insert({
+      organization_id: selectedOrgId,
+      imported_by: user.id,
+      profile_used: profile,
+      file_name: file?.name || 'unknown',
+      file_size_kb: file ? Math.round(file.size / 1024) : 0,
+      total_rows: importRows.length,
+      imported_rows: success,
+      error_rows: failed,
+      warning_rows: importRows.filter((r) => r.validation.warnings.length > 0).length,
+      error_details: errorDetails,
+    })
+
     setImporting(false)
   }
 
   // Update mapping
   const updateMapping = (targetField: string, sourceColumn: string) => {
-    setMappings((prev) =>
-      prev.map((m) =>
-        m.targetField === targetField
-          ? { ...m, sourceColumn }
-          : m
-      )
-    )
+    setMappings((prev) => prev.map((m) => (m.targetField === targetField ? { ...m, sourceColumn } : m)))
   }
 
   return (
@@ -441,23 +609,17 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       <main className="max-w-6xl mx-auto px-8 py-6">
         {/* Progress Steps */}
         <div className="mb-8 flex items-center justify-center">
-          {[1, 2, 3, 4].map((stepNum) => (
+          {[1, 2, 3, 4, 5].map((stepNum) => (
             <div key={stepNum} className="flex items-center">
               <div
                 className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${
-                  step >= stepNum
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-400'
+                  step >= stepNum ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-400'
                 }`}
               >
                 {step > stepNum ? <Check className="h-5 w-5" /> : stepNum}
               </div>
-              {stepNum < 4 && (
-                <div
-                  className={`w-24 h-1 ${
-                    step > stepNum ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
-                  }`}
-                />
+              {stepNum < 5 && (
+                <div className={`w-16 h-1 ${step > stepNum ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'}`} />
               )}
             </div>
           ))}
@@ -468,11 +630,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           {/* STEP 1: Upload */}
           {step === 1 && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Pas 1: Încarcă fișierul
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Pas 1: Încarcă fișierul</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                Acceptăm fișiere CSV, XLSX sau XLS. Datele vor fi procesate automat.
+                Acceptăm CSV, Excel (XLSX/XLS), ODS, JSON și XML (REVISAL). Auto-detectăm encoding și format.
               </p>
 
               {/* Drag & Drop Zone */}
@@ -492,12 +652,12 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   Trage fișierul aici sau selectează
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  CSV, XLSX, XLS (max 10 MB)
+                  CSV, XLSX, XLS, ODS, JSON, XML (max 10 MB)
                 </p>
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".csv,.xlsx,.xls"
+                  accept=".csv,.xlsx,.xls,.ods,.json,.xml"
                   onChange={handleFileChange}
                   className="hidden"
                 />
@@ -531,8 +691,11 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                     <table className="w-full text-sm">
                       <thead className="bg-gray-50 dark:bg-gray-900">
                         <tr>
-                          {columns.map((col) => (
-                            <th key={col} className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          {columns.slice(0, 6).map((col) => (
+                            <th
+                              key={col}
+                              className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400"
+                            >
                               {col}
                             </th>
                           ))}
@@ -541,7 +704,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {rawData.slice(0, 5).map((row, idx) => (
                           <tr key={idx}>
-                            {columns.map((col) => (
+                            {columns.slice(0, 6).map((col) => (
                               <td key={col} className="px-4 py-2 text-gray-700 dark:text-gray-300">
                                 {row[col] || '—'}
                               </td>
@@ -556,12 +719,108 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
             </div>
           )}
 
-          {/* STEP 2: Column Mapping */}
+          {/* STEP 2: Profile Selection */}
           {step === 2 && (
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Pas 2: Mapare coloane
+                Pas 2: Selectează profilul de import
               </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                Alege sursa datelor pentru mapare automată, sau creează o mapare personalizată.
+              </p>
+
+              <div className="space-y-4">
+                {/* REGES Profile */}
+                <button
+                  onClick={() => handleProfileSelect('reges')}
+                  className={`w-full p-6 border-2 rounded-xl text-left transition ${
+                    profile === 'reges'
+                      ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
+                      <FileSpreadsheet className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+                        Import din REGES Online
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Export CSV/Excel de pe platforma reges.inspectiamuncii.ro. Mapare automată pentru toate
+                        câmpurile standard REGES.
+                      </p>
+                    </div>
+                    {profile === 'reges' && <CheckCircle className="h-6 w-6 text-blue-600 flex-shrink-0" />}
+                  </div>
+                </button>
+
+                {/* REVISAL Profile */}
+                <button
+                  onClick={() => handleProfileSelect('revisal')}
+                  className={`w-full p-6 border-2 rounded-xl text-left transition ${
+                    profile === 'revisal'
+                      ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-purple-100 dark:bg-purple-900/40 rounded-lg flex items-center justify-center">
+                      <FileSpreadsheet className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Import din REVISAL</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Export XML din aplicația desktop REVISAL. Mapare automată conform structurii XML standard
+                        REVISAL.
+                      </p>
+                    </div>
+                    {profile === 'revisal' && <CheckCircle className="h-6 w-6 text-purple-600 flex-shrink-0" />}
+                  </div>
+                </button>
+
+                {/* Manual Profile */}
+                <button
+                  onClick={() => handleProfileSelect('manual')}
+                  className={`w-full p-6 border-2 rounded-xl text-left transition ${
+                    profile === 'manual'
+                      ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-lg flex items-center justify-center">
+                      <Sparkles className="h-6 w-6 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Mapare manuală</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Creează o mapare personalizată. Auto-detectăm câmpurile comune, dar poți ajusta manual fiecare
+                        coloană.
+                      </p>
+                    </div>
+                    {profile === 'manual' && <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />}
+                  </div>
+                </button>
+              </div>
+
+              <div className="mt-8 flex justify-between">
+                <button
+                  onClick={() => setStep(1)}
+                  className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Înapoi
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: Column Mapping (Manual only) */}
+          {step === 3 && (
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Pas 3: Mapare coloane</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
                 Am detectat automat câteva coloane. Verifică și ajustează dacă e necesar.
               </p>
@@ -606,7 +865,10 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                 </p>
                 <div className="mt-4 space-y-2">
                   {rawData.slice(0, 3).map((row, idx) => (
-                    <div key={idx} className="text-xs text-gray-700 dark:text-gray-300 p-2 bg-white dark:bg-gray-800 rounded">
+                    <div
+                      key={idx}
+                      className="text-xs text-gray-700 dark:text-gray-300 p-2 bg-white dark:bg-gray-800 rounded"
+                    >
                       {mappings
                         .filter((m) => m.sourceColumn)
                         .map((m) => `${m.targetField}: ${row[m.sourceColumn] || '—'}`)
@@ -618,14 +880,14 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
               <div className="mt-8 flex justify-between">
                 <button
-                  onClick={() => setStep(1)}
+                  onClick={() => setStep(2)}
                   className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Înapoi
                 </button>
                 <button
-                  onClick={handleMappingComplete}
+                  onClick={() => handleMappingComplete()}
                   disabled={mappings.filter((m) => m.required && !m.sourceColumn).length > 0}
                   className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center gap-2"
                 >
@@ -636,12 +898,10 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
             </div>
           )}
 
-          {/* STEP 3: Validation & Preview */}
-          {step === 3 && (
+          {/* STEP 4: Validation & Preview */}
+          {step === 4 && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Pas 3: Validare & Preview
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Pas 4: Validare & Preview</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
                 {importRows.filter((r) => r.validation.valid).length} rânduri valide ·{' '}
                 {importRows.filter((r) => !r.validation.valid).length} cu erori ·{' '}
@@ -652,12 +912,24 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0">
                     <tr>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">#</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">Prenume</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">Nume</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">CNP</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">Funcție</th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">Status</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        #
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        Prenume
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        Nume
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        CNP
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        Funcție
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                        Status
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -673,7 +945,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                         }
                       >
                         <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.rowNumber}</td>
-                        <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.first_name || '—'}</td>
+                        <td className="px-4 py-2 text-gray-700 dark:text-gray-300">
+                          {row.data.first_name || '—'}
+                        </td>
                         <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.last_name || '—'}</td>
                         <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.cnp || '—'}</td>
                         <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.job_title || '—'}</td>
@@ -711,7 +985,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
               <div className="mt-8 flex justify-between">
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={() => setStep(profile === 'manual' ? 3 : 2)}
                   className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -729,8 +1003,8 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
             </div>
           )}
 
-          {/* STEP 4: Import Progress */}
-          {step === 4 && (
+          {/* STEP 5: Import Progress */}
+          {step === 5 && (
             <div className="text-center">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
                 {importing ? 'Import în curs...' : 'Import finalizat'}
@@ -754,13 +1028,16 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   <CheckCircle className="h-16 w-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
                   <div className="mb-6">
                     <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {importStats.success} importați cu succes
+                      ✅ {importStats.success} importați cu succes
                     </p>
                     {importStats.failed > 0 && (
                       <p className="text-sm text-red-600 dark:text-red-400">
-                        {importStats.failed} ignorați (erori)
+                        ❌ {importStats.failed} ignorați (erori)
                       </p>
                     )}
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      Profil: {profile === 'reges' ? 'REGES Online' : profile === 'revisal' ? 'REVISAL' : 'Manual'}
+                    </p>
                   </div>
                   <button
                     onClick={() => router.push(`/${locale}/dashboard?org=${selectedOrgId}`)}
