@@ -1,355 +1,582 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
+// app/[locale]/dashboard/obligations/ObligationsClient.tsx
+// M7 CLIENT: Dashboard obligații legislative pentru organizații
+// Features: selector org, stats, filtre (domeniu, severitate, search), expand detalii
+
+import { useState, useEffect } from 'react'
 import {
-  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Search,
   Scale,
+  FileText,
+  AlertTriangle,
   CheckCircle2,
   Clock,
-  AlertTriangle,
-  FileText,
-  Filter,
-  X,
-  ExternalLink
-} from 'lucide-react';
-import type { OrganizationObligation, OrgObligationSummary } from '@/lib/services/obligation-publisher';
+  Shield,
+  Building2,
+  Flame,
+  Lock,
+  FileStack,
+  TrendingUp
+} from 'lucide-react'
 
-interface ObligationsClientProps {
-  obligations: OrganizationObligation[];
-  stats: OrgObligationSummary;
-  organizationName: string;
-  organizationId: string;
-  userId: string;
-  userRole: string;
+interface Obligation {
+  id: string
+  source_legal_act: string
+  source_article_id: string | null
+  source_article_number: string | null
+  country_code: string
+  obligation_text: string
+  who: string[]
+  deadline: string | null
+  frequency: string | null
+  penalty: string | null
+  penalty_min: number | null
+  penalty_max: number | null
+  penalty_currency: string | null
+  evidence_required: string[]
+  published_at: string | null
+  domain: string // Enriched
+  severity: string // Enriched
 }
 
-type StatusFilter = 'all' | 'pending' | 'acknowledged' | 'compliant' | 'non_compliant';
+interface OrganizationObligation {
+  id: string
+  organization_id: string
+  obligation_id: string
+  status: 'pending' | 'acknowledged' | 'compliant' | 'non_compliant'
+  assigned_at: string
+  acknowledged_at: string | null
+  compliant_at: string | null
+  notes: string | null
+  evidence_urls: string[]
+  match_score: number
+  match_reason: string | null
+  obligation: Obligation
+}
 
-export function ObligationsClient({
-  obligations,
-  stats,
-  organizationName,
-  organizationId,
-  userId,
-  userRole
+interface Stats {
+  total: number
+  byDomain: {
+    SSM: number
+    PSI: number
+    GDPR: number
+    Fiscal: number
+    Altele: number
+  }
+  criticalCount: number
+  newCount: number
+}
+
+interface ObligationsClientProps {
+  initialOrgId: string
+  organizations: Array<{ id: string; name: string }>
+}
+
+export default function ObligationsClient({
+  initialOrgId,
+  organizations
 }: ObligationsClientProps) {
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [selectedObligation, setSelectedObligation] = useState<OrganizationObligation | null>(null);
+  const [selectedOrgId, setSelectedOrgId] = useState(initialOrgId)
+  const [obligations, setObligations] = useState<OrganizationObligation[]>([])
+  const [stats, setStats] = useState<Stats | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  // Filter obligations based on status
-  const filteredObligations = obligations.filter(obl => {
-    if (statusFilter === 'all') return true;
-    return obl.status === statusFilter;
-  });
+  // Filtre
+  const [domainFilter, setDomainFilter] = useState<string>('all')
+  const [severityFilter, setSeverityFilter] = useState<string>('all')
+  const [searchText, setSearchText] = useState('')
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  // Handle acknowledge action
-  const handleAcknowledge = async (obligationId: string) => {
-    try {
-      const response = await fetch(`/api/obligations/${obligationId}/acknowledge`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId })
-      });
+  // Fetch obligations și stats
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true)
+      try {
+        // Fetch obligations
+        const oblUrl = `/api/client/obligations?org_id=${selectedOrgId}&domain=${domainFilter}&severity=${severityFilter}&search=${encodeURIComponent(searchText)}`
+        const oblRes = await fetch(oblUrl)
+        const oblData = await oblRes.json()
 
-      if (!response.ok) {
-        throw new Error('Failed to acknowledge obligation');
+        if (oblRes.ok) {
+          setObligations(oblData.obligations || [])
+        } else {
+          console.error('Error fetching obligations:', oblData.error)
+        }
+
+        // Fetch stats
+        const statsUrl = `/api/client/obligations/stats?org_id=${selectedOrgId}`
+        const statsRes = await fetch(statsUrl)
+        const statsData = await statsRes.json()
+
+        if (statsRes.ok) {
+          setStats(statsData)
+        } else {
+          console.error('Error fetching stats:', statsData.error)
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
       }
-
-      // Refresh page
-      window.location.reload();
-    } catch (error) {
-      console.error('Error acknowledging obligation:', error);
-      alert('Eroare la confirmarea obligației. Vă rugăm încercați din nou.');
     }
-  };
 
-  // Handle mark compliant action
-  const handleMarkCompliant = async (obligationId: string, notes?: string) => {
-    try {
-      const response = await fetch(`/api/obligations/${obligationId}/compliant`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, notes })
-      });
+    fetchData()
+  }, [selectedOrgId, domainFilter, severityFilter, searchText])
 
-      if (!response.ok) {
-        throw new Error('Failed to mark obligation as compliant');
-      }
+  // Get selected org name
+  const selectedOrgName = organizations.find(o => o.id === selectedOrgId)?.name || 'Organizația dvs.'
 
-      // Refresh page
-      window.location.reload();
-    } catch (error) {
-      console.error('Error marking obligation compliant:', error);
-      alert('Eroare la marcarea obligației. Vă rugăm încercați din nou.');
+  // Domain badge helper
+  const getDomainBadge = (domain: string) => {
+    const badges: Record<string, { bg: string; text: string; icon: any }> = {
+      SSM: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Shield },
+      PSI: { bg: 'bg-orange-100', text: 'text-orange-800', icon: Flame },
+      GDPR: { bg: 'bg-purple-100', text: 'text-purple-800', icon: Lock },
+      Fiscal: { bg: 'bg-green-100', text: 'text-green-800', icon: FileStack },
+      Altele: { bg: 'bg-gray-100', text: 'text-gray-800', icon: FileText }
     }
-  };
+
+    const badge = badges[domain] || badges.Altele
+    const Icon = badge.icon
+
+    return (
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg ${badge.bg} ${badge.text} text-xs font-medium`}>
+        <Icon className="h-3.5 w-3.5" />
+        {domain}
+      </span>
+    )
+  }
+
+  // Severity badge helper
+  const getSeverityBadge = (severity: string) => {
+    const badges: Record<string, { bg: string; text: string; label: string }> = {
+      critical: { bg: 'bg-red-100', text: 'text-red-800', label: 'Critică' },
+      major: { bg: 'bg-amber-100', text: 'text-amber-800', label: 'Majoră' },
+      minor: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Minoră' }
+    }
+
+    const badge = badges[severity] || badges.minor
+
+    return (
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg ${badge.bg} ${badge.text} text-xs font-medium`}>
+        <AlertTriangle className="h-3.5 w-3.5" />
+        {badge.label}
+      </span>
+    )
+  }
+
+  // Status badge helper
+  const getStatusBadge = (status: string) => {
+    const badges: Record<string, { bg: string; text: string; icon: any; label: string }> = {
+      pending: { bg: 'bg-amber-100', text: 'text-amber-800', icon: Clock, label: 'Pendintă' },
+      acknowledged: { bg: 'bg-blue-100', text: 'text-blue-800', icon: CheckCircle2, label: 'Confirmată' },
+      compliant: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle2, label: 'Conformă' },
+      non_compliant: { bg: 'bg-red-100', text: 'text-red-800', icon: AlertTriangle, label: 'Non-conformă' }
+    }
+
+    const badge = badges[status] || badges.pending
+    const Icon = badge.icon
+
+    return (
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg ${badge.bg} ${badge.text} text-xs font-medium`}>
+        <Icon className="h-3.5 w-3.5" />
+        {badge.label}
+      </span>
+    )
+  }
+
+  // Empty state
+  if (!loading && obligations.length === 0 && domainFilter === 'all' && severityFilter === 'all' && !searchText) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-8 py-12">
+          <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+            <Scale className="h-16 w-16 text-gray-300 mx-auto mb-6" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              Nu aveți obligații legislative publicate încă
+            </h3>
+            <p className="text-gray-600 max-w-md mx-auto">
+              Consultantul dvs. SSM/PSI va publica obligațiile legislative relevante
+              pentru activitatea organizației dvs. în funcție de domeniul de activitate și țară.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       {/* HEADER */}
       <header className="bg-white border-b border-gray-200 px-8 py-6">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-6">
             <div>
-              <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                <Link href="/dashboard" className="hover:text-gray-700">
-                  Dashboard
-                </Link>
-                <ChevronRight className="h-4 w-4" />
-                <span className="text-gray-900 font-medium">Obligații Legale</span>
-              </div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                 <Scale className="h-7 w-7 text-blue-600" />
-                Obligații Legale
+                Obligațiile tale legislative
               </h1>
-              <p className="text-sm text-gray-500 mt-1">{organizationName}</p>
             </div>
+
+            {/* Selector organizație */}
+            {organizations.length > 1 && (
+              <div className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-gray-500" />
+                <select
+                  value={selectedOrgId}
+                  onChange={(e) => setSelectedOrgId(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {organizations.map(org => (
+                    <option key={org.id} value={org.id}>{org.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
-          {/* STATS CARDS */}
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
-                </div>
-                <FileText className="h-8 w-8 text-gray-400" />
-              </div>
-            </div>
+          <p className="text-sm text-gray-500 mb-6">{selectedOrgName}</p>
 
-            <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-amber-700">Pendinte</p>
-                  <p className="text-2xl font-bold text-amber-900 mt-1">{stats.pending}</p>
+          {/* STAT CARDS */}
+          {stats && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Total */}
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total obligații</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
+                  </div>
+                  <FileText className="h-8 w-8 text-gray-400" />
                 </div>
-                <Clock className="h-8 w-8 text-amber-500" />
               </div>
-            </div>
 
-            <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-blue-700">Confirmate</p>
-                  <p className="text-2xl font-bold text-blue-900 mt-1">{stats.acknowledged}</p>
+              {/* Pe domenii */}
+              <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-blue-700">SSM / PSI / GDPR</p>
+                    <p className="text-2xl font-bold text-blue-900 mt-1">
+                      {stats.byDomain.SSM + stats.byDomain.PSI + stats.byDomain.GDPR}
+                    </p>
+                  </div>
+                  <Shield className="h-8 w-8 text-blue-500" />
                 </div>
-                <CheckCircle2 className="h-8 w-8 text-blue-500" />
               </div>
-            </div>
 
-            <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-green-700">Conforme</p>
-                  <p className="text-2xl font-bold text-green-900 mt-1">{stats.compliant}</p>
+              {/* Severitate critică */}
+              <div className="bg-red-50 rounded-xl p-4 border border-red-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-red-700">Severitate critică</p>
+                    <p className="text-2xl font-bold text-red-900 mt-1">{stats.criticalCount}</p>
+                  </div>
+                  <AlertTriangle className="h-8 w-8 text-red-500" />
                 </div>
-                <CheckCircle2 className="h-8 w-8 text-green-500" />
+              </div>
+
+              {/* Noi (ultima lună) */}
+              <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-green-700">Noi (ultima lună)</p>
+                    <p className="text-2xl font-bold text-green-900 mt-1">{stats.newCount}</p>
+                  </div>
+                  <TrendingUp className="h-8 w-8 text-green-500" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
-      <main className="max-w-7xl mx-auto px-8 py-8">
-        {/* FILTERS */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Filter className="h-4 w-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">Filtrare după status:</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {(['all', 'pending', 'acknowledged', 'compliant', 'non_compliant'] as StatusFilter[]).map(status => (
-              <button
-                key={status}
-                onClick={() => setStatusFilter(status)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  statusFilter === status
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+      {/* FILTRE */}
+      <div className="max-w-7xl mx-auto px-8 py-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Filtru domeniu */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Domeniu
+              </label>
+              <select
+                value={domainFilter}
+                onChange={(e) => setDomainFilter(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {status === 'all' && 'Toate'}
-                {status === 'pending' && 'Pendinte'}
-                {status === 'acknowledged' && 'Confirmate'}
-                {status === 'compliant' && 'Conforme'}
-                {status === 'non_compliant' && 'Non-conforme'}
-              </button>
-            ))}
+                <option value="all">Toate</option>
+                <option value="SSM">SSM</option>
+                <option value="PSI">PSI</option>
+                <option value="GDPR">GDPR</option>
+                <option value="Fiscal">Fiscal</option>
+                <option value="Altele">Altele</option>
+              </select>
+            </div>
+
+            {/* Filtru severitate */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Severitate
+              </label>
+              <select
+                value={severityFilter}
+                onChange={(e) => setSeverityFilter(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">Toate</option>
+                <option value="critical">Critică</option>
+                <option value="major">Majoră</option>
+                <option value="minor">Minoră</option>
+              </select>
+            </div>
+
+            {/* Search text */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Căutare în obligații
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  placeholder="Caută în text sau referință..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* OBLIGATIONS LIST */}
-        {filteredObligations.length === 0 ? (
+      {/* LISTA OBLIGAȚII */}
+      <main className="max-w-7xl mx-auto px-8 pb-8">
+        {loading ? (
+          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Se încarcă obligațiile...</p>
+          </div>
+        ) : obligations.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
             <Scale className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Nicio obligație găsită
             </h3>
             <p className="text-sm text-gray-500">
-              {statusFilter === 'all'
-                ? 'Nu există obligații legale asignate acestei organizații.'
-                : `Nu există obligații cu statusul "${statusFilter}".`}
+              Nu există obligații care să corespundă filtrelor selectate.
             </p>
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredObligations.map((obl) => {
-              const obligation = obl.obligation as any;
-              if (!obligation) return null;
+            {obligations.map((obl) => {
+              const isExpanded = expandedId === obl.id
 
               return (
                 <div
                   key={obl.id}
-                  className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      {/* Status Badge */}
-                      <div className="mb-3">
-                        {obl.status === 'pending' && (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-100 text-amber-800 text-xs font-medium">
-                            <Clock className="h-3 w-3" />
-                            Pending
-                          </span>
-                        )}
-                        {obl.status === 'acknowledged' && (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-100 text-blue-800 text-xs font-medium">
-                            <CheckCircle2 className="h-3 w-3" />
-                            Confirmat
-                          </span>
-                        )}
-                        {obl.status === 'compliant' && (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-100 text-green-800 text-xs font-medium">
-                            <CheckCircle2 className="h-3 w-3" />
-                            Conform
-                          </span>
-                        )}
-                        {obl.status === 'non_compliant' && (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-red-100 text-red-800 text-xs font-medium">
-                            <AlertTriangle className="h-3 w-3" />
-                            Non-conform
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Obligation Text */}
-                      <h3 className="text-base font-semibold text-gray-900 mb-2">
-                        {obligation.obligation_text}
-                      </h3>
-
-                      {/* Metadata */}
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
-                        <div>
-                          <span className="font-medium">Sursă:</span>{' '}
-                          {obligation.source_legal_act}
+                  {/* Card header - clickable pentru expand */}
+                  <div
+                    onClick={() => setExpandedId(isExpanded ? null : obl.id)}
+                    className="p-6 cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        {/* Badges */}
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          {getStatusBadge(obl.status)}
+                          {getDomainBadge(obl.obligation.domain)}
+                          {getSeverityBadge(obl.obligation.severity)}
                         </div>
-                        {obligation.frequency && (
-                          <div>
-                            <span className="font-medium">Frecvență:</span>{' '}
-                            {obligation.frequency}
-                          </div>
-                        )}
-                        {obligation.deadline && (
-                          <div>
-                            <span className="font-medium">Termen:</span>{' '}
-                            {obligation.deadline}
-                          </div>
-                        )}
-                      </div>
 
-                      {/* Who */}
-                      {obligation.who && obligation.who.length > 0 && (
-                        <div className="mb-3">
-                          <span className="text-sm font-medium text-gray-700">Responsabil: </span>
-                          <span className="text-sm text-gray-600">
-                            {obligation.who.join(', ')}
+                        {/* Referință legislativă */}
+                        <div className="mb-2">
+                          <span className="text-xs font-medium text-gray-500">
+                            Referință legislativă:
+                          </span>{' '}
+                          <span className="text-sm font-semibold text-blue-600">
+                            {obl.obligation.source_legal_act}
+                            {obl.obligation.source_article_number && `, Art. ${obl.obligation.source_article_number}`}
                           </span>
                         </div>
-                      )}
 
-                      {/* Penalty */}
-                      {obligation.penalty && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-3">
-                          <p className="text-sm font-medium text-red-900">Sancțiune:</p>
-                          <p className="text-sm text-red-700 mt-1">{obligation.penalty}</p>
-                          {obligation.penalty_min && obligation.penalty_max && (
-                            <p className="text-xs text-red-600 mt-1">
-                              {obligation.penalty_min.toLocaleString()} -{' '}
-                              {obligation.penalty_max.toLocaleString()}{' '}
-                              {obligation.penalty_currency}
-                            </p>
+                        {/* Text obligație */}
+                        <p className="text-base text-gray-900 leading-relaxed">
+                          {obl.obligation.obligation_text}
+                        </p>
+
+                        {/* Quick info */}
+                        <div className="flex flex-wrap gap-4 mt-3 text-xs text-gray-500">
+                          {obl.obligation.frequency && (
+                            <span>Frecvență: {obl.obligation.frequency}</span>
                           )}
+                          {obl.obligation.deadline && (
+                            <span>Termen: {obl.obligation.deadline}</span>
+                          )}
+                          <span>Publicat: {new Date(obl.assigned_at).toLocaleDateString('ro-RO')}</span>
                         </div>
-                      )}
+                      </div>
 
-                      {/* Evidence Required */}
-                      {obligation.evidence_required && obligation.evidence_required.length > 0 && (
-                        <div className="mb-3">
-                          <p className="text-sm font-medium text-gray-700 mb-1">
-                            Dovezi necesare:
+                      {/* Expand icon */}
+                      <button className="text-gray-400 hover:text-gray-600 transition-colors">
+                        {isExpanded ? (
+                          <ChevronUp className="h-6 w-6" />
+                        ) : (
+                          <ChevronDown className="h-6 w-6" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Expanded details */}
+                  {isExpanded && (
+                    <div className="border-t border-gray-200 bg-gray-50 p-6">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-4">
+                        Detalii obligație
+                      </h4>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Textul complet */}
+                        <div className="md:col-span-2">
+                          <p className="text-sm font-medium text-gray-700 mb-2">
+                            Textul complet al obligației:
                           </p>
-                          <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                            {obligation.evidence_required.map((evidence: string, idx: number) => (
-                              <li key={idx}>{evidence}</li>
-                            ))}
-                          </ul>
+                          <div className="bg-white rounded-lg border border-gray-200 p-4">
+                            <p className="text-sm text-gray-900 leading-relaxed">
+                              {obl.obligation.obligation_text}
+                            </p>
+                          </div>
                         </div>
-                      )}
 
-                      {/* Notes */}
-                      {obl.notes && (
-                        <div className="bg-gray-50 rounded-lg p-3 mt-3">
-                          <p className="text-sm font-medium text-gray-700">Note:</p>
-                          <p className="text-sm text-gray-600 mt-1">{obl.notes}</p>
+                        {/* Articol exact */}
+                        {obl.obligation.source_article_id && (
+                          <div className="md:col-span-2">
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                              Articolul exact din lege:
+                            </p>
+                            <div className="bg-white rounded-lg border border-gray-200 p-4">
+                              <p className="text-sm text-gray-600">
+                                {obl.obligation.source_legal_act}, Art. {obl.obligation.source_article_number}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                ID: {obl.obligation.source_article_id}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Responsabil */}
+                        {obl.obligation.who && obl.obligation.who.length > 0 && (
+                          <div>
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                              Responsabil:
+                            </p>
+                            <div className="bg-white rounded-lg border border-gray-200 p-4">
+                              <p className="text-sm text-gray-900">
+                                {obl.obligation.who.join(', ')}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Frecvență + Termen */}
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-2">
+                            Frecvență și termen:
+                          </p>
+                          <div className="bg-white rounded-lg border border-gray-200 p-4">
+                            {obl.obligation.frequency && (
+                              <p className="text-sm text-gray-900">
+                                Frecvență: {obl.obligation.frequency}
+                              </p>
+                            )}
+                            {obl.obligation.deadline && (
+                              <p className="text-sm text-gray-900 mt-1">
+                                Termen: {obl.obligation.deadline}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      )}
+
+                        {/* Sancțiuni */}
+                        {obl.obligation.penalty && (
+                          <div className="md:col-span-2">
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                              Sancțiuni asociate:
+                            </p>
+                            <div className="bg-red-50 rounded-lg border border-red-200 p-4">
+                              <p className="text-sm text-red-900 font-medium">
+                                {obl.obligation.penalty}
+                              </p>
+                              {obl.obligation.penalty_min && obl.obligation.penalty_max && (
+                                <p className="text-xs text-red-700 mt-2">
+                                  Interval amenzi: {obl.obligation.penalty_min.toLocaleString()} - {obl.obligation.penalty_max.toLocaleString()} {obl.obligation.penalty_currency}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Dovezi necesare */}
+                        {obl.obligation.evidence_required && obl.obligation.evidence_required.length > 0 && (
+                          <div className="md:col-span-2">
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                              Dovezi necesare:
+                            </p>
+                            <div className="bg-white rounded-lg border border-gray-200 p-4">
+                              <ul className="list-disc list-inside text-sm text-gray-900 space-y-1">
+                                {obl.obligation.evidence_required.map((evidence, idx) => (
+                                  <li key={idx}>{evidence}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Note consultant */}
+                        {obl.notes && (
+                          <div className="md:col-span-2">
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                              Note:
+                            </p>
+                            <div className="bg-blue-50 rounded-lg border border-blue-200 p-4">
+                              <p className="text-sm text-blue-900">{obl.notes}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
                       {/* Dates */}
-                      <div className="text-xs text-gray-500 mt-3">
-                        Asignat la: {new Date(obl.assigned_at).toLocaleDateString('ro-RO')}
-                        {obl.acknowledged_at && (
-                          <> • Confirmat: {new Date(obl.acknowledged_at).toLocaleDateString('ro-RO')}</>
-                        )}
-                        {obl.compliant_at && (
-                          <> • Conform: {new Date(obl.compliant_at).toLocaleDateString('ro-RO')}</>
-                        )}
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                          <span>
+                            Asignat la: {new Date(obl.assigned_at).toLocaleDateString('ro-RO')}
+                          </span>
+                          {obl.acknowledged_at && (
+                            <span>
+                              Confirmat la: {new Date(obl.acknowledged_at).toLocaleDateString('ro-RO')}
+                            </span>
+                          )}
+                          {obl.compliant_at && (
+                            <span>
+                              Marcat conform la: {new Date(obl.compliant_at).toLocaleDateString('ro-RO')}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-
-                    {/* Actions */}
-                    {(userRole === 'consultant' || userRole === 'firma_admin') && (
-                      <div className="flex flex-col gap-2">
-                        {obl.status === 'pending' && (
-                          <button
-                            onClick={() => handleAcknowledge(obl.id)}
-                            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
-                          >
-                            Confirmă
-                          </button>
-                        )}
-                        {(obl.status === 'acknowledged' || obl.status === 'pending') && (
-                          <button
-                            onClick={() => {
-                              const notes = prompt('Adaugă note (opțional):');
-                              handleMarkCompliant(obl.id, notes || undefined);
-                            }}
-                            className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap"
-                          >
-                            Marchează Conform
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
-              );
+              )
             })}
           </div>
         )}
       </main>
-    </>
-  );
+    </div>
+  )
 }
