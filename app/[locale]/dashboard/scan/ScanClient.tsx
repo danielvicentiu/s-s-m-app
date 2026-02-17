@@ -56,6 +56,8 @@ export default function ScanClient() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orgId, setOrgId] = useState<string | null>(null);
+  const [orgs, setOrgs] = useState<{ organization_id: string; org_name?: string }[]>([]);
+  const [orgsLoaded, setOrgsLoaded] = useState(false);
   const [stats, setStats] = useState<ProcessingStats>({
     total: 0,
     completed: 0,
@@ -63,7 +65,7 @@ export default function ScanClient() {
     processing: 0,
   });
 
-  // Preia org_id curent - FIX BUG: organization_id instead of org_id
+  // Preia toate org_id-urile curentului user
   useEffect(() => {
     async function fetchOrgId() {
       const supabase = createSupabaseBrowser();
@@ -71,17 +73,34 @@ export default function ScanClient() {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (!user) return;
+      if (!user) {
+        setOrgsLoaded(true);
+        return;
+      }
 
       const { data } = await supabase
         .from('memberships')
         .select('organization_id')
         .eq('user_id', user.id)
-        .single();
+        .eq('is_active', true);
 
-      if (data) {
-        setOrgId(data.organization_id);
+      if (data && data.length > 0) {
+        const orgsWithNames: { organization_id: string; org_name?: string }[] = [];
+        for (const membership of data) {
+          const { data: orgData } = await supabase
+            .from('organizations')
+            .select('name')
+            .eq('id', membership.organization_id)
+            .single();
+          orgsWithNames.push({
+            organization_id: membership.organization_id,
+            org_name: orgData?.name,
+          });
+        }
+        setOrgs(orgsWithNames);
+        setOrgId(orgsWithNames[0].organization_id);
       }
+      setOrgsLoaded(true);
     }
 
     fetchOrgId();
@@ -473,6 +492,31 @@ export default function ScanClient() {
           Generează link
         </button>
       </div>
+
+      {/* Org Selector - pentru useri cu multiple organizatii */}
+      {orgsLoaded && orgs.length > 1 && (
+        <div className="bg-white border rounded-lg p-3 mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Organizație activă
+          </label>
+          <select
+            value={orgId || ''}
+            onChange={(e) => setOrgId(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {orgs.map((org) => (
+              <option key={org.organization_id} value={org.organization_id}>
+                {org.org_name || org.organization_id}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+      {orgsLoaded && orgs.length === 0 && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+          Nu ești asociat cu nicio organizație.
+        </div>
+      )}
 
       {/* Error Alert */}
       {error && (
