@@ -614,3 +614,112 @@ export const PSI_ALERT_LEVEL_LABELS: Record<PSIAlertLevel, string> = {
   'info': '90 zile',
   'ok': 'La zi'
 }
+
+// ── TRAINING CALENDAR (Calendar Instruiri SSM) ──
+
+export type TrainingType = 'ig' | 'llm' | 'periodica' | 'tematica'
+export type TrainingSessionStatus = 'programat' | 'efectuat' | 'expirat' | 'anulat'
+
+export interface TrainingSession {
+  id: string
+  organization_id: string
+  employee_id: string
+  training_type: TrainingType
+  scheduled_date: string // DATE
+  completed_date: string | null // DATE
+  instructor: string
+  duration_hours: number
+  topics: string | null
+  status: TrainingSessionStatus
+  notes: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  // Relations (populated by joins)
+  employees?: {
+    id: string
+    full_name: string
+    job_title: string | null
+  }
+  organizations?: {
+    id: string
+    name: string
+    cui: string | null
+  }
+}
+
+// ── REPORTS: Automated PDF/HTML Reports ──
+
+export type ReportType =
+  | 'situatie_ssm'
+  | 'situatie_psi'
+  | 'instruiri_luna'
+  | 'documente_expirate'
+
+export interface Report {
+  id: string
+  organization_id: string
+  report_type: ReportType
+  title: string
+  html_content: string
+  metadata: Record<string, any>
+  generated_by: string | null
+  created_at: string
+  // Joined data (optional)
+  organizations?: {
+    id: string
+    name: string
+    cui: string | null
+  }
+}
+
+export interface TrainingCalendarItem {
+  id: string
+  organization_id: string
+  organization_name: string
+  organization_cui: string | null
+  employee_id: string
+  employee_name: string
+  job_title: string | null
+  training_type: TrainingType
+  scheduled_date: string
+  completed_date: string | null
+  instructor: string
+  duration_hours: number
+  topics: string | null
+  status: TrainingSessionStatus
+  notes: string | null
+  next_training_date: string | null
+  days_until_scheduled: number
+}
+
+export interface TrainingCalendarStats {
+  total_programate_luna_curenta: number
+  total_efectuate: number
+  total_expirate: number
+  upcoming_7_zile: number
+}
+
+// Helper: Romanian labels for training types
+export const TRAINING_TYPE_LABELS: Record<TrainingType, string> = {
+  'ig': 'IG (Introductiv Generală)',
+  'llm': 'LLM (La Locul de Muncă)',
+  'periodica': 'Periodică',
+  'tematica': 'Tematică'
+}
+
+// Helper: Romanian labels for training session status
+export const TRAINING_SESSION_STATUS_LABELS: Record<TrainingSessionStatus, string> = {
+  'programat': 'Programat',
+  'efectuat': 'Efectuat',
+  'expirat': 'Expirat',
+  'anulat': 'Anulat'
+}
+
+// Helper: Romanian labels for report types
+export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
+  'situatie_ssm': 'Situație SSM Completă',
+  'situatie_psi': 'Situație PSI Completă',
+  'instruiri_luna': 'Instruiri Luna Curentă',
+  'documente_expirate': 'Documente Expirate'
+}

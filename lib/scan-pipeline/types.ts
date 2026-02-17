@@ -59,6 +59,7 @@ export interface CreateScanResponse {
   extracted_data?: Record<string, string>;
   confidence_score?: number;
   validation_errors?: Record<string, string>;
+  detected_type?: string; // Pentru auto-detect: tipul detectat de AI
   error?: string;
 }
 
