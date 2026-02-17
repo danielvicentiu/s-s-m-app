@@ -3,16 +3,21 @@
 // app/[locale]/dashboard/DashboardSidebar.tsx
 // Complete sidebar navigation with all dashboard sections
 // Mobile responsive with hamburger menu drawer
+// Dynamic filtering based on active organization modules
 
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
+import { useOrg } from '@/lib/contexts/OrgContext'
+import { useOrgModules } from '@/hooks/useOrgModules'
+import type { ModuleKey } from '@/lib/modules/types'
 
 interface NavLink {
   href: string
   label: string
   icon: React.ReactNode
+  moduleKey?: ModuleKey | null // null = always visible, moduleKey = check if active
 }
 
 interface NavGroup {
@@ -24,7 +29,15 @@ export default function DashboardSidebar({ user }: { user: User }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  // Navigation structure organized by logical sections
+  // Get current organization context
+  const { currentOrg } = useOrg()
+
+  // Fetch organization modules (null if 'all' view)
+  const { hasModule, getModuleAccess, isLoading } = useOrgModules(
+    currentOrg !== 'all' ? currentOrg : null
+  )
+
+  // Navigation structure with module requirements
   const navGroups: NavGroup[] = [
     {
       title: 'Principal',
@@ -32,6 +45,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard',
           label: 'Dashboard',
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -41,6 +55,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/angajat-nou',
           label: 'Angajați',
+          moduleKey: 'ssm', // SSM module required
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -55,6 +70,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/training',
           label: 'Instruiri SSM',
+          moduleKey: 'ssm',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -73,6 +89,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/obligations',
           label: 'Obligații',
+          moduleKey: 'legislatie', // BASE_MODULE - always active
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -87,6 +104,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/psi',
           label: 'Echipamente PSI',
+          moduleKey: 'psi',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
@@ -97,6 +115,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/iscir',
           label: 'ISCIR',
+          moduleKey: 'echipamente', // Per MODULE_ROUTES
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -106,6 +125,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/equipment',
           label: 'Echipamente',
+          moduleKey: 'echipamente',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
@@ -120,6 +140,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/medical',
           label: 'Medicina Muncii',
+          moduleKey: 'ssm', // Part of SSM core
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -134,6 +155,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/reports',
           label: 'Rapoarte PDF',
+          moduleKey: 'reports',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -143,6 +165,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/contabilitate',
           label: 'Contabilitate',
+          moduleKey: null, // Always visible (future module)
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -152,6 +175,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/scan',
           label: 'Scanare Documente',
+          moduleKey: 'documents',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -161,6 +185,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/import',
           label: 'Import Date',
+          moduleKey: null, // Admin tool - always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -175,6 +200,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/reges',
           label: 'REGES',
+          moduleKey: null, // Admin tool - always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -184,6 +210,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/profile',
           label: 'Profil',
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -193,6 +220,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/settings/notifications',
           label: 'Notificări',
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -202,6 +230,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/settings/roles',
           label: 'Roluri',
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -211,6 +240,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/settings/api-keys',
           label: 'API Keys',
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
@@ -220,6 +250,21 @@ export default function DashboardSidebar({ user }: { user: User }) {
       ],
     },
   ]
+
+  // Filter links based on module access (graceful degradation if loading/error)
+  const filteredNavGroups = navGroups.map(group => ({
+    ...group,
+    links: group.links.filter(link => {
+      // Always show links without module requirement
+      if (link.moduleKey === null || link.moduleKey === undefined) return true
+
+      // During loading or when viewing 'all' orgs, show all links (graceful degradation)
+      if (isLoading || currentOrg === 'all') return true
+
+      // Check if organization has access to this module
+      return hasModule(link.moduleKey as ModuleKey)
+    })
+  })).filter(group => group.links.length > 0) // Remove empty groups
 
   // Check if current path matches a link (exact or starts with for nested routes)
   const isActive = (href: string) => {
@@ -243,7 +288,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-6 overflow-y-auto">
-        {navGroups.map((group, groupIdx) => (
+        {filteredNavGroups.map((group, groupIdx) => (
           <div key={groupIdx} className="mb-6">
             <h3 className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
               {group.title}
@@ -251,6 +296,13 @@ export default function DashboardSidebar({ user }: { user: User }) {
             <div className="space-y-1">
               {group.links.map((link) => {
                 const active = isActive(link.href)
+
+                // Check if module is in trial mode
+                const moduleAccess = link.moduleKey
+                  ? getModuleAccess(link.moduleKey as ModuleKey)
+                  : null
+                const isTrialMode = moduleAccess?.is_trial ?? false
+
                 return (
                   <Link
                     key={link.href}
@@ -263,7 +315,12 @@ export default function DashboardSidebar({ user }: { user: User }) {
                     }`}
                   >
                     {link.icon}
-                    <span>{link.label}</span>
+                    <span className="flex-1">{link.label}</span>
+                    {isTrialMode && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
+                        Trial
+                      </span>
+                    )}
                   </Link>
                 )
               })}
