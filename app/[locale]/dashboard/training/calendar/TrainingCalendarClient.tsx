@@ -62,12 +62,16 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
   const [formTrainingType, setFormTrainingType] = useState<TrainingType>('ig')
   const [formDate, setFormDate] = useState(new Date().toISOString().split('T')[0])
   const [formInstructor, setFormInstructor] = useState('')
-  const [formDuration, setFormDuration] = useState(1.0)
+  const [formInstructorMode, setFormInstructorMode] = useState<'select' | 'custom'>('select')
+  const [formDuration, setFormDuration] = useState(2)
   const [formTopics, setFormTopics] = useState('')
   const [formNotes, setFormNotes] = useState('')
 
   // Employees list
   const [employees, setEmployees] = useState<Array<{ id: string; full_name: string }>>([])
+
+  // Instructors list (unique from previous trainings)
+  const [instructors, setInstructors] = useState<string[]>([])
 
   // ============================================================
   // DATA LOADING
@@ -102,9 +106,16 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
       const statsJson = await statsRes.json()
       const employeesJson = await employeesRes.json()
 
-      setCalendarData(calendarJson.data || [])
+      const calendarItems = calendarJson.data || []
+      setCalendarData(calendarItems)
       setStats(statsJson.data || null)
       setEmployees(employeesJson.data || [])
+
+      // Extract unique instructors from calendar data
+      const uniqueInstructors = Array.from(
+        new Set(calendarItems.map((item: TrainingCalendarItem) => item.instructor).filter(Boolean))
+      ).sort()
+      setInstructors(uniqueInstructors)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Eroare necunoscută')
     } finally {
@@ -235,9 +246,32 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
     setFormTrainingType('ig')
     setFormDate(new Date().toISOString().split('T')[0])
     setFormInstructor('')
-    setFormDuration(1.0)
+    setFormInstructorMode('select')
+    setFormDuration(2)
     setFormTopics('')
     setFormNotes('')
+  }
+
+  // Predefined topics
+  const PREDEFINED_TOPICS = [
+    'Instructaj periodic SSM',
+    'Instructaj introductiv general',
+    'Instructaj la locul de muncă',
+    'Prevenire incendii PSI',
+    'Prim ajutor',
+    'Riscuri specifice locului de muncă',
+    'Echipamente de protecție',
+    'Semnalizare de securitate',
+    'Evacuare în caz de urgență',
+    'Substanțe periculoase',
+  ]
+
+  const handleTopicSelect = (topic: string) => {
+    if (formTopics) {
+      setFormTopics(formTopics + '\n' + topic)
+    } else {
+      setFormTopics(topic)
+    }
   }
 
   // ============================================================
@@ -641,30 +675,89 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                     <label className="block text-slate-400 text-sm mb-1.5">
                       Instructor <span className="text-red-400">*</span>
                     </label>
-                    <input
-                      type="text"
-                      value={formInstructor}
-                      onChange={(e) => setFormInstructor(e.target.value)}
-                      placeholder="Nume instructor"
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
-                    />
+                    {formInstructorMode === 'select' ? (
+                      <select
+                        value={formInstructor}
+                        onChange={(e) => {
+                          if (e.target.value === '__custom__') {
+                            setFormInstructorMode('custom')
+                            setFormInstructor('')
+                          } else {
+                            setFormInstructor(e.target.value)
+                          }
+                        }}
+                        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
+                      >
+                        <option value="">— Selectează instructor —</option>
+                        {instructors.map((instructor) => (
+                          <option key={instructor} value={instructor}>
+                            {instructor}
+                          </option>
+                        ))}
+                        <option value="__custom__">✏️ Altul...</option>
+                      </select>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={formInstructor}
+                          onChange={(e) => setFormInstructor(e.target.value)}
+                          placeholder="Nume instructor"
+                          className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormInstructorMode('select')
+                            setFormInstructor('')
+                          }}
+                          className="px-3 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
+                          title="Înapoi la listă"
+                        >
+                          ↩
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Duration */}
                   <div>
                     <label className="block text-slate-400 text-sm mb-1.5">Durata (ore)</label>
-                    <input
-                      type="number"
-                      step="0.5"
+                    <select
                       value={formDuration}
-                      onChange={(e) => setFormDuration(parseFloat(e.target.value))}
+                      onChange={(e) => setFormDuration(parseInt(e.target.value))}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
-                    />
+                    >
+                      <option value={1}>1 oră</option>
+                      <option value={2}>2 ore</option>
+                      <option value={3}>3 ore</option>
+                      <option value={4}>4 ore</option>
+                      <option value={5}>5 ore</option>
+                      <option value={6}>6 ore</option>
+                      <option value={7}>7 ore</option>
+                      <option value={8}>8 ore</option>
+                    </select>
                   </div>
 
                   {/* Topics */}
                   <div>
                     <label className="block text-slate-400 text-sm mb-1.5">Teme Abordate</label>
+                    <select
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          handleTopicSelect(e.target.value)
+                          e.target.value = ''
+                        }
+                      }}
+                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm mb-2"
+                    >
+                      <option value="">+ Adaugă temă predefinită</option>
+                      {PREDEFINED_TOPICS.map((topic) => (
+                        <option key={topic} value={topic}>
+                          {topic}
+                        </option>
+                      ))}
+                    </select>
                     <textarea
                       value={formTopics}
                       onChange={(e) => setFormTopics(e.target.value)}
