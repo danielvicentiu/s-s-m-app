@@ -1,0 +1,38 @@
+git add lib/legislative-import/ro-html-parser.ts && git commit -m "fix: export computeHash from ro-html-parser" && git push
+```
+
+**Starea e perfectă pentru agenți.** Ai 95 rute, build curat, Vercel Pro activ.
+
+Acum pregătesc prompt-urile Claude Code pentru modulele client-facing (5-8) pe care le lansezi pe laptopuri. Între timp noi atacăm punctele 1-4 manual în chat-ul nou.
+
+**Deschide chat nou cu acest titlu și context:**
+
+**Titlu:** `Week 2 — M7 polish + ModuleGate + Agent prompts`
+
+**Context de copiat:**
+```
+S-S-M.RO — Week 2 Development
+
+BUILD STATUS: ✅ ZERO TypeScript errors, 95 rute, Next.js 16.1.4
+VERCEL: Pro plan, CRON activ, build verde
+
+COMPLETAT:
+✅ P1-P5 Week 1 (build clean, org selector, CSV import, onboarding CUI, PDF fișe)
+✅ M7 Legislative Monitor LIVE (9 acte RO, CRON 03:00 UTC, dashboard admin, preview modal)
+✅ M1-M5 pipeline legislativ LIVE
+✅ Multi-țară DB: 34 țări (797 legal_forms, 474 bodies, 1678 junctions, 302 tax_info)
+
+TASK-URI MANUALE (în ordinea asta):
+1. M7 formatare text legal în Preview modal (indentare articole, bold titluri)
+2. ModuleGate + RBAC integrare în layout
+3. M6 Batch deploy pe producție
+4. M7 Log Verificări fix
+
+TASK-URI AGENT (pregătește prompt-uri Claude Code):
+5. M2_PSI — Tracking stingătoare + echipamente PSI
+6. M3_MEDICAL — Tracking medicina muncii
+7. M9_ISCIR — Tracking echipamente ISCIR
+8. M7_LEGISLATION client view — obligații per organizație
+
+Stack: Next.js 14 + Supabase + Vercel + Tailwind
+DB: ~69 tabele, RLS enabled
