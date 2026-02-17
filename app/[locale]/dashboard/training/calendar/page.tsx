@@ -4,7 +4,6 @@
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import TrainingCalendarClient from './TrainingCalendarClient'
-import ModuleGate from '@/components/ModuleGate'
 
 interface TrainingCalendarPageProps {
   params: Promise<{ locale: string }>
@@ -54,15 +53,11 @@ export default async function TrainingCalendarPage({ params, searchParams }: Tra
     }
   }
 
-  const orgId = savedSelectedOrg || organizations[0]?.id || null
-
   return (
-    <ModuleGate orgId={orgId} moduleKey="ssm" locale={locale}>
-      <TrainingCalendarClient
-        user={{ id: user.id, email: user.email || '' }}
-        organizations={organizations}
-        initialSelectedOrg={savedSelectedOrg}
-      />
-    </ModuleGate>
+    <TrainingCalendarClient
+      user={{ id: user.id, email: user.email || '' }}
+      organizations={organizations}
+      initialSelectedOrg={savedSelectedOrg}
+    />
   )
 }
