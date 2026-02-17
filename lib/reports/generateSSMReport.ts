@@ -10,6 +10,7 @@ interface SSMReportData {
     cui: string | null
     address: string | null
   }
+  qrCodeUrl?: string
   employees: Array<{
     id: string
     full_name: string
@@ -110,6 +111,7 @@ export function generateSSMReport(data: SSMReportData): string {
       padding: 30px;
       border-radius: 12px;
       margin-bottom: 30px;
+      position: relative;
     }
 
     .header h1 {
@@ -309,6 +311,7 @@ export function generateSSMReport(data: SSMReportData): string {
   <div class="container">
     <!-- Header -->
     <div class="header">
+      ${data.qrCodeUrl ? `<img src="${data.qrCodeUrl}" alt="QR" style="position: absolute; top: 20px; right: 20px; width: 100px; height: 100px; border-radius: 8px; background: white; padding: 4px;" />` : ''}
       <h1>📋 Raport Situație SSM Completă</h1>
       <div class="subtitle">Securitatea și Sănătatea în Muncă</div>
       <div class="org-info">

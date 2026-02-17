@@ -6,15 +6,18 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseAdmin() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // ============================================================
 // GET — Preview: ce obligații se vor publica la ce organizații
 // ============================================================
 export async function GET(request: NextRequest) {
+  const supabaseAdmin = getSupabaseAdmin()
   const supabase = supabaseAdmin
 
   const searchParams = request.nextUrl.searchParams
@@ -103,6 +106,7 @@ export async function GET(request: NextRequest) {
 // POST — Publish: inserează obligațiile la organizații
 // ============================================================
 export async function POST(request: NextRequest) {
+  const supabaseAdmin = getSupabaseAdmin()
   const supabase = supabaseAdmin
 
   try {
