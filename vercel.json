@@ -7,6 +7,10 @@
     {
       "path": "/api/legislative-import/ro-check",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/daily-check",
+      "schedule": "0 6 * * *"
     }
   ],
   "functions": {
@@ -14,6 +18,9 @@
       "maxDuration": 300
     },
     "app/api/legislative-import/ro-check/route.ts": {
+      "maxDuration": 120
+    },
+    "app/api/cron/daily-check/route.ts": {
       "maxDuration": 120
     }
   }
