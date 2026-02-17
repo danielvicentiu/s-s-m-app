@@ -33,7 +33,7 @@ interface Props {
   locale: string
 }
 
-type ImportProfile = 'reges' | 'revisal' | 'manual'
+type ImportProfile = 'reges-salariati' | 'reges-contracte' | 'manual'
 
 interface ColumnMapping {
   sourceColumn: string
@@ -71,51 +71,80 @@ const EMPLOYEE_FIELDS = [
   { field: 'status', label: 'Status', required: false },
 ]
 
-// REGES Online profile (export CSV/Excel from reges.inspectiamuncii.ro)
-const REGES_PROFILE = {
-  name: 'REGES Online',
+// REGES Salariați profile (24 columns - employee personal data)
+const REGES_SALARIATI_PROFILE = {
+  name: 'REGES Salariați',
+  columnCount: 24,
+  description: '24 coloane - date personale angajați',
   mappings: {
+    'CNP': 'cnp',
     'Nume': 'last_name',
     'Prenume': 'first_name',
-    'CNP': 'cnp',
-    'Cod COR': 'cor_code',
-    'Denumire COR': 'cor_title',
-    'Stare contract': 'status',
-    'Nr. contract': 'contract_number',
-    'Data început': 'hire_date',
-    'Data sfârșit': 'contract_end_date',
-    'Tip contract': 'contract_type',
-    'Departament': 'department',
+    'Data nașterii': 'date_of_birth',
+    'Naționalitate': 'nationality',
+    'Cod SIRUTA localitate': 'siruta_code',
+    'Tip carte identitate': 'id_card_type',
+    'Adresa': 'address',
+    'Radiat': 'is_deleted',
+    'Motiv radiere': 'deletion_reason',
+    'CNP vechi': 'old_cnp',
+    'Grad invaliditate': 'disability_grade',
+    'Tip handicap': 'handicap_type',
+    'Grad handicap': 'handicap_grade',
+    'Dată certificat handicap': 'handicap_cert_date',
+    'Dată valabilitate certificat handicap': 'handicap_cert_expiry',
+    'Tip apatrid': 'stateless_type',
+    'Țară domiciliu': 'country_of_residence',
+    'Număr autorizație': 'work_permit_number',
+    'Tip autorizație': 'work_permit_type',
+    'Tip autorizație excepție': 'work_permit_exception_type',
+    'Dată început autorizație': 'work_permit_start',
+    'Dată sfârșit autorizație': 'work_permit_end',
+    'SalariatId': 'external_id',
   },
-  dateFormat: 'YYYY-MM-DD',
-  statusMapping: {
-    'Activ': 'active',
-    'Suspendat': 'suspended',
-    'Încetat': 'terminated',
-    'Încetăt': 'terminated', // common typo
-  } as Record<string, string>,
 }
 
-// REVISAL profile (export XML from desktop app)
-const REVISAL_PROFILE = {
-  name: 'REVISAL (XML)',
-  isXML: true,
+// REGES Contracte profile (47 columns - employment contracts)
+const REGES_CONTRACTE_PROFILE = {
+  name: 'REGES Contracte',
+  columnCount: 47,
+  description: '47 coloane - contracte de muncă',
   mappings: {
-    'NumeSalariat': 'last_name',
-    'PrenumeSalariat': 'first_name',
-    'CNP': 'cnp',
-    'CodCOR': 'cor_code',
-    'DataAngajare': 'hire_date',
-    'StareContract': 'status',
-    'TipContract': 'contract_type',
-    'NrContract': 'contract_number',
+    'ID Contract': 'contract_external_id',
+    'Număr Contract': 'contract_number',
+    'Dată Consemnare': 'registration_date',
+    'Data Contract': 'contract_date',
+    'Data Început Contract': 'start_date',
+    'Data Sfârșit Contract': 'end_date',
+    'Tip Contract': 'contract_type',
+    'Tip Durată': 'duration_type',
+    'Tip Normă': 'work_norm',
+    'Salariu': 'salary',
+    'Monedă': 'currency',
+    'Nivel Studii': 'education_level',
+    'Tip Loc Muncă': 'workplace_type',
+    'Județ Loc Muncă': 'work_county',
+    'Localitate Loc Muncă': 'work_locality',
+    'ID Salariat': 'employee_external_id',
+    'CNP Salariat': 'cnp',
+    'Nume Salariat': 'last_name',
+    'Prenume Salariat': 'first_name',
+    'Stare Curentă': 'status',
+    'Radiat': 'is_deleted',
+    'Motiv Radiere': 'deletion_reason',
+    'Detalii': 'details',
+    'Normă Timp Muncă': 'work_time_norm',
+    'Repartizare Timp Muncă': 'work_time_distribution',
+    'Durată Timp Muncă': 'work_hours',
+    'Interval Timp': 'time_interval',
+    'Repartizare Muncă': 'work_schedule',
+    'Notă Repartizare Muncă': 'schedule_notes',
+    'Început Interval': 'shift_start',
+    'Sfârșit Interval': 'shift_end',
+    'Tip Tură': 'shift_type',
+    'Cod COR': 'cor_code',
+    'Versiune COR': 'cor_version',
   },
-  dateFormat: 'DD.MM.YYYY',
-  statusMapping: {
-    '1': 'active',
-    '2': 'suspended',
-    '3': 'terminated',
-  } as Record<string, string>,
 }
 
 // Fuzzy match patterns for auto-detection (Romanian/English)
@@ -134,6 +163,159 @@ const COLUMN_PATTERNS: Record<string, string[]> = {
   contract_number: ['nr contract', 'contract_number', 'numar contract', 'nr. contract', 'nrcontract'],
   contract_type: ['tip contract', 'contract_type', 'tipcontract', 'tip_contract'],
   status: ['stare', 'status', 'activ', 'stare contract', 'starecontract'],
+}
+
+// Value transformers for REGES data
+function transformValue(columnName: string, rawValue: any, profile: ImportProfile): { value: any; transformed: boolean; warning?: string } {
+  if (rawValue === null || rawValue === undefined || rawValue === '') {
+    return { value: null, transformed: false }
+  }
+
+  const str = rawValue.toString().trim()
+
+  // Tip carte identitate transformations
+  if (columnName === 'Tip carte identitate') {
+    const mapping: Record<string, string> = {
+      'CarteIdentitate': 'CI',
+      'Pasaport': 'Pașaport',
+      'PermisŞedere': 'Permis ședere',
+      'PermisȘedere': 'Permis ședere',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Grad/Tip handicap - "Fara" → null
+  if (columnName === 'Grad invaliditate' || columnName === 'Tip handicap' || columnName === 'Grad handicap') {
+    if (str === 'Fara' || str === 'Fără') {
+      return { value: null, transformed: true }
+    }
+    return { value: str, transformed: false }
+  }
+
+  // Boolean fields (Radiat)
+  if (columnName === 'Radiat') {
+    const lowerStr = str.toLowerCase()
+    if (lowerStr === 'true' || lowerStr === '1' || lowerStr === 'da') {
+      return { value: true, transformed: true }
+    }
+    if (lowerStr === 'false' || lowerStr === '0' || lowerStr === 'nu' || str === '') {
+      return { value: false, transformed: true }
+    }
+    return { value: Boolean(str), transformed: false }
+  }
+
+  // Contract type transformations
+  if (columnName === 'Tip Contract') {
+    const mapping: Record<string, string> = {
+      'ContractIndividualMunca': 'CIM',
+      'ContractUcenicie': 'Ucenicie',
+      'ContractMuncaDomiciliu': 'CIM domiciliu',
+      'ContractMuncaTemporara': 'CIM temporar',
+      'ContractTelemunca': 'CIM telemuncă',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Duration type transformations
+  if (columnName === 'Tip Durată') {
+    const mapping: Record<string, string> = {
+      'Nedeterminata': 'Nedeterminată',
+      'Determinata': 'Determinată',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Work norm transformations
+  if (columnName === 'Tip Normă') {
+    const mapping: Record<string, string> = {
+      'NormaIntreaga': 'Normă întreagă',
+      'TimpPartial': 'Timp parțial',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Education level transformations
+  if (columnName === 'Nivel Studii') {
+    const mapping: Record<string, string> = {
+      'Medii': 'Medii',
+      'Superioare': 'Superioare',
+      'Profesionale': 'Profesionale',
+    }
+    if (str === '') return { value: null, transformed: true }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Workplace type transformations
+  if (columnName === 'Tip Loc Muncă') {
+    const mapping: Record<string, string> = {
+      'Fix': 'Fix',
+      'Mobil': 'Mobil',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Work time norm transformations
+  if (columnName === 'Normă Timp Muncă') {
+    const mapping: Record<string, string> = {
+      'NormaIntreaga840': '8h/zi, 40h/săpt',
+      'TimpPartial': str,
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Work time distribution transformations
+  if (columnName === 'Repartizare Timp Muncă') {
+    const mapping: Record<string, string> = {
+      'OreDeZi': 'Ore/zi',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Time interval transformations
+  if (columnName === 'Interval Timp') {
+    const mapping: Record<string, string> = {
+      'OrePeZi': 'Ore/zi',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Work schedule transformations
+  if (columnName === 'Repartizare Muncă') {
+    const mapping: Record<string, string> = {
+      'Zilnic': 'Zilnic',
+      'Schimburi': 'Schimburi',
+    }
+    const transformed = mapping[str] || str
+    return { value: transformed, transformed: transformed !== str }
+  }
+
+  // Status - parse composite "Activ", "Încetat: DD-MM-YYYY", "Suspendat: DD-MM-YYYY"
+  if (columnName === 'Stare Curentă') {
+    if (str === 'Activ') {
+      return { value: 'activ', transformed: true }
+    }
+    if (str.startsWith('Încetat:')) {
+      const datePart = str.replace('Încetat:', '').trim()
+      return { value: 'incetat', transformed: true, warning: `Data încetare: ${datePart}` }
+    }
+    if (str.startsWith('Suspendat:')) {
+      const datePart = str.replace('Suspendat:', '').trim()
+      return { value: 'suspendat', transformed: true, warning: `Data suspendare: ${datePart}` }
+    }
+    return { value: str.toLowerCase(), transformed: false }
+  }
+
+  // Default: no transformation
+  return { value: str, transformed: false }
 }
 
 // CNP validation for Romania
@@ -202,6 +384,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
   const [file, setFile] = useState<File | null>(null)
   const [rawData, setRawData] = useState<any[]>([])
   const [columns, setColumns] = useState<string[]>([])
+  const [headerRow, setHeaderRow] = useState<number>(1)
   const [mappings, setMappings] = useState<ColumnMapping[]>([])
   const [importRows, setImportRows] = useState<ImportRow[]>([])
   const [importing, setImporting] = useState(false)
@@ -213,9 +396,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
   const autoDetectMapping = useCallback((sourceColumns: string[], selectedProfile: ImportProfile): ColumnMapping[] => {
     const mappings: ColumnMapping[] = []
 
-    // If REGES or REVISAL profile, use pre-configured mappings
-    if (selectedProfile === 'reges') {
-      Object.entries(REGES_PROFILE.mappings).forEach(([sourceCol, targetField]) => {
+    // If REGES profile, use pre-configured mappings
+    if (selectedProfile === 'reges-salariati') {
+      Object.entries(REGES_SALARIATI_PROFILE.mappings).forEach(([sourceCol, targetField]) => {
         const found = sourceColumns.find((col) => col.trim() === sourceCol)
         if (found) {
           const fieldDef = EMPLOYEE_FIELDS.find((f) => f.field === targetField)
@@ -226,8 +409,8 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           })
         }
       })
-    } else if (selectedProfile === 'revisal') {
-      Object.entries(REVISAL_PROFILE.mappings).forEach(([sourceCol, targetField]) => {
+    } else if (selectedProfile === 'reges-contracte') {
+      Object.entries(REGES_CONTRACTE_PROFILE.mappings).forEach(([sourceCol, targetField]) => {
         const found = sourceColumns.find((col) => col.trim() === sourceCol)
         if (found) {
           const fieldDef = EMPLOYEE_FIELDS.find((f) => f.field === targetField)
@@ -383,49 +566,115 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
       let jsonData: any[] = []
       let detectedColumns: string[] = []
+      let detectedHeaderRow = 1
 
       if (fileExt === 'csv') {
-        // Parse CSV with Papa Parse (auto-detects encoding and delimiter)
+        // Parse CSV with Papa Parse - first parse without header to check rows
         const text = await uploadedFile.text()
-        const parsed = Papa.parse(text, {
-          header: true,
+        const parsedNoHeader = Papa.parse(text, {
+          header: false,
           skipEmptyLines: true,
           dynamicTyping: false,
           delimitersToGuess: [',', ';', '\t', '|'],
         })
 
-        jsonData = parsed.data as any[]
-        detectedColumns = parsed.meta.fields || []
+        const rows = parsedNoHeader.data as any[][]
+
+        if (rows.length >= 2) {
+          // Smart header detection: check if row 1 has many nulls and row 2 has mostly values
+          const row1 = rows[0] || []
+          const row2 = rows[1] || []
+
+          const row1NullCount = row1.filter((cell: any) => !cell || cell.toString().trim() === '').length
+          const row2NullCount = row2.filter((cell: any) => !cell || cell.toString().trim() === '').length
+          const row1NullPercent = row1NullCount / row1.length
+          const row2NullPercent = row2NullCount / row2.length
+
+          // If row 1 has >50% nulls AND row 2 has <20% nulls, use row 2 as headers
+          if (row1NullPercent > 0.5 && row2NullPercent < 0.2) {
+            detectedHeaderRow = 2
+            // Re-parse with row 2 as header
+            const parsed = Papa.parse(text, {
+              header: true,
+              skipEmptyLines: true,
+              dynamicTyping: false,
+              delimitersToGuess: [',', ';', '\t', '|'],
+              transformHeader: (header: string, index: number) => {
+                // Use row 2 values as headers
+                return row2[index]?.toString().trim() || header
+              },
+            })
+            // Skip first data row (which is the merged header row)
+            jsonData = (parsed.data as any[]).slice(1)
+            detectedColumns = row2.map((cell: any) => cell?.toString().trim() || '').filter((col: string) => col !== '')
+          } else {
+            // Normal case: row 1 is headers
+            const parsed = Papa.parse(text, {
+              header: true,
+              skipEmptyLines: true,
+              dynamicTyping: false,
+              delimitersToGuess: [',', ';', '\t', '|'],
+            })
+            jsonData = parsed.data as any[]
+            detectedColumns = parsed.meta.fields || []
+          }
+        } else {
+          // Single row file
+          const parsed = Papa.parse(text, {
+            header: true,
+            skipEmptyLines: true,
+            dynamicTyping: false,
+            delimitersToGuess: [',', ';', '\t', '|'],
+          })
+          jsonData = parsed.data as any[]
+          detectedColumns = parsed.meta.fields || []
+        }
       } else if (fileExt === 'json') {
         // Parse JSON
         const text = await uploadedFile.text()
         const data = JSON.parse(text)
         jsonData = Array.isArray(data) ? data : [data]
         detectedColumns = Object.keys(jsonData[0] || {})
-
-        // Auto-detect REGES JSON structure
-        if (detectedColumns.includes('Nume') && detectedColumns.includes('Cod COR')) {
-          setProfile('reges')
-        }
-      } else if (fileExt === 'xml') {
-        // Parse XML (REVISAL)
-        const text = await uploadedFile.text()
-        parseXML(text, { explicitArray: false }, (err, result) => {
-          if (err) throw err
-
-          // Extract employee data from REVISAL XML structure
-          const employees = result?.Salariati?.Salariat || []
-          jsonData = Array.isArray(employees) ? employees : [employees]
-          detectedColumns = Object.keys(jsonData[0] || {})
-          setProfile('revisal')
-        })
       } else {
-        // Parse Excel/ODS (SheetJS)
+        // Parse Excel/ODS (SheetJS) - with smart header detection
         const data = await uploadedFile.arrayBuffer()
-        const workbook = XLSX.read(data, { type: 'array' })
+        const workbook = XLSX.read(data, { type: 'array', header: 1 })
         const worksheet = workbook.Sheets[workbook.SheetNames[0]]
-        jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: false })
-        detectedColumns = Object.keys(jsonData[0] || {})
+        const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }) as any[][]
+
+        if (rawRows.length >= 2) {
+          const row1 = rawRows[0] || []
+          const row2 = rawRows[1] || []
+
+          const row1NullCount = row1.filter((cell: any) => !cell || cell.toString().trim() === '').length
+          const row2NullCount = row2.filter((cell: any) => !cell || cell.toString().trim() === '').length
+          const row1NullPercent = row1NullCount / row1.length
+          const row2NullPercent = row2NullCount / row2.length
+
+          // If row 1 has >50% nulls AND row 2 has <20% nulls, use row 2 as headers
+          if (row1NullPercent > 0.5 && row2NullPercent < 0.2) {
+            detectedHeaderRow = 2
+            // Use row 2 as headers, data starts from row 3
+            const headers = row2.map((cell: any) => cell?.toString().trim() || '').filter((col: string) => col !== '')
+            const dataRows = rawRows.slice(2)
+            jsonData = dataRows.map((row: any[]) => {
+              const obj: any = {}
+              headers.forEach((header: string, index: number) => {
+                obj[header] = row[index] || ''
+              })
+              return obj
+            })
+            detectedColumns = headers
+          } else {
+            // Normal case: row 1 is headers
+            jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: false })
+            detectedColumns = Object.keys(jsonData[0] || {})
+          }
+        } else {
+          // Single row file
+          jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: false })
+          detectedColumns = Object.keys(jsonData[0] || {})
+        }
       }
 
       if (jsonData.length === 0) {
@@ -435,6 +684,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
       setRawData(jsonData)
       setColumns(detectedColumns)
+      setHeaderRow(detectedHeaderRow)
 
       // Move to profile selection
       setStep(2)
@@ -452,8 +702,8 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
     const detected = autoDetectMapping(columns, selectedProfile)
     setMappings(detected)
 
-    // If REGES or REVISAL, skip to validation (auto-mapped)
-    if (selectedProfile === 'reges' || selectedProfile === 'revisal') {
+    // If REGES profile, skip to validation (auto-mapped)
+    if (selectedProfile === 'reges-salariati' || selectedProfile === 'reges-contracte') {
       handleMappingComplete(detected, selectedProfile)
     } else {
       // Manual: show mapping step
@@ -468,22 +718,35 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
     const mapped = rawData.map((row) => {
       const mappedData: Record<string, any> = {}
+      const transformations: Record<string, { transformed: boolean; original: any; warning?: string }> = {}
+
       finalMappings.forEach((mapping) => {
         if (mapping.sourceColumn && mapping.sourceColumn !== '—') {
-          let value = row[mapping.sourceColumn]
+          const rawValue = row[mapping.sourceColumn]
 
-          // Apply status mapping for REGES/REVISAL
-          if (mapping.targetField === 'status' && value) {
-            if (finalProfile === 'reges') {
-              value = REGES_PROFILE.statusMapping[value] || value.toLowerCase()
-            } else if (finalProfile === 'revisal') {
-              value = REVISAL_PROFILE.statusMapping[value] || value
+          // Apply transformations for REGES profiles
+          if (finalProfile === 'reges-salariati' || finalProfile === 'reges-contracte') {
+            const transformed = transformValue(mapping.sourceColumn, rawValue, finalProfile)
+            mappedData[mapping.targetField] = transformed.value
+            if (transformed.transformed || transformed.warning) {
+              transformations[mapping.targetField] = {
+                transformed: transformed.transformed,
+                original: rawValue,
+                warning: transformed.warning,
+              }
             }
+          } else {
+            // Manual profile: no transformations
+            mappedData[mapping.targetField] = rawValue
           }
-
-          mappedData[mapping.targetField] = value
         }
       })
+
+      // Store transformations metadata
+      if (Object.keys(transformations).length > 0) {
+        mappedData._transformations = transformations
+      }
+
       return mappedData
     })
 
@@ -491,10 +754,10 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
     const cnpSet = new Set<string>()
     Promise.all(
       mapped.map(async (data, index) => {
-        const validation = await validateRow(data, index + 2, cnpSet)
+        const validation = await validateRow(data, index + headerRow + 1, cnpSet)
         if (data.cnp) cnpSet.add(data.cnp.toString().trim())
         return {
-          rowNumber: index + 2,
+          rowNumber: index + headerRow + 1,
           data,
           validation,
         }
@@ -675,7 +938,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{file.name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {(file.size / 1024).toFixed(1)} KB · {rawData.length} rânduri detectate
+                      {(file.size / 1024).toFixed(1)} KB · {rawData.length} rânduri detectate · Header pe rândul {headerRow}
                     </p>
                   </div>
                   <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
@@ -725,42 +988,49 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
                 Pas 2: Selectează profilul de import
               </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 Alege sursa datelor pentru mapare automată, sau creează o mapare personalizată.
               </p>
+              <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                <p className="text-sm text-gray-900 dark:text-white">
+                  <strong>REGES Online</strong> este singurul registru oficial din 2025. Exportați din <strong>Utile → Export entitate</strong>.
+                </p>
+              </div>
 
               <div className="space-y-4">
-                {/* REGES Profile */}
+                {/* REGES Salariați Profile */}
                 <button
-                  onClick={() => handleProfileSelect('reges')}
+                  onClick={() => handleProfileSelect('reges-salariati')}
                   className={`w-full p-6 border-2 rounded-xl text-left transition ${
-                    profile === 'reges'
+                    profile === 'reges-salariati'
                       ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
                   }`}
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
-                      <FileSpreadsheet className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                      <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                        Import din REGES Online
+                        REGES Salariați
                       </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Export CSV/Excel de pe platforma reges.inspectiamuncii.ro. Mapare automată pentru toate
-                        câmpurile standard REGES.
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        Export date personale angajați din REGES Online.
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500">
+                        {REGES_SALARIATI_PROFILE.description}
                       </p>
                     </div>
-                    {profile === 'reges' && <CheckCircle className="h-6 w-6 text-blue-600 flex-shrink-0" />}
+                    {profile === 'reges-salariati' && <CheckCircle className="h-6 w-6 text-blue-600 flex-shrink-0" />}
                   </div>
                 </button>
 
-                {/* REVISAL Profile */}
+                {/* REGES Contracte Profile */}
                 <button
-                  onClick={() => handleProfileSelect('revisal')}
+                  onClick={() => handleProfileSelect('reges-contracte')}
                   className={`w-full p-6 border-2 rounded-xl text-left transition ${
-                    profile === 'revisal'
+                    profile === 'reges-contracte'
                       ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20'
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
                   }`}
@@ -770,13 +1040,15 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       <FileSpreadsheet className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Import din REVISAL</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Export XML din aplicația desktop REVISAL. Mapare automată conform structurii XML standard
-                        REVISAL.
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">REGES Contracte</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        Export contracte de muncă din REGES Online.
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500">
+                        {REGES_CONTRACTE_PROFILE.description}
                       </p>
                     </div>
-                    {profile === 'revisal' && <CheckCircle className="h-6 w-6 text-purple-600 flex-shrink-0" />}
+                    {profile === 'reges-contracte' && <CheckCircle className="h-6 w-6 text-purple-600 flex-shrink-0" />}
                   </div>
                 </button>
 
@@ -902,85 +1174,211 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           {step === 4 && (
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Pas 4: Validare & Preview</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                {importRows.filter((r) => r.validation.valid).length} rânduri valide ·{' '}
-                {importRows.filter((r) => !r.validation.valid).length} cu erori ·{' '}
-                {importRows.filter((r) => r.validation.warnings.length > 0).length} cu avertizări
-              </p>
 
-              <div className="max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0">
-                    <tr>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        #
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        Prenume
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        Nume
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        CNP
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        Funcție
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {importRows.map((row) => (
-                      <tr
-                        key={row.rowNumber}
-                        className={
-                          !row.validation.valid
-                            ? 'bg-red-50 dark:bg-red-900/20'
-                            : row.validation.warnings.length > 0
-                            ? 'bg-yellow-50 dark:bg-yellow-900/20'
-                            : 'bg-green-50 dark:bg-green-900/20'
-                        }
-                      >
-                        <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.rowNumber}</td>
-                        <td className="px-4 py-2 text-gray-700 dark:text-gray-300">
-                          {row.data.first_name || '—'}
-                        </td>
-                        <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.last_name || '—'}</td>
-                        <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.cnp || '—'}</td>
-                        <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.job_title || '—'}</td>
-                        <td className="px-4 py-2">
-                          {row.validation.valid ? (
-                            <div className="flex items-center gap-1">
-                              <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-                              {row.validation.warnings.length > 0 && (
-                                <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                              )}
-                            </div>
-                          ) : (
-                            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                          )}
-                          {(row.validation.errors.length > 0 || row.validation.warnings.length > 0) && (
-                            <div className="text-xs mt-1 space-y-1">
-                              {row.validation.errors.map((err, idx) => (
-                                <div key={idx} className="text-red-600 dark:text-red-400">
-                                  {err}
-                                </div>
-                              ))}
-                              {row.validation.warnings.map((warn, idx) => (
-                                <div key={idx} className="text-yellow-600 dark:text-yellow-400">
-                                  {warn}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </td>
+              {/* Summary Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Rânduri detectate</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{importRows.length}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Header pe rândul {headerRow}</p>
+                </div>
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Valide</p>
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {importRows.filter((r) => r.validation.valid).length}
+                  </p>
+                </div>
+                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Avertizări</p>
+                  <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                    {importRows.filter((r) => r.validation.warnings.length > 0).length}
+                  </p>
+                </div>
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Erori</p>
+                  <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                    {importRows.filter((r) => !r.validation.valid).length}
+                  </p>
+                </div>
+              </div>
+
+              {/* Mapping Stats for REGES Profiles */}
+              {(profile === 'reges-salariati' || profile === 'reges-contracte') && (
+                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    Mapare automată
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{
+                            width: `${(mappings.filter((m) => m.sourceColumn && m.sourceColumn !== '').length / mappings.length) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {mappings.filter((m) => m.sourceColumn && m.sourceColumn !== '').length} / {mappings.length} coloane
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Preview First 5 Rows */}
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  Preview primele 5 rânduri
+                </h3>
+                <div className="max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          #
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          Prenume
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          Nume
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          CNP
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          Funcție
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          Status
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                      {importRows.slice(0, 5).map((row) => {
+                        const transformations = row.data._transformations || {}
+                        return (
+                          <tr
+                            key={row.rowNumber}
+                            className={
+                              !row.validation.valid
+                                ? 'bg-red-50 dark:bg-red-900/20'
+                                : row.validation.warnings.length > 0
+                                ? 'bg-yellow-50 dark:bg-yellow-900/20'
+                                : ''
+                            }
+                          >
+                            <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.rowNumber}</td>
+                            <td className="px-4 py-2">
+                              <span
+                                className={transformations.first_name?.transformed ? 'text-green-600 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}
+                                title={transformations.first_name?.original ? `Original: ${transformations.first_name.original}` : ''}
+                              >
+                                {row.data.first_name || '—'}
+                              </span>
+                            </td>
+                            <td className="px-4 py-2">
+                              <span
+                                className={transformations.last_name?.transformed ? 'text-green-600 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}
+                                title={transformations.last_name?.original ? `Original: ${transformations.last_name.original}` : ''}
+                              >
+                                {row.data.last_name || '—'}
+                              </span>
+                            </td>
+                            <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.cnp || '—'}</td>
+                            <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.job_title || '—'}</td>
+                            <td className="px-4 py-2">
+                              {row.validation.valid ? (
+                                <div className="flex items-center gap-1">
+                                  <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                  {row.validation.warnings.length > 0 && (
+                                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                                  )}
+                                </div>
+                              ) : (
+                                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                              )}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Full Validation List */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  Lista completă validare ({importRows.length} rânduri)
+                </h3>
+                <div className="max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          #
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          Nume Complet
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          CNP
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          Status
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                      {importRows.map((row) => (
+                        <tr
+                          key={row.rowNumber}
+                          className={
+                            !row.validation.valid
+                              ? 'bg-red-50 dark:bg-red-900/20'
+                              : row.validation.warnings.length > 0
+                              ? 'bg-yellow-50 dark:bg-yellow-900/20'
+                              : ''
+                          }
+                        >
+                          <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.rowNumber}</td>
+                          <td className="px-4 py-2 text-gray-700 dark:text-gray-300">
+                            {row.data.last_name} {row.data.first_name}
+                          </td>
+                          <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.cnp || '—'}</td>
+                          <td className="px-4 py-2">
+                            {row.validation.valid ? (
+                              <div className="flex items-center gap-1">
+                                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                {row.validation.warnings.length > 0 && (
+                                  <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                                )}
+                              </div>
+                            ) : (
+                              <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                            )}
+                            {(row.validation.errors.length > 0 || row.validation.warnings.length > 0) && (
+                              <div className="text-xs mt-1 space-y-1">
+                                {row.validation.errors.map((err, idx) => (
+                                  <div key={idx} className="text-red-600 dark:text-red-400">
+                                    {err}
+                                  </div>
+                                ))}
+                                {row.validation.warnings.map((warn, idx) => (
+                                  <div key={idx} className="text-yellow-600 dark:text-yellow-400">
+                                    {warn}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <div className="mt-8 flex justify-between">
@@ -1036,7 +1434,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       </p>
                     )}
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Profil: {profile === 'reges' ? 'REGES Online' : profile === 'revisal' ? 'REVISAL' : 'Manual'}
+                      Profil: {profile === 'reges-salariati' ? 'REGES Salariați' : profile === 'reges-contracte' ? 'REGES Contracte' : 'Manual'}
                     </p>
                   </div>
                   <button
