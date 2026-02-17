@@ -17,6 +17,7 @@ import ActiveModulesCard from '@/components/ActiveModulesCard'  // 🆕 OP-LEGO
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { OrgProvider, useOrg, type OrgOption } from '@/lib/contexts/OrgContext'
 import OrgSelector from '@/components/dashboard/OrgSelector'
+import DashboardOverview from './DashboardOverview'
 
 interface Props {
   user: { email: string; id: string }
@@ -71,7 +72,7 @@ function DashboardContent({
     isArray: Array.isArray(employees)
   })
 
-  const [activeTab, setActiveTab] = useState<'medical' | 'equipment' | 'employees'>('medical')
+  const [activeTab, setActiveTab] = useState<'overview' | 'medical' | 'equipment' | 'employees'>('overview')
   const { currentOrg: selectedOrg, setCurrentOrg: setSelectedOrg, selectedOrgData } = useOrg()
   const router = useRouter()
   const pathname = usePathname()
@@ -413,6 +414,17 @@ function DashboardContent({
         {/* ============ TABS ============ */}
         <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
           <div className="flex">
+            {/* Tab Overview */}
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`flex-1 py-3.5 text-center text-[15px] font-semibold transition-all flex items-center justify-center gap-2 ${
+                activeTab === 'overview'
+                  ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-b-[3px] border-blue-600'
+                  : 'bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 border-b border-gray-200 dark:border-gray-700'
+              }`}
+            >
+              📊 Prezentare Generală
+            </button>
             {/* Tab Medicina Muncii */}
             <button
               onClick={() => setActiveTab('medical')}
@@ -459,22 +471,31 @@ function DashboardContent({
             </button>
           </div>
 
-          {/* ============ COUNTER CARDS ============ */}
-          <div className="grid grid-cols-3 gap-4 p-5">
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-xl py-6 text-center">
-              <div className="text-5xl font-black text-red-600 dark:text-red-400">{expired}</div>
-              <div className="text-[11px] font-bold text-red-500 dark:text-red-400 uppercase tracking-widest mt-1">Expirate</div>
+          {/* ============ COUNTER CARDS (only for medical, equipment, employees tabs) ============ */}
+          {activeTab !== 'overview' && (
+            <div className="grid grid-cols-3 gap-4 p-5">
+              <div className="bg-red-50 dark:bg-red-900/20 rounded-xl py-6 text-center">
+                <div className="text-5xl font-black text-red-600 dark:text-red-400">{expired}</div>
+                <div className="text-[11px] font-bold text-red-500 dark:text-red-400 uppercase tracking-widest mt-1">Expirate</div>
+              </div>
+              <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl py-6 text-center">
+                <div className="text-5xl font-black text-orange-500 dark:text-orange-400">{expiring}</div>
+                <div className="text-[11px] font-bold text-orange-500 dark:text-orange-400 uppercase tracking-widest mt-1">Expiră &lt;30 zile</div>
+              </div>
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-xl py-6 text-center">
+                <div className="text-5xl font-black text-green-600 dark:text-green-400">{valid}</div>
+                <div className="text-[11px] font-bold text-green-600 dark:text-green-400 uppercase tracking-widest mt-1">Valide</div>
+              </div>
             </div>
-            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl py-6 text-center">
-              <div className="text-5xl font-black text-orange-500 dark:text-orange-400">{expiring}</div>
-              <div className="text-[11px] font-bold text-orange-500 dark:text-orange-400 uppercase tracking-widest mt-1">Expiră &lt;30 zile</div>
-            </div>
-            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl py-6 text-center">
-              <div className="text-5xl font-black text-green-600 dark:text-green-400">{valid}</div>
-              <div className="text-[11px] font-bold text-green-600 dark:text-green-400 uppercase tracking-widest mt-1">Valide</div>
-            </div>
-          </div>
+          )}
         </div>
+
+        {/* ============ OVERVIEW TAB ============ */}
+        {activeTab === 'overview' && (
+          <div className="py-6">
+            <DashboardOverview selectedOrg={selectedOrg} />
+          </div>
+        )}
 
         {/* ============ TABEL MEDICINA MUNCII ============ */}
         {activeTab === 'medical' && (
