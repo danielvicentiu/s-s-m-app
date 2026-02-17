@@ -390,6 +390,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
   const [importProgress, setImportProgress] = useState(0)
   const [importStats, setImportStats] = useState({ success: 0, failed: 0, total: 0 })
   const [dragActive, setDragActive] = useState(false)
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set())
 
   // Auto-detect column mapping (fuzzy match)
   const autoDetectMapping = useCallback((sourceColumns: string[], selectedProfile: ImportProfile): ColumnMapping[] => {
@@ -805,6 +806,8 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       })
     ).then((validated) => {
       setImportRows(validated)
+      const defaultSelected = new Set(validated.filter((r) => r.validation.valid).map((r) => r.rowNumber))
+      setSelectedRows(defaultSelected)
       setStep(4)
     })
   }
@@ -815,7 +818,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
     setImporting(true)
 
     const supabase = createSupabaseBrowser()
-    const validRows = importRows.filter((row) => row.validation.valid)
+    const validRows = importRows.filter((row) => selectedRows.has(row.rowNumber))
     const total = validRows.length
     let success = 0
     let failed = 0
@@ -1380,13 +1383,44 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
               {/* Full Validation List */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                  Lista completă validare ({importRows.length} rânduri)
-                </h3>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    Lista completă validare ({importRows.length} rânduri)
+                  </h3>
+                  <button
+                    onClick={() => {
+                      if (selectedRows.size === importRows.length) {
+                        setSelectedRows(new Set())
+                      } else {
+                        setSelectedRows(new Set(importRows.map((r) => r.rowNumber)))
+                      }
+                    }}
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    {selectedRows.size === importRows.length ? 'Deselectează tot' : 'Selectează tot'}
+                  </button>
+                </div>
                 <div className="max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0">
                       <tr>
+                        <th className="px-3 py-2 text-center w-10">
+                          <input
+                            type="checkbox"
+                            checked={importRows.length > 0 && selectedRows.size === importRows.length}
+                            ref={(el) => {
+                              if (el) el.indeterminate = selectedRows.size > 0 && selectedRows.size < importRows.length
+                            }}
+                            onChange={() => {
+                              if (selectedRows.size === importRows.length) {
+                                setSelectedRows(new Set())
+                              } else {
+                                setSelectedRows(new Set(importRows.map((r) => r.rowNumber)))
+                              }
+                            }}
+                            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                          />
+                        </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
                           #
                         </th>
@@ -1402,50 +1436,71 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {importRows.map((row) => (
-                        <tr
-                          key={row.rowNumber}
-                          className={
-                            !row.validation.valid
-                              ? 'bg-red-50 dark:bg-red-900/20'
-                              : row.validation.warnings.length > 0
-                              ? 'bg-yellow-50 dark:bg-yellow-900/20'
-                              : ''
-                          }
-                        >
-                          <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.rowNumber}</td>
-                          <td className="px-4 py-2 text-gray-700 dark:text-gray-300">
-                            {row.data.last_name} {row.data.first_name}
-                          </td>
-                          <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.cnp || '—'}</td>
-                          <td className="px-4 py-2">
-                            {row.validation.valid ? (
-                              <div className="flex items-center gap-1">
-                                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-                                {row.validation.warnings.length > 0 && (
-                                  <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                                )}
-                              </div>
-                            ) : (
-                              <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                            )}
-                            {(row.validation.errors.length > 0 || row.validation.warnings.length > 0) && (
-                              <div className="text-xs mt-1 space-y-1">
-                                {row.validation.errors.map((err, idx) => (
-                                  <div key={idx} className="text-red-600 dark:text-red-400">
-                                    {err}
-                                  </div>
-                                ))}
-                                {row.validation.warnings.map((warn, idx) => (
-                                  <div key={idx} className="text-yellow-600 dark:text-yellow-400">
-                                    {warn}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                      {importRows.map((row) => {
+                        const isChecked = selectedRows.has(row.rowNumber)
+                        return (
+                          <tr
+                            key={row.rowNumber}
+                            className={
+                              !row.validation.valid
+                                ? 'bg-red-50 dark:bg-red-900/20'
+                                : row.validation.warnings.length > 0
+                                ? 'bg-yellow-50 dark:bg-yellow-900/20'
+                                : ''
+                            }
+                          >
+                            <td className="px-3 py-2 text-center">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  setSelectedRows((prev) => {
+                                    const next = new Set(prev)
+                                    if (next.has(row.rowNumber)) {
+                                      next.delete(row.rowNumber)
+                                    } else {
+                                      next.add(row.rowNumber)
+                                    }
+                                    return next
+                                  })
+                                }}
+                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                              />
+                            </td>
+                            <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.rowNumber}</td>
+                            <td className="px-4 py-2 text-gray-700 dark:text-gray-300">
+                              {row.data.last_name} {row.data.first_name}
+                            </td>
+                            <td className="px-4 py-2 text-gray-700 dark:text-gray-300">{row.data.cnp || '—'}</td>
+                            <td className="px-4 py-2">
+                              {row.validation.valid ? (
+                                <div className="flex items-center gap-1">
+                                  <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                  {row.validation.warnings.length > 0 && (
+                                    <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                                  )}
+                                </div>
+                              ) : (
+                                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                              )}
+                              {(row.validation.errors.length > 0 || row.validation.warnings.length > 0) && (
+                                <div className="text-xs mt-1 space-y-1">
+                                  {row.validation.errors.map((err, idx) => (
+                                    <div key={idx} className="text-red-600 dark:text-red-400">
+                                      {err}
+                                    </div>
+                                  ))}
+                                  {row.validation.warnings.map((warn, idx) => (
+                                    <div key={idx} className="text-yellow-600 dark:text-yellow-400">
+                                      {warn}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -1479,10 +1534,10 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                 </div>
                 <button
                   onClick={handleStartImport}
-                  disabled={importRows.filter((r) => r.validation.valid).length === 0}
+                  disabled={selectedRows.size === 0}
                   className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center gap-2"
                 >
-                  Importă {importRows.filter((r) => r.validation.valid).length} angajați
+                  Importă {selectedRows.size} angajați
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -1546,7 +1601,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       Import nou
                     </button>
                     <button
-                      onClick={() => router.push(`/${locale}/dashboard?org=${selectedOrgId}`)}
+                      onClick={() => router.push(`/${locale}/dashboard/employees?org=${selectedOrgId}`)}
                       className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition flex items-center gap-2"
                     >
                       <Users className="h-4 w-4" />
