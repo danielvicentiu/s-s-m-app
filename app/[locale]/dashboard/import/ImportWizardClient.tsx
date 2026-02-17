@@ -21,6 +21,7 @@ import {
   Check,
   Users,
   Sparkles,
+  RefreshCw,
 } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import Papa from 'papaparse'
@@ -1388,13 +1389,31 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
               </div>
 
               <div className="mt-8 flex justify-between">
-                <button
-                  onClick={() => setStep(profile === 'manual' ? 3 : 2)}
-                  className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Înapoi
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setStep(profile === 'manual' ? 3 : 2)}
+                    className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Înapoi
+                  </button>
+                  <button
+                    onClick={() => {
+                      setStep(1)
+                      setFile(null)
+                      setRawData([])
+                      setColumns([])
+                      setMappings([])
+                      setImportRows([])
+                      setProfile('manual')
+                      setHeaderRow(1)
+                    }}
+                    className="px-6 py-3 rounded-lg text-sm font-semibold border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition flex items-center gap-2"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    Import nou
+                  </button>
+                </div>
                 <button
                   onClick={handleStartImport}
                   disabled={importRows.filter((r) => r.validation.valid).length === 0}
@@ -1443,13 +1462,34 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       Profil: {profile === 'reges-salariati' ? 'REGES Salariați' : profile === 'reges-contracte' ? 'REGES Contracte' : 'Manual'}
                     </p>
                   </div>
-                  <button
-                    onClick={() => router.push(`/${locale}/dashboard?org=${selectedOrgId}`)}
-                    className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition flex items-center gap-2 mx-auto"
-                  >
-                    <Users className="h-4 w-4" />
-                    Vezi lista angajați
-                  </button>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={() => {
+                        setStep(1)
+                        setFile(null)
+                        setRawData([])
+                        setColumns([])
+                        setMappings([])
+                        setImportRows([])
+                        setProfile('manual')
+                        setHeaderRow(1)
+                        setImporting(false)
+                        setImportProgress(0)
+                        setImportStats({ success: 0, failed: 0, total: 0 })
+                      }}
+                      className="px-6 py-3 rounded-lg text-sm font-semibold border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition flex items-center gap-2"
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                      Import nou
+                    </button>
+                    <button
+                      onClick={() => router.push(`/${locale}/dashboard?org=${selectedOrgId}`)}
+                      className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition flex items-center gap-2"
+                    >
+                      <Users className="h-4 w-4" />
+                      Vezi lista angajați
+                    </button>
+                  </div>
                 </>
               )}
             </div>
