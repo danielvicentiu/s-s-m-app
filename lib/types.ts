@@ -655,6 +655,12 @@ export type ReportType =
   | 'situatie_psi'
   | 'instruiri_luna'
   | 'documente_expirate'
+  | 'situatie_gdpr'
+  | 'situatie_near_miss'
+  | 'situatie_iscir'
+  | 'situatie_medical'
+  | 'conformitate_generala'
+  | 'simulare_itm'
 
 export interface Report {
   id: string
@@ -721,7 +727,13 @@ export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
   'situatie_ssm': 'Situație SSM Completă',
   'situatie_psi': 'Situație PSI Completă',
   'instruiri_luna': 'Instruiri Luna Curentă',
-  'documente_expirate': 'Documente Expirate'
+  'documente_expirate': 'Documente Expirate',
+  'situatie_gdpr': 'Situație GDPR',
+  'situatie_near_miss': 'Raport Incidente Near-Miss',
+  'situatie_iscir': 'Situație ISCIR',
+  'situatie_medical': 'Situație Medicală',
+  'conformitate_generala': 'Raport Conformitate Generală',
+  'simulare_itm': 'Simulare Control ITM',
 }
 
 

@@ -14,10 +14,12 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseAdmin() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // ==========================================
 // SYSTEM PROMPT PENTRU EXTRACȚIE LEGISLATIVĂ
@@ -298,7 +300,7 @@ function mergeExtractions(extractions: any[]): any {
 // SAVE EXTRACTION TO DB (reutilizat din M2)
 // ==========================================
 
-async function saveExtractionToDB(actId: string, extraction: any): Promise<string[]> {
+async function saveExtractionToDB(actId: string, extraction: any, supabaseAdmin: ReturnType<typeof getSupabaseAdmin>): Promise<string[]> {
   const errors: string[] = []
 
   const { error: actError } = await supabaseAdmin
@@ -430,7 +432,7 @@ interface ValidationResult {
   validated_at: string
 }
 
-async function validateAct(actId: string): Promise<ValidationResult> {
+async function validateAct(actId: string, supabaseAdmin: ReturnType<typeof getSupabaseAdmin>): Promise<ValidationResult> {
   const checks: ValidationCheck[] = []
 
   const { data: act, error: actError } = await supabaseAdmin
@@ -606,7 +608,7 @@ async function validateAct(actId: string): Promise<ValidationResult> {
 // M2: EXTRACT A SINGLE ACT
 // ==========================================
 
-async function extractAct(act: { id: string; act_type: string; act_short_name: string; full_text: string }): Promise<{
+async function extractAct(act: { id: string; act_type: string; act_short_name: string; full_text: string }, supabaseAdmin: ReturnType<typeof getSupabaseAdmin>): Promise<{
   success: boolean
   act_short_name: string
   stats?: any
@@ -626,7 +628,7 @@ async function extractAct(act: { id: string; act_type: string; act_short_name: s
     }
 
     const finalExtraction = mergeExtractions(extractions)
-    const saveErrors = await saveExtractionToDB(act.id, finalExtraction)
+    const saveErrors = await saveExtractionToDB(act.id, finalExtraction, supabaseAdmin)
 
     return {
       success: true,
@@ -654,6 +656,7 @@ async function extractAct(act: { id: string; act_type: string; act_short_name: s
 // ==========================================
 
 export async function POST(request: NextRequest) {
+  const supabaseAdmin = getSupabaseAdmin()
   const startTime = Date.now()
 
   try {
@@ -698,7 +701,7 @@ export async function POST(request: NextRequest) {
 
       // Procesare secvențială (rate limits Claude API)
       for (const act of eligibleM2) {
-        const result = await extractAct(act)
+        const result = await extractAct(act, supabaseAdmin)
         report.m2_results.push(result)
 
         // Delay între acte (respectă rate limits)
@@ -733,7 +736,7 @@ export async function POST(request: NextRequest) {
       console.log(`[M6] M3: ${allM3Eligible.length} acte eligibile pentru validare`)
 
       for (const act of allM3Eligible) {
-        const result = await validateAct(act.id)
+        const result = await validateAct(act.id, supabaseAdmin)
         report.m3_results.push({
           act_short_name: act.act_short_name,
           score: result.score,

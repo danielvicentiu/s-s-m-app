@@ -6,9 +6,8 @@
 import { Resend } from 'resend';
 import type { ImportResult } from './adapters/ro-adapter';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendChangeNotification(results: ImportResult[]): Promise<void> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const changed = results.filter((r) => r.status === 'updated' || r.status === 'new');
   const errors = results.filter((r) => r.status === 'error');
 

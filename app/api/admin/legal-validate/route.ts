@@ -14,10 +14,12 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseAdmin() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // ==========================================
 // TIPURI
@@ -87,7 +89,7 @@ function getArticlesFromObligations(obligations: any[]): { total: number; articl
 /**
  * Validează un singur act
  */
-async function validateAct(actId: string): Promise<ValidationResult> {
+async function validateAct(actId: string, supabaseAdmin: ReturnType<typeof getSupabaseAdmin>): Promise<ValidationResult> {
   const checks: ValidationCheck[] = []
 
   // 1. Citește actul din DB
@@ -381,6 +383,7 @@ async function validateAct(actId: string): Promise<ValidationResult> {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
     const { act_id, batch } = body
 
@@ -393,7 +396,7 @@ export async function POST(request: NextRequest) {
 
     // Validare un singur act
     if (act_id) {
-      const result = await validateAct(act_id)
+      const result = await validateAct(act_id, supabaseAdmin)
       return NextResponse.json({ success: true, result })
     }
 
@@ -422,7 +425,7 @@ export async function POST(request: NextRequest) {
     // Validează fiecare act
     const results: ValidationResult[] = []
     for (const act of extractedActs) {
-      const result = await validateAct(act.id)
+      const result = await validateAct(act.id, supabaseAdmin)
       results.push(result)
     }
 

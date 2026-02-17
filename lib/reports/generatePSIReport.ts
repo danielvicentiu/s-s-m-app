@@ -10,6 +10,7 @@ interface PSIReportData {
     cui: string | null
     address: string | null
   }
+  qrCodeUrl?: string
   equipment: PSIEquipment[]
   inspections: PSIInspection[]
   alerts: Array<{
@@ -99,6 +100,7 @@ export function generatePSIReport(data: PSIReportData): string {
       padding: 30px;
       border-radius: 12px;
       margin-bottom: 30px;
+      position: relative;
     }
 
     .header h1 {
@@ -311,6 +313,7 @@ export function generatePSIReport(data: PSIReportData): string {
   <div class="container">
     <!-- Header -->
     <div class="header">
+      ${data.qrCodeUrl ? `<img src="${data.qrCodeUrl}" alt="QR" style="position: absolute; top: 20px; right: 20px; width: 100px; height: 100px; border-radius: 8px; background: white; padding: 4px;" />` : ''}
       <h1>🔥 Raport Situație PSI Completă</h1>
       <div class="subtitle">Prevenirea și Stingerea Incendiilor</div>
       <div class="org-info">

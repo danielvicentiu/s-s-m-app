@@ -7,10 +7,12 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseAdmin() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // ==========================================
 // SYSTEM PROMPT PENTRU EXTRACȚIE LEGISLATIVĂ
@@ -310,7 +312,7 @@ function mergeExtractions(extractions: any[]): any {
 // SAVE TO DATABASE
 // ==========================================
 
-async function saveExtractionToDB(actId: string, extraction: any) {
+async function saveExtractionToDB(actId: string, extraction: any, supabaseAdmin: ReturnType<typeof getSupabaseAdmin>) {
   const errors: string[] = []
 
   // 1. Update legal_acts cu metadata extrasă
@@ -422,6 +424,7 @@ async function saveExtractionToDB(actId: string, extraction: any) {
 // ==========================================
 
 export async function POST(request: NextRequest) {
+  const supabaseAdmin = getSupabaseAdmin()
   try {
     const body = await request.json()
     const { act_id } = body
@@ -476,7 +479,7 @@ export async function POST(request: NextRequest) {
     const finalExtraction = mergeExtractions(extractions)
 
     // 5. Salvează în DB
-    const saveErrors = await saveExtractionToDB(act.id, finalExtraction)
+    const saveErrors = await saveExtractionToDB(act.id, finalExtraction, supabaseAdmin)
 
     // 6. Response
     return NextResponse.json({
