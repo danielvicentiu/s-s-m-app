@@ -585,10 +585,12 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           const row1 = rows[0] || []
           const row2 = rows[1] || []
 
-          const row1NullCount = row1.filter((cell: any) => !cell || cell.toString().trim() === '').length
-          const row2NullCount = row2.filter((cell: any) => !cell || cell.toString().trim() === '').length
-          const row1NullPercent = row1NullCount / row1.length
-          const row2NullPercent = row2NullCount / row2.length
+          // Use max columns across both rows for accurate null percentage
+          const maxCols = Math.max(row1.length, row2.length, 1)
+          const row1NonNull = row1.filter((cell: any) => cell && cell.toString().trim() !== '').length
+          const row2NonNull = row2.filter((cell: any) => cell && cell.toString().trim() !== '').length
+          const row1NullPercent = (maxCols - row1NonNull) / maxCols
+          const row2NullPercent = (maxCols - row2NonNull) / maxCols
 
           // If row 1 has >50% nulls AND row 2 has <20% nulls, use row 2 as headers
           if (row1NullPercent > 0.5 && row2NullPercent < 0.2) {
@@ -646,10 +648,12 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           const row1 = rawRows[0] || []
           const row2 = rawRows[1] || []
 
-          const row1NullCount = row1.filter((cell: any) => !cell || cell.toString().trim() === '').length
-          const row2NullCount = row2.filter((cell: any) => !cell || cell.toString().trim() === '').length
-          const row1NullPercent = row1NullCount / row1.length
-          const row2NullPercent = row2NullCount / row2.length
+          // Use max columns across both rows for accurate null percentage
+          const maxCols = Math.max(row1.length, row2.length, 1)
+          const row1NonNull = row1.filter((cell: any) => cell && cell.toString().trim() !== '').length
+          const row2NonNull = row2.filter((cell: any) => cell && cell.toString().trim() !== '').length
+          const row1NullPercent = (maxCols - row1NonNull) / maxCols
+          const row2NullPercent = (maxCols - row2NonNull) / maxCols
 
           // If row 1 has >50% nulls AND row 2 has <20% nulls, use row 2 as headers
           if (row1NullPercent > 0.5 && row2NullPercent < 0.2) {
