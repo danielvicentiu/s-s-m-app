@@ -48,21 +48,21 @@ function buildGetTokenEnvelope(): string {
 }
 
 function buildSearchEnvelope(token: string, params: SearchParams): string {
-  // Schema order for CompositeType: NumarPagina, RezultatePagina, SearchAn, SearchNumar, SearchText, SearchTitlu
-  // Schema order for Search: SearchModel first, then tokenKey
+  // WCF requires: no namespace on SearchModel wrapper, DC namespace on each child element
+  // Schema order: SearchModel first, tokenKey second
   const fields = [
     `<NumarPagina xmlns="${DC_NS}">${params.pagina ?? 0}</NumarPagina>`,
     `<RezultatePagina xmlns="${DC_NS}">${params.rezultatePePagina ?? 10}</RezultatePagina>`,
-    params.an    ? `<SearchAn xmlns="${DC_NS}">${params.an}</SearchAn>`                        : '',
-    params.numar ? `<SearchNumar xmlns="${DC_NS}">${escapeXml(params.numar)}</SearchNumar>`   : '',
-    params.titlu ? `<SearchTitlu xmlns="${DC_NS}">${escapeXml(params.titlu)}</SearchTitlu>`   : '',
+    params.an    ? `<SearchAn xmlns="${DC_NS}">${params.an}</SearchAn>`                      : '',
+    params.numar ? `<SearchNumar xmlns="${DC_NS}">${escapeXml(params.numar)}</SearchNumar>` : '',
+    params.titlu ? `<SearchTitlu xmlns="${DC_NS}">${escapeXml(params.titlu)}</SearchTitlu>` : '',
   ].filter(Boolean).join('\n        ');
 
   return `<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
   <s:Body>
     <Search xmlns="http://tempuri.org/">
-      <SearchModel xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="${DC_NS}">
+      <SearchModel>
         ${fields}
       </SearchModel>
       <tokenKey>${escapeXml(token)}</tokenKey>
