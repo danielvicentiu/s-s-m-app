@@ -81,6 +81,7 @@ async function soapRequest(envelope: string, action: string): Promise<string> {
       'SOAPAction': `"http://tempuri.org/IFreeWebService/${action}"`,
     },
     body: envelope,
+    cache: 'no-store',
   });
 
   if (!response.ok) {
@@ -123,6 +124,19 @@ export async function searchActs(params: SearchParams): Promise<LegislativeActRe
   return parseSearchResults(xml);
 }
 
+// Normalize SOAP full act type names to abbreviations used in the UI
+function normalizeTipAct(raw: string): string {
+  const t = raw.toUpperCase().trim();
+  if (t.includes('URGENȚĂ') || t.includes('URGENTA')) return 'OUG';
+  if (t.startsWith('ORDONANȚĂ') || t.startsWith('ORDONANTA')) return 'OG';
+  if (t.startsWith('HOTĂRÂRE') || t.startsWith('HOTARARE')) return 'HG';
+  if (t.startsWith('LEGE')) return 'Lege';
+  if (t.startsWith('ORDIN')) return 'Ordin';
+  if (t.startsWith('COD')) return 'Cod';
+  // Return title-cased original for unknown types
+  return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+}
+
 // Response schema (Legi type): DataVigoare, Emitent, LinkHtml, Numar, Publicatie, Text, TipAct, Titlu
 function parseSearchResults(xml: string): LegislativeActResult[] {
   const results: LegislativeActResult[] = [];
@@ -132,11 +146,14 @@ function parseSearchResults(xml: string): LegislativeActResult[] {
 
   for (const block of legiBlocks) {
     const extract = (tag: string): string => {
-      const m = block.match(new RegExp(`<(?:[a-zA-Z]+:)?${tag}(?:\\s[^>]*)?>(.*?)<\\/(?:[a-zA-Z]+:)?${tag}>`, 'i'));
+      // Use [\s\S]*? (dotAll) so multiline fields like Titlu are captured correctly
+      const m = block.match(new RegExp(`<(?:[a-zA-Z]+:)?${tag}(?:\\s[^>]*)?>([\\s\\S]*?)<\\/(?:[a-zA-Z]+:)?${tag}>`, 'i'));
       return m?.[1]?.trim() ?? '';
     };
 
-    const titlu = extract('Titlu');
+    const titluRaw = extract('Titlu');
+    // Collapse whitespace — Titlu contains multiline formatted text
+    const titlu = titluRaw.replace(/\s+/g, ' ').trim();
     const linkHtml = extract('LinkHtml');
     const numarStr = extract('Numar');
 
@@ -153,7 +170,7 @@ function parseSearchResults(xml: string): LegislativeActResult[] {
       results.push({
         id,
         titlu,
-        tipAct: extract('TipAct'),
+        tipAct: normalizeTipAct(extract('TipAct')),
         numar,
         an,
         dataPublicarii: extract('DataVigoare'),

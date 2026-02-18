@@ -11,6 +11,7 @@ import { isSuperAdmin, getMyRoles } from '@/lib/rbac';
 import { searchActs, type LegislativeActResult } from '@/lib/legislative-import/ro-soap-client';
 
 export const maxDuration = 30;
+export const dynamic = 'force-dynamic';
 
 // ─── Allowed roles (besides super_admin) ─────────────────────
 
@@ -69,14 +70,24 @@ export async function GET(request: NextRequest) {
   const pagina = searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!) : 0;
 
   try {
-    // Request more from SOAP since we post-filter by tipAct (SOAP returns mixed types)
-    const soapPageSize = tipAct ? 50 : 20;
-    const allResults = await searchActs({
-      an,
-      numar,
-      titlu,
-      pagina,
-      rezultatePePagina: soapPageSize,
+    // SOAP caps at 10 results/page. When filtering by tipAct (which SOAP doesn't support
+    // natively), fetch 3 pages in parallel so we have 30 raw results to filter from.
+    const SOAP_PAGE_SIZE = 10;
+    const SOAP_PAGES_PER_UI_PAGE = tipAct ? 3 : 1;
+    const soapStart = pagina * SOAP_PAGES_PER_UI_PAGE;
+
+    const batches = await Promise.all(
+      Array.from({ length: SOAP_PAGES_PER_UI_PAGE }, (_, i) =>
+        searchActs({ an, numar, titlu, pagina: soapStart + i, rezultatePePagina: SOAP_PAGE_SIZE })
+      )
+    );
+    // Deduplicate — SOAP may return same acts across pages when result set is small
+    const seen = new Set<string>();
+    const allResults = batches.flat().filter((r) => {
+      const key = getActKey(r);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
     });
 
     // Post-filter by tipAct if provided (SOAP doesn't support it natively)
@@ -113,12 +124,20 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
-      results,
-      page: pagina,
-      hasMore: allResults.length >= soapPageSize,
-      existingIds: Array.from(existingKeys),
-    });
+    console.log(`[bulk-search] page=${pagina} soapPages=${SOAP_PAGES_PER_UI_PAGE} allResults=${allResults.length} filtered=${results.length} firstNumar=${results[0]?.numar ?? 'none'}`);
+
+    return NextResponse.json(
+      {
+        results,
+        page: pagina,
+        // hasMore: only true if we got a full set of unique results (no dedup collapse)
+        hasMore: seen.size >= SOAP_PAGE_SIZE * SOAP_PAGES_PER_UI_PAGE,
+        existingIds: Array.from(existingKeys),
+      },
+      {
+        headers: { 'Cache-Control': 'no-store' },
+      }
+    );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Eroare la căutare SOAP.';
     console.error('[bulk-search] SOAP search error:', err);
