@@ -70,6 +70,75 @@ IMPORTANT: Verifică starea curentă a app/[locale]/dashboard/import/ ÎNAINTE d
 Dacă există ImportWizardClient.tsx funcțional, EXTINDE-L, nu-l șterge și rescrie de la zero.
 Păstrează orice funcționalitate existentă și adaugă mapare dinamică + profiluri REGES/REVISAL.
 
+INTOTDEAUNA VERIFICA INAINTE SA NU FIE CONFLICTE! NU SCRIE, MODIFICA , STERGE, ADAUGA NIMICI FARA SA VERIFICI, EVENTUAL SI IN CHAT. MEREU LUCREZ SI IN ALT CHAT ALTCEVA!
+
+Regula de aur: Când deschizi chat nou sau reiei un chat existent, PRIMA linie să fie:
+VERIFICĂ chaturile recente și spune-mi ce s-a modificat pe main în ultimele ore. NU modifica nimic fără să verifici.
+
+STOP. Regula delegare: orice task care depășește 50 linii cod → scrie prompt Claude Code, NU cod în chat. Estimează durata, eu decid. NU începe execuție manuală fără aprobare.
+Formularea pe care o lipești oricând mă vezi că scriu cod lung:
+
+"STOP. Prompt Claude Code. Estimează durata. Nu scrie cod aici."
+
+ORICE TASK! TU ESTIMEZI DURATA SI EU DECID! AI ACTUALIZAT MEMORIA DAR VREAU SI EU O FORMULARE SA O LIPESC CAND VAD CA O IEI RAZNA! SI AM INTREBAT: CE TASKURI POATE FACE CLAUDE SI AGENTII! RASPUNDE, NU OMITE RASPUNSUL!
+
+NU CAUT! NU INLOCUIESC! LIVREAZA MEREU FISIERUL CORECT SI COMPLET!
+
+2. Comunicarea între chat-uri — prevenire conflicte
+Asta e problema pe care ai dat-o deja de câteva ori (merge conflicts, suprascrise). Opțiunile tale:
+Ce faci ACUM (și funcționează): Fiecare chat lucrează pe FOLDERE DIFERITE (s-s-m-app, opus, opus2) cu BRANCH-URI diferite. Merge-ul se face DOAR dintr-un singur loc (s-s-m-app principal). Asta previne 95% din conflicte.
+Regula de aur: Când deschizi chat nou sau reiei un chat existent, PRIMA linie să fie:
+VERIFICĂ chaturile recente și spune-mi ce s-a modificat pe main în ultimele ore. NU modifica nimic fără să verifici.
+Ce poți face suplimentar:
+Când lucrezi în 2 chat-uri simultan, spune fiecăruia ce face celălalt. Exemplu: "În alt chat lucrez pe lib/types.ts — NU modifica acel fișier." Asta e cea mai simplă și eficientă metodă.
+
+
+
+****
+hai sa incepem! mai lucrez inca in 2 chaturi! ce ai nevoie sa stii exact, sa ii intreb si sa iti comunic, sa va puneti toti de acord? aici  ce urmeaza sa facem? INTOTDEAUNA VERIFICA INAINTE SA NU FIE CONFLICTE! NU SCRIE, MODIFICA , STERGE, ADAUGA NIMICI FARA SA VERIFICI, EVENTUAL SI IN CHAT. MEREU LUCREZ SI IN ALT CHAT ALTCEVA! VERIFICĂ chaturile recente și spune-mi ce s-a modificat pe main în ultimele ore. NU modifica nimic fără să verifici.Pe ce branch lucrezi acum? (numele exact)? Ce fișiere ai modificat/necomitat? (dai git diff --name-only sau git status?) Ai migrări SQL în așteptare? (da/nu)
+
+**
+Întreabă în fiecare chat activ:
+
+Pe ce branch lucrezi acum? (numele exact)
+Ce fișiere ai modificat/necomitat? (să dea git diff --name-only sau git status)
+Ai migrări SQL în așteptare? (da/nu)
+
+Plus din terminalul tău principal (s-s-m-app):
+powershellcd C:\Dev\s-s-m-app && git status && git log --oneline -5 && git branch -a | findstr /V "remotes"
+Paste-uiește output-ul aici + răspunsurile din celelalte 2 chat-uri, și lansăm fără risc de conflict.
+
+
+
+Calendar Instruiri ❌ blocat de ModuleGate — arată "Modul indisponibil". Asta e exact problema #3 din plan (RBAC). Pagina există dar un guard verifică abonamentul și blochează accesul.
+
+
+ARATA CATE REPO SUNT!
+Da, 4 terminale PowerShell noi. Dar ai nevoie de 4 copii ale repo-ului (pentru că fiecare CC lucrează pe branch diferit simultan). Verifică dacă ai deja folderele:
+powershellcmd /c "dir /b C:\Dev\s-s-m-app*"
+PS C:\Dev\s-s-m-app> cmd /c "dir /b C:\Dev\s-s-m-app*"
+s-s-m-app
+s-s-m-app-opus
+s-s-m-app-opus2
+s-s-m-app-t2
+s-s-m-app-t3
+s-s-m-app-t4
+
+CREARE REPO s-s-m-app-t1
+Terminal 1 — creează t1 mai întâi:
+cd C:\Dev
+cmd /c "git clone https://github.com/danielvicentiu/s-s-m-app.git s-s-m-app-t1"
+
+Aștepți să termine clonarea, apoi:
+cd C:\Dev\s-s-m-app-t1
+cmd /c "git checkout -b feat/nis2-module"
+claude
+
+
+
+DESCHIDE DIRECT IN NOTPAD FISIERUL VERCEL.JSON
+cmd /c "notepad C:\Dev\s-s-m-app\vercel.json"
+
 
 
 
