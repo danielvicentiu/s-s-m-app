@@ -69,21 +69,20 @@ export async function GET(request: NextRequest) {
   const pagina = searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!) : 0;
 
   try {
-    // Call SOAP search
-    let results = await searchActs({
+    // Request more from SOAP since we post-filter by tipAct (SOAP returns mixed types)
+    const soapPageSize = tipAct ? 50 : 20;
+    const allResults = await searchActs({
       an,
       numar,
       titlu,
       pagina,
-      rezultatePePagina: 20,
+      rezultatePePagina: soapPageSize,
     });
 
     // Post-filter by tipAct if provided (SOAP doesn't support it natively)
-    if (tipAct) {
-      results = results.filter(
-        (r) => r.tipAct.toLowerCase() === tipAct.toLowerCase()
-      );
-    }
+    const results = tipAct
+      ? allResults.filter((r) => r.tipAct.toLowerCase() === tipAct.toLowerCase())
+      : allResults;
 
     // Check which results already exist in DB
     const supabaseAdmin = getSupabaseAdmin();
@@ -117,7 +116,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       results,
       page: pagina,
-      hasMore: results.length >= 20,
+      hasMore: allResults.length >= soapPageSize,
       existingIds: Array.from(existingKeys),
     });
   } catch (err: unknown) {
