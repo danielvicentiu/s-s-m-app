@@ -16,7 +16,7 @@ const TEST_ACT = { numar: '1425', an: '2006', tip: 'HG' } as const
 
 export async function GET(request: NextRequest) {
   try {
-    // ─── Auth: consultant only ─────────────────────────────────
+    // ─── Auth: admin sau consultant ─────────────────────────────────
     const supabase = await createSupabaseServer()
 
     const {
@@ -35,9 +35,9 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
       .single()
 
-    if (membershipError || !membership || membership.role !== 'consultant') {
+    if (membershipError || !membership || !['consultant', 'admin'].includes(membership.role)) {
       return NextResponse.json(
-        { error: 'Acces permis doar consultanților' },
+        { error: 'Acces permis doar admin/consultant' },
         { status: 403 }
       )
     }
