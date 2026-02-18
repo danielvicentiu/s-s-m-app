@@ -104,7 +104,7 @@ CREATE POLICY "super_admin_can_manage_modules" ON organization_modules
       FROM user_roles ur
       JOIN roles r ON r.id = ur.role_id
       WHERE ur.user_id = auth.uid()
-        AND r.name = 'super_admin'
+        AND r.role_name = 'super_admin'
         AND (ur.expires_at IS NULL OR ur.expires_at > now())
     )
   );
@@ -126,7 +126,7 @@ CREATE POLICY "super_admin_can_manage_module_definitions" ON module_definitions
       FROM user_roles ur
       JOIN roles r ON r.id = ur.role_id
       WHERE ur.user_id = auth.uid()
-        AND r.name = 'super_admin'
+        AND r.role_name = 'super_admin'
         AND (ur.expires_at IS NULL OR ur.expires_at > now())
     )
   );
