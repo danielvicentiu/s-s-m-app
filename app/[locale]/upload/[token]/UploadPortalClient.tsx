@@ -8,7 +8,10 @@ interface Props {
   organizationName: string
 }
 
-type UploadStatus = 'idle' | 'preview' | 'uploading' | 'success' | 'error'
+type UploadStatus = 'idle' | 'preview' | 'uploading' | 'success' | 'error' | 'batch-preview' | 'batch-uploading' | 'batch-success'
+type BatchItemStatus = 'pending' | 'uploading' | 'success' | 'error'
+
+const MAX_BATCH = 20
 
 export default function UploadPortalClient({ token, label, organizationName }: Props) {
   const [status, setStatus] = useState<UploadStatus>('idle')
@@ -20,6 +23,14 @@ export default function UploadPortalClient({ token, label, organizationName }: P
   const [isAdjusting, setIsAdjusting] = useState(false)
   const [originalSize, setOriginalSize] = useState(0)
   const [compressedSize, setCompressedSize] = useState(0)
+
+  // Batch mode state
+  const [batchFiles, setBatchFiles] = useState<File[]>([])
+  const [batchPreviewUrls, setBatchPreviewUrls] = useState<string[]>([])
+  const [batchItemStatuses, setBatchItemStatuses] = useState<BatchItemStatus[]>([])
+  const [batchCurrentIndex, setBatchCurrentIndex] = useState(-1)
+  const [batchSuccessCount, setBatchSuccessCount] = useState(0)
+
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const galleryInputRef = useRef<HTMLInputElement>(null)
 
@@ -90,6 +101,23 @@ export default function UploadPortalClient({ token, label, organizationName }: P
     }
   }
 
+  const applyAdjustmentToUrl = (url: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width
+        canvas.height = img.height
+        const ctx = canvas.getContext('2d')!
+        ctx.filter = 'brightness(110%) contrast(115%)'
+        ctx.drawImage(img, 0, 0)
+        resolve(canvas.toDataURL('image/jpeg', 0.9))
+      }
+      img.onerror = reject
+      img.src = url
+    })
+  }
+
   const handleFileSelected = (file: File) => {
     if (!file || !file.type.startsWith('image/')) {
       setErrorMessage('Fișierul trebuie să fie o imagine (JPEG, PNG, etc).')
@@ -101,6 +129,104 @@ export default function UploadPortalClient({ token, label, organizationName }: P
     setPreviewUrl(url)
     setAdjustedPreviewUrl(null)
     setStatus('preview')
+  }
+
+  const handleGallerySelected = (files: FileList) => {
+    if (files.length > MAX_BATCH) {
+      alert(`Maxim ${MAX_BATCH} documente per trimitere.`)
+      return
+    }
+    const fileArray = Array.from(files).filter(f => f.type.startsWith('image/'))
+    if (fileArray.length === 0) {
+      setErrorMessage('Selectați cel puțin o imagine validă.')
+      setStatus('error')
+      return
+    }
+    if (fileArray.length === 1) {
+      handleFileSelected(fileArray[0])
+      return
+    }
+    const urls = fileArray.map(f => URL.createObjectURL(f))
+    setBatchFiles(fileArray)
+    setBatchPreviewUrls(urls)
+    setBatchItemStatuses(fileArray.map(() => 'pending' as BatchItemStatus))
+    setBatchCurrentIndex(-1)
+    setBatchSuccessCount(0)
+    setStatus('batch-preview')
+  }
+
+  const removeBatchItem = (index: number) => {
+    URL.revokeObjectURL(batchPreviewUrls[index])
+    const newFiles = batchFiles.filter((_, i) => i !== index)
+    const newUrls = batchPreviewUrls.filter((_, i) => i !== index)
+    const newStatuses = batchItemStatuses.filter((_, i) => i !== index)
+    setBatchFiles(newFiles)
+    setBatchPreviewUrls(newUrls)
+    setBatchItemStatuses(newStatuses)
+    if (newFiles.length === 0) setStatus('idle')
+  }
+
+  const clearAllBatch = () => {
+    batchPreviewUrls.forEach(url => URL.revokeObjectURL(url))
+    setBatchFiles([])
+    setBatchPreviewUrls([])
+    setBatchItemStatuses([])
+    setStatus('idle')
+  }
+
+  const handleBatchUpload = async () => {
+    if (batchFiles.length === 0) return
+    setStatus('batch-uploading')
+    const total = batchFiles.length
+    let successCount = 0
+    const statuses: BatchItemStatus[] = batchFiles.map(() => 'pending')
+
+    for (let i = 0; i < total; i++) {
+      setBatchCurrentIndex(i)
+      statuses[i] = 'uploading'
+      setBatchItemStatuses([...statuses])
+
+      try {
+        const adjustedDataUrl = await applyAdjustmentToUrl(batchPreviewUrls[i])
+        const res = await fetch(adjustedDataUrl)
+        const blob = await res.blob()
+        const adjustedFile = new File(
+          [blob],
+          batchFiles[i].name.replace(/\.[^/.]+$/, '.jpg'),
+          { type: 'image/jpeg' }
+        )
+        let fileToUpload: File
+        if (adjustedFile.size > 1024 * 1024) {
+          const result = await compressImage(adjustedFile)
+          fileToUpload = result.file
+        } else {
+          fileToUpload = adjustedFile
+        }
+        const formData = new FormData()
+        formData.append('image', fileToUpload)
+        const response = await fetch(`/api/upload/${token}`, {
+          method: 'POST',
+          body: formData,
+        })
+        const result = await response.json()
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Eroare la trimitere')
+        }
+        successCount++
+        statuses[i] = 'success'
+      } catch (err) {
+        console.error(`Upload error for item ${i + 1}:`, err)
+        statuses[i] = 'error'
+      }
+
+      setBatchItemStatuses([...statuses])
+      setProgress(Math.round(((i + 1) / total) * 100))
+    }
+
+    setBatchSuccessCount(successCount)
+    setProgress(100)
+    setBatchCurrentIndex(-1)
+    setStatus('batch-success')
   }
 
   const handleUpload = async () => {
@@ -170,6 +296,71 @@ export default function UploadPortalClient({ token, label, organizationName }: P
     setIsAdjusting(false)
     setOriginalSize(0)
     setCompressedSize(0)
+    batchPreviewUrls.forEach(url => URL.revokeObjectURL(url))
+    setBatchFiles([])
+    setBatchPreviewUrls([])
+    setBatchItemStatuses([])
+    setBatchCurrentIndex(-1)
+    setBatchSuccessCount(0)
+  }
+
+  const renderBatchGrid = (interactive: boolean) => {
+    const total = batchFiles.length
+    return (
+      <div className="grid grid-cols-3 gap-2">
+        {batchPreviewUrls.map((url, i) => {
+          const itemStatus = batchItemStatuses[i]
+          return (
+            <div key={i} className="relative">
+              <div className="relative w-full aspect-square rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                <img
+                  src={url}
+                  alt={`Document ${i + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                {itemStatus === 'success' && (
+                  <div className="absolute inset-0 bg-green-500 bg-opacity-40 flex items-center justify-center">
+                    <div className="bg-green-500 rounded-full p-1">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {itemStatus === 'error' && (
+                  <div className="absolute inset-0 bg-red-500 bg-opacity-40 flex items-center justify-center">
+                    <div className="bg-red-500 rounded-full p-1">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {itemStatus === 'uploading' && (
+                  <div className="absolute inset-0 bg-blue-500 bg-opacity-40 flex items-center justify-center">
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+                <div className="absolute top-1 left-1 bg-black bg-opacity-60 text-white text-xs px-1.5 py-0.5 rounded-full leading-tight">
+                  {i + 1}/{total}
+                </div>
+                {interactive && (
+                  <button
+                    onClick={() => removeBatchItem(i)}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 transition-colors"
+                    aria-label={`Elimină documentul ${i + 1}`}
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    )
   }
 
   return (
@@ -211,7 +402,7 @@ export default function UploadPortalClient({ token, label, organizationName }: P
             {status === 'idle' && (
               <div className="space-y-4">
                 <p className="text-center text-gray-500 text-sm mb-4">
-                  Fotografiați documentul sau selectați o imagine din galerie.
+                  Fotografiați documentul sau selectați imagini din galerie.
                 </p>
 
                 {/* Camera framing guide overlay */}
@@ -288,17 +479,18 @@ export default function UploadPortalClient({ token, label, organizationName }: P
                   ref={galleryInputRef}
                   type="file"
                   accept="image/*"
+                  multiple
                   className="hidden"
                   onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) handleFileSelected(file)
+                    const files = e.target.files
+                    if (files && files.length > 0) handleGallerySelected(files)
                     e.target.value = ''
                   }}
                 />
               </div>
             )}
 
-            {/* Preview State */}
+            {/* Preview State — single mode */}
             {status === 'preview' && (
               <div className="space-y-4">
                 <h2 className="text-base font-semibold text-gray-900 text-center">Verifică imaginea</h2>
@@ -362,7 +554,91 @@ export default function UploadPortalClient({ token, label, organizationName }: P
               </div>
             )}
 
-            {/* Uploading State */}
+            {/* Batch Preview State */}
+            {status === 'batch-preview' && (
+              <div className="space-y-4">
+                <h2 className="text-base font-semibold text-gray-900 text-center">Verifică documentele</h2>
+
+                {renderBatchGrid(true)}
+
+                <p className="text-center text-sm text-gray-500">
+                  {batchFiles.length} documente selectate
+                </p>
+
+                <button
+                  onClick={handleBatchUpload}
+                  className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-xl py-4 px-4 text-base font-semibold hover:bg-blue-700 active:scale-[0.98] transition-all shadow-sm"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  Trimite toate documentele
+                </button>
+
+                <button
+                  onClick={clearAllBatch}
+                  className="w-full flex items-center justify-center gap-2 bg-white text-red-600 rounded-xl py-2.5 px-4 text-sm font-medium border-2 border-red-200 hover:border-red-400 active:bg-red-50 transition-all"
+                >
+                  Șterge toate
+                </button>
+              </div>
+            )}
+
+            {/* Batch Uploading State */}
+            {status === 'batch-uploading' && (
+              <div className="space-y-4">
+                {renderBatchGrid(false)}
+
+                <p className="text-center text-sm font-medium text-gray-700">
+                  Procesare document {batchCurrentIndex + 1} din {batchFiles.length}...
+                </p>
+
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-blue-600 h-3 rounded-full transition-all duration-700 ease-out"
+                    style={{ width: `${progress}%` }}
+                    role="progressbar"
+                    aria-valuenow={progress}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  />
+                </div>
+                <p className="text-center text-sm text-gray-400">{progress}%</p>
+              </div>
+            )}
+
+            {/* Batch Success State */}
+            {status === 'batch-success' && (
+              <div className="space-y-4">
+                {renderBatchGrid(false)}
+
+                <div className="text-center py-2">
+                  {batchSuccessCount === batchFiles.length ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <p className="text-green-700 font-semibold">
+                        {batchSuccessCount} din {batchFiles.length} documente trimise cu succes.
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-amber-700 font-semibold">
+                      {batchSuccessCount} din {batchFiles.length} documente trimise cu succes.
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  onClick={handleReset}
+                  className="w-full bg-blue-600 text-white rounded-2xl py-4 px-6 text-base font-semibold hover:bg-blue-700 active:scale-[0.98] transition-all"
+                >
+                  Trimite alte documente
+                </button>
+              </div>
+            )}
+
+            {/* Uploading State — single mode */}
             {status === 'uploading' && (
               <div className="py-4">
                 <div className="text-center mb-6">
@@ -392,7 +668,7 @@ export default function UploadPortalClient({ token, label, organizationName }: P
               </div>
             )}
 
-            {/* Success State */}
+            {/* Success State — single mode */}
             {status === 'success' && (
               <div className="py-4 text-center">
                 <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
