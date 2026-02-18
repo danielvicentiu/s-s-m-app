@@ -104,9 +104,10 @@ export async function getToken(): Promise<string> {
   }
 
   const xml = await soapRequest(buildGetTokenEnvelope(), 'GetToken');
-  const match = xml.match(/<GetTokenResult>(.*?)<\/GetTokenResult>/);
+  const match = xml.match(/<(?:[a-zA-Z]+:)?GetTokenResult[^>]*>(.*?)<\/(?:[a-zA-Z]+:)?GetTokenResult>/);
 
   if (!match?.[1]) {
+    console.error('[SOAP] GetToken raw response:', xml.substring(0, 500));
     throw new Error('Failed to extract token from SOAP response');
   }
 
