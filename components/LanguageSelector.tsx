@@ -12,13 +12,12 @@ interface LanguageOption {
 
 const LANGUAGES: LanguageOption[] = [
   { code: 'ro', label: 'Română', country: 'România' },
-  { code: 'bg', label: 'Български', country: 'България' },
-  { code: 'hu', label: 'Magyar', country: 'Magyarország' },
-  { code: 'de', label: 'Deutsch', country: 'Deutschland' },
-  { code: 'pl', label: 'Polski', country: 'Polska' },
   { code: 'en', label: 'English', country: 'International' },
+  { code: 'de', label: 'Deutsch', country: 'Deutschland' },
+  { code: 'hu', label: 'Magyar', country: 'Magyarország' },
+  { code: 'bg', label: 'Български', country: 'България' },
+  { code: 'pl', label: 'Polski', country: 'Polska' },
 ]
-
 // SVG Flag components — crisp at any size, no emoji rendering issues
 function FlagRO({ className = 'w-5 h-4' }: { className?: string }) {
   return (
