@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
 import { useOrg } from '@/lib/contexts/OrgContext'
-import { useOrgModules } from '@/hooks/useOrgModules'
+import { useModuleGate } from '@/lib/hooks/useModuleGate'
 import type { ModuleKey } from '@/lib/modules/types'
 
 interface NavLink {
@@ -33,7 +33,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
   const { currentOrg } = useOrg()
 
   // Fetch organization modules (null if 'all' view)
-  const { hasModule, getModuleAccess, isLoading } = useOrgModules(
+  const { hasModule, getModuleAccess, isLoading } = useModuleGate(
     currentOrg !== 'all' ? currentOrg : null
   )
 
@@ -90,7 +90,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/near-miss',
           label: 'Incidente Near-miss',
-          moduleKey: 'ssm',
+          moduleKey: 'near_miss',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
