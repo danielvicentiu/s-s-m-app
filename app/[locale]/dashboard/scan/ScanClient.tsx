@@ -6,10 +6,23 @@
  * Cu suport pentru procesare în batch a mai multor documente
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Fragment } from 'react';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
 import type { ScanTemplate, TemplateCategory } from '@/lib/scan-pipeline';
 import { validateCNP, validateCUI } from '@/lib/utils/validators';
+
+const FIELD_LABELS: Record<string, string> = {
+  tip_document: 'Tip document',
+  furnizor_nume: 'Furnizor',
+  furnizor_cui: 'CUI Furnizor',
+  data_document: 'Data document',
+  suma_totala: 'Sumă totală',
+  tva: 'TVA',
+  moneda: 'Monedă',
+  metoda_plata: 'Metodă plată',
+  descriere_produse: 'Descriere produse',
+  adresa_furnizor: 'Adresă furnizor',
+};
 
 // Categorii pentru grupare template-uri
 const CATEGORIES: Record<string, { label_ro: string; label_en: string }> = {
@@ -54,6 +67,7 @@ interface ReceivedDoc {
   storage_path: string | null;
   original_filename: string | null;
   created_by: string | null;
+  extracted_data?: Record<string, unknown> | null;
   imageUrl?: string;
 }
 
@@ -76,6 +90,8 @@ export default function ScanClient() {
     processing: 0,
   });
   const [receivedDocs, setReceivedDocs] = useState<ReceivedDoc[]>([]);
+  const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
+  const [confirmingDocId, setConfirmingDocId] = useState<string | null>(null);
 
   // Preia toate org_id-urile curentului user
   useEffect(() => {
@@ -124,7 +140,7 @@ export default function ScanClient() {
     const supabase = createSupabaseBrowser();
     const { data } = await supabase
       .from('document_scans')
-      .select('id, created_at, status, template_key, storage_path, original_filename, created_by')
+      .select('id, created_at, status, template_key, storage_path, original_filename, created_by, extracted_data')
       .eq('org_id', orgId)
       .order('created_at', { ascending: false })
       .limit(20);
@@ -442,6 +458,31 @@ export default function ScanClient() {
     } catch (err) {
       console.error('Save error:', err);
       setError('Eroare la salvarea documentului');
+    }
+  };
+
+  // Confirma verificarea unui document primit
+  const handleConfirm = async (scanId: string) => {
+    setConfirmingDocId(scanId);
+    try {
+      const res = await fetch('/api/upload/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scan_id: scanId }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        console.error('Confirm error:', data.error);
+        alert('Eroare la confirmare: ' + (data.error || 'Eroare server'));
+        return;
+      }
+      await fetchReceivedDocs();
+      setExpandedDocId(null);
+    } catch (err) {
+      console.error('Confirm exception:', err);
+      alert('Eroare la confirmare');
+    } finally {
+      setConfirmingDocId(null);
     }
   };
 
@@ -1086,13 +1127,13 @@ export default function ScanClient() {
                   const statusColors: Record<string, string> = {
                     pending: 'bg-yellow-100 text-yellow-800',
                     completed: 'bg-green-100 text-green-800',
-                    reviewed: 'bg-green-100 text-green-800',
+                    reviewed: 'bg-blue-100 text-blue-800',
                     error: 'bg-red-100 text-red-800',
                   };
                   const statusLabels: Record<string, string> = {
                     pending: 'În așteptare',
                     completed: 'Finalizat',
-                    reviewed: 'Revizuit',
+                    reviewed: 'Verificat',
                     error: 'Eroare',
                   };
                   const source = doc.created_by ? 'Manual' : 'Portal';
@@ -1105,49 +1146,114 @@ export default function ScanClient() {
                     hour: '2-digit',
                     minute: '2-digit',
                   });
+                  const isExpanded = expandedDocId === doc.id;
+                  const extractedData = doc.extracted_data as Record<string, unknown> | null | undefined;
+                  const tipDocument = extractedData?.tip_document as string | null | undefined;
 
                   return (
-                    <tr
-                      key={doc.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                    >
-                      <td className="py-3 px-3 text-gray-700 whitespace-nowrap">{uploadDate}</td>
-                      <td className="py-3 px-3">
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                            source === 'Portal'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-700'
-                          }`}
-                        >
-                          {source}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
-                          {statusLabel}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 text-gray-600">
-                        {doc.template_key ?? (
-                          <span className="text-gray-400 italic">Nedetectat</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-3">
-                        {doc.imageUrl ? (
-                          <a
-                            href={doc.imageUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-700 hover:underline text-xs"
+                    <Fragment key={doc.id}>
+                      <tr
+                        onClick={() => setExpandedDocId(isExpanded ? null : doc.id)}
+                        className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer select-none"
+                      >
+                        <td className="py-3 px-3 text-gray-700 whitespace-nowrap">{uploadDate}</td>
+                        <td className="py-3 px-3">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                              source === 'Portal'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-gray-100 text-gray-700'
+                            }`}
                           >
-                            Vezi imagine ↗
-                          </a>
-                        ) : (
-                          <span className="text-gray-400 text-xs">—</span>
-                        )}
-                      </td>
-                    </tr>
+                            {source}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3">
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
+                            {statusLabel}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-gray-600">
+                          {tipDocument ? (
+                            tipDocument
+                          ) : (
+                            <span className="text-gray-400 italic">Nedetectat</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-3">
+                          {doc.imageUrl ? (
+                            <a
+                              href={doc.imageUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-blue-600 hover:text-blue-700 hover:underline text-xs"
+                            >
+                              Vezi imagine ↗
+                            </a>
+                          ) : (
+                            <span className="text-gray-400 text-xs">—</span>
+                          )}
+                        </td>
+                      </tr>
+                      {isExpanded && (
+                        <tr>
+                          <td colSpan={5} className="p-0 border-b border-gray-200">
+                            <div className="bg-gray-50 rounded-lg p-4 m-2">
+                              <div className="grid grid-cols-2 gap-6">
+                                {/* Stanga: imaginea documentului */}
+                                <div>
+                                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Document</h4>
+                                  {doc.imageUrl ? (
+                                    <img
+                                      src={doc.imageUrl}
+                                      alt={doc.original_filename || 'Document'}
+                                      className="max-w-md w-full h-auto rounded-lg border border-gray-200 object-contain"
+                                    />
+                                  ) : (
+                                    <p className="text-sm text-gray-400 italic">Imagine indisponibilă</p>
+                                  )}
+                                </div>
+                                {/* Dreapta: date extrase */}
+                                <div>
+                                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Date extrase</h4>
+                                  {extractedData && Object.keys(extractedData).length > 0 ? (
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-4">
+                                      {Object.entries(FIELD_LABELS).map(([key, label]) => {
+                                        const val = extractedData[key];
+                                        if (val === null || val === undefined || val === '') return null;
+                                        return (
+                                          <div key={key}>
+                                            <p className="text-xs font-bold text-gray-600">{label}</p>
+                                            <p className="text-xs text-gray-800 mt-0.5">{String(val)}</p>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  ) : (
+                                    <p className="text-sm text-gray-400 italic mb-4">Nu există date extrase.</p>
+                                  )}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleConfirm(doc.id);
+                                    }}
+                                    disabled={confirmingDocId === doc.id || doc.status === 'reviewed'}
+                                    className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                                  >
+                                    {confirmingDocId === doc.id
+                                      ? 'Se procesează...'
+                                      : doc.status === 'reviewed'
+                                      ? 'Deja verificat'
+                                      : 'Confirmă verificarea'}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   );
                 })}
               </tbody>
