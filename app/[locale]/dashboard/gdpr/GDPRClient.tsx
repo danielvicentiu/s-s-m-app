@@ -458,15 +458,15 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       key: 'status',
       label: 'Status',
       render: (row) => {
-        const variant =
+        const badgeStatus =
           row.status === 'active'
-            ? 'success'
+            ? 'valid'
             : row.status === 'inactive'
-            ? 'danger'
+            ? 'expired'
             : row.status === 'under_review'
-            ? 'warning'
-            : 'default'
-        return <StatusBadge status={statusLabels[row.status]} variant={variant} />
+            ? 'expiring'
+            : 'incomplete'
+        return <StatusBadge status={badgeStatus} label={statusLabels[row.status]} />
       },
     },
     {
@@ -489,7 +489,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
           <button
             onClick={() => {
               setEditingProcessing(row.id)
-              setProcessingForm(row)
+              setProcessingForm({ ...row, retention_period: row.retention_period || '' })
               setProcessingModal(true)
             }}
             className="p-1 text-blue-600 hover:bg-blue-50 rounded dark:hover:bg-blue-900/20"
@@ -556,11 +556,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       label: 'Status',
       render: (row) => {
         if (row.is_active) {
-          return <StatusBadge status="Activ" variant="success" />
+          return <StatusBadge status="valid" label="Activ" />
         }
         return (
           <div className="flex flex-col">
-            <StatusBadge status="Retras" variant="danger" />
+            <StatusBadge status="expired" label="Retras" />
             {row.withdrawn_at && (
               <span className="text-xs text-gray-500 mt-1">
                 {new Date(row.withdrawn_at).toLocaleDateString('ro-RO')}
@@ -792,7 +792,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 <EmptyState
                   icon={FileCheck}
                   title="Nicio activitate de prelucrare"
-                  message="Adaugă prima activitate de prelucrare date personale pentru a începe registrul GDPR."
+                  description="Adaugă prima activitate de prelucrare date personale pentru a începe registrul GDPR."
                 />
               ) : (
                 <DataTable
@@ -849,7 +849,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 <EmptyState
                   icon={UserCheck}
                   title="Niciun consimțământ înregistrat"
-                  message="Adaugă primul consimțământ pentru prelucrare date personale."
+                  description="Adaugă primul consimțământ pentru prelucrare date personale."
                 />
               ) : (
                 <DataTable data={consents} columns={consentColumns} />
