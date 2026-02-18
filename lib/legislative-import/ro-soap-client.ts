@@ -82,7 +82,7 @@ async function soapRequest(envelope: string, action: string): Promise<string> {
     method: 'POST',
     headers: {
       'Content-Type': 'text/xml; charset=utf-8',
-      'SOAPAction': `http://tempuri.org/IFreeWebService/${action}`,
+      'SOAPAction': `"http://tempuri.org/IFreeWebService/${action}"`,
     },
     body: envelope,
   });
