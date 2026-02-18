@@ -15,13 +15,21 @@ const FIELD_LABELS: Record<string, string> = {
   tip_document: 'Tip document',
   furnizor_nume: 'Furnizor',
   furnizor_cui: 'CUI Furnizor',
+  furnizor_adresa: 'Adresă furnizor',
+  cumparator_nume: 'Cumparator',
+  cumparator_cui: 'CUI Cumparator',
   data_document: 'Data document',
+  numar_document: 'Nr. Document',
   suma_totala: 'Sumă totală',
+  subtotal_fara_tva: 'Subtotal fara TVA',
   tva: 'TVA',
+  tva_total: 'TVA Total',
+  total_cu_tva: 'Total cu TVA',
   moneda: 'Monedă',
   metoda_plata: 'Metodă plată',
   descriere_produse: 'Descriere produse',
   adresa_furnizor: 'Adresă furnizor',
+  cota_tva_detalii: 'Detalii cote TVA',
 };
 
 // Categorii pentru grupare template-uri
@@ -1225,13 +1233,44 @@ export default function ScanClient() {
                                         return (
                                           <div key={key}>
                                             <p className="text-xs font-bold text-gray-600">{label}</p>
-                                            <p className="text-xs text-gray-800 mt-0.5">{String(val)}</p>
+                                            <p className="text-xs text-gray-800 mt-0.5">{Array.isArray(val) || (typeof val === 'object' && val !== null) ? JSON.stringify(val) : String(val)}</p>
                                           </div>
                                         );
                                       })}
                                     </div>
                                   ) : (
                                     <p className="text-sm text-gray-400 italic mb-4">Nu există date extrase.</p>
+                                  )}
+                                  {Array.isArray(extractedData?.produse) && (extractedData!.produse as unknown[]).length > 0 && (
+                                    <div className="mt-4">
+                                      <p className="text-xs font-bold text-gray-600 mb-1">Produse</p>
+                                      <div className="overflow-x-auto">
+                                        <table className="w-full text-sm border border-gray-200 rounded-lg">
+                                          <thead className="bg-gray-50">
+                                            <tr>
+                                              <th className="text-left py-1 px-2 text-xs font-medium text-gray-600 border-b border-gray-200">Denumire</th>
+                                              <th className="text-right py-1 px-2 text-xs font-medium text-gray-600 border-b border-gray-200">Cant.</th>
+                                              <th className="text-right py-1 px-2 text-xs font-medium text-gray-600 border-b border-gray-200">Pret unitar</th>
+                                              <th className="text-right py-1 px-2 text-xs font-medium text-gray-600 border-b border-gray-200">Val. fara TVA</th>
+                                              <th className="text-right py-1 px-2 text-xs font-medium text-gray-600 border-b border-gray-200">TVA</th>
+                                              <th className="text-right py-1 px-2 text-xs font-medium text-gray-600 border-b border-gray-200">Val. cu TVA</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {(extractedData!.produse as Record<string, unknown>[]).map((produs, idx) => (
+                                              <tr key={idx} className="border-b border-gray-100 last:border-0">
+                                                <td className="py-1 px-2 text-xs text-gray-800">{produs.denumire != null ? String(produs.denumire) : '—'}</td>
+                                                <td className="py-1 px-2 text-xs text-gray-800 text-right">{produs.cantitate != null ? String(produs.cantitate) : '—'}</td>
+                                                <td className="py-1 px-2 text-xs text-gray-800 text-right">{produs.pret_unitar != null ? String(produs.pret_unitar) : '—'}</td>
+                                                <td className="py-1 px-2 text-xs text-gray-800 text-right">{produs.valoare_fara_tva != null ? String(produs.valoare_fara_tva) : '—'}</td>
+                                                <td className="py-1 px-2 text-xs text-gray-800 text-right">{produs.tva_valoare != null ? String(produs.tva_valoare) : '—'}</td>
+                                                <td className="py-1 px-2 text-xs text-gray-800 text-right">{produs.valoare_cu_tva != null ? String(produs.valoare_cu_tva) : '—'}</td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
                                   )}
                                   <button
                                     onClick={(e) => {
