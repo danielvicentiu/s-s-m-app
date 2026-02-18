@@ -16,7 +16,7 @@ const TEST_ACT = { numar: '1425', an: '2006', tip: 'HG' } as const
 
 export async function GET(request: NextRequest) {
   try {
-    // ─── Auth: admin sau consultant ─────────────────────────────────
+    // ─── Auth: super_admin, admin sau consultant ─────────────────────────────────
     const supabase = await createSupabaseServer()
 
     const {
@@ -28,18 +28,32 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Neautentificat' }, { status: 401 })
     }
 
-    const { data: membership, error: membershipError } = await supabase
-      .from('memberships')
-      .select('role')
+    // Verifică super_admin în user_roles
+    const { data: userRole } = await supabase
+      .from('user_roles')
+      .select('roles!inner(role_key)')
       .eq('user_id', user.id)
       .eq('is_active', true)
-      .single()
+      .eq('roles.role_key', 'super_admin')
+      .maybeSingle()
 
-    if (membershipError || !membership || !['consultant', 'admin'].includes(membership.role)) {
-      return NextResponse.json(
-        { error: 'Acces permis doar admin/consultant' },
-        { status: 403 }
-      )
+    const isSuperAdmin = !!userRole
+
+    // Dacă NU e super_admin, verifică membership (admin/consultant)
+    if (!isSuperAdmin) {
+      const { data: membership, error: membershipError } = await supabase
+        .from('memberships')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .single()
+
+      if (membershipError || !membership || !['consultant', 'admin'].includes(membership.role)) {
+        return NextResponse.json(
+          { error: 'Acces permis doar super_admin/admin/consultant' },
+          { status: 403 }
+        )
+      }
     }
 
     // ─── Parse optional overrides from query params ────────────
