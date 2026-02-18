@@ -242,7 +242,7 @@ export async function POST(
             extracted_data: extractedData,
             confidence_score: 85,
             status: 'completed',
-            template_key: extractedData.tip_document || null,
+            template_key: null,
           })
           .eq('id', scan.id)
 
