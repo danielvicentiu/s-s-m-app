@@ -6,7 +6,9 @@
     { "path": "/api/cron/daily-alerts", "schedule": "0 7 * * 1" },
     { "path": "/api/cron/check-expiries", "schedule": "0 6 * * *" },
     { "path": "/api/cron/monthly-report", "schedule": "0 8 1 * *" },
-    { "path": "/api/cron/medical-alerts", "schedule": "30 7 * * *" }
+    { "path": "/api/cron/medical-alerts", "schedule": "30 7 * * *" },
+    { "path": "/api/cron/psi-alerts", "schedule": "0 7 * * *" },
+    { "path": "/api/cron/iscir-alerts", "schedule": "0 7 * * *" }
   ],
   "functions": {
     "app/api/admin/legal-batch/route.ts": { "maxDuration": 300 },
@@ -15,6 +17,8 @@
     "app/api/cron/daily-alerts/route.ts": { "maxDuration": 300 },
     "app/api/cron/check-expiries/route.ts": { "maxDuration": 300 },
     "app/api/cron/monthly-report/route.ts": { "maxDuration": 120 },
-    "app/api/cron/medical-alerts/route.ts": { "maxDuration": 120 }
+    "app/api/cron/medical-alerts/route.ts": { "maxDuration": 120 },
+    "app/api/cron/psi-alerts/route.ts": { "maxDuration": 120 },
+    "app/api/cron/iscir-alerts/route.ts": { "maxDuration": 120 }
   }
 }
