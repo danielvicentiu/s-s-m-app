@@ -4,8 +4,8 @@
 // Raw fetch + XML manual — zero dependențe SOAP
 // ============================================================
 
-const SOAP_ENDPOINT = 'http://legislatie.just.ro/apiws/FreeWebService.svc';
-const SOAP_NS = 'http://tempuri.org/';
+const SOAP_ENDPOINT = 'https://legislatie.just.ro/apiws/FreeWebService.svc/SOAP';
+const DC_NS = 'http://schemas.datacontract.org/2004/07/FreeWebService';
 
 export interface SearchParams {
   an?: number;
@@ -41,9 +41,6 @@ function escapeXml(str: string): string {
 function buildGetTokenEnvelope(): string {
   return `<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Header>
-    <Action s:mustUnderstand="1" xmlns="http://schemas.microsoft.com/ws/2005/05/addressing/none">http://tempuri.org/IFreeWebService/GetToken</Action>
-  </s:Header>
   <s:Body>
     <GetToken xmlns="http://tempuri.org/"/>
   </s:Body>
@@ -51,25 +48,24 @@ function buildGetTokenEnvelope(): string {
 }
 
 function buildSearchEnvelope(token: string, params: SearchParams): string {
+  // Schema order for CompositeType: NumarPagina, RezultatePagina, SearchAn, SearchNumar, SearchText, SearchTitlu
+  // Schema order for Search: SearchModel first, then tokenKey
   const fields = [
-    `<NumarPagina>${params.pagina ?? 0}</NumarPagina>`,
-    `<RezultatePagina>${params.rezultatePePagina ?? 10}</RezultatePagina>`,
-    params.an ? `<SearchAn>${params.an}</SearchAn>` : '',
-    params.numar ? `<SearchNumar>${escapeXml(params.numar)}</SearchNumar>` : '',
-    params.titlu ? `<SearchTitlu>${escapeXml(params.titlu)}</SearchTitlu>` : '',
+    `<NumarPagina xmlns="${DC_NS}">${params.pagina ?? 0}</NumarPagina>`,
+    `<RezultatePagina xmlns="${DC_NS}">${params.rezultatePePagina ?? 10}</RezultatePagina>`,
+    params.an    ? `<SearchAn xmlns="${DC_NS}">${params.an}</SearchAn>`                        : '',
+    params.numar ? `<SearchNumar xmlns="${DC_NS}">${escapeXml(params.numar)}</SearchNumar>`   : '',
+    params.titlu ? `<SearchTitlu xmlns="${DC_NS}">${escapeXml(params.titlu)}</SearchTitlu>`   : '',
   ].filter(Boolean).join('\n        ');
 
   return `<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Header>
-    <Action s:mustUnderstand="1" xmlns="http://schemas.microsoft.com/ws/2005/05/addressing/none">http://tempuri.org/IFreeWebService/Search</Action>
-  </s:Header>
   <s:Body>
     <Search xmlns="http://tempuri.org/">
-      <tokenKey>${escapeXml(token)}</tokenKey>
-      <SearchModel xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+      <SearchModel xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="${DC_NS}">
         ${fields}
       </SearchModel>
+      <tokenKey>${escapeXml(token)}</tokenKey>
     </Search>
   </s:Body>
 </s:Envelope>`;
@@ -127,42 +123,43 @@ export async function searchActs(params: SearchParams): Promise<LegislativeActRe
   return parseSearchResults(xml);
 }
 
+// Response schema (Legi type): DataVigoare, Emitent, LinkHtml, Numar, Publicatie, Text, TipAct, Titlu
 function parseSearchResults(xml: string): LegislativeActResult[] {
   const results: LegislativeActResult[] = [];
 
-  // Extract XML blocks for each act — adapt to actual response structure
-  const actPattern = /<[^>]*?(?:DocumentId|ActId)[^>]*?>[\s\S]*?(?:<\/[^>]*?Result>|<\/[^>]*?Act>)/g;
-  const blocks: string[] = xml.match(actPattern) || [];
+  // Split on <Legi> elements
+  const legiBlocks = xml.match(/<(?:[a-zA-Z]+:)?Legi[\s>][\s\S]*?<\/(?:[a-zA-Z]+:)?Legi>/gi) || [];
 
-  // Fallback: try splitting on repeating patterns
-  if (blocks.length === 0) {
-    const altBlocks = xml.split(/<\/?[a-z]:/).filter(b => b.includes('DocumentId') || b.includes('Titlu'));
-    // Parse entire response as one block if structured differently
-    if (xml.includes('SearchResult') || xml.includes('Titlu')) {
-      blocks.push(xml);
-    }
-  }
-
-  for (const block of blocks) {
+  for (const block of legiBlocks) {
     const extract = (tag: string): string => {
-      const m = block.match(new RegExp(`<(?:[a-z]:)?${tag}[^>]*?>(.*?)<\\/(?:[a-z]:)?${tag}>`, 'i'));
+      const m = block.match(new RegExp(`<(?:[a-zA-Z]+:)?${tag}(?:\\s[^>]*)?>(.*?)<\\/(?:[a-zA-Z]+:)?${tag}>`, 'i'));
       return m?.[1]?.trim() ?? '';
     };
 
-    const id = extract('DocumentId') || extract('Id') || extract('ActId');
-    const titlu = extract('Titlu') || extract('DenumireAct');
+    const titlu = extract('Titlu');
+    const linkHtml = extract('LinkHtml');
+    const numarStr = extract('Numar');
 
-    if (id || titlu) {
+    // Extract year from Numar (e.g. "319/2006") or from DataVigoare
+    const anMatch = numarStr.match(/\/(\d{4})$/) || extract('DataVigoare').match(/(\d{4})/);
+    const an = anMatch ? parseInt(anMatch[1]) : 0;
+    const numar = numarStr.replace(/\/\d{4}$/, '');
+
+    // Extract ID from LinkHtml (e.g. https://legislatie.just.ro/Public/DetaliiDocument/12345)
+    const idMatch = linkHtml.match(/\/(\d+)\s*$/);
+    const id = idMatch ? idMatch[1] : '';
+
+    if (titlu || numarStr) {
       results.push({
         id,
         titlu,
-        tipAct: extract('TipAct') || extract('TipDocument') || '',
-        numar: extract('Numar') || extract('NumarAct') || '',
-        an: parseInt(extract('An') || extract('AnAct') || '0'),
-        dataPublicarii: extract('DataPublicarii') || extract('DataDocument') || '',
-        emitent: extract('Emitent') || extract('OrganEmitent') || '',
-        stare: extract('Stare') || extract('StareAct') || '',
-        portalUrl: id ? `https://legislatie.just.ro/Public/DetaliiDocument/${id}` : '',
+        tipAct: extract('TipAct'),
+        numar,
+        an,
+        dataPublicarii: extract('DataVigoare'),
+        emitent: extract('Emitent'),
+        stare: extract('Publicatie'),
+        portalUrl: linkHtml || (id ? `https://legislatie.just.ro/Public/DetaliiDocument/${id}` : ''),
       });
     }
   }
