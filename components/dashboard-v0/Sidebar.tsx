@@ -12,7 +12,7 @@ import { useModuleGate } from '@/lib/hooks/useModuleGate'
 import type { ModuleKey } from '@/lib/modules/types'
 import NotificationBell from '@/components/notifications/NotificationBell'
 import {
-  LayoutDashboard, BrainCircuit, Users, BookOpen, AlertTriangle, CalendarDays,
+  LayoutDashboard, BrainCircuit, Brain, Users, BookOpen, AlertTriangle, CalendarDays,
   ClipboardList, Flame, Cog, CheckSquare, Wrench, HeartPulse, FileBarChart2,
   Coins, Lock, Network, ScanLine, Upload, Bell, Database, UserCircle, KeyRound,
   Layers, ChevronLeft, ChevronRight, Shield, X, Menu,
@@ -44,6 +44,7 @@ const navGroups: NavGroup[] = [
     links: [
       { href: '/dashboard', label: 'Dashboard', moduleKey: null, icon: LayoutDashboard },
       { href: '/dashboard/ai-assistant', label: 'VA-AI Assistant', moduleKey: null, icon: BrainCircuit },
+      { href: '/dashboard/ai-kb', label: 'Baza de Cunoștințe AI', moduleKey: null, icon: Brain },
       { href: '/dashboard/employees', label: 'Angajați', moduleKey: 'ssm', icon: Users },
     ],
   },
