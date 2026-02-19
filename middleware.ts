@@ -107,7 +107,7 @@ export async function middleware(request: NextRequest) {
   const countryCode = countryCodeMap[locale] || 'RO'
 
   // Check if route is protected
-  const protectedSegments = ['/dashboard', '/onboarding', '/admin', '/consultant', '/firma', '/angajat', '/inspector']
+  const protectedSegments = ['/dashboard', '/onboarding', '/admin', '/consultant', '/firma', '/angajat', '/inspector', '/portal']
   const isProtected = protectedSegments.some(segment =>
     pathWithoutLocale.startsWith(segment)
   )
