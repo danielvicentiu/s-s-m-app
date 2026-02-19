@@ -147,6 +147,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // PIN lock: if user has a PIN set and it hasn't been verified this session,
+  // redirect to PIN entry screen (dashboard routes only)
+  if (pathWithoutLocale.startsWith('/dashboard')) {
+    const hasPinCookie = request.cookies.get('has_pin')?.value === 'true'
+    const pinVerifiedCookie = request.cookies.get('pin_verified')?.value === 'true'
+    if (hasPinCookie && !pinVerifiedCookie) {
+      const url = request.nextUrl.clone()
+      url.pathname = `/${locale}/pin`
+      return NextResponse.redirect(url)
+    }
+  }
+
   const userRoles = await getRolesFromSupabase(supabase, user.id)
 
   let requiredRoles: string[] = []
