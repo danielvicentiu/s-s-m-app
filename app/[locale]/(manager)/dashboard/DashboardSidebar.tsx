@@ -47,8 +47,8 @@ export default function DashboardSidebar({ user }: { user: User }) {
     currentOrg !== 'all' ? currentOrg : null
   )
 
-  // FALLBACK: if loading, error, or viewing all orgs — show all links normally
-  const shouldGate = !isLoading && !error && currentOrg !== 'all'
+  // FALLBACK: if loading, error, no org context, or viewing all orgs — show all links normally
+  const shouldGate = !isLoading && !error && !!currentOrg && currentOrg !== 'all'
 
   // Navigation structure with module requirements
   const navGroups: NavGroup[] = [
@@ -413,7 +413,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
                   return (
                     <div
                       key={link.href}
-                      title="Modul inactiv"
+                      title="Modul inactiv - activati din Setari"
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed select-none"
                     >
                       <span className="opacity-50">{link.icon}</span>
