@@ -128,7 +128,6 @@ export function extractMetadata(text: string) {
 // ==========================================
 
 export async function PUT(request: NextRequest) {
-  const supabaseAdmin = getSupabaseAdmin()
   try {
     const body = await request.json()
     const { url } = body
@@ -272,7 +271,6 @@ export async function POST(request: NextRequest) {
       subdomains,
       status,
       country_code,
-      eu_directives,
       full_text_metadata,
       notes,
     } = body

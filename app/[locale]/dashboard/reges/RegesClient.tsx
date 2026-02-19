@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
-import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { ArrowLeft, Plus, RefreshCw, Link as LinkIcon, Send, FileText, Database, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react'
 
 interface Props {
@@ -12,7 +11,7 @@ interface Props {
   organizations: any[]
 }
 
-export default function RegesClient({ user, connections, outbox, organizations }: Props) {
+export default function RegesClient({ connections, outbox, organizations }: Props) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'connections' | 'transmissions' | 'nomenclatures'>('connections')
   const [showConnectionModal, setShowConnectionModal] = useState(false)
@@ -27,10 +26,6 @@ export default function RegesClient({ user, connections, outbox, organizations }
     username: '',
     password: '',
   })
-
-  // Sync state
-  const [syncResult, setSyncResult] = useState<any>(null)
-  const [syncing, setSyncing] = useState(false)
 
   async function handleCreateConnection() {
     if (!connectionForm.organizationId || !connectionForm.cui || !connectionForm.regesUserId || !connectionForm.regesEmployerId || !connectionForm.username || !connectionForm.password) {
@@ -69,38 +64,6 @@ export default function RegesClient({ user, connections, outbox, organizations }
       alert(`Eroare: ${error.message}`)
     } finally {
       setLoading(false)
-    }
-  }
-
-  async function handleSync() {
-    if (connections.length === 0) {
-      alert('Nicio conexiune REGES configurată. Adaugă o conexiune mai întâi.')
-      return
-    }
-
-    setSyncing(true)
-    setSyncResult(null)
-
-    try {
-      const response = await fetch('/api/reges/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ connection_id: connections[0].id }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Sync failed')
-      }
-
-      const result = await response.json()
-      setSyncResult(result)
-      router.refresh()
-    } catch (error: any) {
-      console.error('Sync error:', error)
-      alert(`Eroare la sincronizare: ${error.message}`)
-    } finally {
-      setSyncing(false)
     }
   }
 

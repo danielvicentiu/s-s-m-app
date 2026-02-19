@@ -7,7 +7,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter, usePathname } from '@/i18n/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { ValuePreview } from '@/components/ui/ValuePreview'
 import Link from 'next/link'
@@ -73,9 +73,8 @@ function DashboardContent({
   })
 
   const [activeTab, setActiveTab] = useState<'overview' | 'medical' | 'equipment' | 'employees'>('overview')
-  const { currentOrg: selectedOrg, setCurrentOrg: setSelectedOrg, selectedOrgData } = useOrg()
+  const { currentOrg: selectedOrg, selectedOrgData } = useOrg()
   const router = useRouter()
-  const pathname = usePathname()
 
   // Toggle-uri panouri (din DB sau default true = vizibil)
   const [showRiskITM, setShowRiskITM] = useState(initialPrefs.show_risk_itm !== false)
@@ -251,9 +250,6 @@ function DashboardContent({
   const expired = activeTab === 'medical' ? medExpired : eqExpired
   const expiring = activeTab === 'medical' ? medExpiring : eqExpiring
   const valid = activeTab === 'medical' ? medValid : eqValid
-
-  // Active tab rows
-  const activeRows = activeTab === 'medical' ? medWithStatus : eqWithStatus
 
   // Scor risc ITM
   const totalExpired = medExpired + eqExpired

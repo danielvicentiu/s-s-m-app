@@ -151,86 +151,6 @@ function classifyDomain(title: string, description: string): LegislationDomain {
 }
 
 /**
- * Extrage număr act legislativ din titlu
- * Exemple: "LEGE nr. 319 din 2006" -> "L 319/2006"
- *          "ORDIN nr. 1.234 din 2024" -> "O 1234/2024"
- */
-function extractActNumber(title: string): string {
-  // Pattern: tip (LEGE|ORDIN|HG|OUG) + nr + an
-  const patterns = [
-    /(?:LEGE|L)\s*nr\.?\s*(\d+)[\s\/]*(?:din\s*)?(\d{4})/i,
-    /(?:ORDIN|O)\s*nr\.?\s*([\d.]+)[\s\/]*(?:din\s*)?(\d{4})/i,
-    /(?:HG|HOTĂRÂRE)\s*nr\.?\s*(\d+)[\s\/]*(?:din\s*)?(\d{4})/i,
-    /(?:OUG|ORDONANȚĂ)\s*nr\.?\s*(\d+)[\s\/]*(?:din\s*)?(\d{4})/i
-  ]
-
-  for (const pattern of patterns) {
-    const match = title.match(pattern)
-    if (match) {
-      const type = title.match(/^[A-Z]+/)?.[0] || 'ACT'
-      const number = match[1].replace(/\./g, '')
-      const year = match[2]
-      return `${type.charAt(0)} ${number}/${year}`
-    }
-  }
-
-  // Fallback: primele 50 caractere din titlu
-  return title.substring(0, 50)
-}
-
-/**
- * Extrage data actului din pubDate sau titlu
- */
-function extractActDate(pubDate: string, title: string): string {
-  // Încearcă din pubDate RSS
-  if (pubDate) {
-    try {
-      const date = new Date(pubDate)
-      if (!isNaN(date.getTime())) {
-        return date.toISOString().split('T')[0]
-      }
-    } catch (e) {
-      // Continue to fallback
-    }
-  }
-
-  // Fallback: extrage din titlu "din DD.MM.YYYY" sau "din YYYY"
-  const dateMatch = title.match(/din\s+(\d{1,2})\.(\d{1,2})\.(\d{4})/)
-  if (dateMatch) {
-    const [, day, month, year] = dateMatch
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-  }
-
-  const yearMatch = title.match(/din\s+(\d{4})/)
-  if (yearMatch) {
-    return `${yearMatch[1]}-01-01`
-  }
-
-  // Fallback final: today
-  return new Date().toISOString().split('T')[0]
-}
-
-/**
- * Extrage referința Monitorul Oficial din description
- * Exemplu: "publicat în M.Of. nr. 1043 din 13.12.2024"
- */
-function extractOfficialJournalRef(description: string): string | null {
-  const patterns = [
-    /M\.?Of\.?\s*nr\.?\s*(\d+)\s*(?:din|\/)\s*([\d.]+)/i,
-    /Monitorul Oficial\s*nr\.?\s*(\d+)\s*(?:din|\/)\s*([\d.]+)/i
-  ]
-
-  for (const pattern of patterns) {
-    const match = description.match(pattern)
-    if (match) {
-      return `MO ${match[1]}/${match[2]}`
-    }
-  }
-
-  return null
-}
-
-/**
  * MAIN FUNCTION: Scrape legislație nouă pentru o țară
  */
 export async function scrapeLegislatie(
@@ -271,7 +191,6 @@ export async function scrapeLegislatie(
 
     // Transform în LegislationEntry
     const entries: LegislationEntry[] = []
-    const now = new Date().toISOString()
 
     for (const item of rssItems) {
       // Skip intrări prea vechi
@@ -355,18 +274,4 @@ export async function scrapeLegislatieAll(
   return output as Record<CountryCode, LegislationEntry[]>
 }
 
-/**
- * Helper: Generate UUID (compatibil cu crypto.randomUUID)
- */
-function generateUuid(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID()
-  }
 
-  // Fallback pentru Node.js fără crypto.randomUUID
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0
-    const v = c === 'x' ? r : (r & 0x3 | 0x8)
-    return v.toString(16)
-  })
-}

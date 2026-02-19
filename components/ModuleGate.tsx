@@ -8,7 +8,6 @@
 import { ReactNode } from 'react'
 import { useOrgModules } from '@/hooks/useOrgModules'
 import type { ModuleKey } from '@/lib/modules/types'
-import { MODULE_ICONS, CATEGORY_COLORS } from '@/lib/modules/constants'
 
 // ── Props ──
 interface ModuleGateProps {
@@ -32,7 +31,7 @@ export default function ModuleGate({
   hideIfNoAccess = false,
   locale = 'en',
 }: ModuleGateProps) {
-  const { hasModule, getModuleAccess, isLoading } = useOrgModules(orgId, locale)
+  const { getModuleAccess, isLoading } = useOrgModules(orgId, locale)
 
   // Loading state
   if (isLoading) {
@@ -76,7 +75,7 @@ interface TrialBannerProps {
   locale: string
 }
 
-function TrialBanner({ moduleKey, daysRemaining, locale }: TrialBannerProps) {
+function TrialBanner({ moduleKey: _moduleKey, daysRemaining, locale }: TrialBannerProps) {
   const urgency = daysRemaining <= 3 ? 'critical' : daysRemaining <= 7 ? 'warning' : 'info'
 
   const colors = {
@@ -143,9 +142,7 @@ interface UpgradeCTAProps {
   locale: string
 }
 
-function UpgradeCTA({ moduleKey, locale }: UpgradeCTAProps) {
-  const icon = MODULE_ICONS[moduleKey] || 'Package'
-
+function UpgradeCTA({ locale }: UpgradeCTAProps) {
   const titles: Record<string, string> = {
     ro: 'Modul indisponibil',
     en: 'Module unavailable',

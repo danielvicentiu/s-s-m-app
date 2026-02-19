@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/Badge'
@@ -117,7 +117,7 @@ function getStatus(expiryDate: string): { status: 'expired' | 'expiring' | 'vali
   return { status: 'valid', days: diffDays }
 }
 
-export default function EquipmentClient({ user, organizations, equipment: initialEquipment, equipmentTypes }: Props) {
+export default function EquipmentClient({ organizations, equipment: initialEquipment, equipmentTypes }: Props) {
   // Convertește equipment_types din DB la format { value, label } pentru dropdown-uri
   const EQUIPMENT_TYPES = equipmentTypes.length > 0
     ? equipmentTypes.map(et => ({ value: et.id, label: et.name }))

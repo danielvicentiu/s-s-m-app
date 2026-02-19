@@ -90,7 +90,7 @@ const NIS2_SECTORS = [
 // MAIN COMPONENT
 // ============================================================
 
-export default function NIS2Client({ user, organizations, initialSelectedOrg }: Props) {
+export default function NIS2Client({ organizations, initialSelectedOrg }: Props) {
   const [selectedOrg, setSelectedOrg] = useState(initialSelectedOrg)
   const [activeTab, setActiveTab] = useState<TabType>('assessment')
   const [loading, setLoading] = useState(false)
@@ -544,10 +544,10 @@ interface AssessmentTabProps {
 }
 
 function AssessmentTab({
-  assessments, selectedAssessment, checklistItems, wizardStep,
+  assessments, selectedAssessment, checklistItems,
   showNewForm, newForm, loading,
   onSelectAssessment, onNewAssessment, onFormChange, onCreateAssessment,
-  onCancelNew, onToggleCompliant, onUpdateEvidence, onWizardStep, onChecklistByCategory,
+  onCancelNew, onToggleCompliant, onUpdateEvidence, onChecklistByCategory,
 }: AssessmentTabProps) {
   const [activeCategory, setActiveCategory] = useState<NIS2ChecklistCategory>('governance')
 
@@ -1233,7 +1233,7 @@ interface ReportTabProps {
 }
 
 function ReportTab({
-  selectedAssessment, checklistItems, incidents, getNonCompliantItems, getCategoryScore,
+  selectedAssessment, checklistItems: _checklistItems, incidents, getNonCompliantItems, getCategoryScore,
 }: ReportTabProps) {
   if (!selectedAssessment) {
     return (

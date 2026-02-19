@@ -109,7 +109,7 @@ export async function rotateApiKey(params: {
   const supabase = await createSupabaseServer()
 
   // Get the old key
-  const { data: oldKey, error: fetchError } = await supabase
+  const { error: fetchError } = await supabase
     .from('api_keys')
     .select('*')
     .eq('id', params.keyId)

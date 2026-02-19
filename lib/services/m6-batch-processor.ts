@@ -215,7 +215,7 @@ export async function processLegislationBatch(
         continue
       }
 
-      const { legislationId, country, source, attempts, lastError } = item
+      const { legislationId, country, source, attempts, lastError: _lastError } = item
 
       // Mark as in progress
       inProgress.add(legislationId)

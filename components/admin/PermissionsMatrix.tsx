@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Resource, Action } from '@/lib/rbac';
 import { Check } from 'lucide-react';
 

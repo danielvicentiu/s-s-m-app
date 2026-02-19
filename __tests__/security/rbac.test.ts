@@ -8,15 +8,9 @@
 import { createSupabaseServer } from '@/lib/supabase/server';
 import {
   getMyRoles,
-  hasRole,
   isSuperAdmin,
   hasPermission,
   getFieldRestrictions,
-  getMyOrgIds,
-  type RoleKey,
-  type Resource,
-  type Action,
-  type UserRole,
 } from '@/lib/rbac';
 
 // Mock Supabase
@@ -73,13 +67,6 @@ describe('RBAC Security Tests', () => {
           }),
         }),
       }),
-    };
-  };
-
-  // Helper to create mock for organizations query (for getMyOrgIds)
-  const mockOrganizationsQuery = (data: any, error: any = null) => {
-    return {
-      select: jest.fn().mockResolvedValue({ data, error }),
     };
   };
 

@@ -15,9 +15,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
-  Download,
   Loader2,
-  X,
   Check,
   Users,
   Sparkles,
@@ -25,8 +23,6 @@ import {
 } from 'lucide-react'
 import * as XLSX from 'xlsx'
 import Papa from 'papaparse'
-import { parseString as parseXML } from 'xml2js'
-
 interface Props {
   user: { id: string; email: string }
   organizations: Array<{ id: string; name: string; cui: string | null }>
@@ -175,7 +171,7 @@ const COLUMN_PATTERNS: Record<string, string[]> = {
 }
 
 // Value transformers for REGES data
-function transformValue(columnName: string, rawValue: any, profile: ImportProfile): { value: any; transformed: boolean; warning?: string } {
+function transformValue(columnName: string, rawValue: any, _profile: ImportProfile): { value: any; transformed: boolean; warning?: string } {
   if (rawValue === null || rawValue === undefined || rawValue === '') {
     return { value: null, transformed: false }
   }
@@ -455,7 +451,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
   // Validate row
   const validateRow = useCallback(
-    async (rowData: Record<string, any>, rowNumber: number, existingCNPs: Set<string>, currentProfile?: ImportProfile): Promise<ValidationResult> => {
+    async (rowData: Record<string, any>, _rowNumber: number, existingCNPs: Set<string>, _currentProfile?: ImportProfile): Promise<ValidationResult> => {
       const errors: string[] = []
       const warnings: string[] = []
 

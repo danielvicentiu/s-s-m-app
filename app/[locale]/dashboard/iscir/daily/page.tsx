@@ -17,7 +17,7 @@ interface PageProps {
 }
 
 export default async function ISCIRDailyPage({ params, searchParams }: PageProps) {
-  const { locale } = await params
+  const { locale: _locale } = await params
   const { org: selectedOrgId, equipment: preselectedEquipmentId } = await searchParams
 
   const supabase = await createSupabaseServer()

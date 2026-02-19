@@ -18,7 +18,6 @@ import {
   Save,
   X,
   FileDown,
-  Calendar,
   User,
   Target,
   ClipboardList,
@@ -42,20 +41,6 @@ interface RiskAssessment {
   department: string | null
   assessment_date: string
   organization_id: string
-}
-
-interface RiskHazard {
-  id: string
-  hazard_name: string
-  hazard_description: string | null
-  hazard_source: string
-  probability: number
-  severity: number
-  risk_level: number
-  control_measures: string | null
-  residual_probability: number | null
-  residual_severity: number | null
-  residual_risk_level: number | null
 }
 
 interface PreventionMeasure {
@@ -170,7 +155,7 @@ export default function PreventionPlanForm({
 
   const [riskAssessments, setRiskAssessments] = useState<RiskAssessment[]>([])
   const [measures, setMeasures] = useState<PreventionMeasure[]>([])
-  const [selectedAssessment, setSelectedAssessment] = useState<RiskAssessment | null>(null)
+  const [_selectedAssessment, setSelectedAssessment] = useState<RiskAssessment | null>(null)
 
   // ========== EFFECTS ==========
 

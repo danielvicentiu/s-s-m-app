@@ -9,7 +9,6 @@ import {
   ArrowLeft,
   ClipboardCheck,
   CheckCircle2,
-  XCircle,
   AlertTriangle,
   Wrench,
   QrCode,
@@ -125,7 +124,6 @@ const EQUIPMENT_TYPE_LABELS: Record<string, string> = {
 // ─── Main component ────────────────────────────────────────────────────────
 
 export default function ISCIRDailyClient({
-  user,
   equipment,
   todayChecks,
   organizations,
@@ -133,13 +131,6 @@ export default function ISCIRDailyClient({
   preselectedEquipmentId,
   today,
 }: ISCIRDailyClientProps) {
-  // Map equipmentId → today's check
-  const todayCheckMap = new Map<string, ISCIRDailyCheck>(
-    todayChecks.map((c) => [c.equipment_id, c])
-  )
-
-  const checkedCount = equipment.filter((eq) => todayCheckMap.has(eq.id)).length
-
   // Checklist modal state
   const [activeEquipment, setActiveEquipment] = useState<ISCIREquipment | null>(null)
   const [checkItems, setCheckItems] = useState<Record<string, boolean>>({})
@@ -242,7 +233,6 @@ export default function ISCIRDailyClient({
     setCheckItems((prev) => ({ ...prev, [key]: !prev[key] }))
   }
 
-  const allItemsChecked = Object.values(checkItems).every(Boolean)
   const todayFormatted = new Date(today).toLocaleDateString('ro-RO', {
     weekday: 'long',
     day: 'numeric',

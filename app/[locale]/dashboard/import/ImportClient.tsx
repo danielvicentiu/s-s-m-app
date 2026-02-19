@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, ArrowLeft, ArrowRight, Download, Loader2 } from 'lucide-react'
@@ -126,12 +126,12 @@ const TABLE_MAPPING: Record<ImportType, string> = {
   equipment: 'safety_equipment',
 }
 
-export default function ImportClient({ user, organizations, locale }: Props) {
+export default function ImportClient({ organizations, locale }: Props) {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [importType, setImportType] = useState<ImportType>('employees')
   const [selectedOrgId, setSelectedOrgId] = useState<string>(organizations[0]?.id || '')
-  const [file, setFile] = useState<File | null>(null)
+  const [_file, setFile] = useState<File | null>(null)
   const [rawData, setRawData] = useState<any[]>([])
   const [columns, setColumns] = useState<string[]>([])
   const [mappings, setMappings] = useState<ColumnMapping[]>([])
@@ -176,7 +176,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
   }
 
   // Validate row
-  const validateRow = (rowData: any, rowNumber: number): ValidationResult => {
+  const validateRow = (rowData: any, _rowNumber: number): ValidationResult => {
     const errors: string[] = []
     const warnings: string[] = []
     const fields = FIELD_DEFINITIONS[importType]
@@ -272,7 +272,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
 
   // Step 2: Mapping complete → validate
   const handleMappingComplete = () => {
-    const mapped = rawData.map((row, index) => {
+    const mapped = rawData.map((row, _index) => {
       const mappedData: any = {}
       mappings.forEach((mapping) => {
         if (mapping.sourceColumn) {
@@ -660,7 +660,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                         <td className="px-4 py-3 text-sm text-gray-600">
                           {Object.entries(row.data)
                             .slice(0, 3)
-                            .map(([key, value]) => `${value}`)
+                            .map(([_key, value]) => `${value}`)
                             .join(' • ')}
                         </td>
                         <td className="px-4 py-3 text-sm">

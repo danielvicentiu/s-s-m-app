@@ -620,7 +620,7 @@ export function calculateNextTrainingDate(
  * @returns true if special surveillance required
  */
 export function requiresSpecialMedicalSurveillance(
-  jobTitle: string,
+  _jobTitle: string,
   workConditions: {
     nightWork: boolean
     hazardousSubstances: boolean

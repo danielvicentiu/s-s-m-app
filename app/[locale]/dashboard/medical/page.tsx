@@ -17,7 +17,7 @@ export default async function MedicalPage({ params, searchParams }: MedicalPageP
   const { locale } = await params
   const { org: selectedOrgId } = await searchParams
   const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 
@@ -31,7 +31,7 @@ export default async function MedicalPage({ params, searchParams }: MedicalPageP
     medicalQuery = medicalQuery.eq('organization_id', selectedOrgId)
   }
 
-  const { data: medicalExams, error } = await medicalQuery
+  const { data: medicalExams } = await medicalQuery
 
   // Fetch employees filtered by org if selected
   let employeesQuery = supabase

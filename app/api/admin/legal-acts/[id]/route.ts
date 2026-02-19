@@ -3,7 +3,7 @@ import { createSupabaseServer } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -25,7 +25,7 @@ export async function GET(
     }
 
     // Get obligations
-    const { data: obligations, error: oblError } = await supabase
+    const { data: obligations } = await supabase
       .from('legal_obligations')
       .select('*')
       .eq('legal_act_id', id)
@@ -33,7 +33,7 @@ export async function GET(
       .order('created_at', { ascending: true })
 
     // Get penalties
-    const { data: penalties, error: penError } = await supabase
+    const { data: penalties } = await supabase
       .from('legal_penalties')
       .select('*')
       .eq('legal_act_id', id)
@@ -41,7 +41,7 @@ export async function GET(
       .order('created_at', { ascending: true })
 
     // Get cross references (where this act is source)
-    const { data: crossRefs, error: refError } = await supabase
+    const { data: crossRefs } = await supabase
       .from('legal_cross_references')
       .select('*')
       .eq('act_a_id', id)

@@ -384,7 +384,7 @@ export async function markCompliant(
  */
 export async function markNonCompliant(
   orgObligationId: string,
-  userId: string,
+  _userId: string,
   notes: string
 ): Promise<void> {
   const supabase = await createSupabaseServer()

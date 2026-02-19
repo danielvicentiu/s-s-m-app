@@ -8,17 +8,13 @@ import {
   Gauge,
   Plus,
   Search,
-  Filter,
   AlertTriangle,
-  Clock,
   CheckCircle2,
   XCircle,
   Edit,
   Trash2,
   ClipboardCheck,
   Factory,
-  Calendar,
-  FileText,
   ShieldAlert
 } from 'lucide-react'
 
@@ -122,7 +118,6 @@ const RESULT_LABELS: Record<string, string> = {
 }
 
 export default function ISCIRClient({
-  user,
   equipment: initialEquipment,
   organizations,
   selectedOrgId,

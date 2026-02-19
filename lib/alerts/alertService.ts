@@ -273,7 +273,6 @@ export async function checkExpiries(
   const cutoff = new Date(today)
   cutoff.setDate(today.getDate() + maxDays)
   const cutoffStr = cutoff.toISOString().split('T')[0]
-  const todayStr = today.toISOString().split('T')[0]
 
   const items: ExpiryItem[] = []
 
@@ -636,7 +635,7 @@ export async function generateMonthlyReport(organizationId: string): Promise<voi
       link,
     })
     messageContent = subject
-    const result = await sendAlertEmail({ to: contactEmail, subject, html })
+    await sendAlertEmail({ to: contactEmail, subject, html })
     channelUsed = 'email'
   }
 

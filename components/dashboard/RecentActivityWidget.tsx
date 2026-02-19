@@ -57,7 +57,7 @@ const ACTION_CONFIGS: Record<string, {
   getLinkText?: (metadata: any) => string | null
 }> = {
   employee_added: {
-    getText: (metadata) => `a adăugat angajatul`,
+    getText: (_metadata) => `a adăugat angajatul`,
     icon: UserPlus,
     iconColor: 'text-blue-600',
     iconBg: 'bg-blue-50',
@@ -65,7 +65,7 @@ const ACTION_CONFIGS: Record<string, {
     getLinkText: (metadata) => metadata?.employee_name || 'Vezi detalii',
   },
   training_completed: {
-    getText: (metadata) => `a finalizat instruirea`,
+    getText: (_metadata) => `a finalizat instruirea`,
     icon: GraduationCap,
     iconColor: 'text-green-600',
     iconBg: 'bg-green-50',
@@ -73,7 +73,7 @@ const ACTION_CONFIGS: Record<string, {
     getLinkText: (metadata) => metadata?.training_name || 'Vezi certificat',
   },
   document_generated: {
-    getText: (metadata) => `a generat document`,
+    getText: (_metadata) => `a generat document`,
     icon: FileText,
     iconColor: 'text-purple-600',
     iconBg: 'bg-purple-50',
@@ -81,7 +81,7 @@ const ACTION_CONFIGS: Record<string, {
     getLinkText: (metadata) => metadata?.document_type || 'Vezi document',
   },
   alert_resolved: {
-    getText: (metadata) => `a rezolvat alerta`,
+    getText: (_metadata) => `a rezolvat alerta`,
     icon: CheckCircle,
     iconColor: 'text-teal-600',
     iconBg: 'bg-teal-50',
@@ -89,7 +89,7 @@ const ACTION_CONFIGS: Record<string, {
     getLinkText: (metadata) => metadata?.alert_type || 'Vezi alertă',
   },
   settings_changed: {
-    getText: (metadata) => `a modificat setările`,
+    getText: (_metadata) => `a modificat setările`,
     icon: Settings,
     iconColor: 'text-orange-600',
     iconBg: 'bg-orange-50',

@@ -18,7 +18,6 @@ import {
   validatePassword,
   getPasswordStrength,
   DEFAULT_POLICY,
-  type PasswordPolicy,
 } from '@/lib/security/password-policy';
 
 describe('Password Policy Security Tests', () => {

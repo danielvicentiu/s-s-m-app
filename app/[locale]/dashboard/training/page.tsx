@@ -16,7 +16,7 @@ export default async function TrainingPage({ params, searchParams }: TrainingPag
   const { locale } = await params
   const { org: urlOrgParam } = await searchParams
   const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user, orgs } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 

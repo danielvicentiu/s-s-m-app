@@ -126,7 +126,6 @@ const appointmentStatuses: Record<string, string> = {
 // ========== COMPONENT ==========
 
 export default function MedicalClient({
-  user,
   medicalExams,
   employees,
   organizations,

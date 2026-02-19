@@ -5,7 +5,6 @@
 // ============================================================
 
 const SOAP_ENDPOINT = 'http://legislatie.just.ro/apiws/FreeWebService.svc';
-const SOAP_NS = 'http://tempuri.org/';
 
 export interface SearchParams {
   an?: number;
@@ -135,7 +134,6 @@ function parseSearchResults(xml: string): LegislativeActResult[] {
 
   // Fallback: try splitting on repeating patterns
   if (blocks.length === 0) {
-    const altBlocks = xml.split(/<\/?[a-z]:/).filter(b => b.includes('DocumentId') || b.includes('Titlu'));
     // Parse entire response as one block if structured differently
     if (xml.includes('SearchResult') || xml.includes('Titlu')) {
       blocks.push(xml);

@@ -6,7 +6,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { Package, Calendar, FileText, AlertCircle, CheckCircle2, Plus, Trash2, UserCheck } from 'lucide-react'
 
@@ -49,7 +49,6 @@ export default function EquipmentFormComplete({
   equipmentTypes,
   onSuccess,
   onCancel,
-  organizationId,
 }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -170,7 +169,7 @@ export default function EquipmentFormComplete({
       }))
 
       // Insert into employee_equipment table
-      const { data: insertedData, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('employee_equipment')
         .insert(records)
         .select()

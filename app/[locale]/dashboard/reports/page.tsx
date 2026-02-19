@@ -11,11 +11,10 @@ interface ReportsPageProps {
   searchParams: Promise<{ org?: string }>
 }
 
-export default async function ReportsPage({ params, searchParams }: ReportsPageProps) {
-  const { locale } = await params
+export default async function ReportsPage({ searchParams }: ReportsPageProps) {
   const { org: selectedOrgId } = await searchParams
   const supabase = await createSupabaseServer()
-  const { user, orgs } = await getCurrentUserOrgs()
+  const { user } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 

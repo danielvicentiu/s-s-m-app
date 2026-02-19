@@ -67,7 +67,7 @@ const DOCUMENT_TYPES = [
   },
 ]
 
-export default function DocumentGeneratorClient({ user, organizations, employees }: Props) {
+export default function DocumentGeneratorClient({ organizations, employees }: Props) {
   const [selectedType, setSelectedType] = useState<DocumentType | null>(null)
   const [selectedOrg, setSelectedOrg] = useState<string>('')
   const [selectedEmployee, setSelectedEmployee] = useState<string>('')

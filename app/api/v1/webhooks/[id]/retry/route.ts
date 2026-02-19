@@ -8,7 +8,7 @@ import { retryFailedWebhooks } from '@/lib/services/webhook-outgoing'
 export const dynamic = 'force-dynamic'
 
 export async function POST(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

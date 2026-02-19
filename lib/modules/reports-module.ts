@@ -692,7 +692,7 @@ export function calculateNextRunTime(
   frequency: ReportScheduleFrequency,
   lastRunAt: string | null,
   deliveryTime: string = '09:00',
-  timezone: string = 'Europe/Bucharest'
+  _timezone: string = 'Europe/Bucharest'
 ): string {
   const now = new Date()
   const [hours, minutes] = deliveryTime.split(':').map(Number)

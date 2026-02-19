@@ -2,14 +2,14 @@
 // Pipeline: Adapter → Translator → Structurer → legal_acts + legal_act_sections
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { env, getDefaultImportConfig, COUNTRY_CONFIGS } from '../config';
+import { env, getDefaultImportConfig } from '../config';
 import { EurLexAdapter } from '../adapters/eurlex-adapter';
 import { BgLexAdapter } from '../adapters/bg-adapter';
 import { LegislativeTranslator } from '../processors/translator';
 import { LegislativeStructurer } from '../processors/structurer';
 import type {
   CountryCode, AdapterType, ImportResult, ImportError,
-  RawLegislation, StructuredLegislation, LegislativeAdapter,
+  StructuredLegislation, LegislativeAdapter,
 } from '../types';
 
 export class ImportPipeline {

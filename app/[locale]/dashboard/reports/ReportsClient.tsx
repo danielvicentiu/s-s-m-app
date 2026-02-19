@@ -15,7 +15,6 @@ interface ReportsClientProps {
 }
 
 export default function ReportsClient({
-  user,
   reports: initialReports,
   organizations,
   selectedOrgId,

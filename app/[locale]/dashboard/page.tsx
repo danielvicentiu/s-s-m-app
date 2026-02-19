@@ -9,7 +9,7 @@ import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import DashboardClient from './DashboardClient'
 // RBAC: Import funcții server-side pentru verificare roluri și permisiuni
-import { getMyRoles, hasRole, getMyOrgIds } from '@/lib/rbac'
+import { hasRole, getMyOrgIds } from '@/lib/rbac'
 
 interface DashboardPageProps {
   searchParams: Promise<{ org?: string }>
@@ -18,7 +18,7 @@ interface DashboardPageProps {
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const resolvedSearchParams = await searchParams
   const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user, orgs } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 

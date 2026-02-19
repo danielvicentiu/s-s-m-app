@@ -485,7 +485,7 @@ function DeadlinesTab({
 }
 
 // Activity Tab Component
-function ActivityTab({ activityLog }: { activityLog: any[] }) {
+function ActivityTab({}: { activityLog: any[] }) {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900">Jurnal activitate</h2>

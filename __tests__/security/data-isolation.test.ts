@@ -57,7 +57,7 @@ describe('Data Isolation Security Tests (RLS)', () => {
           data: { user: currentUserId ? { id: currentUserId } : null },
         }),
       },
-      from: jest.fn((table: string) => {
+      from: jest.fn((_table: string) => {
         return {
           select: jest.fn().mockReturnThis(),
           insert: jest.fn().mockReturnThis(),

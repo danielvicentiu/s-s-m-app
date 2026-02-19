@@ -6,7 +6,7 @@
 'use client'
 
 import { useState } from 'react'
-import { AlertTriangle, ChevronDown, ChevronUp, Scale, Eye, EyeOff } from 'lucide-react'
+import { AlertTriangle, ChevronDown, ChevronUp, Scale } from 'lucide-react'
 
 interface BreakdownItem {
   code: string
@@ -38,16 +38,6 @@ interface ValuePreviewProps {
 
 function formatRON(amount: number): string {
   return amount.toLocaleString('ro-RO') + ' RON'
-}
-
-function severityColor(severity: string): string {
-  switch (severity) {
-    case 'critical': return 'bg-red-100 text-red-700 border-red-200'
-    case 'high': return 'bg-red-50 text-red-600 border-red-100'
-    case 'medium': return 'bg-orange-50 text-orange-600 border-orange-100'
-    case 'low': return 'bg-yellow-50 text-yellow-600 border-yellow-100'
-    default: return 'bg-gray-50 text-gray-600 border-gray-100'
-  }
 }
 
 function authorityBadge(authority: string): string {

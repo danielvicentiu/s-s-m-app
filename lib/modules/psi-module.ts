@@ -3,7 +3,7 @@
 // Fire safety compliance tracking: equipment, trainings, evacuation plans, authorizations
 // Data: 13 Februarie 2026
 
-import type { ModuleKey, CountryModuleConfig } from './types'
+import type { ModuleKey } from './types'
 
 // ── Module Interface ──
 export interface IModule {

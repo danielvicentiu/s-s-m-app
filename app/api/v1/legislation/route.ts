@@ -9,9 +9,8 @@ import {
   parseSortParams,
   buildPaginatedResponse,
   ApiError,
-  checkOrganizationAccess
 } from '@/lib/api/middleware'
-import type { CountryCode, LegislationDomain, ObligationStatus } from '@/lib/types'
+import type { CountryCode, ObligationStatus } from '@/lib/types'
 import { runPipeline, type PipelineOptions } from '@/lib/services/legislation-pipeline'
 
 /**

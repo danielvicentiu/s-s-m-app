@@ -8,7 +8,7 @@
  * Dependencies: ssm-core, gdpr
  */
 
-import { ModuleDefinition, ModuleCapability, ModuleHook } from './types';
+import { ModuleCapability, ModuleHook } from './types';
 
 // ===========================
 // NIS2-SPECIFIC TYPES

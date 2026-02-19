@@ -10,11 +10,10 @@ interface TrainingCalendarPageProps {
   searchParams: Promise<{ org?: string }>
 }
 
-export default async function TrainingCalendarPage({ params, searchParams }: TrainingCalendarPageProps) {
-  const { locale } = await params
+export default async function TrainingCalendarPage({ searchParams }: TrainingCalendarPageProps) {
   const { org: urlOrgParam } = await searchParams
   const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user, orgs } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 

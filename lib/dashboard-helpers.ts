@@ -3,7 +3,7 @@
 
 import { createSupabaseServer } from './supabase/server'
 import { createSupabaseBrowser } from './supabase/client'
-import { getCountryFromLocale } from './country-utils'
+
 import type { EquipmentType, AlertCategory, ObligationType } from './types'
 
 /**

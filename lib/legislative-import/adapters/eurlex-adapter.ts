@@ -1,7 +1,7 @@
 // lib/legislative-import/adapters/eurlex-adapter.ts
 // EUR-Lex adapter v3 — Direct HTML fetch, CELEX type fix, title fix
 import { BaseAdapter } from './base-adapter';
-import { EURLEX_CONFIG, EURLEX_PRIORITY_ACTS } from '../config';
+import { EURLEX_PRIORITY_ACTS } from '../config';
 import { hashContent, extractSections } from '../utils/text-splitter';
 import { withRetry } from '../utils/rate-limiter';
 import type { RawLegislation, SearchParams, UpdateCheckResult, RawSection } from '../types';

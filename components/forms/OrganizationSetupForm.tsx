@@ -10,10 +10,6 @@ import { useState, useEffect } from 'react'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import {
   Building2,
-  MapPin,
-  Users,
-  Phone,
-  Mail,
   Search,
   CheckCircle2,
   AlertCircle,

@@ -10,8 +10,6 @@ import type {
   TrainingCalendarStats,
   TrainingType,
   TrainingSessionStatus,
-  TRAINING_TYPE_LABELS as TrainingTypeLabelsType,
-  TRAINING_SESSION_STATUS_LABELS as TrainingSessionStatusLabelsType,
 } from '@/lib/types'
 import {
   TRAINING_TYPE_LABELS,
@@ -33,7 +31,7 @@ interface CalendarDay {
   trainings: TrainingCalendarItem[]
 }
 
-export default function TrainingCalendarClient({ user, organizations, initialSelectedOrg }: Props) {
+export default function TrainingCalendarClient({ organizations, initialSelectedOrg }: Props) {
   // Organization selector
   const [selectedOrgId, setSelectedOrgId] = useState(initialSelectedOrg)
 
@@ -272,23 +270,6 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
     } else {
       setFormTopics(topic)
     }
-  }
-
-  // ============================================================
-  // FILTERS
-  // ============================================================
-  const getFilteredTrainings = (): TrainingCalendarItem[] => {
-    let filtered = [...calendarData]
-
-    if (filterType) {
-      filtered = filtered.filter((t) => t.training_type === filterType)
-    }
-
-    if (filterStatus) {
-      filtered = filtered.filter((t) => t.status === filterStatus)
-    }
-
-    return filtered
   }
 
   const getUpcomingTrainings = (): TrainingCalendarItem[] => {

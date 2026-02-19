@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Check, X, AlertTriangle, Shield } from 'lucide-react'
+import { Check, AlertTriangle, Shield } from 'lucide-react'
 import obligationsData from '@/src/data/obligations-matrix.json'
 
 interface Obligation {
@@ -29,7 +29,7 @@ interface Props {
   selectedRoles: string[]
 }
 
-export default function EstimateResult({ activity, employeeCount, orgType, selectedRoles }: Props) {
+export default function EstimateResult({ activity, employeeCount, orgType: _orgType, selectedRoles: _selectedRoles }: Props) {
   const [checkedObligations, setCheckedObligations] = useState<Record<string, boolean>>({})
   const [allObligations, setAllObligations] = useState<Obligation[]>([])
 

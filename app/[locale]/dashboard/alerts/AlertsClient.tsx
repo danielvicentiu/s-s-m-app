@@ -138,7 +138,6 @@ const DEFAULT_CONFIG: AlertConfig = {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function AlertsClient({
-  user,
   organizations,
   selectedOrgId,
   alertLogs,

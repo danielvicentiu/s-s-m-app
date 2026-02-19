@@ -37,14 +37,6 @@ interface AlertItem {
   alert_category?: string;
 }
 
-interface OrgAlerts {
-  org_id: string;
-  org_name: string;
-  contact_email: string;
-  country_code: string;
-  items: AlertItem[];
-}
-
 // Helper: calculează zile rămase
 function daysUntil(dateStr: string): number {
   const today = new Date();
@@ -54,37 +46,8 @@ function daysUntil(dateStr: string): number {
   return Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-// Helper: emoji urgență
-function urgencyEmoji(urgency: AlertItem['urgency']): string {
-  switch (urgency) {
-    case 'expired': return '🔴';
-    case 'critical': return '🟠';
-    case 'warning': return '🟡';
-    case 'info': return '🔵';
-  }
-}
-
-// Helper: text urgență RO (dinamic din alert_category)
-function urgencyText(urgency: AlertItem['urgency'], alertCategory?: AlertCategory): string {
-  switch (urgency) {
-    case 'expired': return 'EXPIRAT';
-    case 'critical':
-      return alertCategory
-        ? `CRITIC - ${alertCategory.critical_days_before} zile`
-        : 'CRITIC - 3 zile';
-    case 'warning':
-      return alertCategory
-        ? `ATENȚIE - ${alertCategory.warning_days_before} zile`
-        : 'ATENȚIE - 7 zile';
-    case 'info':
-      return alertCategory
-        ? `Informare - ${alertCategory.warning_days_before} zile`
-        : 'Informare - 30 zile';
-  }
-}
-
 // Generare HTML email
-function generateEmailHtml(orgName: string, items: AlertItem[], alertCategories: AlertCategory[]): string {
+function generateEmailHtml(orgName: string, items: AlertItem[], _alertCategories: AlertCategory[]): string {
   const expired = items.filter(i => i.urgency === 'expired');
   const critical = items.filter(i => i.urgency === 'critical');
   const warning = items.filter(i => i.urgency === 'warning');

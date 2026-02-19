@@ -221,7 +221,7 @@ export default function IncidentReportForm({
     try {
       for (const file of formData.photo_files) {
         const fileName = `${incidentId}/${Date.now()}_${file.name}`
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from('incident-photos')
           .upload(fileName, file)
 

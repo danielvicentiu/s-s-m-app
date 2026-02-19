@@ -8,7 +8,7 @@
  * Dependencies: ssm-core, documents
  */
 
-import { ModuleDefinition, ModuleCapability, ModuleHook } from './types';
+import { ModuleCapability, ModuleHook } from './types';
 
 // ===========================
 // GDPR-SPECIFIC TYPES
@@ -575,8 +575,6 @@ export const gdprFunctions = {
     let maxRisk: 'low' | 'medium' | 'high' = 'low';
 
     for (const risk of risks) {
-      const likelihoodScore = riskScores[risk.likelihood];
-      const severityScore = riskScores[risk.severity];
       const residualScore = riskScores[risk.residualRisk];
 
       totalScore += residualScore;
@@ -594,7 +592,7 @@ export const gdprFunctions = {
   /**
    * Generate data portability export
    */
-  generatePortabilityExport: (dataSubjectId: string, organizationId: string): {
+  generatePortabilityExport: (_dataSubjectId: string, _organizationId: string): {
     personalData: Record<string, any>;
     format: 'json' | 'csv' | 'xml';
     generatedAt: Date;

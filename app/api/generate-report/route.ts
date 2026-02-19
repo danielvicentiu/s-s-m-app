@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
     const body = await request.json()
-    const { organizationId, month, type = 'monthly' } = body
+    const { organizationId, month } = body
 
     if (!organizationId || !month) {
       return NextResponse.json(

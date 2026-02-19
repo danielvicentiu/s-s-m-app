@@ -4,7 +4,7 @@
 
 import { redirect } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
-import { getMyRoles, hasRole } from '@/lib/rbac';
+import { getMyRoles } from '@/lib/rbac';
 import { RolesViewerClient } from './RolesViewerClient';
 
 export default async function DashboardRolesPage() {

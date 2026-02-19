@@ -9,7 +9,7 @@
 // ============================================================
 
 import type { Organization, MedicalExamination, SafetyEquipment, GeneratedDocument } from '@/lib/types'
-import type { TrainingSession, TrainingAssignment } from '@/lib/training-types'
+import type { TrainingSession } from '@/lib/training-types'
 
 // ============================================================
 // ORGANIZAȚIE

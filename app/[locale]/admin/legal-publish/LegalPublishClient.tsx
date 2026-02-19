@@ -95,7 +95,7 @@ export default function LegalPublishClient({
   recentBatches,
   publishedMap,
   locale,
-  userId,
+  userId: _userId,
 }: Props) {
   // State
   const [step, setStep] = useState<Step>('select')

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { RoleKey, Resource, Action } from '@/lib/rbac';
+import { Resource, Action } from '@/lib/rbac';
 import { CountryCode } from '@/lib/types';
 import { PermissionsMatrix } from './PermissionsMatrix';
 import { AlertCircle, Loader2 } from 'lucide-react';

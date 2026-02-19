@@ -9,7 +9,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import type { ModuleKey, ActiveModule, ModuleAccess, ModuleDefinition } from '@/lib/modules/types'
-import { isModuleActive, getTrialDaysRemaining } from '@/lib/modules/types'
+import { isModuleActive } from '@/lib/modules/types'
 import { BASE_MODULES } from '@/lib/modules/constants'
 
 // ── 1. useOrgModules() — hook principal ──

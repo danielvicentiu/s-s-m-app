@@ -50,7 +50,6 @@ interface PSIClientProps {
 }
 
 export default function PSIClient({
-  user,
   equipment: initialEquipment,
   organizations,
   selectedOrgId,

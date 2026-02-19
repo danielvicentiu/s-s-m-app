@@ -3,7 +3,7 @@
 // 4 steps: Upload → Column Mapping → Validation & Preview → Import
 // Integrates with organization selector via URL params
 
-import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
+import { getCurrentUserOrgs } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import ImportWizardClient from './ImportWizardClient'
 
@@ -15,8 +15,7 @@ interface ImportPageProps {
 export default async function ImportPage({ params, searchParams }: ImportPageProps) {
   const { locale } = await params
   const { org: selectedOrgId } = await searchParams
-  const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user, orgs } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 

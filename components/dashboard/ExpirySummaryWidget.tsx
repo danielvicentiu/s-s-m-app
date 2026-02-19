@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { AlertCircle, Clock, Info, ChevronRight } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
-import { ro } from 'date-fns/locale'
 
 interface ExpiringItem {
   id: string

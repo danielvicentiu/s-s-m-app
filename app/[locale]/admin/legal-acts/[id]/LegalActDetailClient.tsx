@@ -297,7 +297,6 @@ export default function LegalActDetailClient({
 
   // Check if all reviewed
   const allObligationsReviewed = reviewStats.obligations.pending === 0 && reviewStats.obligations.total > 0
-  const allPenaltiesReviewed = reviewStats.penalties.pending === 0 && reviewStats.penalties.total > 0
 
   // Extract definitions from ai_extraction_result if present
   const definitions = act.ai_extraction_result?.definitions || act.ai_extraction_result?.definiții || []

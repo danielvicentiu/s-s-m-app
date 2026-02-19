@@ -40,7 +40,7 @@ import {
  *         description: Internal Server Error
  */
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -374,7 +374,7 @@ export async function PATCH(
  *         description: Internal Server Error
  */
 export async function DELETE(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

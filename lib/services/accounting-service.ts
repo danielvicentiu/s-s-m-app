@@ -14,7 +14,6 @@ import {
   UpdateDeadlineInput,
   DeadlineFilters,
   ContractFilters,
-  DeadlineType,
   DEADLINE_LABELS,
   AccountingService as AccountingServiceType,
 } from './accounting-types';
@@ -356,7 +355,6 @@ export class AccountingService {
     // Check which services are included
     const hasPayroll = services.some((s) => s.type === 'salarizare');
     const hasTVA = services.some((s) => s.type === 'TVA');
-    const hasPrimaryAccounting = services.some((s) => s.type === 'contabilitate_primara');
     const hasFiscalDeclarations = services.some((s) => s.type === 'declaratii_fiscale');
     const hasBilant = services.some((s) => s.type === 'bilant');
 

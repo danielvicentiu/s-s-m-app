@@ -1,7 +1,7 @@
 // lib/legislative-import/config.ts
 // S-S-M.RO — Legislative Import Pipeline Configuration
 
-import type { CountryCode, AdapterType, ImportConfig, Domain } from './types';
+import type { CountryCode, AdapterType, ImportConfig } from './types';
 
 // ============================================================================
 // Environment Variables

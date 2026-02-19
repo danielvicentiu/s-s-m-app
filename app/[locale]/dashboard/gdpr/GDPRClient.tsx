@@ -6,7 +6,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from '@/i18n/navigation'
 import { DataTable, type DataTableColumn } from '@/components/ui/DataTable'
 import { FormModal } from '@/components/ui/FormModal'
 import { StatusBadge } from '@/components/ui/StatusBadge'
@@ -21,10 +20,8 @@ import {
   UserCheck,
   Building,
   Search,
-  Filter,
   AlertCircle,
   CheckCircle2,
-  Clock,
   XCircle,
 } from 'lucide-react'
 import type { ProcessingActivity, Consent, DPO, LegalBasis, ProcessingActivityStatus, ConsentType } from '@/lib/gdpr/types'
@@ -118,7 +115,6 @@ const statusLabels: Record<ProcessingActivityStatus, string> = {
 // ========== MAIN COMPONENT ==========
 
 export default function GDPRClient({ user, organizations, selectedOrgId }: Props) {
-  const router = useRouter()
   const [activeTab, setActiveTab] = useState<TabType>('processing')
   const [loading, setLoading] = useState(false)
 

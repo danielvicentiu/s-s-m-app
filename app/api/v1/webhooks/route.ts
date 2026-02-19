@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase/server'
-import type { Webhook, WebhookEventType } from '@/lib/types'
+import type { WebhookEventType } from '@/lib/types'
 import crypto from 'crypto'
 
 export const dynamic = 'force-dynamic'

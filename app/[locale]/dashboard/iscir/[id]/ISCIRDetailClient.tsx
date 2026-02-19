@@ -15,10 +15,8 @@ import {
   Gauge,
   Factory,
   MapPin,
-  User,
   Wrench,
   Clock,
-  FileText,
   ShieldCheck,
   QrCode,
   Plus,
@@ -238,7 +236,6 @@ type VerificationForm = {
 // ─── Main component ────────────────────────────────────────────────────────
 
 export default function ISCIRDetailClient({
-  user,
   equipment,
   verifications,
   dailyChecks,
@@ -811,11 +808,6 @@ function VerificationTimelineItem({
     modernizare: 'Modernizare',
   }
 
-  const RESULT_LABELS: Record<string, string> = {
-    admis: 'Admis',
-    respins: 'Respins',
-    admis_conditionat: 'Admis condiționat',
-  }
 
   return (
     <div className="relative pl-10">

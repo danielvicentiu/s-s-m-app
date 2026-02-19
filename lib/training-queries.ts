@@ -6,8 +6,6 @@
 import { supabase } from '@/lib/supabase';
 import type {
   TrainingModule,
-  TrainingAssignment,
-  TrainingSession,
   TrainingDashboardRow,
   TrainingStats,
   WorkerTrainingStatus,

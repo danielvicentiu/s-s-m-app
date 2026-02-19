@@ -156,7 +156,7 @@ interface Props {
 // COMPONENT
 // ============================================================
 
-export default function NearMissClient({ user, organizations, initialSelectedOrg }: Props) {
+export default function NearMissClient({ organizations, initialSelectedOrg }: Props) {
   const [selectedOrgId, setSelectedOrgId] = useState(initialSelectedOrg)
   const [activeTab, setActiveTab] = useState<'reports' | 'statistics'>('reports')
   const [reports, setReports] = useState<NearMissReport[]>([])
@@ -710,7 +710,7 @@ function StatisticsTab({ stats, loading, error }: StatisticsTabProps) {
               fill="#8884d8"
               dataKey="value"
             >
-              {severityData.map((entry, index) => (
+              {severityData.map((_entry, index) => (
                 <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
               ))}
             </Pie>

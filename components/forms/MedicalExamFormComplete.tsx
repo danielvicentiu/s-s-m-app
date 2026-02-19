@@ -184,7 +184,7 @@ export default function MedicalExamFormComplete({
         setUploadingFile(true)
         const fileName = `${formData.organization_id}/${formData.employee_id}/fisa-aptitudine-${Date.now()}.pdf`
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('medical-documents')
           .upload(fileName, formData.file, {
             contentType: 'application/pdf',

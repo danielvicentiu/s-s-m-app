@@ -8,7 +8,7 @@
 import { useMemo } from 'react'
 import { useOrgModules } from '@/hooks/useOrgModules'
 import type { ModuleKey } from '@/lib/modules/types'
-import { MODULE_ICONS, CATEGORY_COLORS } from '@/lib/modules/constants'
+import { MODULE_ICONS } from '@/lib/modules/constants'
 
 // ── Structura navigare per modul ──
 interface NavItem {

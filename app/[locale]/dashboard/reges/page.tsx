@@ -7,7 +7,7 @@ import RegesClient from './RegesClient'
 
 export default async function RegesPage() {
   const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user, orgs } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 

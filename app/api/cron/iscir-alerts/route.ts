@@ -108,7 +108,6 @@ export async function GET(request: NextRequest) {
       else summary.atentie++
 
       // Insert into alerts table (upsert to avoid duplicates per equipment+day)
-      const today = new Date().toISOString().split('T')[0]
       try {
         const { error: alertError } = await supabase.from('alerts').upsert(
           {

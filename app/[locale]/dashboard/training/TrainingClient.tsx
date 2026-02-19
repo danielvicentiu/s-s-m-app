@@ -20,11 +20,6 @@ import type {
   TrainingDashboardRow,
   TrainingStats,
   WorkerTrainingStatus,
-  AssignmentStatus,
-  TrainingCategory,
-  VerificationResult,
-  STATUS_CONFIG as StatusConfigType,
-  CATEGORY_CONFIG as CategoryConfigType,
 } from '@/lib/training-types';
 import {
   STATUS_CONFIG,

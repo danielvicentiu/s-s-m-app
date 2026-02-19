@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase/server'
 import { runRomanianMonitorCheck } from '@/lib/legal-monitor/ro-checker'
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     // Step 1: Autentificare și verificare rol
     const supabase = await createSupabaseServer()
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET pentru status (opțional, pentru debugging)
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const supabase = await createSupabaseServer()
 

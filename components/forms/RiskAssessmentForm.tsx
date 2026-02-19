@@ -12,14 +12,12 @@ import { CHEMICAL_HAZARDS, ChemicalHazard } from '@/lib/data/chemical-hazards'
 import {
   AlertTriangle,
   MapPin,
-  Building2,
   Plus,
   Trash2,
   CheckCircle2,
   AlertCircle,
   ShieldAlert,
   Activity,
-  FileText,
   Save,
   X,
 } from 'lucide-react'

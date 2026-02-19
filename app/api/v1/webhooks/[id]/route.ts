@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
 
 // GET /api/v1/webhooks/[id] - Get webhook by ID
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -187,7 +187,7 @@ export async function PATCH(
 
 // DELETE /api/v1/webhooks/[id] - Delete webhook
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

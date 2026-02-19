@@ -19,7 +19,7 @@ interface RouteParams {
  * GET /api/psi/equipment/[id]
  * Get single PSI equipment by ID
  */
-export async function GET(req: NextRequest, { params }: RouteParams) {
+export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
     const supabase = await createSupabaseServer()
@@ -211,7 +211,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
  * DELETE /api/psi/equipment/[id]
  * Delete PSI equipment
  */
-export async function DELETE(req: NextRequest, { params }: RouteParams) {
+export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params
     const supabase = await createSupabaseServer()

@@ -18,7 +18,7 @@ export default async function EquipmentPage({ params, searchParams }: EquipmentP
   const { locale } = await params
   const { org: selectedOrgId } = await searchParams
   const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 

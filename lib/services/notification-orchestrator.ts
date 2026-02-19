@@ -792,7 +792,7 @@ async function deliverWhatsApp(
  */
 async function deliverPush(
   payload: NotificationPayload,
-  preferences: UserNotificationPreferences,
+  _preferences: UserNotificationPreferences,
   supabase: any
 ): Promise<ChannelDeliveryResult> {
   try {
@@ -870,7 +870,7 @@ async function getUserNotificationPreferences(
  */
 function getDefaultUserPreferences(
   userId: string,
-  orgId: string
+  _orgId: string
 ): UserNotificationPreferences {
   return {
     userId,

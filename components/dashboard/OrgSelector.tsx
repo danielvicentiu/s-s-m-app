@@ -8,7 +8,7 @@
 import { useState, Fragment } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import { Building2, Check, ChevronsUpDown, Users } from 'lucide-react'
-import { useOrg, type OrgOption } from '@/lib/contexts/OrgContext'
+import { useOrg } from '@/lib/contexts/OrgContext'
 
 export default function OrgSelector() {
   const { currentOrg, setCurrentOrg, allOrgs, selectedOrgData } = useOrg()
@@ -71,7 +71,7 @@ export default function OrgSelector() {
                   }`
                 }
               >
-                {({ selected, active }) => (
+                {({ selected }) => (
                   <>
                     <div className="flex items-center justify-between">
                       <div>
@@ -111,7 +111,7 @@ export default function OrgSelector() {
                       }`
                     }
                   >
-                    {({ selected, active }) => (
+                    {({ selected }) => (
                       <>
                         <div className="flex items-center justify-between">
                           <div className="flex-1 min-w-0">

@@ -7,7 +7,7 @@
 // ============================================================
 
 import { createClient } from '@supabase/supabase-js'
-import { checkRomanianAct, type RoCheckResult } from './ro-adapter'
+import { checkRomanianAct } from './ro-adapter'
 import type { LegalActMonitor } from '@/lib/types'
 
 export interface CheckSummary {

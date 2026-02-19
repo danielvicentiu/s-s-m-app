@@ -7,8 +7,8 @@
 // ============================================================
 
 import { createClient } from '@supabase/supabase-js';
-import { getToken, searchActs, findAct, type LegislativeActResult } from '../ro-soap-client';
-import { fetchAndParseAct, computeHash, type ParsedLegalAct } from '../ro-html-parser';
+import { findAct } from '../ro-soap-client';
+import { fetchAndParseAct } from '../ro-html-parser';
 
 // ─── Types ───────────────────────────────────────────────────
 

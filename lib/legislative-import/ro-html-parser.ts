@@ -165,10 +165,8 @@ function extractSectionsFromHtml(html: string): ParsedSection[] {
   const sections: ParsedSection[] = [];
   let orderIndex = 0;
 
-  // Extract CHAPTERS: <span class="S_CAP_TTL" id="id_capA{N}_ttl">Capitolul I</span>
-  const capRegex = /<span\s+class="S_CAP"\s[^>]*id="id_capA(\d+)"[^>]*>[\s\S]*?<span\s+class="S_CAP_TTL"[^>]*>([\s\S]*?)<\/span>[\s\S]*?<span\s+class="S_CAP_BDY"[^>]*>([\s\S]*?)<\/span>\s*<\/span>/gi;
   let match;
-  
+
   // Simpler approach: extract by class patterns
   // Chapters
   const capTtlRegex = /<span\s+class="S_CAP_TTL"[^>]*>(.*?)<\/span>/gi;
@@ -198,9 +196,6 @@ function extractSectionsFromHtml(html: string): ParsedSection[] {
     });
   }
 
-  // Articles — most important for compliance
-  const artRegex = /<span\s+class="S_ART"\s[^>]*id="id_artA(\d+)"[^>]*>([\s\S]*?)(?=<span\s+class="S_ART"\s|<span\s+class="S_SEC"\s|<span\s+class="S_CAP"\s|<\/span>\s*<\/span>\s*<span\s+class="S_CAP"|$)/gi;
-  
   // Simpler: match article titles and their body content
   const artTtlRegex = /<span\s+class="S_ART_TTL"[^>]*id="id_artA(\d+)_ttl"[^>]*>(.*?)<\/span>/gi;
   while ((match = artTtlRegex.exec(html)) !== null) {

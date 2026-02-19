@@ -10,7 +10,6 @@ import {
   withAuth,
   ApiContext
 } from '@/lib/api/middleware'
-import { organizationSchema } from '@/lib/middleware/validation'
 import { withErrorHandling } from '@/lib/middleware/error-handler'
 
 /**
@@ -48,10 +47,10 @@ import { withErrorHandling } from '@/lib/middleware/error-handler'
  *         $ref: '#/components/responses/InternalError'
  */
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  return withAuth(withErrorHandling(async (req: NextRequest, apiContext: ApiContext) => {
+  return withAuth(withErrorHandling(async (_req: NextRequest, apiContext: ApiContext) => {
     const supabase = await createSupabaseServer()
     const { id: organizationId } = await context.params
 
@@ -305,10 +304,10 @@ export async function PATCH(
  *         $ref: '#/components/responses/InternalError'
  */
 export async function DELETE(
-  req: NextRequest,
+  _req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  return withAuth(withErrorHandling(async (req: NextRequest, apiContext: ApiContext) => {
+  return withAuth(withErrorHandling(async (_req: NextRequest, apiContext: ApiContext) => {
     const supabase = await createSupabaseServer()
     const { id: organizationId } = await context.params
 

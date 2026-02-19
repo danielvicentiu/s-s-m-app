@@ -10,7 +10,7 @@ interface PSIEquipmentDetailPageProps {
   params: Promise<{ locale: string; id: string }>
 }
 
-export async function generateMetadata({ params }: PSIEquipmentDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params: _params }: PSIEquipmentDetailPageProps): Promise<Metadata> {
   return {
     title: 'Detalii echipament PSI | s-s-m.ro'
   }

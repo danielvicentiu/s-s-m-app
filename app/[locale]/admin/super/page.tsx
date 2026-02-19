@@ -13,7 +13,6 @@ import {
   DollarSign,
   Activity,
   TrendingUp,
-  TrendingDown,
   AlertTriangle,
   CheckCircle,
   XCircle,
@@ -21,7 +20,6 @@ import {
   Zap,
   Server,
   Database,
-  Mail,
   UserPlus,
   ArrowUpRight,
   ArrowDownRight,
@@ -40,7 +38,7 @@ export default async function SuperAdminDashboard() {
   // ═══════════════════════════════════════════════════════════════
 
   // 1. ORGANIZATIONS METRICS
-  const { data: organizations, error: orgsError } = await supabase
+  const { data: organizations, error: _orgsError } = await supabase
     .from('organizations')
     .select('id, name, cui, created_at, cooperation_status, data_completeness')
     .order('created_at', { ascending: false })

@@ -41,15 +41,13 @@ export default function PSIEquipmentDetailClient({
   equipment: initialEquipment,
   inspections: initialInspections,
   organizations,
-  locale
 }: PSIEquipmentDetailClientProps) {
   const router = useRouter()
   const [equipment, setEquipment] = useState<PSIEquipment>(initialEquipment)
   const [inspections, setInspections] = useState<PSIInspection[]>(initialInspections)
   const [showEditForm, setShowEditForm] = useState(false)
   const [showInspectionForm, setShowInspectionForm] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error] = useState<string | null>(null)
 
   const handleSaveEquipment = async (data: CreatePSIEquipmentInput) => {
     const response = await fetch(`/api/psi/equipment/${equipment.id}`, {

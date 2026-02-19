@@ -62,7 +62,7 @@ function formatDate(iso: string): string {
   }
 }
 
-export default function AIAssistantClient({ userId, organizations, activeOrgId: initialOrgId, initialConversations }: Props) {
+export default function AIAssistantClient({ organizations, activeOrgId: initialOrgId, initialConversations }: Props) {
   const [selectedOrgId, setSelectedOrgId] = useState(initialOrgId)
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations)
   const [activeConversationId, setActiveConversationId] = useState<string | undefined>(undefined)

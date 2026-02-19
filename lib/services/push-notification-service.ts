@@ -63,26 +63,6 @@ export function getVAPIDPublicKey(): string {
   return publicKey
 }
 
-/**
- * Get VAPID private key from environment (server-side only)
- */
-function getVAPIDPrivateKey(): string {
-  const privateKey = process.env.VAPID_PRIVATE_KEY
-
-  if (!privateKey) {
-    throw new Error('VAPID private key not configured')
-  }
-
-  return privateKey
-}
-
-/**
- * Get VAPID email from environment
- */
-function getVAPIDEmail(): string {
-  return process.env.VAPID_EMAIL || 'admin@s-s-m.ro'
-}
-
 // ── Service Worker Registration (Client-Side) ──
 
 /**

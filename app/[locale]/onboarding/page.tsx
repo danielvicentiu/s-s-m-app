@@ -8,7 +8,7 @@ import OnboardingClient from './OnboardingClient'
 
 export default async function OnboardingPage() {
   const supabase = await createSupabaseServer()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
 

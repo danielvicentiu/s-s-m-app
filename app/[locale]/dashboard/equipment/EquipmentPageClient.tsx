@@ -73,7 +73,7 @@ export default function EquipmentPageClient() {
   const [sortColumn, setSortColumn] = useState<string | null>('assignment_date')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(25)
+  const [pageSize] = useState(25)
   const [viewMode, setViewMode] = useState<ViewMode>('table')
 
   // ========== FETCH DATA ==========
@@ -118,16 +118,6 @@ export default function EquipmentPageClient() {
   }, [searchQuery])
 
   // ========== STATUS HELPERS ==========
-
-  function getStatusBadgeVariant(status: EquipmentStatus): 'success' | 'warning' | 'error' | 'default' {
-    switch (status) {
-      case 'active': return 'success'
-      case 'returned': return 'default'
-      case 'damaged': return 'warning'
-      case 'lost': return 'error'
-      default: return 'default'
-    }
-  }
 
   function getStatusLabel(status: EquipmentStatus): string {
     const labels: Record<EquipmentStatus, string> = {

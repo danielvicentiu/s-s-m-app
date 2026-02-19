@@ -3,7 +3,7 @@
 // Data: 13 Februarie 2026
 
 import { createClient } from '@supabase/supabase-js'
-import { WebhookEventType, Webhook, WebhookDeliveryLog } from '@/lib/types'
+import { WebhookEventType } from '@/lib/types'
 import * as crypto from 'crypto'
 
 // Configuration

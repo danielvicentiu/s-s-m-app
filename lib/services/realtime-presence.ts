@@ -252,11 +252,11 @@ export function subscribeToPresence(
         const state = channel.presenceState<PresenceUser>()
         callback(extractOnlineUsers(state))
       })
-      .on('presence', { event: 'join' }, ({ newPresences }) => {
+      .on('presence', { event: 'join' }, ({ newPresences: _newPresences }) => {
         const state = channel.presenceState<PresenceUser>()
         callback(extractOnlineUsers(state))
       })
-      .on('presence', { event: 'leave' }, ({ leftPresences }) => {
+      .on('presence', { event: 'leave' }, ({ leftPresences: _leftPresences }) => {
         const state = channel.presenceState<PresenceUser>()
         callback(extractOnlineUsers(state))
       })

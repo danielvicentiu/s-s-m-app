@@ -170,7 +170,7 @@ function CategoryBadge({ category }: { category: string }) {
 // ── Componenta principală ──
 export default function ModulesClient({
   locale,
-  orgId,
+  orgId: _orgId,
   orgName,
   definitions,
   activeModules,

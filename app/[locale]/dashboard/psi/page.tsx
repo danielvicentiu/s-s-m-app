@@ -21,7 +21,7 @@ export default async function PSIPage({ params, searchParams }: PSIPageProps) {
   const { locale } = await params
   const { org: selectedOrgId } = await searchParams
   const supabase = await createSupabaseServer()
-  const { user, orgs, error: authError } = await getCurrentUserOrgs()
+  const { user } = await getCurrentUserOrgs()
 
   if (!user) redirect('/login')
 
@@ -35,7 +35,7 @@ export default async function PSIPage({ params, searchParams }: PSIPageProps) {
     equipmentQuery = equipmentQuery.eq('organization_id', selectedOrgId)
   }
 
-  const { data: equipment, error: equipmentError } = await equipmentQuery
+  const { data: equipment } = await equipmentQuery
 
   // Fetch organizations for selector
   const { data: organizations } = await supabase

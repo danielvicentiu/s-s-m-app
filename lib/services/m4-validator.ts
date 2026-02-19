@@ -20,7 +20,7 @@
  * const published = await publishObligations(validated, legislationId)
  */
 
-import type { ObligationFrequency, CountryCode, Obligation } from '@/lib/types'
+import type { CountryCode, Obligation } from '@/lib/types'
 
 // ══════════════════════════════════════════════════════════════
 // TYPES
@@ -539,12 +539,6 @@ export async function publishObligations(
       // Simulate database insert
       // const published = await insertObligationToDB(obligation, legislationId)
 
-      const publishedObligation = {
-        ...obligation,
-        status: 'published' as ObligationStatus,
-        publishedAt: new Date().toISOString()
-      }
-
       result.publishedCount++
       result.publishedIds.push(obligation.id)
 
@@ -584,8 +578,8 @@ export async function publishObligations(
  * Notifies organizations affected by new obligations
  */
 async function notifyAffectedOrganizations(
-  obligations: ValidatedObligation[],
-  legislationId: string,
+  _obligations: ValidatedObligation[],
+  _legislationId: string,
   countryCode: CountryCode
 ): Promise<number> {
   console.log(`[M4 Publisher] Preparing notifications for ${countryCode} organizations`)

@@ -44,8 +44,8 @@ export function OrgProvider({
   userId
 }: OrgProviderProps) {
   const [currentOrg, setCurrentOrgState] = useState<string>(initialSelectedOrg)
-  const [allOrgs, setAllOrgs] = useState<OrgOption[]>(initialOrgs)
-  const [isLoading, setIsLoading] = useState(false)
+  const [allOrgs, _setAllOrgs] = useState<OrgOption[]>(initialOrgs)
+  const [isLoading, _setIsLoading] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
 

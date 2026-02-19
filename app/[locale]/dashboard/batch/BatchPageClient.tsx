@@ -6,7 +6,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import {
   Layers,
   Plus,
@@ -90,8 +89,6 @@ const TYPE_LABELS: Record<string, string> = {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function BatchPageClient({ initialJobs }: Props) {
-  const router = useRouter()
-
   // State
   const [jobs, setJobs] = useState<BatchJob[]>(initialJobs)
   const [loading, setLoading] = useState(false)

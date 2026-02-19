@@ -727,11 +727,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: `Eroare citire acte M3: ${m3FetchError.message}` }, { status: 500 })
       }
 
-      // Include și actele tocmai extrase în M2 (care acum au ai_extraction_date)
-      const m2SuccessIds = report.m2_results
-        .filter(r => r.success)
-        .map(r => r.act_short_name)
-
       const allM3Eligible = actsForM3 || []
       console.log(`[M6] M3: ${allM3Eligible.length} acte eligibile pentru validare`)
 
