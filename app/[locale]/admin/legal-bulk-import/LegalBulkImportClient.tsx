@@ -25,6 +25,13 @@ interface ImportReport {
   error: number;
 }
 
+interface SearchParams {
+  tipAct: string;
+  an: number | '';
+  numar: string;
+  titlu: string;
+}
+
 const TIP_ACT_OPTIONS = ['', 'Lege', 'OUG', 'OG', 'HG', 'Ordin', 'Cod'];
 
 const IMPORT_STATUS_EMOJI: Record<ImportStatus, string> = {
@@ -37,6 +44,54 @@ const IMPORT_STATUS_EMOJI: Record<ImportStatus, string> = {
 
 const getActKey = (act: LegislativeActResult): string =>
   act.id || `${act.tipAct}_${act.numar}_${act.an}`;
+
+// ─── Smart search parser ──────────────────────────────────────
+
+const TYPE_MAP: Array<[RegExp, string]> = [
+  [/^(lege|legea)$/, 'Lege'],
+  [/^(hg|hotarare|hot[aă]r[âa]re)$/, 'HG'],
+  [/^(oug|ordonan[tț][aă]\s+de\s+urgen[tț][aă])$/, 'OUG'],
+  [/^(og|ordonan[tț][aă])$/, 'OG'],
+  [/^ordin$/, 'Ordin'],
+  [/^cod$/, 'Cod'],
+];
+
+function mapActType(word: string): string {
+  for (const [re, mapped] of TYPE_MAP) {
+    if (re.test(word)) return mapped;
+  }
+  return '';
+}
+
+function parseSmartSearch(raw: string): SearchParams {
+  const text = raw.trim().replace(/\s+/g, ' ');
+  const lower = text.toLowerCase();
+
+  // Pattern: <type words> <number>[/<year>]  — e.g. "HG 1425", "legea 319/2006"
+  const m1 = lower.match(/^(.+?)\s+(\d+)(?:\/(\d{4}))?$/);
+  if (m1) {
+    const [, typeRaw, num, year] = m1;
+    const mapped = mapActType(typeRaw.trim());
+    if (mapped) {
+      return { tipAct: mapped, numar: num, an: year ? parseInt(year) : '', titlu: '' };
+    }
+  }
+
+  // Pattern: <number>/<year>  — e.g. "319/2006"
+  const m2 = lower.match(/^(\d+)\/(\d{4})$/);
+  if (m2) {
+    return { tipAct: '', numar: m2[1], an: parseInt(m2[2]), titlu: '' };
+  }
+
+  // Pattern: just a number  — e.g. "1425"
+  const m3 = lower.match(/^(\d+)$/);
+  if (m3) {
+    return { tipAct: '', numar: m3[1], an: '', titlu: '' };
+  }
+
+  // Fallback: use as title search
+  return { tipAct: '', numar: '', an: '', titlu: text };
+}
 
 // ─── Spinner ─────────────────────────────────────────────────
 
@@ -52,12 +107,16 @@ function Spinner({ className = 'h-4 w-4' }: { className?: string }) {
 // ─── Main Component ──────────────────────────────────────────
 
 export default function LegalBulkImportClient() {
-  // Search form state
+  // Advanced form state
   const [tipAct, setTipAct] = useState('');
-  const [an, setAn] = useState<number>(new Date().getFullYear());
+  const [an, setAn] = useState<number | ''>('');
   const [numar, setNumar] = useState('');
   const [titlu, setTitlu] = useState('');
   const [page, setPage] = useState(0);
+
+  // Quick search state
+  const [quickSearch, setQuickSearch] = useState('');
+  const [advancedOpen, setAdvancedOpen] = useState(false);
 
   // Results state
   const [results, setResults] = useState<LegislativeActResult[]>([]);
@@ -88,18 +147,18 @@ export default function LegalBulkImportClient() {
 
   // ─── Search ────────────────────────────────────────────────
 
-  const runSearch = useCallback(async (targetPage: number) => {
+  const executeSearch = useCallback(async (params: SearchParams & { page: number }) => {
     setIsSearching(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      if (tipAct) params.set('tipAct', tipAct);
-      if (an) params.set('an', String(an));
-      if (numar) params.set('numar', numar);
-      if (titlu) params.set('titlu', titlu);
-      params.set('pagina', String(targetPage));
+      const urlParams = new URLSearchParams();
+      if (params.tipAct) urlParams.set('tipAct', params.tipAct);
+      if (params.an !== '') urlParams.set('an', String(params.an));
+      if (params.numar) urlParams.set('numar', params.numar);
+      if (params.titlu) urlParams.set('titlu', params.titlu);
+      urlParams.set('pagina', String(params.page));
 
-      const res = await fetch(`/api/admin/legal-bulk-search?${params.toString()}`);
+      const res = await fetch(`/api/admin/legal-bulk-search?${urlParams.toString()}`);
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || `Eroare ${res.status}`);
@@ -115,14 +174,36 @@ export default function LegalBulkImportClient() {
     } finally {
       setIsSearching(false);
     }
-  }, [tipAct, an, numar, titlu]);
+  }, []);
+
+  const runSearch = useCallback((targetPage: number) => {
+    executeSearch({ tipAct, an, numar, titlu, page: targetPage });
+  }, [executeSearch, tipAct, an, numar, titlu]);
 
   const handleSearch = useCallback(() => {
     runSearch(0);
   }, [runSearch]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleQuickSearch = useCallback(() => {
+    if (!quickSearch.trim()) {
+      runSearch(0);
+      return;
+    }
+    const parsed = parseSmartSearch(quickSearch);
+    // Sync advanced form fields so they reflect what was searched
+    setTipAct(parsed.tipAct);
+    setNumar(parsed.numar);
+    setAn(parsed.an);
+    setTitlu(parsed.titlu);
+    executeSearch({ ...parsed, page: 0 });
+  }, [quickSearch, runSearch, executeSearch]);
+
+  const handleAdvancedKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleSearch();
+  };
+
+  const handleQuickKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleQuickSearch();
   };
 
   // ─── Selection ─────────────────────────────────────────────
@@ -226,92 +307,25 @@ export default function LegalBulkImportClient() {
           </p>
         </div>
 
-        {/* Search Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-6">
-          <h2 className="text-base font-semibold text-gray-800 mb-4">Criterii căutare</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Tip act */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tip act
-              </label>
-              <select
-                value={tipAct}
-                onChange={e => setTipAct(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isSearching || isImporting}
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                  disabled:bg-gray-50 disabled:text-gray-400"
-              >
-                {TIP_ACT_OPTIONS.map(opt => (
-                  <option key={opt} value={opt}>
-                    {opt === '' ? 'Toate tipurile' : opt}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* An */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                An
-              </label>
-              <input
-                type="number"
-                value={an}
-                min={1990}
-                max={2030}
-                onChange={e => setAn(Number(e.target.value))}
-                onKeyDown={handleKeyDown}
-                disabled={isSearching || isImporting}
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                  disabled:bg-gray-50 disabled:text-gray-400"
-              />
-            </div>
-
-            {/* Număr */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Număr
-              </label>
-              <input
-                type="text"
-                value={numar}
-                onChange={e => setNumar(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isSearching || isImporting}
-                placeholder="ex: 319"
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
-                  placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                  disabled:bg-gray-50 disabled:text-gray-400"
-              />
-            </div>
-
-            {/* Titlu */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Titlu / cuvinte cheie
-              </label>
-              <input
-                type="text"
-                value={titlu}
-                onChange={e => setTitlu(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isSearching || isImporting}
-                placeholder="ex: securitate muncă"
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
-                  placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                  disabled:bg-gray-50 disabled:text-gray-400"
-              />
-            </div>
-          </div>
-
-          {/* Search button */}
-          <div className="mt-4 flex justify-end">
+        {/* Quick Search */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Căutare rapidă
+          </label>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={quickSearch}
+              onChange={e => setQuickSearch(e.target.value)}
+              onKeyDown={handleQuickKeyDown}
+              disabled={isSearching || isImporting}
+              placeholder='ex: "HG 1425", "legea 319/2006", "319", "hotarare 1425"'
+              className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
+                placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                disabled:bg-gray-50 disabled:text-gray-400"
+            />
             <button
-              onClick={handleSearch}
+              onClick={handleQuickSearch}
               disabled={isSearching || isImporting}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700
                 text-white text-sm font-semibold transition-colors
@@ -332,6 +346,136 @@ export default function LegalBulkImportClient() {
               )}
             </button>
           </div>
+          <p className="mt-1.5 text-xs text-gray-400">
+            Parsare automată: tip act, număr, an (opțional). Ex: „HG 1425", „319/2006", „319".
+          </p>
+        </div>
+
+        {/* Advanced Search (collapsible) */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6">
+          <button
+            type="button"
+            onClick={() => setAdvancedOpen(v => !v)}
+            className="w-full flex items-center justify-between px-5 py-3.5 text-sm font-semibold text-gray-600
+              hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-2xl"
+          >
+            <span>Căutare avansată</span>
+            <svg
+              className={`w-4 h-4 transition-transform duration-200 ${advancedOpen ? 'rotate-180' : ''}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {advancedOpen && (
+            <div className="px-5 pb-5 border-t border-gray-100 pt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Tip act */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tip act
+                  </label>
+                  <select
+                    value={tipAct}
+                    onChange={e => setTipAct(e.target.value)}
+                    onKeyDown={handleAdvancedKeyDown}
+                    disabled={isSearching || isImporting}
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
+                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                      disabled:bg-gray-50 disabled:text-gray-400"
+                  >
+                    {TIP_ACT_OPTIONS.map(opt => (
+                      <option key={opt} value={opt}>
+                        {opt === '' ? 'Toate tipurile' : opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* An */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    An <span className="text-gray-400 font-normal">(opțional)</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={an}
+                    min={1990}
+                    max={2030}
+                    onChange={e => setAn(e.target.value === '' ? '' : Number(e.target.value))}
+                    onKeyDown={handleAdvancedKeyDown}
+                    disabled={isSearching || isImporting}
+                    placeholder="Toți anii"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
+                      placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                      disabled:bg-gray-50 disabled:text-gray-400"
+                  />
+                </div>
+
+                {/* Număr */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Număr
+                  </label>
+                  <input
+                    type="text"
+                    value={numar}
+                    onChange={e => setNumar(e.target.value)}
+                    onKeyDown={handleAdvancedKeyDown}
+                    disabled={isSearching || isImporting}
+                    placeholder="ex: 319"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
+                      placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                      disabled:bg-gray-50 disabled:text-gray-400"
+                  />
+                </div>
+
+                {/* Titlu */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Titlu / cuvinte cheie
+                  </label>
+                  <input
+                    type="text"
+                    value={titlu}
+                    onChange={e => setTitlu(e.target.value)}
+                    onKeyDown={handleAdvancedKeyDown}
+                    disabled={isSearching || isImporting}
+                    placeholder="ex: securitate muncă"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
+                      placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                      disabled:bg-gray-50 disabled:text-gray-400"
+                  />
+                </div>
+              </div>
+
+              {/* Search button */}
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={handleSearch}
+                  disabled={isSearching || isImporting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700
+                    text-white text-sm font-semibold transition-colors
+                    disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {isSearching ? (
+                    <>
+                      <Spinner className="h-4 w-4 text-white" />
+                      Se caută...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      Caută
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Error */}
