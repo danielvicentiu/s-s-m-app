@@ -140,5 +140,5 @@ DESCHIDE DIRECT IN NOTPAD FISIERUL VERCEL.JSON
 cmd /c "notepad C:\Dev\s-s-m-app\vercel.json"
 
 
-
+hai ca nu lucram eficient. iti dau ce apare. tu mai pui sa caut o linie. propui inlocuire, dai 2-3 variante. esti incoerent . nu pot lucra asa cu tine. ma intrebai variante, scriai sau livrai direct fisierul modificat, eu faceam donwload si aopi imi livrai o comanda care prelua fisierul si il executa, muta, eu doar rulam in terminal sau sql. nu caut, nu inlocuiesc. nu vad bine, nu disting. plus ca nu gasesc requireRole(['consultant'])
 
