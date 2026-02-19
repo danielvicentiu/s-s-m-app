@@ -4,8 +4,8 @@
 // Raw fetch + XML manual — zero dependențe SOAP
 // ============================================================
 
-const SOAP_ENDPOINT = 'http://legislatie.just.ro/apiws/FreeWebService.svc';
-const SOAP_NS = 'http://tempuri.org/';
+const SOAP_ENDPOINT = 'https://legislatie.just.ro/apiws/FreeWebService.svc/SOAP';
+const DC_NS = 'http://schemas.datacontract.org/2004/07/FreeWebService';
 
 export interface SearchParams {
   an?: number;
@@ -19,6 +19,7 @@ export interface LegislativeActResult {
   id: string;
   titlu: string;
   tipAct: string;
+  rawTipAct: string; // raw value from SOAP before normalization — for debugging
   numar: string;
   an: number;
   dataPublicarii: string;
@@ -41,9 +42,6 @@ function escapeXml(str: string): string {
 function buildGetTokenEnvelope(): string {
   return `<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Header>
-    <Action s:mustUnderstand="1" xmlns="http://schemas.microsoft.com/ws/2005/05/addressing/none">http://tempuri.org/IFreeWebService/GetToken</Action>
-  </s:Header>
   <s:Body>
     <GetToken xmlns="http://tempuri.org/"/>
   </s:Body>
@@ -51,25 +49,24 @@ function buildGetTokenEnvelope(): string {
 }
 
 function buildSearchEnvelope(token: string, params: SearchParams): string {
+  // WCF requires: no namespace on SearchModel wrapper, DC namespace on each child element
+  // Schema order: SearchModel first, tokenKey second
   const fields = [
-    `<NumarPagina>${params.pagina ?? 0}</NumarPagina>`,
-    `<RezultatePagina>${params.rezultatePePagina ?? 10}</RezultatePagina>`,
-    params.an ? `<SearchAn>${params.an}</SearchAn>` : '',
-    params.numar ? `<SearchNumar>${escapeXml(params.numar)}</SearchNumar>` : '',
-    params.titlu ? `<SearchTitlu>${escapeXml(params.titlu)}</SearchTitlu>` : '',
+    `<NumarPagina xmlns="${DC_NS}">${params.pagina ?? 0}</NumarPagina>`,
+    `<RezultatePagina xmlns="${DC_NS}">${params.rezultatePePagina ?? 10}</RezultatePagina>`,
+    params.an    ? `<SearchAn xmlns="${DC_NS}">${params.an}</SearchAn>`                      : '',
+    params.numar ? `<SearchNumar xmlns="${DC_NS}">${escapeXml(params.numar)}</SearchNumar>` : '',
+    params.titlu ? `<SearchTitlu xmlns="${DC_NS}">${escapeXml(params.titlu)}</SearchTitlu>` : '',
   ].filter(Boolean).join('\n        ');
 
   return `<?xml version="1.0" encoding="utf-8"?>
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Header>
-    <Action s:mustUnderstand="1" xmlns="http://schemas.microsoft.com/ws/2005/05/addressing/none">http://tempuri.org/IFreeWebService/Search</Action>
-  </s:Header>
   <s:Body>
     <Search xmlns="http://tempuri.org/">
-      <tokenKey>${escapeXml(token)}</tokenKey>
-      <SearchModel xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+      <SearchModel>
         ${fields}
       </SearchModel>
+      <tokenKey>${escapeXml(token)}</tokenKey>
     </Search>
   </s:Body>
 </s:Envelope>`;
@@ -82,9 +79,10 @@ async function soapRequest(envelope: string, action: string): Promise<string> {
     method: 'POST',
     headers: {
       'Content-Type': 'text/xml; charset=utf-8',
-      'SOAPAction': `http://tempuri.org/IFreeWebService/${action}`,
+      'SOAPAction': `"http://tempuri.org/IFreeWebService/${action}"`,
     },
     body: envelope,
+    cache: 'no-store',
   });
 
   if (!response.ok) {
@@ -104,15 +102,19 @@ export async function getToken(): Promise<string> {
   }
 
   const xml = await soapRequest(buildGetTokenEnvelope(), 'GetToken');
-  const match = xml.match(/<GetTokenResult>(.*?)<\/GetTokenResult>/);
+  const match = xml.match(/<(?:[a-zA-Z]+:)?GetTokenResult[^>]*>(.*?)<\/(?:[a-zA-Z]+:)?GetTokenResult>/);
 
   if (!match?.[1]) {
+    console.error('[SOAP] GetToken raw response:', xml.substring(0, 500));
     throw new Error('Failed to extract token from SOAP response');
   }
 
   cachedToken = {
     value: match[1],
-    expiresAt: Date.now() + 10 * 60 * 1000,
+    // Short TTL: long enough for parallel calls within one request (~5s),
+    // short enough to force a fresh token on the next request so stale
+    // tokens (SOAP server expires them quickly) don't cause 500 errors.
+    expiresAt: Date.now() + 5 * 1000,
   };
 
   return cachedToken.value;
@@ -126,42 +128,72 @@ export async function searchActs(params: SearchParams): Promise<LegislativeActRe
   return parseSearchResults(xml);
 }
 
+// Normalize SOAP full act type names to abbreviations used in the UI.
+// Strategy: NFD-normalize then strip ALL combining diacritical marks (U+0300–U+036F).
+// This handles every Romanian encoding variant in one shot:
+//   • NFC precomposed (Ț U+021A, Ş U+015E, Ă U+0102, …)
+//   • NFD decomposed  (T + U+0326 combining comma below, …)
+//   • Cedilla vs comma-below confusion
+//   • ASCII abbreviations ("OUG", "OG") that SOAP may also return
+function normalizeTipAct(raw: string): string {
+  const t = raw
+    .normalize('NFD')                    // decompose precomposed chars
+    .replace(/[\u0300-\u036f]/g, '')     // strip all combining diacritical marks
+    .toUpperCase()
+    .trim();
+  if (t.includes('URGENTA')) return 'OUG';
+  if (t.startsWith('ORDONANTA')) return 'OG';
+  if (t.startsWith('HOTARARE')) return 'HG';
+  if (t.startsWith('LEGE')) return 'Lege';
+  if (t.startsWith('ORDIN')) return 'Ordin';
+  if (t.startsWith('COD')) return 'Cod';
+  // Return title-cased original for unknown types
+  return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+}
+
+// Response schema (Legi type): DataVigoare, Emitent, LinkHtml, Numar, Publicatie, Text, TipAct, Titlu
 function parseSearchResults(xml: string): LegislativeActResult[] {
   const results: LegislativeActResult[] = [];
 
-  // Extract XML blocks for each act — adapt to actual response structure
-  const actPattern = /<[^>]*?(?:DocumentId|ActId)[^>]*?>[\s\S]*?(?:<\/[^>]*?Result>|<\/[^>]*?Act>)/g;
-  const blocks: string[] = xml.match(actPattern) || [];
+  // Split on <Legi> elements
+  const legiBlocks = xml.match(/<(?:[a-zA-Z]+:)?Legi[\s>][\s\S]*?<\/(?:[a-zA-Z]+:)?Legi>/gi) || [];
 
-  // Fallback: try splitting on repeating patterns
-  if (blocks.length === 0) {
-    const altBlocks = xml.split(/<\/?[a-z]:/).filter(b => b.includes('DocumentId') || b.includes('Titlu'));
-    // Parse entire response as one block if structured differently
-    if (xml.includes('SearchResult') || xml.includes('Titlu')) {
-      blocks.push(xml);
-    }
-  }
-
-  for (const block of blocks) {
+  for (const block of legiBlocks) {
     const extract = (tag: string): string => {
-      const m = block.match(new RegExp(`<(?:[a-z]:)?${tag}[^>]*?>(.*?)<\\/(?:[a-z]:)?${tag}>`, 'i'));
+      // Use [\s\S]*? (dotAll) so multiline fields like Titlu are captured correctly
+      const m = block.match(new RegExp(`<(?:[a-zA-Z]+:)?${tag}(?:\\s[^>]*)?>([\\s\\S]*?)<\\/(?:[a-zA-Z]+:)?${tag}>`, 'i'));
       return m?.[1]?.trim() ?? '';
     };
 
-    const id = extract('DocumentId') || extract('Id') || extract('ActId');
-    const titlu = extract('Titlu') || extract('DenumireAct');
+    const titluRaw = extract('Titlu');
+    // Collapse whitespace — Titlu contains multiline formatted text
+    const titlu = titluRaw.replace(/\s+/g, ' ').trim();
+    const linkHtml = extract('LinkHtml');
+    const numarStr = extract('Numar');
 
-    if (id || titlu) {
+    // Extract year from Numar (e.g. "319/2006") or from DataVigoare
+    const anMatch = numarStr.match(/\/(\d{4})$/) || extract('DataVigoare').match(/(\d{4})/);
+    const an = anMatch ? parseInt(anMatch[1]) : 0;
+    const numar = numarStr.replace(/\/\d{4}$/, '');
+
+    // Extract ID from LinkHtml (e.g. https://legislatie.just.ro/Public/DetaliiDocument/12345)
+    const idMatch = linkHtml.match(/\/(\d+)\s*$/);
+    const id = idMatch ? idMatch[1] : '';
+
+    const rawTipAct = extract('TipAct');
+
+    if (titlu || numarStr) {
       results.push({
         id,
         titlu,
-        tipAct: extract('TipAct') || extract('TipDocument') || '',
-        numar: extract('Numar') || extract('NumarAct') || '',
-        an: parseInt(extract('An') || extract('AnAct') || '0'),
-        dataPublicarii: extract('DataPublicarii') || extract('DataDocument') || '',
-        emitent: extract('Emitent') || extract('OrganEmitent') || '',
-        stare: extract('Stare') || extract('StareAct') || '',
-        portalUrl: id ? `https://legislatie.just.ro/Public/DetaliiDocument/${id}` : '',
+        tipAct: normalizeTipAct(rawTipAct),
+        rawTipAct,
+        numar,
+        an,
+        dataPublicarii: extract('DataVigoare'),
+        emitent: extract('Emitent'),
+        stare: extract('Publicatie'),
+        portalUrl: linkHtml || (id ? `https://legislatie.just.ro/Public/DetaliiDocument/${id}` : ''),
       });
     }
   }
