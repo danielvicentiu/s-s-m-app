@@ -39,7 +39,7 @@ export function AlerteConformitate({
   return (
     <Html lang="ro">
       <Head />
-      <Preview>Alerte Conformitate {organizationName}: {expired} expirate, {critical} critice</Preview>
+      <Preview>Alerte Conformitate {organizationName}: {String(expired)} expirate, {String(critical)} critice</Preview>
       <Body style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f9fafb' }}>
         <Container style={{ maxWidth: '600px', margin: '0 auto', padding: '24px' }}>
           <Heading style={{ color: '#dc2626', fontSize: '24px', margin: '0 0 8px' }}>
