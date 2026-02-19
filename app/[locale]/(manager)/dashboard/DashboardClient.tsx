@@ -18,6 +18,11 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { OrgProvider, useOrg, type OrgOption } from '@/lib/contexts/OrgContext'
 import OrgSelector from '@/components/dashboard/OrgSelector'
 import DashboardOverview from './DashboardOverview'
+import { StatCards } from '@/components/dashboard-v0/StatCards'
+import { ComplianceChart } from '@/components/dashboard-v0/ComplianceChart'
+import { ActiveModulesWidget } from '@/components/dashboard-v0/ActiveModules'
+import { UrgentActions } from '@/components/dashboard-v0/UrgentActions'
+import { ActivityTimeline } from '@/components/dashboard-v0/ActivityTimeline'
 
 interface Props {
   user: { email: string; id: string }
@@ -492,7 +497,22 @@ function DashboardContent({
 
         {/* ============ OVERVIEW TAB ============ */}
         {activeTab === 'overview' && (
-          <div className="py-6">
+          <div className="py-6 space-y-6">
+            {/* === v0 Visual Dashboard Widgets === */}
+            <StatCards />
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+              <div className="xl:col-span-2" style={{ minHeight: 320 }}>
+                <ComplianceChart />
+              </div>
+              <div style={{ minHeight: 320 }}>
+                <ActiveModulesWidget />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <UrgentActions />
+              <ActivityTimeline />
+            </div>
+            {/* === Existing Dashboard Overview (real data) === */}
             <DashboardOverview selectedOrg={selectedOrg} />
           </div>
         )}
