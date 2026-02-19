@@ -87,7 +87,7 @@ export async function GET(
     }
 
     return NextResponse.json({ data: org })
-  }))(req)
+  }))(_req)
 }
 
 /**
@@ -380,7 +380,7 @@ export async function DELETE(
       id: organizationId,
       name: org.name
     })
-  }))(req)
+  }))(_req)
 }
 
 /**

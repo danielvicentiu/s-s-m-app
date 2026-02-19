@@ -477,7 +477,7 @@ export async function POST(request: NextRequest) {
 
       // Fetch all domains in parallel with graceful fallback
       const [
-        ,
+        employeesRes,
         trainingsRes,
         medicalRes,
         psiEquipmentRes,
@@ -494,6 +494,7 @@ export async function POST(request: NextRequest) {
         safeQuery(() => supabase.from('near_miss_reports').select('id, status').eq('organization_id', organizationId)),
       ])
 
+      const employees = employeesRes.data || []
       const trainings = trainingsRes.data || []
       const medical = medicalRes.data || []
       const psiEquipment = psiEquipmentRes.data || []
