@@ -25,7 +25,7 @@ export function ActiveModulesWidget() {
             </div>
             <span className="text-xs font-semibold text-foreground">{mod.name}</span>
             <span className={`inline-flex items-center gap-1 text-[10px] font-medium ${mod.status === 'active' ? 'text-green-600' : 'text-amber-600'}`}>
-              {mod.status === 'active' ? <><Check className="h-3 w-3" /> Activ</> : <><Clock className="h-3 w-3" /> \u00cen a\u015fteptare</>}
+              {mod.status === 'active' ? <><Check className="h-3 w-3" /> Activ</> : <><Clock className="h-3 w-3" /> În așteptare</>}
             </span>
           </div>
         ))}

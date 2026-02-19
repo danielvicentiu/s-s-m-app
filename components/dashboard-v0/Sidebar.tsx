@@ -44,16 +44,16 @@ const navGroups: NavGroup[] = [
     links: [
       { href: '/dashboard', label: 'Dashboard', moduleKey: null, icon: LayoutDashboard },
       { href: '/dashboard/ai-assistant', label: 'VA-AI Assistant', moduleKey: null, icon: BrainCircuit },
-      { href: '/dashboard/employees', label: 'Angaja\u021bi', moduleKey: 'ssm', icon: Users },
+      { href: '/dashboard/employees', label: 'Angajați', moduleKey: 'ssm', icon: Users },
     ],
   },
   {
-    title: 'SSM - Securitate Munc\u0103',
+    title: 'SSM - Securitate Muncă',
     links: [
       { href: '/dashboard/training', label: 'Instruiri SSM', moduleKey: 'ssm', icon: BookOpen },
       { href: '/dashboard/near-miss', label: 'Incidente Near-miss', moduleKey: 'near_miss', icon: AlertTriangle },
       { href: '/dashboard/training/calendar', label: 'Calendar Instruiri', moduleKey: null, icon: CalendarDays },
-      { href: '/dashboard/obligations', label: 'Obliga\u021bii Legale', moduleKey: 'legislatie', icon: ClipboardList },
+      { href: '/dashboard/obligations', label: 'Obligații Legale', moduleKey: 'legislatie', icon: ClipboardList },
     ],
   },
   {
@@ -61,12 +61,12 @@ const navGroups: NavGroup[] = [
     links: [
       { href: '/dashboard/psi', label: 'Echipamente PSI', moduleKey: 'psi', icon: Flame },
       { href: '/dashboard/iscir', label: 'ISCIR', moduleKey: 'echipamente', icon: Cog },
-      { href: '/dashboard/iscir/daily', label: 'Verific\u0103ri Zilnice', moduleKey: 'echipamente', icon: CheckSquare },
+      { href: '/dashboard/iscir/daily', label: 'Verificări Zilnice', moduleKey: 'echipamente', icon: CheckSquare },
       { href: '/dashboard/equipment', label: 'Echipamente', moduleKey: 'echipamente', icon: Wrench },
     ],
   },
   {
-    title: 'Medicin\u0103 Munc\u0103',
+    title: 'Medicină Muncă',
     links: [
       { href: '/dashboard/medical', label: 'Medicina Muncii', moduleKey: 'ssm', icon: HeartPulse },
     ],
@@ -85,7 +85,7 @@ const navGroups: NavGroup[] = [
   {
     title: 'Alerte',
     links: [
-      { href: '/dashboard/alerts', label: 'Alerte & Notific\u0103ri', moduleKey: null, icon: Bell },
+      { href: '/dashboard/alerts', label: 'Alerte & Notificări', moduleKey: null, icon: Bell },
     ],
   },
   {
@@ -93,7 +93,7 @@ const navGroups: NavGroup[] = [
     links: [
       { href: '/dashboard/reges', label: 'REGES', moduleKey: null, icon: Database },
       { href: '/dashboard/profile', label: 'Profil', moduleKey: null, icon: UserCircle },
-      { href: '/dashboard/settings/notifications', label: 'Notific\u0103ri', moduleKey: null, icon: Bell },
+      { href: '/dashboard/settings/notifications', label: 'Notificări', moduleKey: null, icon: Bell },
       { href: '/dashboard/settings/roles', label: 'Roluri', moduleKey: null, icon: Shield },
       { href: '/dashboard/settings/api-keys', label: 'API Keys', moduleKey: null, icon: KeyRound },
       { href: '/dashboard/batch', label: 'Batch Jobs', moduleKey: null, icon: Layers },
@@ -242,12 +242,12 @@ export default function Sidebar({ user, expanded, onToggle, mobileOpen, onMobile
         <button
           onClick={onToggle}
           className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          aria-label={expanded ? 'Restr\u00e2nge meniul' : 'Extinde meniul'}
+          aria-label={expanded ? 'Restrânge meniul' : 'Extinde meniul'}
         >
           {expanded ? (
             <>
               <ChevronLeft className="h-4 w-4" />
-              <span>Restr\u00e2nge</span>
+              <span>Restrânge</span>
             </>
           ) : (
             <ChevronRight className="h-4 w-4" />

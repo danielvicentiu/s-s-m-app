@@ -24,9 +24,9 @@ function ConformityRing({ value }: { value: number }) {
 }
 
 const cards = [
-  { label: 'Angaja\u021bi Activi', value: '245', sub: '+12 luna aceasta', subColor: 'text-green-600', bgAccent: 'bg-green-50', icon: Users, iconColor: 'text-green-600' },
+  { label: 'Angajați Activi', value: '245', sub: '+12 luna aceasta', subColor: 'text-green-600', bgAccent: 'bg-green-50', icon: Users, iconColor: 'text-green-600' },
   { label: 'Instruiri Planificate', value: '18', sub: '5 restante', subColor: 'text-amber-600', bgAccent: 'bg-amber-50', icon: CalendarClock, iconColor: 'text-amber-600' },
-  { label: 'Documente Expirate', value: '3', sub: 'Necesit\u0103 aten\u021bie', subColor: 'text-red-600', bgAccent: 'bg-red-50', icon: FileWarning, iconColor: 'text-red-600' },
+  { label: 'Documente Expirate', value: '3', sub: 'Necesită atenție', subColor: 'text-red-600', bgAccent: 'bg-red-50', icon: FileWarning, iconColor: 'text-red-600' },
 ]
 
 export function StatCards() {
@@ -49,7 +49,7 @@ export function StatCards() {
         <div>
           <p className="text-xs font-medium text-muted-foreground">Scor Conformitate</p>
           <p className="mt-0.5 text-sm font-medium text-foreground">Foarte bun</p>
-          <p className="text-xs text-muted-foreground">+3% fa\u021b\u0103 de luna trecut\u0103</p>
+          <p className="text-xs text-muted-foreground">+3% față de luna trecută</p>
         </div>
       </div>
     </div>

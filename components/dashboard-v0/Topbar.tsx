@@ -57,7 +57,7 @@ export default function Topbar({ userEmail, userId, onMobileMenuOpen }: TopbarPr
         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Caut\u0103 angaja\u021bi, documente, module..."
+          placeholder="Caută angajați, documente, module..."
           className="h-9 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
         />
       </div>
@@ -103,7 +103,7 @@ export default function Topbar({ userEmail, userId, onMobileMenuOpen }: TopbarPr
                 onClick={() => setDropdownOpen(false)}
               >
                 <Settings className="h-4 w-4 text-muted-foreground" />
-                Set\u0103ri
+                Setări
               </Link>
               <div className="my-1 border-t border-border" />
               <button

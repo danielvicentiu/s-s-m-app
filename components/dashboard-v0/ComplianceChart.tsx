@@ -18,7 +18,7 @@ export function ComplianceChart() {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-foreground">Conformitate Ultimele 12 Luni</h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">Evolu\u021bia scorului general de conformitate</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">Evoluția scorului general de conformitate</p>
         </div>
         <span className="rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-green-700">+19% YoY</span>
       </div>
