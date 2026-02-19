@@ -1,0 +1,92 @@
+"use client"
+
+import { useState } from "react"
+import { Eye, EyeOff, ShieldCheck, Mail, ArrowRight } from "lucide-react"
+
+export function TabLogin() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPw, setShowPw] = useState(false)
+
+  return (
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className="flex flex-col gap-5"
+      style={{ animation: "slideInRight .3s ease-out" }}
+    >
+      {/* Email */}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="login-email" className="text-sm font-medium text-foreground">
+          Email
+        </label>
+        <div className="relative">
+          <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            id="login-email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="adresa@companie.ro"
+            className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+        </div>
+      </div>
+
+      {/* Password */}
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between">
+          <label htmlFor="login-pw" className="text-sm font-medium text-foreground">
+            Parolă
+          </label>
+          <a href="#" className="text-xs font-medium text-primary hover:underline">
+            Am uitat parola
+          </a>
+        </div>
+        <div className="relative">
+          <input
+            id="login-pw"
+            type={showPw ? "text" : "password"}
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Introdu parola"
+            className="h-11 w-full rounded-lg border border-border bg-background px-4 pr-11 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPw(!showPw)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+            aria-label={showPw ? "Ascunde parola" : "Arată parola"}
+          >
+            {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Submit */}
+      <button
+        type="submit"
+        className="flex h-11 items-center justify-center gap-2 rounded-lg bg-primary font-semibold text-primary-foreground transition-all hover:brightness-110 active:scale-[0.98]"
+      >
+        Autentificare
+        <ArrowRight className="h-4 w-4" />
+      </button>
+
+      {/* MFA notice */}
+      <div className="flex items-start gap-2 rounded-lg bg-secondary/60 px-3.5 py-3 text-xs leading-relaxed text-muted-foreground">
+        <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+        <span>După autentificare va fi necesar codul de verificare MFA</span>
+      </div>
+
+      {/* Passwordless link */}
+      <a
+        href="#"
+        className="flex items-center gap-1.5 text-center text-xs font-medium text-primary hover:underline"
+      >
+        <Mail className="h-3.5 w-3.5" />
+        {"Autentificare fără parolă \u2192 primești link pe email"}
+      </a>
+    </form>
+  )
+}
