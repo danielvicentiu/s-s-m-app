@@ -108,21 +108,23 @@ export async function GET(request: NextRequest) {
       else summary.atentie++
 
       // Insert into alerts table (upsert to avoid duplicates per equipment+day)
-      const today = new Date().toISOString().split('T')[0]
+      const alertSeverity = level === 'expirat' ? 'critical' : level === 'urgent' ? 'high' : 'medium'
+      const alertTitle = `Verificare ISCIR ${level}: ${eq.identifier}`
+
       try {
-        const { error: alertError } = await supabase.from('alerts').upsert(
+        const { data: newAlert, error: alertError } = await supabase.from('alerts').upsert(
           {
             organization_id: eq.organization_id,
             alert_type: 'iscir_verificare',
-            severity: level === 'expirat' ? 'critical' : level === 'urgent' ? 'high' : 'medium',
-            title: `Verificare ISCIR ${level}: ${eq.identifier}`,
+            severity: alertSeverity,
+            title: alertTitle,
             message,
             reference_id: eq.id,
             reference_type: 'iscir_equipment',
             is_read: false,
           },
           { onConflict: 'reference_id,reference_type,alert_type', ignoreDuplicates: false }
-        )
+        ).select('id').maybeSingle()
 
         if (alertError) {
           // alerts table schema may differ; log and continue
@@ -130,6 +132,38 @@ export async function GET(request: NextRequest) {
           summary.errors++
         } else {
           summary.alertsCreated++
+
+          // Doar pentru alerte HIGH/CRITICAL — nu spam pentru INFO/MEDIUM
+          if (['high', 'critical'].includes(alertSeverity)) {
+            try {
+              // Ia utilizatorii activi din organizație
+              const { data: members } = await supabase
+                .from('memberships')
+                .select('user_id')
+                .eq('organization_id', eq.organization_id)
+                .eq('is_active', true)
+
+              const affectedUserIds = members?.map((m: { user_id: string }) => m.user_id) ?? []
+
+              if (affectedUserIds.length > 0) {
+                await supabase.functions.invoke('send-push-notification', {
+                  body: {
+                    user_ids: affectedUserIds,
+                    title: `⚠️ ISCIR Alert`,
+                    body: alertTitle.substring(0, 100),
+                    data: {
+                      type: 'ssm_alert',
+                      alert_id: newAlert?.id ?? '',
+                      url: newAlert?.id ? `/dashboard/alerts/${newAlert.id}` : '/dashboard/alerts',
+                    },
+                  },
+                })
+              }
+            } catch (pushErr) {
+              // Eșecul notificării push nu trebuie să afecteze flow-ul principal
+              console.error(`[ISCIR] Push notification failed for equipment ${eq.id}:`, pushErr)
+            }
+          }
         }
       } catch (alertErr) {
         console.error(`Alert creation error for ${eq.id}:`, alertErr)

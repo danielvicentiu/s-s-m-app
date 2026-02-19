@@ -1,265 +1,196 @@
 // Supabase Edge Function: send-push-notification
-// Trimite Web Push Notifications folosind web-push library
-// Data: 14 Februarie 2026
+// Trimite notificări push prin Firebase Cloud Messaging (FCM)
+// Suportă batch de max 500 tokens per request FCM cu split automat
+// Data actualizată: 19 Februarie 2026
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// Note: web-push library trebuie instalată ca dependency
-// Până atunci, folosim direct Web Push Protocol cu fetch
+const FCM_SEND_URL = 'https://fcm.googleapis.com/fcm/send'
+const FCM_BATCH_SIZE = 500
 
-interface PushSubscription {
-  endpoint: string
-  keys: {
-    p256dh: string
-    auth: string
-  }
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-interface NotificationPayload {
+interface RequestBody {
+  user_ids: string[]
   title: string
   body: string
-  icon?: string
-  badge?: string
-  image?: string
-  data?: Record<string, any>
-  actions?: PushNotificationAction[]
-  tag?: string
-  url?: string
-  requireInteraction?: boolean
-  silent?: boolean
-  timestamp?: number
+  data?: Record<string, string>
 }
 
-interface PushNotificationAction {
-  action: string
-  title: string
-  icon?: string
+interface FcmBatchResult {
+  sent: number
+  failed: number
+  errors: string[]
+  invalidTokens: string[]
 }
 
 serve(async (req) => {
-  // CORS headers
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
-  }
-
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    // Parse request body
-    const { subscription, notification } = await req.json()
-
-    if (!subscription || !notification) {
+    const serverKey = Deno.env.get('FIREBASE_SERVER_KEY')
+    if (!serverKey) {
+      console.error('[FCM Edge] FIREBASE_SERVER_KEY not configured')
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Missing subscription or notification data'
-        }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
+        JSON.stringify({ success: false, error: 'FIREBASE_SERVER_KEY neconfigurat' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Validate subscription
-    if (!subscription.endpoint || !subscription.keys?.p256dh || !subscription.keys?.auth) {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    const body: RequestBody = await req.json()
+    const { user_ids, title, body: notifBody, data } = body
+
+    if (!user_ids?.length || !title || !notifBody) {
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Invalid subscription format'
-        }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
+        JSON.stringify({ success: false, error: 'user_ids, title și body sunt obligatorii' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Get VAPID keys from environment
-    const vapidPublicKey = Deno.env.get('VAPID_PUBLIC_KEY')
-    const vapidPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY')
-    const vapidEmail = Deno.env.get('VAPID_EMAIL') || 'admin@s-s-m.ro'
+    // Ia token-urile active din fcm_tokens pentru user_ids dați
+    const { data: tokens, error: tokensError } = await supabase
+      .from('fcm_tokens')
+      .select('token, user_id')
+      .in('user_id', user_ids)
+      .eq('is_active', true)
 
-    if (!vapidPublicKey || !vapidPrivateKey) {
-      console.error('[Push] VAPID keys not configured')
+    if (tokensError) {
+      console.error('[FCM Edge] Error fetching tokens:', tokensError)
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'VAPID keys not configured'
-        }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
+        JSON.stringify({ success: false, error: 'Eroare la obținerea token-urilor' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Prepare notification payload
-    const payload: NotificationPayload = {
-      title: notification.title,
-      body: notification.body,
-      icon: notification.icon || '/icons/icon-192x192.png',
-      badge: notification.badge || '/icons/badge-72x72.png',
-      image: notification.image,
-      data: {
-        url: notification.url || '/',
-        timestamp: Date.now(),
-        ...notification.data
-      },
-      tag: notification.tag || 'default',
-      requireInteraction: notification.requireInteraction || false,
-      silent: notification.silent || false,
-      actions: notification.actions || []
+    if (!tokens?.length) {
+      return new Response(
+        JSON.stringify({ success: true, sent: 0, failed: 0, errors: [] }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Send push notification using Web Push Protocol
-    // Note: Aceasta este o implementare simplificată
-    // Pentru producție, folosește library-ul web-push complet
-    const result = await sendWebPush(
-      subscription,
-      payload,
-      vapidPublicKey,
-      vapidPrivateKey,
-      vapidEmail
-    )
+    const tokenList = tokens.map((t: { token: string }) => t.token)
+    const result = await sendFcmBatch(serverKey, tokenList, title, notifBody, data)
 
-    if (!result.success) {
-      console.error('[Push] Send failed:', result.error)
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: result.error
-        }),
-        {
-          status: result.statusCode || 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
+    // Curăță token-urile invalide (marcate ca inactive)
+    if (result.invalidTokens.length > 0) {
+      const { error: cleanupError } = await supabase
+        .from('fcm_tokens')
+        .update({ is_active: false })
+        .in('token', result.invalidTokens)
+
+      if (cleanupError) {
+        console.error('[FCM Edge] Error cleaning invalid tokens:', cleanupError)
+      } else {
+        console.log(`[FCM Edge] Marked ${result.invalidTokens.length} tokens as inactive`)
+      }
     }
 
     return new Response(
       JSON.stringify({
         success: true,
-        messageId: result.messageId,
-        timestamp: new Date().toISOString()
+        sent: result.sent,
+        failed: result.failed,
+        errors: result.errors,
+        timestamp: new Date().toISOString(),
       }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (error) {
-    console.error('[Push] Error:', error)
-
+    console.error('[FCM Edge] Unexpected error:', error)
     return new Response(
       JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Eroare necunoscută',
       }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 })
 
-/**
- * Send Web Push notification using Web Push Protocol
- * Simplified implementation - pentru producție, folosește web-push library
- */
-async function sendWebPush(
-  subscription: PushSubscription,
-  payload: NotificationPayload,
-  vapidPublicKey: string,
-  vapidPrivateKey: string,
-  vapidEmail: string
-): Promise<{ success: boolean; error?: string; statusCode?: number; messageId?: string }> {
-  try {
-    const payloadString = JSON.stringify(payload)
+// ---------------------------------------------------------------------------
+// sendFcmBatch — trimite la FCM legacy API în batch-uri de max FCM_BATCH_SIZE
+// Split automat dacă tokenList > FCM_BATCH_SIZE
+// ---------------------------------------------------------------------------
+async function sendFcmBatch(
+  serverKey: string,
+  tokens: string[],
+  title: string,
+  body: string,
+  data?: Record<string, string>
+): Promise<FcmBatchResult> {
+  let sent = 0
+  let failed = 0
+  const errors: string[] = []
+  const invalidTokens: string[] = []
 
-    // Extrage URL-ul endpoint-ului push service
-    const endpoint = subscription.endpoint
+  for (let i = 0; i < tokens.length; i += FCM_BATCH_SIZE) {
+    const batch = tokens.slice(i, i + FCM_BATCH_SIZE)
+    console.log(`[FCM Edge] Sending batch ${Math.floor(i / FCM_BATCH_SIZE) + 1}: ${batch.length} tokens`)
 
-    // Trimite request HTTP POST către push service
-    // Note: Aceasta este o implementare simplificată
-    // Pentru criptare completă și VAPID signing, folosește web-push library
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Encoding': 'aes128gcm',
-        'TTL': '86400' // 24 ore
+    const payload = {
+      registration_ids: batch,
+      notification: {
+        title,
+        body,
+        icon: '/favicon.ico',
       },
-      body: payloadString
-    })
-
-    if (response.ok) {
-      return {
-        success: true,
-        messageId: crypto.randomUUID()
-      }
+      data: {
+        url: '/dashboard/alerts',
+        ...data,
+      },
     }
 
-    // Handle error responses
-    const statusCode = response.status
-
-    if (statusCode === 404 || statusCode === 410) {
-      // Subscription expired or invalid
-      return {
-        success: false,
-        error: 'Subscription expired or invalid',
-        statusCode
-      }
+    let response: Response
+    try {
+      response = await fetch(FCM_SEND_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `key=${serverKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+    } catch (fetchError) {
+      console.error('[FCM Edge] Fetch error:', fetchError)
+      failed += batch.length
+      errors.push(`Fetch error: ${fetchError instanceof Error ? fetchError.message : String(fetchError)}`)
+      continue
     }
 
-    if (statusCode === 429) {
-      // Rate limited
-      return {
-        success: false,
-        error: 'Rate limited',
-        statusCode
-      }
+    if (!response.ok) {
+      const errText = await response.text().catch(() => 'unknown')
+      console.error('[FCM Edge] HTTP error:', response.status, errText)
+      failed += batch.length
+      errors.push(`HTTP ${response.status}: ${errText}`)
+      continue
     }
 
-    return {
-      success: false,
-      error: `Push service returned status ${statusCode}`,
-      statusCode
-    }
-  } catch (error) {
-    console.error('[Push] Send error:', error)
+    const fcmResult = await response.json()
+    sent += fcmResult.success || 0
+    failed += fcmResult.failure || 0
 
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+    // Procesează rezultatele individuale pentru a identifica token-uri invalide
+    if (fcmResult.results) {
+      fcmResult.results.forEach((r: { error?: string }, idx: number) => {
+        if (r.error === 'NotRegistered' || r.error === 'InvalidRegistration') {
+          invalidTokens.push(batch[idx])
+        } else if (r.error) {
+          errors.push(`Token error: ${r.error}`)
+        }
+      })
     }
   }
-}
 
-/**
- * Note: Implementare completă cu criptare și VAPID signing
- *
- * Pentru producție, instalează web-push library:
- *
- * import webpush from 'npm:web-push@3.6.6'
- *
- * webpush.setVapidDetails(
- *   `mailto:${vapidEmail}`,
- *   vapidPublicKey,
- *   vapidPrivateKey
- * )
- *
- * const result = await webpush.sendNotification(
- *   subscription,
- *   JSON.stringify(payload),
- *   {
- *     TTL: 86400,
- *     urgency: 'normal'
- *   }
- * )
- */
+  return { sent, failed, errors, invalidTokens }
+}

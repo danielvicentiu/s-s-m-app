@@ -12,6 +12,7 @@ import { User } from '@supabase/supabase-js'
 import { useOrg } from '@/lib/contexts/OrgContext'
 import { useModuleGate } from '@/lib/hooks/useModuleGate'
 import type { ModuleKey } from '@/lib/modules/types'
+import NotificationBell from '@/components/notifications/NotificationBell'
 
 interface NavLink {
   href: string
@@ -423,6 +424,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
             </p>
             <p className="text-xs text-gray-500">Utilizator</p>
           </div>
+          <NotificationBell userId={user.id} />
         </div>
       </div>
     </>
