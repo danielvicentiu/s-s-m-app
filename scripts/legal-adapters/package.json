@@ -1,0 +1,20 @@
+{
+  "name": "legal-adapters",
+  "version": "1.0.0",
+  "description": "Standalone legal adapters for fetching and importing legislation from country-specific APIs",
+  "private": true,
+  "scripts": {
+    "run": "tsx run.ts",
+    "run:pl": "tsx pl/run.ts",
+    "run:pl:dry": "DRY_RUN=true tsx pl/run.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}
