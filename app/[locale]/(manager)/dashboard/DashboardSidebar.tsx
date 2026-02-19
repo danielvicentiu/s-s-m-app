@@ -18,12 +18,21 @@ interface NavLink {
   href: string
   label: string
   icon: React.ReactNode
-  moduleKey?: ModuleKey | null // null = always visible, moduleKey = check if active
+  moduleKey?: ModuleKey | null // null/undefined = always visible, moduleKey = check if active
 }
 
 interface NavGroup {
   title: string
   links: NavLink[]
+}
+
+// Lock icon for inactive modules
+function LockIcon() {
+  return (
+    <svg className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+    </svg>
+  )
 }
 
 export default function DashboardSidebar({ user }: { user: User }) {
@@ -34,9 +43,12 @@ export default function DashboardSidebar({ user }: { user: User }) {
   const { currentOrg } = useOrg()
 
   // Fetch organization modules (null if 'all' view)
-  const { hasModule, getModuleAccess, isLoading } = useModuleGate(
+  const { hasModule, getModuleAccess, isLoading, error } = useModuleGate(
     currentOrg !== 'all' ? currentOrg : null
   )
+
+  // FALLBACK: if loading, error, or viewing all orgs — show all links normally
+  const shouldGate = !isLoading && !error && currentOrg !== 'all'
 
   // Navigation structure with module requirements
   const navGroups: NavGroup[] = [
@@ -60,6 +72,16 @@ export default function DashboardSidebar({ user }: { user: User }) {
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          ),
+        },
+        {
+          href: '/dashboard/ai-kb',
+          label: 'AI Bază de Cunoștințe',
+          moduleKey: null, // Always visible
+          icon: (
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
           ),
         },
@@ -226,7 +248,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/scan',
           label: 'Scanare Documente',
-          moduleKey: 'documents',
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -236,7 +258,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/import',
           label: 'Import Date',
-          moduleKey: null, // Admin tool - always visible
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -251,7 +273,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         {
           href: '/dashboard/alerts',
           label: 'Alerte & Notificări',
-          moduleKey: null, // Mereu vizibil
+          moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -347,21 +369,6 @@ export default function DashboardSidebar({ user }: { user: User }) {
     },
   ]
 
-  // Filter links based on module access (graceful degradation if loading/error)
-  const filteredNavGroups = navGroups.map(group => ({
-    ...group,
-    links: group.links.filter(link => {
-      // Always show links without module requirement
-      if (link.moduleKey === null || link.moduleKey === undefined) return true
-
-      // During loading or when viewing 'all' orgs, show all links (graceful degradation)
-      if (isLoading || currentOrg === 'all') return true
-
-      // Check if organization has access to this module
-      return hasModule(link.moduleKey as ModuleKey)
-    })
-  })).filter(group => group.links.length > 0) // Remove empty groups
-
   // Check if current path matches a link (exact or starts with for nested routes)
   const isActive = (href: string) => {
     if (href === '/dashboard') {
@@ -384,7 +391,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-6 overflow-y-auto">
-        {filteredNavGroups.map((group, groupIdx) => (
+        {navGroups.map((group, groupIdx) => (
           <div key={groupIdx} className="mb-6">
             <h3 className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
               {group.title}
@@ -392,12 +399,29 @@ export default function DashboardSidebar({ user }: { user: User }) {
             <div className="space-y-1">
               {group.links.map((link) => {
                 const active = isActive(link.href)
+                const alwaysVisible = link.moduleKey === null || link.moduleKey === undefined
 
-                // Check if module is in trial mode
-                const moduleAccess = link.moduleKey
+                // Determine module access state
+                const isLocked = !alwaysVisible && shouldGate && !hasModule(link.moduleKey as ModuleKey)
+                const moduleAccess = (!alwaysVisible && link.moduleKey)
                   ? getModuleAccess(link.moduleKey as ModuleKey)
                   : null
-                const isTrialMode = moduleAccess?.is_trial ?? false
+                const isTrial = moduleAccess?.is_trial ?? false
+
+                if (isLocked) {
+                  // Grayed-out locked link — not navigable
+                  return (
+                    <div
+                      key={link.href}
+                      title="Modul inactiv"
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed select-none"
+                    >
+                      <span className="opacity-50">{link.icon}</span>
+                      <span className="flex-1">{link.label}</span>
+                      <LockIcon />
+                    </div>
+                  )
+                }
 
                 return (
                   <Link
@@ -412,12 +436,12 @@ export default function DashboardSidebar({ user }: { user: User }) {
                   >
                     {link.icon}
                     <span className="flex-1">{link.label}</span>
-                    {link.href === '/dashboard/ai-assistant' && !isTrialMode && (
+                    {link.href === '/dashboard/ai-assistant' && !isTrial && (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
                         AI
                       </span>
                     )}
-                    {isTrialMode && (
+                    {isTrial && (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
                         Trial
                       </span>
