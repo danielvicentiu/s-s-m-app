@@ -105,7 +105,7 @@ export default function OnboardingClient({ user }: Props) {
             }}
           >
             {step === 1 && (
-              <StepActivity activities={activities} onChange={setActivities} onNext={goNext} />
+              <StepActivity selected={activities} onChange={setActivities} onNext={goNext} />
             )}
             {step === 2 && (
               <StepEmployees
