@@ -103,8 +103,8 @@ const DEFAULT_ACTION = {
   icon: Activity,
   iconColor: 'text-gray-600',
   iconBg: 'bg-gray-50',
-  getLink: () => null,
-  getLinkText: () => null,
+  getLink: (): null => null,
+  getLinkText: (): null => null,
 }
 
 function transformAuditLogToActivity(entry: AuditLogEntry): ActivityItem {

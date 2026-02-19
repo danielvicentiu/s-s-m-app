@@ -171,7 +171,7 @@ export async function GET(request: NextRequest) {
       errors: [{ message: errMsg }],
       duration_ms: Date.now() - startTime,
       triggered_by: 'cron',
-    }).catch(() => null)
+    }).catch((): null => null)
 
     return NextResponse.json(
       {
