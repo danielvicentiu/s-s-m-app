@@ -1,4 +1,7 @@
+'use client'
+
 import { Check, Minus } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Feature {
   name: string
@@ -7,25 +10,25 @@ interface Feature {
   enterprise: boolean
 }
 
-const comparisonFeatures: Feature[] = [
-  { name: 'SSM de bază', starter: true, professional: true, enterprise: true },
-  { name: 'PSI de bază', starter: true, professional: true, enterprise: true },
-  { name: 'Rapoarte PDF', starter: true, professional: true, enterprise: true },
-  { name: 'Alerte email automate', starter: true, professional: true, enterprise: true },
-  { name: 'Suport email', starter: true, professional: true, enterprise: true },
-  { name: 'Modul GDPR', starter: false, professional: true, enterprise: true },
-  { name: 'Medicina Muncii', starter: false, professional: true, enterprise: true },
-  { name: 'Near-Miss Reporting', starter: false, professional: true, enterprise: true },
-  { name: 'Calendar instruiri', starter: false, professional: true, enterprise: true },
-  { name: 'Import REGES/REVISAL', starter: false, professional: true, enterprise: true },
-  { name: 'Suport prioritar', starter: false, professional: true, enterprise: true },
-  { name: 'NIS2 compliance', starter: false, professional: false, enterprise: true },
-  { name: 'ISCIR management', starter: false, professional: false, enterprise: true },
-  { name: 'Automatizări avansate', starter: false, professional: false, enterprise: true },
-  { name: 'Acces API', starter: false, professional: false, enterprise: true },
-  { name: 'Utilizatori nelimitați', starter: false, professional: false, enterprise: true },
-  { name: 'Manager dedicat', starter: false, professional: false, enterprise: true },
-  { name: 'SLA 99.9%', starter: false, professional: false, enterprise: true },
+const FEATURE_BOOLEANS = [
+  { starter: true,  professional: true,  enterprise: true  },
+  { starter: true,  professional: true,  enterprise: true  },
+  { starter: true,  professional: true,  enterprise: true  },
+  { starter: true,  professional: true,  enterprise: true  },
+  { starter: true,  professional: true,  enterprise: true  },
+  { starter: false, professional: true,  enterprise: true  },
+  { starter: false, professional: true,  enterprise: true  },
+  { starter: false, professional: true,  enterprise: true  },
+  { starter: false, professional: true,  enterprise: true  },
+  { starter: false, professional: true,  enterprise: true  },
+  { starter: false, professional: true,  enterprise: true  },
+  { starter: false, professional: false, enterprise: true  },
+  { starter: false, professional: false, enterprise: true  },
+  { starter: false, professional: false, enterprise: true  },
+  { starter: false, professional: false, enterprise: true  },
+  { starter: false, professional: false, enterprise: true  },
+  { starter: false, professional: false, enterprise: true  },
+  { starter: false, professional: false, enterprise: true  },
 ]
 
 function CellIcon({ included }: { included: boolean }) {
@@ -37,11 +40,25 @@ function CellIcon({ included }: { included: boolean }) {
 }
 
 export function ComparisonTable() {
+  const t = useTranslations('pricing')
+
+  const featureNames = t.raw('comparisonFeatures') as string[]
+  const comparisonFeatures: Feature[] = featureNames.map((name, i) => ({
+    name,
+    ...FEATURE_BOOLEANS[i],
+  }))
+
+  const planNames = {
+    starter: t('starter.name'),
+    professional: t('professional.name'),
+    enterprise: t('enterprise.name'),
+  }
+
   return (
     <section className="px-6 py-20">
       <div className="mx-auto max-w-5xl">
         <h2 className="mb-10 text-center text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
-          Compară toate funcționalitățile
+          {t('compareTitle')}
         </h2>
 
         {/* Desktop table */}
@@ -50,11 +67,11 @@ export function ComparisonTable() {
             <thead>
               <tr className="border-b border-border bg-muted/50">
                 <th className="px-6 py-4 text-left font-semibold text-foreground">
-                  Funcționalitate
+                  {t('featureCol')}
                 </th>
-                <th className="px-6 py-4 text-center font-semibold text-foreground">Starter</th>
-                <th className="px-6 py-4 text-center font-semibold text-primary">Professional</th>
-                <th className="px-6 py-4 text-center font-semibold text-foreground">Enterprise</th>
+                <th className="px-6 py-4 text-center font-semibold text-foreground">{planNames.starter}</th>
+                <th className="px-6 py-4 text-center font-semibold text-primary">{planNames.professional}</th>
+                <th className="px-6 py-4 text-center font-semibold text-foreground">{planNames.enterprise}</th>
               </tr>
             </thead>
             <tbody>
@@ -83,24 +100,21 @@ export function ComparisonTable() {
 
         {/* Mobile stacked view */}
         <div className="flex flex-col gap-8 md:hidden">
-          {(['Starter', 'Professional', 'Enterprise'] as const).map((planName) => {
-            const key = planName === 'Starter' ? 'starter' : planName === 'Professional' ? 'professional' : 'enterprise'
-            return (
-              <div key={planName} className="rounded-xl border border-border bg-card overflow-hidden">
-                <div className={`px-5 py-3 font-semibold text-sm ${planName === 'Professional' ? 'bg-primary text-primary-foreground' : 'bg-muted/50 text-foreground'}`}>
-                  {planName}
-                </div>
-                <ul className="divide-y divide-border">
-                  {comparisonFeatures.map((feature) => (
-                    <li key={feature.name} className="flex items-center justify-between px-5 py-3">
-                      <span className="text-sm text-foreground/80">{feature.name}</span>
-                      <CellIcon included={feature[key]} />
-                    </li>
-                  ))}
-                </ul>
+          {(Object.entries(planNames) as Array<[keyof typeof planNames, string]>).map(([key, name]) => (
+            <div key={key} className="rounded-xl border border-border bg-card overflow-hidden">
+              <div className={`px-5 py-3 font-semibold text-sm ${key === 'professional' ? 'bg-primary text-primary-foreground' : 'bg-muted/50 text-foreground'}`}>
+                {name}
               </div>
-            )
-          })}
+              <ul className="divide-y divide-border">
+                {comparisonFeatures.map((feature) => (
+                  <li key={feature.name} className="flex items-center justify-between px-5 py-3">
+                    <span className="text-sm text-foreground/80">{feature.name}</span>
+                    <CellIcon included={feature[key]} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </section>

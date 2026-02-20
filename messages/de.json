@@ -270,5 +270,132 @@
     "terms": "Nutzungsbedingungen",
     "privacy": "Datenschutzrichtlinie",
     "cookies": "Cookies"
+  },
+  "pricing": {
+    "title": "Einfache Preise, keine Überraschungen",
+    "subtitle": "Wählen Sie den richtigen Plan für Ihr Unternehmen. Alle beinhalten 30 Tage kostenlos.",
+    "monthly": "Monatlich",
+    "annual": "Jährlich",
+    "save20": "20% sparen",
+    "switchLabel": "Zwischen monatlicher und jährlicher Abrechnung wechseln",
+    "perYear": "/Jahr",
+    "perMonth": "/Monat",
+    "equivalent": "entspricht {amount} LEI/Monat",
+    "included": "Was ist enthalten",
+    "compareTitle": "Alle Funktionen vergleichen",
+    "featureCol": "Funktion",
+    "comparisonFeatures": ["Basis-Arbeitssicherheit", "Basis-Brandschutz", "PDF-Berichte", "Automatische E-Mail-Warnungen", "E-Mail-Support", "DSGVO-Modul", "Arbeitsmedizin", "Near-Miss Reporting", "Schulungskalender", "REGES/REVISAL Import", "Prioritäts-Support", "NIS2 compliance", "ISCIR management", "Erweiterte Automatisierungen", "API-Zugang", "Unbegrenzte Benutzer", "Dedizierter Manager", "SLA 99.9%"],
+    "starter": {
+      "name": "Starter",
+      "audience": "Bis zu 10 Mitarbeiter",
+      "cta": "Kostenlos starten",
+      "features": ["Basis-Arbeitssicherheit", "Basis-Brandschutz", "1 Admin-Benutzer", "PDF-Berichte", "Automatische E-Mail-Warnungen", "E-Mail-Support"]
+    },
+    "professional": {
+      "name": "Professional",
+      "badge": "Empfohlen",
+      "audience": "Bis zu 50 Mitarbeiter",
+      "cta": "Professional wählen",
+      "features": ["Alles aus Starter, plus:", "DSGVO-Modul", "Arbeitsmedizin", "Near-Miss Reporting", "Schulungskalender", "REGES/REVISAL Import", "5 Benutzer", "Prioritäts-Support"]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "audience": "Unbegrenzte Mitarbeiter",
+      "cta": "Kontaktieren Sie uns",
+      "features": ["Alles aus Professional, plus:", "NIS2 compliance", "ISCIR management", "Erweiterte Automatisierungen", "API-Zugang", "Unbegrenzte Benutzer", "Dedizierter Manager", "SLA 99.9%"]
+    }
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "q1": "Kann ich die Plattform vor dem Bezahlen testen?",
+    "a1": "Ja, wir bieten für alle Pläne eine 30-tägige kostenlose Testphase an, ohne dass eine Kreditkarte erforderlich ist. Sie haben vollen Zugriff auf die Funktionen des gewählten Plans und können jederzeit kündigen.",
+    "q2": "Welche Zahlungsmethoden akzeptieren Sie?",
+    "a2": "Wir akzeptieren Zahlungen per Bankkarte (Visa, Mastercard), Banküberweisung und Rechnungsstellung mit Zahlungsziel für den Enterprise-Plan. Alle Rechnungen werden gemäß den geltenden Steuervorschriften ausgestellt.",
+    "q3": "Kann ich den Plan jederzeit kündigen oder wechseln?",
+    "a3": "Absolut. Sie können jederzeit upgraden oder downgraden, die Preisdifferenz wird anteilig berechnet. Bei Kündigung haben Sie bis zum Ende des aktuellen Abrechnungszeitraums Zugang. Es gibt keine Strafen oder versteckten Gebühren.",
+    "q4": "Wie sind die Daten meines Unternehmens geschützt?",
+    "a4": "Die Daten werden auf sicheren Servern in der EU mit End-to-End-Verschlüsselung (AES-256) gespeichert. Wir sind DSGVO-konform und führen tägliche automatische Backups und vierteljährliche Sicherheitsaudits durch.",
+    "q5": "Kann ich jederzeit von Starter auf Professional wechseln?",
+    "a5": "Ja, Sie können sofort upgraden. Die Preisdifferenz wird pro-rata für den verbleibenden Zeitraum berechnet. Die Migration erfolgt sofort, ohne Datenverlust.",
+    "q6": "Gibt es einen Rabatt für die jährliche Zahlung?",
+    "a6": "Die angezeigten Preise sind Jahrestarife. Im Vergleich zur monatlichen Zahlung bedeutet die jährliche Zahlung eine Ersparnis von ca. 20%. Für mehrjährige Pläne (3+ Jahre) oder mehrere Organisationen kontaktieren Sie uns für ein individuelles Angebot."
+  },
+  "auth": {
+    "leftPanel": {
+      "title": "Komplette Plattform für Arbeitssicherheits-, Brandschutz-, DSGVO- und NIS2-Compliance",
+      "subtitle": "Automatisierte Compliance für Arbeitgeber in Rumänien und MOE. Digitalisieren Sie Ihre Arbeitssicherheitsprozesse.",
+      "modules": "Module",
+      "companies": "Unternehmen",
+      "languages": "Sprachen",
+      "gdprNotice": "Datenschutz gemäß DSGVO und NIS2"
+    },
+    "mobileBanner": "Komplette Plattform für Arbeitssicherheits-, Brandschutz-, DSGVO- und NIS2-Compliance",
+    "tabs": {
+      "login": "Anmelden",
+      "register": "Neues Konto",
+      "quick": "Schnellzugang"
+    },
+    "login": {
+      "email": "E-Mail",
+      "emailPlaceholder": "email@unternehmen.de",
+      "password": "Passwort",
+      "passwordPlaceholder": "Passwort eingeben",
+      "orUseMagicLink": "Oder verwenden Sie einen",
+      "magicLink": "E-Mail-Link",
+      "submit": "Zur Plattform",
+      "submitting": "Anmeldung läuft...",
+      "invalidCredentials": "Falsche E-Mail oder Passwort.",
+      "magicLinkError": "Fehler beim Senden des Links: ",
+      "magicLinkEnterEmail": "Geben Sie Ihre E-Mail-Adresse ein, um den Link zu erhalten.",
+      "magicLinkSentTitle": "Überprüfen Sie Ihre E-Mail",
+      "magicLinkSentText": "Wir haben einen Anmeldelink gesendet an",
+      "magicLinkSentAccess": "Klicken Sie darauf, um auf die Plattform zuzugreifen.",
+      "magicLinkBack": "← Zurück zur Anmeldung",
+      "sessionProtected": "Sitzung durch End-to-End-Verschlüsselung gemäß DSGVO geschützt.",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort ausblenden"
+    },
+    "register": {
+      "email": "E-Mail",
+      "emailPlaceholder": "email@unternehmen.de",
+      "password": "Passwort",
+      "passwordPlaceholder": "Mindestens 8 Zeichen",
+      "confirmPassword": "Passwort bestätigen",
+      "confirmPlaceholder": "Passwort wiederholen",
+      "passwordMismatch": "Passwörter stimmen nicht überein.",
+      "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+      "alreadyRegistered": "Diese E-Mail ist bereits registriert.",
+      "terms": "Ich akzeptiere die",
+      "termsLink": "Nutzungsbedingungen",
+      "and": "und die",
+      "privacyLink": "Datenschutzrichtlinie",
+      "submit": "Konto erstellen",
+      "submitting": "Konto wird erstellt...",
+      "confirmTitle": "Überprüfen Sie Ihre E-Mail",
+      "confirmText": "Wir haben einen Bestätigungslink gesendet an",
+      "confirmAccess": "Klicken Sie darauf, um Ihr Konto zu aktivieren.",
+      "confirmBack": "← Zurück zur Registrierung",
+      "info": "Sie erhalten eine Bestätigungs-E-Mail. Die Kontoeinrichtung dauert 2 Minuten.",
+      "required": "*"
+    },
+    "quickAccess": {
+      "title": "Schnellzugang",
+      "subtitle": "Schnelle Wiederauthentifizierung mit PIN für Mitarbeiter",
+      "email": "E-Mail",
+      "emailPlaceholder": "email@unternehmen.de",
+      "enterEmail": "Geben Sie Ihre E-Mail-Adresse ein.",
+      "enterAllDigits": "Geben Sie alle {count} Ziffern der PIN ein.",
+      "pinError": "Fehler bei der PIN-Authentifizierung.",
+      "sessionError": "Fehler beim Aktivieren der Sitzung. Versuchen Sie es erneut.",
+      "networkError": "Netzwerkfehler. Überprüfen Sie Ihre Verbindung.",
+      "submit": "Zur Plattform",
+      "submitting": "Wird überprüft...",
+      "pinHelp": "Die PIN wurde von Ihrem Arbeitgeber oder dem Arbeitssicherheitsbeauftragten erhalten",
+      "noPin": "Keine PIN? Kontaktieren Sie den Administrator Ihres Unternehmens.",
+      "digit": "Ziffer {n} von {total}"
+    }
+  },
+  "onboarding": {
+    "steps": ["Tätigkeit", "Mitarbeiter", "Unternehmensdaten", "Bestätigung"]
   }
 }

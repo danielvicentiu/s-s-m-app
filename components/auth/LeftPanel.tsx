@@ -1,14 +1,17 @@
 'use client'
 
 import { Shield, Globe, Building2, Lock } from 'lucide-react'
-
-const stats = [
-  { value: '38+', label: 'Module', icon: Shield },
-  { value: '100+', label: 'Companii', icon: Building2 },
-  { value: '6', label: 'Limbi', icon: Globe },
-]
+import { useTranslations } from 'next-intl'
 
 export function LeftPanel() {
+  const t = useTranslations('auth.leftPanel')
+
+  const stats = [
+    { value: '38+', label: t('modules'), icon: Shield },
+    { value: '100+', label: t('companies'), icon: Building2 },
+    { value: '6', label: t('languages'), icon: Globe },
+  ]
+
   return (
     <div className="relative hidden flex-col justify-between overflow-hidden bg-header-bg p-10 lg:flex lg:w-[60%] xl:p-14">
       {/* Grid pattern background */}
@@ -30,11 +33,10 @@ export function LeftPanel() {
           <span className="text-2xl font-bold tracking-tight text-white">s-s-m.ro</span>
         </a>
         <h1 className="mt-8 max-w-md text-balance text-3xl font-bold leading-tight text-white xl:text-4xl">
-          Platformă completă pentru conformitate SSM, PSI, GDPR și NIS2
+          {t('title')}
         </h1>
         <p className="mt-4 max-w-sm text-pretty leading-relaxed text-white/60">
-          Conformitate automată pentru angajatorii din România și CEE. Digitalizează procesele
-          de securitate a muncii.
+          {t('subtitle')}
         </p>
       </div>
 
@@ -57,7 +59,7 @@ export function LeftPanel() {
       {/* Bottom: GDPR notice */}
       <div className="relative z-10 flex items-center gap-2 text-sm text-white/40">
         <Lock className="h-4 w-4 shrink-0" />
-        <span>Protecție date conform GDPR și NIS2</span>
+        <span>{t('gdprNotice')}</span>
       </div>
     </div>
   )

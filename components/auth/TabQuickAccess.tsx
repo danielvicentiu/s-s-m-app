@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { GraduationCap, ArrowRight, HelpCircle, Mail } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { useRouter } from '@/i18n/navigation'
 
@@ -14,6 +15,7 @@ export function TabQuickAccess() {
   const [error, setError] = useState<string | null>(null)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
+  const t = useTranslations('auth.quickAccess')
   const supabase = createSupabaseBrowser()
   const router = useRouter()
 
@@ -54,13 +56,13 @@ export function TabQuickAccess() {
 
   async function handleSubmit() {
     if (!email) {
-      setError('Introdu adresa de email.')
+      setError(t('enterEmail'))
       return
     }
 
     const pin = digits.join('')
     if (pin.length !== PIN_LENGTH) {
-      setError(`Introdu toate cele ${PIN_LENGTH} cifre ale PIN-ului.`)
+      setError(t('enterAllDigits', { count: PIN_LENGTH }))
       return
     }
 
@@ -77,7 +79,7 @@ export function TabQuickAccess() {
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.error || 'Eroare autentificare PIN.')
+        setError(data.error || t('pinError'))
         setLoading(false)
         return
       }
@@ -90,7 +92,7 @@ export function TabQuickAccess() {
 
       if (verifyError) {
         console.error('PIN verifyOtp error:', verifyError)
-        setError('Eroare activare sesiune. Încearcă din nou.')
+        setError(t('sessionError'))
         setLoading(false)
         return
       }
@@ -98,7 +100,7 @@ export function TabQuickAccess() {
       router.push('/dashboard')
     } catch (err) {
       console.error('PIN submit error:', err)
-      setError('Eroare de rețea. Verifică conexiunea.')
+      setError(t('networkError'))
       setLoading(false)
     }
   }
@@ -115,9 +117,9 @@ export function TabQuickAccess() {
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
           <GraduationCap className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="text-lg font-bold text-foreground">Acces rapid</h3>
+        <h3 className="text-lg font-bold text-foreground">{t('title')}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Re-autentificare rapidă cu PIN pentru angajați
+          {t('subtitle')}
         </p>
       </div>
 
@@ -130,7 +132,7 @@ export function TabQuickAccess() {
       {/* Email */}
       <div className="flex w-full flex-col gap-1.5 text-left">
         <label htmlFor="pin-email" className="text-sm font-medium text-foreground">
-          Email
+          {t('email')}
         </label>
         <div className="relative">
           <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -140,7 +142,7 @@ export function TabQuickAccess() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="adresa@companie.ro"
+            placeholder={t('emailPlaceholder')}
             className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -160,7 +162,7 @@ export function TabQuickAccess() {
             value={d}
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
-            aria-label={`Cifra ${i + 1} din ${PIN_LENGTH}`}
+            aria-label={t('digit', { n: i + 1, total: PIN_LENGTH })}
             className="h-14 w-12 rounded-lg border-2 border-border bg-background text-center text-xl font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         ))}
@@ -173,13 +175,13 @@ export function TabQuickAccess() {
         disabled={!isFilled || loading}
         className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary font-semibold text-primary-foreground transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? 'Se verifică...' : 'Intră în platformă'}
+        {loading ? t('submitting') : t('submit')}
         {!loading && <ArrowRight className="h-4 w-4" />}
       </button>
 
       {/* Help text */}
       <p className="text-xs text-muted-foreground/70">
-        PIN-ul a fost primit de la angajatorul tău sau de la responsabilul SSM
+        {t('pinHelp')}
       </p>
 
       {/* Contact admin link */}
@@ -188,7 +190,7 @@ export function TabQuickAccess() {
         className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
       >
         <HelpCircle className="h-3.5 w-3.5" />
-        Nu ai PIN? Contactează administratorul companiei.
+        {t('noPin')}
       </a>
     </div>
   )

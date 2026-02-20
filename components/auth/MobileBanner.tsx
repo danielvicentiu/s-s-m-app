@@ -1,6 +1,11 @@
+'use client'
+
 import { Shield } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export function MobileBanner() {
+  const t = useTranslations('auth')
+
   return (
     <div className="flex items-center gap-4 bg-header-bg px-6 py-5 lg:hidden">
       <a href="/" className="flex items-center gap-2">
@@ -10,7 +15,7 @@ export function MobileBanner() {
         <span className="text-xl font-bold tracking-tight text-white">s-s-m.ro</span>
       </a>
       <p className="flex-1 text-xs leading-snug text-white/50">
-        Platformă completă pentru conformitate SSM, PSI, GDPR și NIS2
+        {t('mobileBanner')}
       </p>
     </div>
   )

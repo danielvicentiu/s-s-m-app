@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Mail, Lock, ArrowRight, Info, Eye, EyeOff } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 export function TabRegister() {
@@ -14,6 +15,7 @@ export function TabRegister() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  const t = useTranslations('auth.register')
   const supabase = createSupabaseBrowser()
 
   async function handleSubmit(e: React.FormEvent) {
@@ -21,12 +23,12 @@ export function TabRegister() {
     setError(null)
 
     if (password !== confirmPassword) {
-      setError('Parolele nu coincid.')
+      setError(t('passwordMismatch'))
       return
     }
 
     if (password.length < 8) {
-      setError('Parola trebuie să aibă minim 8 caractere.')
+      setError(t('passwordTooShort'))
       return
     }
 
@@ -46,7 +48,7 @@ export function TabRegister() {
       console.error('Register error:', signUpError)
       setError(
         signUpError.message.includes('already registered')
-          ? 'Acest email este deja înregistrat.'
+          ? t('alreadyRegistered')
           : signUpError.message
       )
       return
@@ -62,17 +64,16 @@ export function TabRegister() {
         style={{ animation: 'slideInRight .3s ease-out' }}
       >
         <Mail className="h-10 w-10 text-primary" />
-        <h3 className="font-semibold text-foreground">Verifică-ți email-ul</h3>
+        <h3 className="font-semibold text-foreground">{t('confirmTitle')}</h3>
         <p className="text-sm text-muted-foreground">
-          Am trimis un link de confirmare la <strong>{email}</strong>. Accesează-l pentru a
-          activa contul.
+          {t('confirmText')} <strong>{email}</strong>. {t('confirmAccess')}
         </p>
         <button
           type="button"
           onClick={() => setSuccess(false)}
           className="text-xs font-medium text-primary hover:underline"
         >
-          ← Înapoi la înregistrare
+          {t('confirmBack')}
         </button>
       </div>
     )
@@ -93,7 +94,7 @@ export function TabRegister() {
       {/* Email */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="reg-email" className="text-sm font-medium text-foreground">
-          Email <span className="text-destructive">*</span>
+          {t('email')} <span className="text-destructive">{t('required')}</span>
         </label>
         <div className="relative">
           <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -103,7 +104,7 @@ export function TabRegister() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="adresa@companie.ro"
+            placeholder={t('emailPlaceholder')}
             className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -112,7 +113,7 @@ export function TabRegister() {
       {/* Password */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="reg-pw" className="text-sm font-medium text-foreground">
-          Parolă <span className="text-destructive">*</span>
+          {t('password')} <span className="text-destructive">{t('required')}</span>
         </label>
         <div className="relative">
           <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -122,14 +123,14 @@ export function TabRegister() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Minim 8 caractere"
+            placeholder={t('passwordPlaceholder')}
             className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-11 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
           <button
             type="button"
             onClick={() => setShowPw(!showPw)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-            aria-label={showPw ? 'Ascunde parola' : 'Arată parola'}
+            aria-label={showPw ? t('hidePassword') : t('showPassword')}
           >
             {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -139,7 +140,7 @@ export function TabRegister() {
       {/* Confirm Password */}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="reg-pw-confirm" className="text-sm font-medium text-foreground">
-          Confirmă parola <span className="text-destructive">*</span>
+          {t('confirmPassword')} <span className="text-destructive">{t('required')}</span>
         </label>
         <div className="relative">
           <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -149,7 +150,7 @@ export function TabRegister() {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Repetă parola"
+            placeholder={t('confirmPlaceholder')}
             className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -164,13 +165,13 @@ export function TabRegister() {
           className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-border accent-primary"
         />
         <span className="text-xs leading-relaxed text-muted-foreground">
-          {'Accept '}
+          {t('terms')}{' '}
           <a href="/termeni" className="font-medium text-primary hover:underline">
-            Termenii și Condițiile
+            {t('termsLink')}
           </a>
-          {' și '}
+          {' '}{t('and')}{' '}
           <a href="/confidentialitate" className="font-medium text-primary hover:underline">
-            Politica de Confidențialitate
+            {t('privacyLink')}
           </a>
         </span>
       </label>
@@ -181,14 +182,14 @@ export function TabRegister() {
         disabled={!terms || loading}
         className="flex h-11 items-center justify-center gap-2 rounded-lg bg-primary font-semibold text-primary-foreground transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? 'Se creează contul...' : 'Creează contul'}
+        {loading ? t('submitting') : t('submit')}
         {!loading && <ArrowRight className="h-4 w-4" />}
       </button>
 
       {/* Info */}
       <div className="flex items-start gap-2 rounded-lg bg-secondary/60 px-3.5 py-3 text-xs leading-relaxed text-muted-foreground">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-        <span>Vei primi un email de confirmare. Configurarea contului durează 2 minute.</span>
+        <span>{t('info')}</span>
       </div>
     </form>
   )

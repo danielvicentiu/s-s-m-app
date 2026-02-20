@@ -270,5 +270,132 @@
     "terms": "Felhasználási feltételek",
     "privacy": "Adatvédelmi irányelvek",
     "cookies": "Sütik"
+  },
+  "pricing": {
+    "title": "Egyszerű árazás, meglepetések nélkül",
+    "subtitle": "Válassza ki a megfelelő csomagot vállalata számára. Mindegyik tartalmaz 30 napos ingyenes próbát.",
+    "monthly": "Havi",
+    "annual": "Éves",
+    "save20": "20% megtakarítás",
+    "switchLabel": "Váltás havi és éves számlázás között",
+    "perYear": "/év",
+    "perMonth": "/hó",
+    "equivalent": "egyenértékű {amount} LEI/hó",
+    "included": "Mi van benne",
+    "compareTitle": "Az összes funkció összehasonlítása",
+    "featureCol": "Funkció",
+    "comparisonFeatures": ["Alapvető munkavédelem", "Alapvető tűzvédelem", "PDF jelentések", "Automatikus email riasztások", "Email támogatás", "GDPR modul", "Munkaegészségügy", "Near-Miss Reporting", "Képzési naptár", "REGES/REVISAL importálás", "Elsőbbségi támogatás", "NIS2 compliance", "ISCIR management", "Fejlett automatizálások", "API hozzáférés", "Korlátlan felhasználó", "Dedikált menedzser", "SLA 99.9%"],
+    "starter": {
+      "name": "Starter",
+      "audience": "Legfeljebb 10 alkalmazott",
+      "cta": "Indulj ingyen",
+      "features": ["Alapvető munkavédelem", "Alapvető tűzvédelem", "1 admin felhasználó", "PDF jelentések", "Automatikus email riasztások", "Email támogatás"]
+    },
+    "professional": {
+      "name": "Professional",
+      "badge": "Ajánlott",
+      "audience": "Legfeljebb 50 alkalmazott",
+      "cta": "Válassza a Professionalt",
+      "features": ["Minden, ami a Starterben van, plusz:", "GDPR modul", "Munkaegészségügy", "Near-Miss Reporting", "Képzési naptár", "REGES/REVISAL importálás", "5 felhasználó", "Elsőbbségi támogatás"]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "audience": "Korlátlan alkalmazott",
+      "cta": "Vegye fel velünk a kapcsolatot",
+      "features": ["Minden, ami a Professionalban van, plusz:", "NIS2 compliance", "ISCIR management", "Fejlett automatizálások", "API hozzáférés", "Korlátlan felhasználó", "Dedikált menedzser", "SLA 99.9%"]
+    }
+  },
+  "faq": {
+    "title": "Gyakran ismételt kérdések",
+    "q1": "Kipróbálhatom a platformot fizetés előtt?",
+    "a1": "Igen, 30 napos ingyenes próbaidőszakot kínálunk minden csomaghoz, hitelkártya nélkül. Teljes hozzáféréssel rendelkezik a kiválasztott csomag funkcióihoz, és bármikor lemondhat.",
+    "q2": "Milyen fizetési módokat fogadnak el?",
+    "a2": "Elfogadunk bankkártyás fizetést (Visa, Mastercard), banki átutalást és halasztott fizetéses számlázást az Enterprise csomaghoz. Minden számla az érvényes adójogszabályoknak megfelelően kerül kiállításra.",
+    "q3": "Bármikor lemondhatom vagy módosíthatom a csomagot?",
+    "a3": "Természetesen. Bármikor frissíthet vagy visszaminősíthet, az árkülönbséget arányosan számítjuk. Lemondáskor az aktuális számlázási időszak végéig hozzáféréssel rendelkezik. Nincsenek szankciók vagy rejtett díjak.",
+    "q4": "Hogyan vannak védve a cégem adatai?",
+    "a4": "Az adatokat az EU-ban lévő biztonságos szervereken tároljuk, end-to-end titkosítással (AES-256). GDPR-kompatibilisek vagyunk, és napi automatikus mentéseket és negyedéves biztonsági auditokat végzünk.",
+    "q5": "Bármikor átválthatok a Starterről a Professionalra?",
+    "a5": "Igen, azonnal frissíthet. Az árkülönbséget arányosan számítjuk a fennmaradó időszakra. Az átállás azonnal megtörténik, adatvesztés nélkül.",
+    "q6": "Van kedvezmény az éves fizetésre?",
+    "a6": "A feltüntetett árak éves díjak. A havi fizetéshez képest az éves fizetés körülbelül 20% megtakarítást jelent. Több éves tervekhez (3+ év) vagy több szervezethez lépjen kapcsolatba velünk személyre szabott ajánlatért."
+  },
+  "auth": {
+    "leftPanel": {
+      "title": "Teljes platform a munkavédelmi, tűzvédelmi, GDPR és NIS2 megfeleléshez",
+      "subtitle": "Automatizált megfelelés romániai és közép-kelet-európai munkaadók számára. Digitalizálja a munkabiztonsági folyamatokat.",
+      "modules": "Modul",
+      "companies": "Vállalat",
+      "languages": "Nyelv",
+      "gdprNotice": "Adatvédelem GDPR és NIS2 szerint"
+    },
+    "mobileBanner": "Teljes platform a munkavédelmi, tűzvédelmi, GDPR és NIS2 megfeleléshez",
+    "tabs": {
+      "login": "Bejelentkezés",
+      "register": "Új fiók",
+      "quick": "Gyors hozzáférés"
+    },
+    "login": {
+      "email": "E-mail",
+      "emailPlaceholder": "email@vallalat.hu",
+      "password": "Jelszó",
+      "passwordPlaceholder": "Jelszó megadása",
+      "orUseMagicLink": "Vagy használja a",
+      "magicLink": "e-mailes linket",
+      "submit": "Belépés a platformba",
+      "submitting": "Hitelesítés...",
+      "invalidCredentials": "Helytelen e-mail vagy jelszó.",
+      "magicLinkError": "Hiba a link küldésekor: ",
+      "magicLinkEnterEmail": "Adja meg e-mail címét a link fogadásához.",
+      "magicLinkSentTitle": "Ellenőrizze e-mailjét",
+      "magicLinkSentText": "Bejelentkezési linket küldtünk a következő címre:",
+      "magicLinkSentAccess": "Kattintson rá a platformba való belépéshez.",
+      "magicLinkBack": "← Vissza a bejelentkezéshez",
+      "sessionProtected": "A munkamenet end-to-end titkosítással védett a GDPR szerint.",
+      "showPassword": "Jelszó megjelenítése",
+      "hidePassword": "Jelszó elrejtése"
+    },
+    "register": {
+      "email": "E-mail",
+      "emailPlaceholder": "email@vallalat.hu",
+      "password": "Jelszó",
+      "passwordPlaceholder": "Minimum 8 karakter",
+      "confirmPassword": "Jelszó megerősítése",
+      "confirmPlaceholder": "Jelszó ismétlése",
+      "passwordMismatch": "A jelszavak nem egyeznek.",
+      "passwordTooShort": "A jelszónak legalább 8 karakterből kell állnia.",
+      "alreadyRegistered": "Ez az e-mail cím már regisztrálva van.",
+      "terms": "Elfogadom a",
+      "termsLink": "Felhasználási feltételeket",
+      "and": "és az",
+      "privacyLink": "Adatvédelmi irányelveket",
+      "submit": "Fiók létrehozása",
+      "submitting": "Fiók létrehozása...",
+      "confirmTitle": "Ellenőrizze e-mailjét",
+      "confirmText": "Megerősítő linket küldtünk a következő címre:",
+      "confirmAccess": "Kattintson rá a fiók aktiválásához.",
+      "confirmBack": "← Vissza a regisztrációhoz",
+      "info": "Megerősítő e-mailt fog kapni. A fiók beállítása 2 percet vesz igénybe.",
+      "required": "*"
+    },
+    "quickAccess": {
+      "title": "Gyors hozzáférés",
+      "subtitle": "Gyors újbóli hitelesítés PIN kóddal alkalmazottak számára",
+      "email": "E-mail",
+      "emailPlaceholder": "email@vallalat.hu",
+      "enterEmail": "Adja meg e-mail címét.",
+      "enterAllDigits": "Adja meg a PIN kód összes {count} számjegyét.",
+      "pinError": "Hiba a PIN hitelesítésekor.",
+      "sessionError": "Hiba a munkamenet aktiválásakor. Próbálja újra.",
+      "networkError": "Hálózati hiba. Ellenőrizze a kapcsolatot.",
+      "submit": "Belépés a platformba",
+      "submitting": "Ellenőrzés...",
+      "pinHelp": "A PIN kódot munkaadójától vagy a munkavédelmi felelőstől kapta",
+      "noPin": "Nincs PIN kódja? Vegye fel a kapcsolatot a cég adminisztrátorával.",
+      "digit": "{n}. számjegy {total}-ből"
+    }
+  },
+  "onboarding": {
+    "steps": ["Tevékenység", "Alkalmazottak", "Cégadatok", "Megerősítés"]
   }
 }

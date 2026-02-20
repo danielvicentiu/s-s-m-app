@@ -270,5 +270,132 @@
     "terms": "Terms & Conditions",
     "privacy": "Privacy Policy",
     "cookies": "Cookies"
+  },
+  "pricing": {
+    "title": "Simple pricing, no surprises",
+    "subtitle": "Choose the right plan for your company. All include 30 days free trial.",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save20": "save 20%",
+    "switchLabel": "Switch between monthly and annual billing",
+    "perYear": "/year",
+    "perMonth": "/month",
+    "equivalent": "equivalent {amount} LEI/month",
+    "included": "What's included",
+    "compareTitle": "Compare all features",
+    "featureCol": "Feature",
+    "comparisonFeatures": ["Basic OHS", "Basic Fire Safety", "PDF Reports", "Automatic email alerts", "Email support", "GDPR Module", "Occupational Medicine", "Near-Miss Reporting", "Training Calendar", "REGES/REVISAL Import", "Priority support", "NIS2 compliance", "ISCIR management", "Advanced automations", "API Access", "Unlimited users", "Dedicated manager", "SLA 99.9%"],
+    "starter": {
+      "name": "Starter",
+      "audience": "Up to 10 employees",
+      "cta": "Start free",
+      "features": ["Basic OHS", "Basic Fire Safety", "1 admin user", "PDF Reports", "Automatic email alerts", "Email support"]
+    },
+    "professional": {
+      "name": "Professional",
+      "badge": "Recommended",
+      "audience": "Up to 50 employees",
+      "cta": "Choose Professional",
+      "features": ["Everything in Starter, plus:", "GDPR Module", "Occupational Medicine", "Near-Miss Reporting", "Training Calendar", "REGES/REVISAL Import", "5 users", "Priority support"]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "audience": "Unlimited employees",
+      "cta": "Contact us",
+      "features": ["Everything in Professional, plus:", "NIS2 compliance", "ISCIR management", "Advanced automations", "API Access", "Unlimited users", "Dedicated manager", "SLA 99.9%"]
+    }
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "q1": "Can I test the platform before paying?",
+    "a1": "Yes, we offer a 30-day free trial for all plans, without requiring a credit card. You have full access to the features of your chosen plan and can cancel at any time.",
+    "q2": "What payment methods do you accept?",
+    "a2": "We accept payments by bank card (Visa, Mastercard), bank transfer and invoice with deferred payment for the Enterprise plan. All invoices are issued in accordance with applicable tax legislation.",
+    "q3": "Can I cancel or change the plan at any time?",
+    "a3": "Absolutely. You can upgrade or downgrade at any time, and the price difference is calculated proportionally. Upon cancellation, you have access until the end of the current billing period. There are no penalties or hidden fees.",
+    "q4": "How is my company's data protected?",
+    "a4": "Data is stored on secure servers in the EU, with end-to-end encryption (AES-256). We are GDPR compliant and perform daily automatic backups and quarterly security audits.",
+    "q5": "Can I switch from Starter to Professional at any time?",
+    "a5": "Yes, you can upgrade instantly. The price difference is calculated pro-rata for the remaining period. Migration happens instantly, without data loss.",
+    "q6": "Is there a discount for annual payment?",
+    "a6": "The displayed prices are annual rates. Compared to monthly payment, annual payment means a saving of approximately 20%. For multi-year plans (3+ years) or multiple organizations, contact us for a personalized offer."
+  },
+  "auth": {
+    "leftPanel": {
+      "title": "Complete platform for OHS, Fire Safety, GDPR and NIS2 compliance",
+      "subtitle": "Automated compliance for employers in Romania and CEE. Digitize workplace safety processes.",
+      "modules": "Modules",
+      "companies": "Companies",
+      "languages": "Languages",
+      "gdprNotice": "Data protection compliant with GDPR and NIS2"
+    },
+    "mobileBanner": "Complete platform for OHS, Fire Safety, GDPR and NIS2 compliance",
+    "tabs": {
+      "login": "Sign in",
+      "register": "New account",
+      "quick": "Quick access"
+    },
+    "login": {
+      "email": "Email",
+      "emailPlaceholder": "email@company.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "orUseMagicLink": "Or use",
+      "magicLink": "email link",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "invalidCredentials": "Incorrect email or password.",
+      "magicLinkError": "Error sending link: ",
+      "magicLinkEnterEmail": "Enter your email address to receive the link.",
+      "magicLinkSentTitle": "Check your email",
+      "magicLinkSentText": "We sent a sign-in link to",
+      "magicLinkSentAccess": "Click it to access the platform.",
+      "magicLinkBack": "← Back to sign in",
+      "sessionProtected": "Session protected with end-to-end encryption per GDPR.",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
+    "register": {
+      "email": "Email",
+      "emailPlaceholder": "email@company.com",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPlaceholder": "Repeat password",
+      "passwordMismatch": "Passwords do not match.",
+      "passwordTooShort": "Password must be at least 8 characters.",
+      "alreadyRegistered": "This email is already registered.",
+      "terms": "I accept the",
+      "termsLink": "Terms and Conditions",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "confirmTitle": "Check your email",
+      "confirmText": "We sent a confirmation link to",
+      "confirmAccess": "Click it to activate your account.",
+      "confirmBack": "← Back to registration",
+      "info": "You will receive a confirmation email. Account setup takes 2 minutes.",
+      "required": "*"
+    },
+    "quickAccess": {
+      "title": "Quick access",
+      "subtitle": "Quick re-authentication with PIN for employees",
+      "email": "Email",
+      "emailPlaceholder": "email@company.com",
+      "enterEmail": "Enter your email address.",
+      "enterAllDigits": "Enter all {count} digits of the PIN.",
+      "pinError": "PIN authentication error.",
+      "sessionError": "Session activation error. Try again.",
+      "networkError": "Network error. Check your connection.",
+      "submit": "Sign in",
+      "submitting": "Verifying...",
+      "pinHelp": "The PIN was received from your employer or OHS responsible",
+      "noPin": "No PIN? Contact your company administrator.",
+      "digit": "Digit {n} of {total}"
+    }
+  },
+  "onboarding": {
+    "steps": ["Activity", "Employees", "Company data", "Confirmation"]
   }
 }

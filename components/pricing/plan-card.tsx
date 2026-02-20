@@ -1,4 +1,7 @@
+'use client'
+
 import { Check } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 
 export interface PlanData {
@@ -19,6 +22,7 @@ interface PlanCardProps {
 }
 
 export function PlanCard({ plan, isAnnual }: PlanCardProps) {
+  const t = useTranslations('pricing')
   const price = isAnnual ? plan.annualPrice : plan.monthlyPrice
   const isHighlighted = plan.highlighted
 
@@ -55,12 +59,12 @@ export function PlanCard({ plan, isAnnual }: PlanCardProps) {
             {price.toLocaleString('ro-RO')}
           </span>
           <span className="text-sm font-medium text-muted-foreground">
-            &nbsp;LEI{isAnnual ? '/an' : '/lună'}
+            &nbsp;LEI{isAnnual ? t('perYear') : t('perMonth')}
           </span>
         </div>
         {isAnnual && (
           <p className="mt-1 text-xs text-muted-foreground">
-            echivalent {Math.round(plan.annualPrice / 12).toLocaleString('ro-RO')} LEI/lună
+            {t('equivalent', { amount: Math.round(plan.annualPrice / 12).toLocaleString('ro-RO') })}
           </p>
         )}
       </div>
@@ -87,7 +91,7 @@ export function PlanCard({ plan, isAnnual }: PlanCardProps) {
 
       <div className="flex flex-1 flex-col">
         <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Ce este inclus
+          {t('included')}
         </p>
         <ul className="flex flex-col gap-3">
           {plan.features.map((feature) => (

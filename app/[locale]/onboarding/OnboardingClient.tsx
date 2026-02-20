@@ -7,10 +7,9 @@ import { StepActivity } from '@/components/onboarding/StepActivity'
 import { StepEmployees } from '@/components/onboarding/StepEmployees'
 import { StepCompany } from '@/components/onboarding/StepCompany'
 import { StepConfirm } from '@/components/onboarding/StepConfirm'
+import { useTranslations } from 'next-intl'
 import type { CaenActivity } from '@/data/caen-activities'
 import type { CompanyFormData } from '@/components/onboarding/StepCompany'
-
-const STEP_LABELS = ['Activitate', 'Angajați', 'Date firmă', 'Confirmare']
 
 interface Props {
   user: { id: string; email: string }
@@ -18,6 +17,8 @@ interface Props {
 
 export default function OnboardingClient({ user }: Props) {
   const router = useRouter()
+  const t = useTranslations('onboarding')
+  const STEP_LABELS = t.raw('steps') as string[]
   const [step, setStep] = useState(1)
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
 

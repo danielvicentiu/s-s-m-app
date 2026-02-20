@@ -270,5 +270,132 @@
     "terms": "Termeni și condiții",
     "privacy": "Politica de confidențialitate",
     "cookies": "Cookies"
+  },
+  "pricing": {
+    "title": "Prețuri simple, fără surprize",
+    "subtitle": "Alege planul potrivit pentru compania ta. Toate includ 30 de zile gratuit.",
+    "monthly": "Lunar",
+    "annual": "Anual",
+    "save20": "economisești 20%",
+    "switchLabel": "Comută între facturare lunară și anuală",
+    "perYear": "/an",
+    "perMonth": "/lună",
+    "equivalent": "echivalent {amount} LEI/lună",
+    "included": "Ce este inclus",
+    "compareTitle": "Compară toate funcționalitățile",
+    "featureCol": "Funcționalitate",
+    "comparisonFeatures": ["SSM de bază", "PSI de bază", "Rapoarte PDF", "Alerte email automate", "Suport email", "Modul GDPR", "Medicina Muncii", "Near-Miss Reporting", "Calendar instruiri", "Import REGES/REVISAL", "Suport prioritar", "NIS2 compliance", "ISCIR management", "Automatizări avansate", "Acces API", "Utilizatori nelimitați", "Manager dedicat", "SLA 99.9%"],
+    "starter": {
+      "name": "Starter",
+      "audience": "Până la 10 angajați",
+      "cta": "Începe gratuit",
+      "features": ["SSM de bază", "PSI de bază", "1 utilizator admin", "Rapoarte PDF", "Alerte email automate", "Suport email"]
+    },
+    "professional": {
+      "name": "Professional",
+      "badge": "Recomandat",
+      "audience": "Până la 50 angajați",
+      "cta": "Alege Professional",
+      "features": ["Tot din Starter, plus:", "Modul GDPR", "Medicina Muncii", "Near-Miss Reporting", "Calendar instruiri", "Import REGES/REVISAL", "5 utilizatori", "Suport prioritar"]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "audience": "Angajați nelimitați",
+      "cta": "Contactează-ne",
+      "features": ["Tot din Professional, plus:", "NIS2 compliance", "ISCIR management", "Automatizări avansate", "Acces API", "Utilizatori nelimitați", "Manager dedicat", "SLA 99.9%"]
+    }
+  },
+  "faq": {
+    "title": "Întrebări frecvente",
+    "q1": "Pot testa platforma înainte de a plăti?",
+    "a1": "Da, oferim o perioadă de test gratuită de 30 de zile pentru toate planurile, fără a fi necesar un card de credit. Ai acces complet la funcționalitățile planului ales și poți anula oricând.",
+    "q2": "Ce metode de plată acceptați?",
+    "a2": "Acceptăm plăți prin card bancar (Visa, Mastercard), transfer bancar și facturare cu plată la termen pentru planul Enterprise. Toate facturile sunt emise în conformitate cu legislația fiscală din România.",
+    "q3": "Pot anula sau schimba planul oricând?",
+    "a3": "Absolut. Poți face upgrade sau downgrade oricând, iar diferența de preț se calculează proporțional. La anulare, ai acces până la sfârșitul perioadei de facturare curente. Nu există penalizări sau taxe ascunse.",
+    "q4": "Cum sunt protejate datele companiei mele?",
+    "a4": "Datele sunt stocate pe servere securizate în UE, cu criptare end-to-end (AES-256). Suntem conformi GDPR și efectuăm backup-uri zilnice automate și audituri de securitate trimestriale.",
+    "q5": "Pot trece de la Starter la Professional oricând?",
+    "a5": "Da, poți face upgrade instant. Diferența de preț se calculează pro-rata pentru perioada rămasă. Migrarea se face instant, fără pierdere de date.",
+    "q6": "Există discount pentru plata anuală?",
+    "a6": "Prețurile afișate sunt tarife anuale. Față de plata lunară, plata anuală înseamnă o economie de aproximativ 20%. Pentru planuri multi-an (3+ ani) sau multiple organizații, contactați-ne pentru ofertă personalizată."
+  },
+  "auth": {
+    "leftPanel": {
+      "title": "Platformă completă pentru conformitate SSM, PSI, GDPR și NIS2",
+      "subtitle": "Conformitate automată pentru angajatorii din România și CEE. Digitalizează procesele de securitate a muncii.",
+      "modules": "Module",
+      "companies": "Companii",
+      "languages": "Limbi",
+      "gdprNotice": "Protecție date conform GDPR și NIS2"
+    },
+    "mobileBanner": "Platformă completă pentru conformitate SSM, PSI, GDPR și NIS2",
+    "tabs": {
+      "login": "Autentificare",
+      "register": "Cont nou",
+      "quick": "Acces rapid"
+    },
+    "login": {
+      "email": "Email",
+      "emailPlaceholder": "adresa@companie.ro",
+      "password": "Parolă",
+      "passwordPlaceholder": "Introdu parola",
+      "orUseMagicLink": "Sau folosește",
+      "magicLink": "link pe email",
+      "submit": "Intră în platformă",
+      "submitting": "Se autentifică...",
+      "invalidCredentials": "Email sau parolă incorectă.",
+      "magicLinkError": "Eroare trimitere link: ",
+      "magicLinkEnterEmail": "Introdu adresa de email pentru a primi link-ul.",
+      "magicLinkSentTitle": "Verifică-ți email-ul",
+      "magicLinkSentText": "Am trimis un link de autentificare la",
+      "magicLinkSentAccess": "Accesează-l pentru a intra în platformă.",
+      "magicLinkBack": "← Înapoi la autentificare",
+      "sessionProtected": "Sesiunea este protejată cu criptare end-to-end conform GDPR.",
+      "showPassword": "Arată parola",
+      "hidePassword": "Ascunde parola"
+    },
+    "register": {
+      "email": "Email",
+      "emailPlaceholder": "adresa@companie.ro",
+      "password": "Parolă",
+      "passwordPlaceholder": "Minim 8 caractere",
+      "confirmPassword": "Confirmă parola",
+      "confirmPlaceholder": "Repetă parola",
+      "passwordMismatch": "Parolele nu coincid.",
+      "passwordTooShort": "Parola trebuie să aibă minim 8 caractere.",
+      "alreadyRegistered": "Acest email este deja înregistrat.",
+      "terms": "Accept",
+      "termsLink": "Termenii și Condițiile",
+      "and": "și",
+      "privacyLink": "Politica de Confidențialitate",
+      "submit": "Creează contul",
+      "submitting": "Se creează contul...",
+      "confirmTitle": "Verifică-ți email-ul",
+      "confirmText": "Am trimis un link de confirmare la",
+      "confirmAccess": "Accesează-l pentru a activa contul.",
+      "confirmBack": "← Înapoi la înregistrare",
+      "info": "Vei primi un email de confirmare. Configurarea contului durează 2 minute.",
+      "required": "*"
+    },
+    "quickAccess": {
+      "title": "Acces rapid",
+      "subtitle": "Re-autentificare rapidă cu PIN pentru angajați",
+      "email": "Email",
+      "emailPlaceholder": "adresa@companie.ro",
+      "enterEmail": "Introdu adresa de email.",
+      "enterAllDigits": "Introdu toate cele {count} cifre ale PIN-ului.",
+      "pinError": "Eroare autentificare PIN.",
+      "sessionError": "Eroare activare sesiune. Încearcă din nou.",
+      "networkError": "Eroare de rețea. Verifică conexiunea.",
+      "submit": "Intră în platformă",
+      "submitting": "Se verifică...",
+      "pinHelp": "PIN-ul a fost primit de la angajatorul tău sau de la responsabilul SSM",
+      "noPin": "Nu ai PIN? Contactează administratorul companiei.",
+      "digit": "Cifra {n} din {total}"
+    }
+  },
+  "onboarding": {
+    "steps": ["Activitate", "Angajați", "Date firmă", "Confirmare"]
   }
 }

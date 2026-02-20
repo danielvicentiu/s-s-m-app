@@ -1,20 +1,22 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { TabLogin } from './TabLogin'
 import { TabRegister } from './TabRegister'
 import { TabQuickAccess } from './TabQuickAccess'
 
-const tabs = [
-  { id: 'login' as const, label: 'Autentificare' },
-  { id: 'register' as const, label: 'Cont nou' },
-  { id: 'quick' as const, label: 'Acces rapid' },
-]
-
-type TabId = (typeof tabs)[number]['id']
+type TabId = 'login' | 'register' | 'quick'
 
 export function RightPanel() {
   const [active, setActive] = useState<TabId>('login')
+  const t = useTranslations('auth.tabs')
+
+  const tabs: Array<{ id: TabId; label: string }> = [
+    { id: 'login', label: t('login') },
+    { id: 'register', label: t('register') },
+    { id: 'quick', label: t('quick') },
+  ]
 
   return (
     <div className="flex w-full flex-col items-center justify-center px-6 py-10 lg:w-[40%] lg:px-12 xl:px-16">

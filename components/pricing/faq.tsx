@@ -2,42 +2,20 @@
 
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
-
-const faqItems = [
-  {
-    question: 'Pot testa platforma înainte de a plăti?',
-    answer:
-      'Da, oferim o perioadă de test gratuită de 30 de zile pentru toate planurile, fără a fi necesar un card de credit. Ai acces complet la funcționalitățile planului ales și poți anula oricând.',
-  },
-  {
-    question: 'Ce metode de plată acceptați?',
-    answer:
-      'Acceptăm plăți prin card bancar (Visa, Mastercard), transfer bancar și facturare cu plată la termen pentru planul Enterprise. Toate facturile sunt emise în conformitate cu legislația fiscală din România.',
-  },
-  {
-    question: 'Pot anula sau schimba planul oricând?',
-    answer:
-      'Absolut. Poți face upgrade sau downgrade oricând, iar diferența de preț se calculează proporțional. La anulare, ai acces până la sfârșitul perioadei de facturare curente. Nu există penalizări sau taxe ascunse.',
-  },
-  {
-    question: 'Cum sunt protejate datele companiei mele?',
-    answer:
-      'Datele sunt stocate pe servere securizate în UE, cu criptare end-to-end (AES-256). Suntem conformi GDPR și efectuăm backup-uri zilnice automate și audituri de securitate trimestriale.',
-  },
-  {
-    question: 'Pot trece de la Starter la Professional oricând?',
-    answer:
-      'Da, poți face upgrade instant. Diferența de preț se calculează pro-rata pentru perioada rămasă. Migrarea se face instant, fără pierdere de date.',
-  },
-  {
-    question: 'Există discount pentru plata anuală?',
-    answer:
-      'Prețurile afișate sunt tarife anuale. Față de plata lunară, plata anuală înseamnă o economie de aproximativ 20%. Pentru planuri multi-an (3+ ani) sau multiple organizații, contactați-ne pentru ofertă personalizată.',
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const t = useTranslations('faq')
+
+  const faqItems = [
+    { question: t('q1'), answer: t('a1') },
+    { question: t('q2'), answer: t('a2') },
+    { question: t('q3'), answer: t('a3') },
+    { question: t('q4'), answer: t('a4') },
+    { question: t('q5'), answer: t('a5') },
+    { question: t('q6'), answer: t('a6') },
+  ]
 
   function toggle(index: number) {
     setOpenIndex(openIndex === index ? null : index)
@@ -47,7 +25,7 @@ export function Faq() {
     <section className="bg-muted/30 px-6 py-20">
       <div className="mx-auto max-w-3xl">
         <h2 className="mb-10 text-center text-2xl font-extrabold tracking-tight text-foreground md:text-3xl">
-          Întrebări frecvente
+          {t('title')}
         </h2>
 
         <div className="flex flex-col gap-3">

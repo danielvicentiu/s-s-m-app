@@ -270,5 +270,132 @@
     "terms": "Regulamin",
     "privacy": "Polityka prywatności",
     "cookies": "Pliki cookie"
+  },
+  "pricing": {
+    "title": "Proste ceny, bez niespodzianek",
+    "subtitle": "Wybierz odpowiedni plan dla swojej firmy. Wszystkie zawierają 30-dniowy bezpłatny okres próbny.",
+    "monthly": "Miesięcznie",
+    "annual": "Rocznie",
+    "save20": "oszczędzasz 20%",
+    "switchLabel": "Przełącz między rozliczeniem miesięcznym a rocznym",
+    "perYear": "/rok",
+    "perMonth": "/miesiąc",
+    "equivalent": "równowartość {amount} LEI/miesiąc",
+    "included": "Co jest zawarte",
+    "compareTitle": "Porównaj wszystkie funkcje",
+    "featureCol": "Funkcja",
+    "comparisonFeatures": ["Podstawowe BHP", "Podstawowa ochrona przeciwpożarowa", "Raporty PDF", "Automatyczne powiadomienia email", "Wsparcie email", "Moduł RODO", "Medycyna pracy", "Near-Miss Reporting", "Kalendarz szkoleń", "Import REGES/REVISAL", "Wsparcie priorytetowe", "NIS2 compliance", "ISCIR management", "Zaawansowane automatyzacje", "Dostęp API", "Nieograniczona liczba użytkowników", "Dedykowany menedżer", "SLA 99.9%"],
+    "starter": {
+      "name": "Starter",
+      "audience": "Do 10 pracowników",
+      "cta": "Zacznij bezpłatnie",
+      "features": ["Podstawowe BHP", "Podstawowa ochrona przeciwpożarowa", "1 użytkownik admin", "Raporty PDF", "Automatyczne powiadomienia email", "Wsparcie email"]
+    },
+    "professional": {
+      "name": "Professional",
+      "badge": "Polecany",
+      "audience": "Do 50 pracowników",
+      "cta": "Wybierz Professional",
+      "features": ["Wszystko ze Starter, plus:", "Moduł RODO", "Medycyna pracy", "Near-Miss Reporting", "Kalendarz szkoleń", "Import REGES/REVISAL", "5 użytkowników", "Wsparcie priorytetowe"]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "audience": "Nieograniczona liczba pracowników",
+      "cta": "Skontaktuj się z nami",
+      "features": ["Wszystko z Professional, plus:", "NIS2 compliance", "ISCIR management", "Zaawansowane automatyzacje", "Dostęp API", "Nieograniczona liczba użytkowników", "Dedykowany menedżer", "SLA 99.9%"]
+    }
+  },
+  "faq": {
+    "title": "Często zadawane pytania",
+    "q1": "Czy mogę przetestować platformę przed zapłatą?",
+    "a1": "Tak, oferujemy 30-dniowy bezpłatny okres próbny dla wszystkich planów, bez konieczności podawania karty kredytowej. Masz pełny dostęp do funkcji wybranego planu i możesz zrezygnować w dowolnym momencie.",
+    "q2": "Jakie metody płatności akceptujecie?",
+    "a2": "Akceptujemy płatności kartą bankową (Visa, Mastercard), przelewem bankowym oraz fakturowanie z odroczoną płatnością dla planu Enterprise. Wszystkie faktury są wystawiane zgodnie z obowiązującymi przepisami podatkowymi.",
+    "q3": "Czy mogę anulować lub zmienić plan w dowolnym momencie?",
+    "a3": "Absolutnie. Możesz w każdej chwili uaktualnić lub obniżyć plan, a różnica w cenie jest obliczana proporcjonalnie. Przy anulowaniu masz dostęp do końca bieżącego okresu rozliczeniowego. Nie ma kar ani ukrytych opłat.",
+    "q4": "Jak są chronione dane mojej firmy?",
+    "a4": "Dane są przechowywane na zabezpieczonych serwerach w UE z szyfrowaniem end-to-end (AES-256). Jesteśmy zgodni z RODO i wykonujemy automatyczne codzienne kopie zapasowe oraz kwartalne audyty bezpieczeństwa.",
+    "q5": "Czy mogę przejść ze Starter na Professional w dowolnym momencie?",
+    "a5": "Tak, możesz natychmiast uaktualnić plan. Różnica w cenie jest obliczana pro-rata za pozostały okres. Migracja odbywa się natychmiastowo, bez utraty danych.",
+    "q6": "Czy jest zniżka za płatność roczną?",
+    "a6": "Wyświetlane ceny są stawkami rocznymi. W porównaniu do płatności miesięcznej, płatność roczna oznacza oszczędność około 20%. W przypadku planów wieloletnich (3+ lata) lub wielu organizacji skontaktuj się z nami w celu uzyskania spersonalizowanej oferty."
+  },
+  "auth": {
+    "leftPanel": {
+      "title": "Kompletna platforma zgodności BHP, PSI, RODO i NIS2",
+      "subtitle": "Automatyczna zgodność dla pracodawców w Rumunii i Europie Środkowo-Wschodniej. Cyfryzuj procesy bezpieczeństwa pracy.",
+      "modules": "Modułów",
+      "companies": "Firm",
+      "languages": "Języków",
+      "gdprNotice": "Ochrona danych zgodna z RODO i NIS2"
+    },
+    "mobileBanner": "Kompletna platforma zgodności BHP, PSI, RODO i NIS2",
+    "tabs": {
+      "login": "Logowanie",
+      "register": "Nowe konto",
+      "quick": "Szybki dostęp"
+    },
+    "login": {
+      "email": "Email",
+      "emailPlaceholder": "adres@firma.pl",
+      "password": "Hasło",
+      "passwordPlaceholder": "Wprowadź hasło",
+      "orUseMagicLink": "Lub użyj",
+      "magicLink": "linku email",
+      "submit": "Wejdź do platformy",
+      "submitting": "Logowanie...",
+      "invalidCredentials": "Nieprawidłowy email lub hasło.",
+      "magicLinkError": "Błąd wysyłania linku: ",
+      "magicLinkEnterEmail": "Wprowadź adres email, aby otrzymać link.",
+      "magicLinkSentTitle": "Sprawdź swojego emaila",
+      "magicLinkSentText": "Wysłaliśmy link logowania na adres",
+      "magicLinkSentAccess": "Kliknij go, aby wejść do platformy.",
+      "magicLinkBack": "← Powrót do logowania",
+      "sessionProtected": "Sesja chroniona szyfrowaniem end-to-end zgodnym z RODO.",
+      "showPassword": "Pokaż hasło",
+      "hidePassword": "Ukryj hasło"
+    },
+    "register": {
+      "email": "Email",
+      "emailPlaceholder": "adres@firma.pl",
+      "password": "Hasło",
+      "passwordPlaceholder": "Minimum 8 znaków",
+      "confirmPassword": "Potwierdź hasło",
+      "confirmPlaceholder": "Powtórz hasło",
+      "passwordMismatch": "Hasła nie są zgodne.",
+      "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+      "alreadyRegistered": "Ten email jest już zarejestrowany.",
+      "terms": "Akceptuję",
+      "termsLink": "Regulamin",
+      "and": "i",
+      "privacyLink": "Politykę prywatności",
+      "submit": "Utwórz konto",
+      "submitting": "Tworzenie konta...",
+      "confirmTitle": "Sprawdź swojego emaila",
+      "confirmText": "Wysłaliśmy link potwierdzający na adres",
+      "confirmAccess": "Kliknij go, aby aktywować konto.",
+      "confirmBack": "← Powrót do rejestracji",
+      "info": "Otrzymasz email z potwierdzeniem. Konfiguracja konta trwa 2 minuty.",
+      "required": "*"
+    },
+    "quickAccess": {
+      "title": "Szybki dostęp",
+      "subtitle": "Szybkie ponowne uwierzytelnienie kodem PIN dla pracowników",
+      "email": "Email",
+      "emailPlaceholder": "adres@firma.pl",
+      "enterEmail": "Wprowadź adres email.",
+      "enterAllDigits": "Wprowadź wszystkie {count} cyfry kodu PIN.",
+      "pinError": "Błąd uwierzytelnienia PIN.",
+      "sessionError": "Błąd aktywacji sesji. Spróbuj ponownie.",
+      "networkError": "Błąd sieci. Sprawdź połączenie.",
+      "submit": "Wejdź do platformy",
+      "submitting": "Weryfikacja...",
+      "pinHelp": "Kod PIN został otrzymany od pracodawcy lub osoby odpowiedzialnej za BHP",
+      "noPin": "Nie masz kodu PIN? Skontaktuj się z administratorem firmy.",
+      "digit": "Cyfra {n} z {total}"
+    }
+  },
+  "onboarding": {
+    "steps": ["Działalność", "Pracownicy", "Dane firmy", "Potwierdzenie"]
   }
 }

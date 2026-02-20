@@ -1,79 +1,56 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { PricingToggle } from './pricing-toggle'
 import { PlanCard } from './plan-card'
 import type { PlanData } from './plan-card'
 
-const plans: PlanData[] = [
-  {
-    name: 'Starter',
-    monthlyPrice: 146,
-    annualPrice: 1750,
-    audience: 'Până la 10 angajați',
-    features: [
-      'SSM de bază',
-      'PSI de bază',
-      '1 utilizator admin',
-      'Rapoarte PDF',
-      'Alerte email automate',
-      'Suport email',
-    ],
-    cta: 'Începe gratuit',
-    ctaHref: '/onboarding',
-  },
-  {
-    name: 'Professional',
-    monthlyPrice: 292,
-    annualPrice: 3500,
-    audience: 'Până la 50 angajați',
-    highlighted: true,
-    badge: 'Recomandat',
-    features: [
-      'Tot din Starter, plus:',
-      'Modul GDPR',
-      'Medicina Muncii',
-      'Near-Miss Reporting',
-      'Calendar instruiri',
-      'Import REGES/REVISAL',
-      '5 utilizatori',
-      'Suport prioritar',
-    ],
-    cta: 'Alege Professional',
-    ctaHref: '/onboarding',
-  },
-  {
-    name: 'Enterprise',
-    monthlyPrice: 500,
-    annualPrice: 6000,
-    audience: 'Angajați nelimitați',
-    features: [
-      'Tot din Professional, plus:',
-      'NIS2 compliance',
-      'ISCIR management',
-      'Automatizări avansate',
-      'Acces API',
-      'Utilizatori nelimitați',
-      'Manager dedicat',
-      'SLA 99.9%',
-    ],
-    cta: 'Contactează-ne',
-    ctaHref: 'mailto:contact@s-s-m.ro?subject=Solicitare plan Enterprise',
-  },
-]
-
 export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true)
+  const t = useTranslations('pricing')
+
+  const plans: PlanData[] = [
+    {
+      name: t('starter.name'),
+      monthlyPrice: 146,
+      annualPrice: 1750,
+      audience: t('starter.audience'),
+      features: t.raw('starter.features') as string[],
+      cta: t('starter.cta'),
+      ctaHref: '/onboarding',
+    },
+    {
+      name: t('professional.name'),
+      monthlyPrice: 292,
+      annualPrice: 3500,
+      audience: t('professional.audience'),
+      highlighted: true,
+      badge: t('professional.badge'),
+      features: t.raw('professional.features') as string[],
+      cta: t('professional.cta'),
+      ctaHref: '/onboarding',
+    },
+    {
+      name: t('enterprise.name'),
+      monthlyPrice: 500,
+      annualPrice: 6000,
+      audience: t('enterprise.audience'),
+      features: t.raw('enterprise.features') as string[],
+      cta: t('enterprise.cta'),
+      ctaHref: 'mailto:contact@s-s-m.ro?subject=Solicitare plan Enterprise',
+    },
+  ]
 
   return (
     <section id="preturi" className="px-6 py-20">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
           <h2 className="text-balance text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
-            Prețuri simple, fără surprize
+            {t('title')}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
-            Alege planul potrivit pentru compania ta. Toate includ 30 de zile gratuit.
+            {t('subtitle')}
           </p>
         </div>
 
