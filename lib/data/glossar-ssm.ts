@@ -213,7 +213,7 @@ export const glossarSSM: GlossaryTerm[] = [
     abbreviation: '',
     definition: 'Obligația angajatorului de a comunica autorităților competente (ITM, CAS) accidentele de muncă în termenele legale.',
     legalSource: 'HG 1425/2006',
-    relatedTranslations: ['Accident de munca', 'ITM', 'Registru accidente']
+    relatedTerms: ['Accident de munca', 'ITM', 'Registru accidente']
   },
   {
     term: 'Situații de Urgență',
