@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { AlertCircle, Clock, Info, ChevronRight } from 'lucide-react'
@@ -29,6 +30,7 @@ interface WidgetData {
 }
 
 export function ExpirySummaryWidget() {
+  const t = useTranslations('widgets.expirySummary')
   const [data, setData] = useState<WidgetData>({
     critical: { count: 0, items: [] },
     warning: { count: 0, items: [] },
@@ -219,7 +221,7 @@ export function ExpirySummaryWidget() {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Expirări iminente
+          {t('title')}
         </h2>
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
@@ -240,7 +242,7 @@ export function ExpirySummaryWidget() {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Expirări iminente
+          {t('title')}
         </h2>
         <div className="text-center py-8">
           <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-3" />
@@ -256,12 +258,12 @@ export function ExpirySummaryWidget() {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Expirări iminente
+          {t('title')}
         </h2>
         <div className="text-center py-8">
           <Clock className="h-12 w-12 text-gray-400 mx-auto mb-3" />
           <p className="text-sm text-gray-500">
-            Nu există elemente care expiră în următoarele 90 de zile
+            {t('noData')}
           </p>
         </div>
       </div>

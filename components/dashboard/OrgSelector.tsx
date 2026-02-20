@@ -6,11 +6,13 @@
 'use client'
 
 import { useState, Fragment } from 'react'
+import { useTranslations } from 'next-intl'
 import { Combobox, Transition } from '@headlessui/react'
 import { Building2, Check, ChevronsUpDown, Users } from 'lucide-react'
 import { useOrg, type OrgOption } from '@/lib/contexts/OrgContext'
 
 export default function OrgSelector() {
+  const t = useTranslations('widgets.orgSelector')
   const { currentOrg, setCurrentOrg, allOrgs, selectedOrgData } = useOrg()
   const [query, setQuery] = useState('')
 
@@ -25,7 +27,7 @@ export default function OrgSelector() {
   // Get display text for selected option
   const getDisplayText = () => {
     if (currentOrg === 'all') {
-      return `Toate organizațiile (${allOrgs.length})`
+      return `${t('allOrganizations')} (${allOrgs.length})`
     }
     if (selectedOrgData) {
       return selectedOrgData.name
@@ -42,7 +44,7 @@ export default function OrgSelector() {
               className="w-full border-none py-2.5 pl-10 pr-10 text-sm leading-5 text-gray-900 dark:text-white bg-transparent focus:ring-0 placeholder:text-gray-400"
               displayValue={() => getDisplayText()}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Caută organizație..."
+              placeholder={t('search')}
             />
             <Combobox.Button className="absolute inset-y-0 left-0 flex items-center pl-3">
               <Building2 className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -76,7 +78,7 @@ export default function OrgSelector() {
                     <div className="flex items-center justify-between">
                       <div>
                         <span className={`block truncate font-semibold ${selected ? 'font-bold' : ''}`}>
-                          Toate organizațiile
+                          {t('allOrganizations')}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           {allOrgs.length} {allOrgs.length === 1 ? 'organizație' : 'organizații'}
@@ -98,7 +100,7 @@ export default function OrgSelector() {
               {/* Organization options */}
               {filteredOrgs.length === 0 && query !== '' ? (
                 <div className="relative cursor-default select-none py-3 px-4 text-gray-500 dark:text-gray-400 text-sm">
-                  Nicio organizație găsită.
+                  {t('noResults')}
                 </div>
               ) : (
                 filteredOrgs.map((org) => (
@@ -137,7 +139,7 @@ export default function OrgSelector() {
                               {org.employee_count !== undefined && (
                                 <span className="flex items-center gap-1">
                                   <Users className="h-3 w-3" />
-                                  {org.employee_count} {org.employee_count === 1 ? 'angajat' : 'angajați'}
+                                  {org.employee_count} {t('employees')}
                                 </span>
                               )}
                             </div>

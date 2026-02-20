@@ -397,5 +397,103 @@
   },
   "onboarding": {
     "steps": ["Дейност", "Служители", "Данни за фирмата", "Потвърждение"]
+  },
+  "sidebar": {
+    "groups": {
+      "main": "Основно",
+      "ssm": "ЗБУТ - Безопасност при работа",
+      "psi": "ПБ - Противопожарна защита",
+      "medical": "Трудова медицина",
+      "management": "Управление",
+      "alerts": "Известия",
+      "admin": "Администриране"
+    },
+    "links": {
+      "dashboard": "Табло",
+      "aiAssistant": "VA-AI Асистент",
+      "aiKnowledgeBase": "AI База знания",
+      "employees": "Служители",
+      "ssmTraining": "Инструктажи ЗБУТ",
+      "nearMiss": "Инциденти Near-miss",
+      "trainingCalendar": "Календар обучения",
+      "obligations": "Задължения",
+      "psiEquipment": "Оборудване ПБ",
+      "iscir": "ISCIR",
+      "dailyChecks": "Ежедневни проверки",
+      "equipment": "Оборудване",
+      "occupationalMedicine": "Трудова медицина",
+      "pdfReports": "PDF Справки",
+      "accounting": "Счетоводство",
+      "gdpr": "GDPR",
+      "nis2": "NIS2 Киберсигурност",
+      "documentScan": "Сканиране документи",
+      "dataImport": "Импорт данни",
+      "alertsNotifications": "Известия и нотификации",
+      "reges": "REGES",
+      "profile": "Профил",
+      "notifications": "Нотификации",
+      "pinSecurity": "PIN Сигурност",
+      "roles": "Роли",
+      "apiKeys": "API Keys",
+      "batchJobs": "Batch Jobs",
+      "bulkLegalImport": "Масов импорт законодателство"
+    },
+    "moduleInactive": "Модулът е неактивен - активирайте от Настройки",
+    "user": "Потребител"
+  },
+  "dashboardOverview": {
+    "totalEmployees": "Общо служители",
+    "expiredTrainings": "Изтекли обучения",
+    "upcomingTrainings": "Предстоящи обучения",
+    "expiredDocuments": "Изтекли документи",
+    "psiEquipment": "ПБ Оборудване",
+    "recentAlerts": "Последни известия",
+    "noAlerts": "Няма последни известия",
+    "quickActions": "Бързи действия",
+    "trainingCalendar": "Календар обучения",
+    "scheduleSessions": "Планирай сесии",
+    "reports": "Справки",
+    "generateReports": "Генерирай справки",
+    "scanDocuments": "Сканиране документи",
+    "uploadProcess": "Качи и обработи",
+    "employees": "Служители",
+    "addNewEmployee": "Добави нов служител"
+  },
+  "widgets": {
+    "expirySummary": {
+      "title": "Изтекли и предстоящи за изтичане",
+      "expired": "Изтекли",
+      "expiringSoon": "Изтичат скоро",
+      "valid": "Валидни",
+      "noData": "Няма налични данни"
+    },
+    "obligations": {
+      "title": "Правни задължения",
+      "compliant": "В съответствие",
+      "nonCompliant": "Несъответствие",
+      "pending": "Чакащо",
+      "noObligations": "Няма задължения"
+    },
+    "orgSelector": {
+      "allOrganizations": "Всички организации",
+      "search": "Търси организация...",
+      "noResults": "Няма резултати",
+      "employees": "служители"
+    },
+    "recentActivity": {
+      "title": "Последна активност",
+      "noActivity": "Няма последна активност"
+    },
+    "bulkActions": {
+      "selected": "избрани",
+      "export": "Експорт",
+      "delete": "Изтрий",
+      "cancel": "Отказ",
+      "confirmDelete": "Потвърди изтриването?",
+      "assignTraining": "Назначи обучение",
+      "medicalExam": "Планирай медицински преглед",
+      "assignOrg": "Назначи в организация",
+      "deactivate": "Деактивирай"
+    }
   }
 }

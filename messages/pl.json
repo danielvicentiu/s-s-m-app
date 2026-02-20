@@ -397,5 +397,103 @@
   },
   "onboarding": {
     "steps": ["Działalność", "Pracownicy", "Dane firmy", "Potwierdzenie"]
+  },
+  "sidebar": {
+    "groups": {
+      "main": "Główne",
+      "ssm": "BHP - Bezpieczeństwo pracy",
+      "psi": "PSI - Ochrona przeciwpożarowa",
+      "medical": "Medycyna pracy",
+      "management": "Zarządzanie",
+      "alerts": "Alerty",
+      "admin": "Administracja"
+    },
+    "links": {
+      "dashboard": "Panel główny",
+      "aiAssistant": "VA-AI Asystent",
+      "aiKnowledgeBase": "AI Baza wiedzy",
+      "employees": "Pracownicy",
+      "ssmTraining": "Szkolenia BHP",
+      "nearMiss": "Incydenty Near-miss",
+      "trainingCalendar": "Kalendarz szkoleń",
+      "obligations": "Obowiązki",
+      "psiEquipment": "Sprzęt PSI",
+      "iscir": "ISCIR",
+      "dailyChecks": "Codzienne sprawdzenia",
+      "equipment": "Sprzęt",
+      "occupationalMedicine": "Medycyna pracy",
+      "pdfReports": "Raporty PDF",
+      "accounting": "Księgowość",
+      "gdpr": "RODO",
+      "nis2": "NIS2 Cyberbezpieczeństwo",
+      "documentScan": "Skanowanie dokumentów",
+      "dataImport": "Import danych",
+      "alertsNotifications": "Alerty i powiadomienia",
+      "reges": "REGES",
+      "profile": "Profil",
+      "notifications": "Powiadomienia",
+      "pinSecurity": "Bezpieczeństwo PIN",
+      "roles": "Role",
+      "apiKeys": "API Keys",
+      "batchJobs": "Batch Jobs",
+      "bulkLegalImport": "Masowy import przepisów"
+    },
+    "moduleInactive": "Moduł nieaktywny - aktywuj w Ustawieniach",
+    "user": "Użytkownik"
+  },
+  "dashboardOverview": {
+    "totalEmployees": "Łącznie pracowników",
+    "expiredTrainings": "Wygasłe szkolenia",
+    "upcomingTrainings": "Nadchodzące szkolenia",
+    "expiredDocuments": "Wygasłe dokumenty",
+    "psiEquipment": "Sprzęt PSI",
+    "recentAlerts": "Ostatnie alerty",
+    "noAlerts": "Brak ostatnich alertów",
+    "quickActions": "Szybkie akcje",
+    "trainingCalendar": "Kalendarz szkoleń",
+    "scheduleSessions": "Zaplanuj sesje",
+    "reports": "Raporty",
+    "generateReports": "Generuj raporty",
+    "scanDocuments": "Skanowanie dokumentów",
+    "uploadProcess": "Prześlij i przetwórz",
+    "employees": "Pracownicy",
+    "addNewEmployee": "Dodaj nowego pracownika"
+  },
+  "widgets": {
+    "expirySummary": {
+      "title": "Wygasłe i wkrótce wygasające",
+      "expired": "Wygasłe",
+      "expiringSoon": "Wkrótce wygasa",
+      "valid": "Ważne",
+      "noData": "Brak dostępnych danych"
+    },
+    "obligations": {
+      "title": "Obowiązki prawne",
+      "compliant": "Zgodny",
+      "nonCompliant": "Niezgodny",
+      "pending": "Oczekujące",
+      "noObligations": "Brak obowiązków"
+    },
+    "orgSelector": {
+      "allOrganizations": "Wszystkie organizacje",
+      "search": "Szukaj organizacji...",
+      "noResults": "Brak wyników",
+      "employees": "pracowników"
+    },
+    "recentActivity": {
+      "title": "Ostatnia aktywność",
+      "noActivity": "Brak ostatniej aktywności"
+    },
+    "bulkActions": {
+      "selected": "wybrane",
+      "export": "Eksportuj",
+      "delete": "Usuń",
+      "cancel": "Anuluj",
+      "confirmDelete": "Potwierdzić usunięcie?",
+      "assignTraining": "Przypisz szkolenie",
+      "medicalExam": "Zaplanuj badanie lekarskie",
+      "assignOrg": "Przypisz do organizacji",
+      "deactivate": "Dezaktywuj"
+    }
   }
 }

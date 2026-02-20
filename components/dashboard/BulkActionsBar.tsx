@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { X, ChevronDown, Download, BookOpen, Stethoscope, Building2, UserX, Trash2 } from 'lucide-react'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
@@ -18,46 +19,47 @@ interface BulkActionsBarProps {
   onAction: (action: BulkAction) => void | Promise<void>
 }
 
-const ACTIONS = [
-  {
-    id: 'export' as BulkAction,
-    label: 'Exportă selecția',
-    icon: Download,
-    isDestructive: false,
-  },
-  {
-    id: 'assign-training' as BulkAction,
-    label: 'Atribuie training',
-    icon: BookOpen,
-    isDestructive: false,
-  },
-  {
-    id: 'schedule-medical' as BulkAction,
-    label: 'Programează medical',
-    icon: Stethoscope,
-    isDestructive: false,
-  },
-  {
-    id: 'change-department' as BulkAction,
-    label: 'Schimbă departament',
-    icon: Building2,
-    isDestructive: false,
-  },
-  {
-    id: 'deactivate' as BulkAction,
-    label: 'Dezactivează',
-    icon: UserX,
-    isDestructive: true,
-  },
-  {
-    id: 'delete' as BulkAction,
-    label: 'Șterge',
-    icon: Trash2,
-    isDestructive: true,
-  },
-]
-
 export function BulkActionsBar({ selectedCount, onClear, onAction }: BulkActionsBarProps) {
+  const t = useTranslations('widgets.bulkActions')
+
+  const ACTIONS = [
+    {
+      id: 'export' as BulkAction,
+      label: t('export'),
+      icon: Download,
+      isDestructive: false,
+    },
+    {
+      id: 'assign-training' as BulkAction,
+      label: t('assignTraining'),
+      icon: BookOpen,
+      isDestructive: false,
+    },
+    {
+      id: 'schedule-medical' as BulkAction,
+      label: t('medicalExam'),
+      icon: Stethoscope,
+      isDestructive: false,
+    },
+    {
+      id: 'change-department' as BulkAction,
+      label: t('assignOrg'),
+      icon: Building2,
+      isDestructive: false,
+    },
+    {
+      id: 'deactivate' as BulkAction,
+      label: t('deactivate'),
+      icon: UserX,
+      isDestructive: true,
+    },
+    {
+      id: 'delete' as BulkAction,
+      label: t('delete'),
+      icon: Trash2,
+      isDestructive: true,
+    },
+  ]
   const [isOpen, setIsOpen] = useState(false)
   const [confirmDialog, setConfirmDialog] = useState<{
     isOpen: boolean
@@ -89,14 +91,14 @@ export function BulkActionsBar({ selectedCount, onClear, onAction }: BulkActions
 
       switch (action) {
         case 'deactivate':
-          title = 'Dezactivează înregistrări?'
+          title = t('deactivate')
           message = `Sigur doriți să dezactivați ${selectedCount} ${selectedCount === 1 ? 'înregistrare' : 'înregistrări'}? Acestea vor fi marcate ca inactive.`
-          confirmLabel = 'Dezactivează'
+          confirmLabel = t('deactivate')
           break
         case 'delete':
-          title = 'Șterge înregistrări?'
+          title = t('confirmDelete')
           message = `Sigur doriți să ștergeți ${selectedCount} ${selectedCount === 1 ? 'înregistrare' : 'înregistrări'}? Această acțiune nu poate fi anulată.`
-          confirmLabel = 'Șterge'
+          confirmLabel = t('delete')
           break
       }
 
@@ -140,7 +142,7 @@ export function BulkActionsBar({ selectedCount, onClear, onAction }: BulkActions
               <span className="text-white text-sm font-bold">{selectedCount}</span>
             </div>
             <span className="text-sm font-medium text-gray-700">
-              {selectedCount === 1 ? '1 înregistrare selectată' : `${selectedCount} înregistrări selectate`}
+              {`${selectedCount} ${t('selected')}`}
             </span>
           </div>
 
@@ -190,7 +192,7 @@ export function BulkActionsBar({ selectedCount, onClear, onAction }: BulkActions
           <button
             onClick={onClear}
             className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Anulează selecția"
+            aria-label={t('cancel')}
           >
             <X className="h-5 w-5" />
           </button>

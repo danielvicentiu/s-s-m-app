@@ -397,5 +397,103 @@
   },
   "onboarding": {
     "steps": ["Activitate", "Angajați", "Date firmă", "Confirmare"]
+  },
+  "sidebar": {
+    "groups": {
+      "main": "Principal",
+      "ssm": "SSM - Securitate Muncă",
+      "psi": "PSI - Prevenire Incendiu",
+      "medical": "Medicină Muncă",
+      "management": "Gestiune",
+      "alerts": "Alerte",
+      "admin": "Administrare"
+    },
+    "links": {
+      "dashboard": "Dashboard",
+      "aiAssistant": "VA-AI Assistant",
+      "aiKnowledgeBase": "AI Bază de Cunoștințe",
+      "employees": "Angajați",
+      "ssmTraining": "Instruiri SSM",
+      "nearMiss": "Incidente Near-miss",
+      "trainingCalendar": "Calendar Instruiri",
+      "obligations": "Obligații",
+      "psiEquipment": "Echipamente PSI",
+      "iscir": "ISCIR",
+      "dailyChecks": "Verificări zilnice",
+      "equipment": "Echipamente",
+      "occupationalMedicine": "Medicina Muncii",
+      "pdfReports": "Rapoarte PDF",
+      "accounting": "Contabilitate",
+      "gdpr": "GDPR",
+      "nis2": "NIS2 Cybersecurity",
+      "documentScan": "Scanare Documente",
+      "dataImport": "Import Date",
+      "alertsNotifications": "Alerte & Notificări",
+      "reges": "REGES",
+      "profile": "Profil",
+      "notifications": "Notificări",
+      "pinSecurity": "Securitate PIN",
+      "roles": "Roluri",
+      "apiKeys": "API Keys",
+      "batchJobs": "Batch Jobs",
+      "bulkLegalImport": "Import Bulk Legislație"
+    },
+    "moduleInactive": "Modul inactiv - activați din Setări",
+    "user": "Utilizator"
+  },
+  "dashboardOverview": {
+    "totalEmployees": "Total Angajați",
+    "expiredTrainings": "Instruiri Expirate",
+    "upcomingTrainings": "Instruiri Viitoare",
+    "expiredDocuments": "Documente Expirate",
+    "psiEquipment": "Echipamente PSI",
+    "recentAlerts": "Alerte Recente",
+    "noAlerts": "Nicio alertă recentă",
+    "quickActions": "Acțiuni Rapide",
+    "trainingCalendar": "Calendar Instruiri",
+    "scheduleSessions": "Programează sesiuni",
+    "reports": "Rapoarte",
+    "generateReports": "Generează rapoarte",
+    "scanDocuments": "Scan Documente",
+    "uploadProcess": "Upload & procesare",
+    "employees": "Angajați",
+    "addNewEmployee": "Adaugă angajat nou"
+  },
+  "widgets": {
+    "expirySummary": {
+      "title": "Expirate & Aproape de Expirare",
+      "expired": "Expirate",
+      "expiringSoon": "Expiră curând",
+      "valid": "Valide",
+      "noData": "Nu sunt date disponibile"
+    },
+    "obligations": {
+      "title": "Obligații Legale",
+      "compliant": "Conform",
+      "nonCompliant": "Neconform",
+      "pending": "În așteptare",
+      "noObligations": "Nicio obligație"
+    },
+    "orgSelector": {
+      "allOrganizations": "Toate organizațiile",
+      "search": "Caută organizație...",
+      "noResults": "Niciun rezultat",
+      "employees": "angajați"
+    },
+    "recentActivity": {
+      "title": "Activitate Recentă",
+      "noActivity": "Nicio activitate recentă"
+    },
+    "bulkActions": {
+      "selected": "selectate",
+      "export": "Export",
+      "delete": "Șterge",
+      "cancel": "Anulează",
+      "confirmDelete": "Confirmi ștergerea?",
+      "assignTraining": "Atribuie instruire",
+      "medicalExam": "Programare examen medical",
+      "assignOrg": "Atribuie la organizație",
+      "deactivate": "Dezactivează"
+    }
   }
 }

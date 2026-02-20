@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { User } from '@supabase/supabase-js'
 import { useOrg } from '@/lib/contexts/OrgContext'
 import { useModuleGate } from '@/lib/hooks/useModuleGate'
@@ -38,6 +39,7 @@ function LockIcon() {
 export default function DashboardSidebar({ user }: { user: User }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const t = useTranslations('sidebar')
 
   // Get current organization context
   const { currentOrg } = useOrg()
@@ -53,11 +55,11 @@ export default function DashboardSidebar({ user }: { user: User }) {
   // Navigation structure with module requirements
   const navGroups: NavGroup[] = [
     {
-      title: 'Principal',
+      title: t('groups.main'),
       links: [
         {
           href: '/dashboard',
-          label: 'Dashboard',
+          label: t('links.dashboard'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,7 +69,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/ai-assistant',
-          label: 'VA-AI Assistant',
+          label: t('links.aiAssistant'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,7 +79,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/ai-kb',
-          label: 'AI Bază de Cunoștințe',
+          label: t('links.aiKnowledgeBase'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,7 +89,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/angajat-nou',
-          label: 'Angajați',
+          label: t('links.employees'),
           moduleKey: 'ssm', // SSM module required
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,11 +100,11 @@ export default function DashboardSidebar({ user }: { user: User }) {
       ],
     },
     {
-      title: 'SSM - Securitate Muncă',
+      title: t('groups.ssm'),
       links: [
         {
           href: '/dashboard/training',
-          label: 'Instruiri SSM',
+          label: t('links.ssmTraining'),
           moduleKey: 'ssm',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,7 +114,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/near-miss',
-          label: 'Incidente Near-miss',
+          label: t('links.nearMiss'),
           moduleKey: 'near_miss',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -122,7 +124,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/training/calendar',
-          label: 'Calendar Instruiri',
+          label: t('links.trainingCalendar'),
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -131,7 +133,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/obligations',
-          label: 'Obligații',
+          label: t('links.obligations'),
           moduleKey: 'legislatie', // BASE_MODULE - always active
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,11 +144,11 @@ export default function DashboardSidebar({ user }: { user: User }) {
       ],
     },
     {
-      title: 'PSI - Prevenire Incendiu',
+      title: t('groups.psi'),
       links: [
         {
           href: '/dashboard/psi',
-          label: 'Echipamente PSI',
+          label: t('links.psiEquipment'),
           moduleKey: 'psi',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,7 +159,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/iscir',
-          label: 'ISCIR',
+          label: t('links.iscir'),
           moduleKey: 'echipamente', // Per MODULE_ROUTES
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -167,7 +169,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/iscir/daily',
-          label: 'Verificări zilnice',
+          label: t('links.dailyChecks'),
           moduleKey: 'echipamente',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -177,7 +179,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/equipment',
-          label: 'Echipamente',
+          label: t('links.equipment'),
           moduleKey: 'echipamente',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,11 +190,11 @@ export default function DashboardSidebar({ user }: { user: User }) {
       ],
     },
     {
-      title: 'Medicină Muncă',
+      title: t('groups.medical'),
       links: [
         {
           href: '/dashboard/medical',
-          label: 'Medicina Muncii',
+          label: t('links.occupationalMedicine'),
           moduleKey: 'ssm', // Part of SSM core
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -203,11 +205,11 @@ export default function DashboardSidebar({ user }: { user: User }) {
       ],
     },
     {
-      title: 'Gestiune',
+      title: t('groups.management'),
       links: [
         {
           href: '/dashboard/reports',
-          label: 'Rapoarte PDF',
+          label: t('links.pdfReports'),
           moduleKey: 'reports',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -217,7 +219,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/contabilitate',
-          label: 'Contabilitate',
+          label: t('links.accounting'),
           moduleKey: null, // Always visible (future module)
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -227,7 +229,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/gdpr',
-          label: 'GDPR',
+          label: t('links.gdpr'),
           moduleKey: 'gdpr',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,7 +239,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/nis2',
-          label: 'NIS2 Cybersecurity',
+          label: t('links.nis2'),
           moduleKey: 'nis2',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -247,7 +249,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/scan',
-          label: 'Scanare Documente',
+          label: t('links.documentScan'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -257,7 +259,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/import',
-          label: 'Import Date',
+          label: t('links.dataImport'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -268,11 +270,11 @@ export default function DashboardSidebar({ user }: { user: User }) {
       ],
     },
     {
-      title: 'Alerte',
+      title: t('groups.alerts'),
       links: [
         {
           href: '/dashboard/alerts',
-          label: 'Alerte & Notificări',
+          label: t('links.alertsNotifications'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -283,11 +285,11 @@ export default function DashboardSidebar({ user }: { user: User }) {
       ],
     },
     {
-      title: 'Administrare',
+      title: t('groups.admin'),
       links: [
         {
           href: '/dashboard/reges',
-          label: 'REGES',
+          label: t('links.reges'),
           moduleKey: null, // Admin tool - always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -297,7 +299,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/profile',
-          label: 'Profil',
+          label: t('links.profile'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -307,7 +309,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/settings/notifications',
-          label: 'Notificări',
+          label: t('links.notifications'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -317,7 +319,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/settings/pin',
-          label: 'Securitate PIN',
+          label: t('links.pinSecurity'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -327,7 +329,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/settings/roles',
-          label: 'Roluri',
+          label: t('links.roles'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -337,7 +339,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/settings/api-keys',
-          label: 'API Keys',
+          label: t('links.apiKeys'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -347,7 +349,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/dashboard/batch',
-          label: 'Batch Jobs',
+          label: t('links.batchJobs'),
           moduleKey: null, // Always visible
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -357,7 +359,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
         },
         {
           href: '/admin/legal-bulk-import',
-          label: 'Import Bulk Legislație',
+          label: t('links.bulkLegalImport'),
           moduleKey: null,
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -413,7 +415,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
                   return (
                     <div
                       key={link.href}
-                      title="Modul inactiv - activati din Setari"
+                      title={t('moduleInactive')}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed select-none"
                     >
                       <span className="opacity-50">{link.icon}</span>
@@ -466,7 +468,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
             <p className="text-sm font-medium text-gray-900 truncate">
               {user.email}
             </p>
-            <p className="text-xs text-gray-500">Utilizator</p>
+            <p className="text-xs text-gray-500">{t('user')}</p>
           </div>
           <NotificationBell userId={user.id} />
         </div>

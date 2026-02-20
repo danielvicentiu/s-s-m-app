@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import {
@@ -126,6 +127,7 @@ function transformAuditLogToActivity(entry: AuditLogEntry): ActivityItem {
 }
 
 export function RecentActivityWidget() {
+  const t = useTranslations('widgets.recentActivity')
   const [activities, setActivities] = useState<ActivityItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -240,7 +242,7 @@ export function RecentActivityWidget() {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Activitate recentă
+          {t('title')}
         </h2>
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
@@ -261,7 +263,7 @@ export function RecentActivityWidget() {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Activitate recentă
+          {t('title')}
         </h2>
         <div className="text-center py-8">
           <Activity className="h-12 w-12 text-gray-400 mx-auto mb-3" />
@@ -275,12 +277,12 @@ export function RecentActivityWidget() {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Activitate recentă
+          {t('title')}
         </h2>
         <div className="text-center py-8">
           <Activity className="h-12 w-12 text-gray-400 mx-auto mb-3" />
           <p className="text-sm text-gray-500">
-            Nu există activități recente
+            {t('noActivity')}
           </p>
         </div>
       </div>
@@ -291,7 +293,7 @@ export function RecentActivityWidget() {
     <div className="bg-white rounded-2xl border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-900">
-          Activitate recentă
+          {t('title')}
         </h2>
         <div className="flex items-center gap-1.5 text-xs text-gray-500">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />

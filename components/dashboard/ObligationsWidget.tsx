@@ -6,6 +6,7 @@
 // Full = pagină dedicată /dashboard/obligations
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 
 interface OrgObligation {
   id: string
@@ -63,6 +64,7 @@ const SEVERITY_BADGE: Record<string, string> = {
 }
 
 export default function ObligationsWidget({ organizationId, locale = 'ro', compact = true }: Props) {
+  const t = useTranslations('widgets.obligations')
   const [obligations, setObligations] = useState<OrgObligation[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -134,7 +136,7 @@ export default function ObligationsWidget({ organizationId, locale = 'ro', compa
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-            📋 Obligații Legale
+            📋 {t('title')}
             {stats && stats.new > 0 && (
               <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {stats.new} noi
@@ -156,7 +158,7 @@ export default function ObligationsWidget({ organizationId, locale = 'ro', compa
         )}
 
         {obligations.length === 0 ? (
-          <p className="text-sm text-gray-500 text-center py-4">Nicio obligație publicată.</p>
+          <p className="text-sm text-gray-500 text-center py-4">{t('noObligations')}</p>
         ) : (
           <div className="space-y-2">
             {obligations.slice(0, 5).map(obl => (
@@ -183,7 +185,7 @@ export default function ObligationsWidget({ organizationId, locale = 'ro', compa
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Obligații Legale</h2>
+        <h2 className="text-xl font-bold text-gray-900">{t('title')}</h2>
         {stats && <span className="text-sm text-gray-500">Total: <strong>{stats.total}</strong></span>}
       </div>
 

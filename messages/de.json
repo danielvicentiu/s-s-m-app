@@ -397,5 +397,103 @@
   },
   "onboarding": {
     "steps": ["Tätigkeit", "Mitarbeiter", "Unternehmensdaten", "Bestätigung"]
+  },
+  "sidebar": {
+    "groups": {
+      "main": "Hauptmenü",
+      "ssm": "Arbeitssicherheit",
+      "psi": "Brandschutz",
+      "medical": "Arbeitsmedizin",
+      "management": "Verwaltung",
+      "alerts": "Warnungen",
+      "admin": "Administration"
+    },
+    "links": {
+      "dashboard": "Dashboard",
+      "aiAssistant": "VA-AI Assistent",
+      "aiKnowledgeBase": "AI Wissensbasis",
+      "employees": "Mitarbeiter",
+      "ssmTraining": "Arbeitssicherheitsschulung",
+      "nearMiss": "Beinahe-Unfälle",
+      "trainingCalendar": "Schulungskalender",
+      "obligations": "Pflichten",
+      "psiEquipment": "Brandschutzausrüstung",
+      "iscir": "ISCIR",
+      "dailyChecks": "Tägliche Prüfungen",
+      "equipment": "Ausrüstung",
+      "occupationalMedicine": "Arbeitsmedizin",
+      "pdfReports": "PDF-Berichte",
+      "accounting": "Buchhaltung",
+      "gdpr": "DSGVO",
+      "nis2": "NIS2 Cybersicherheit",
+      "documentScan": "Dokumentenscan",
+      "dataImport": "Datenimport",
+      "alertsNotifications": "Warnungen & Benachrichtigungen",
+      "reges": "REGES",
+      "profile": "Profil",
+      "notifications": "Benachrichtigungen",
+      "pinSecurity": "PIN-Sicherheit",
+      "roles": "Rollen",
+      "apiKeys": "API Keys",
+      "batchJobs": "Batch Jobs",
+      "bulkLegalImport": "Massenimport Rechtsvorschriften"
+    },
+    "moduleInactive": "Modul inaktiv - in Einstellungen aktivieren",
+    "user": "Benutzer"
+  },
+  "dashboardOverview": {
+    "totalEmployees": "Mitarbeiter gesamt",
+    "expiredTrainings": "Abgelaufene Schulungen",
+    "upcomingTrainings": "Bevorstehende Schulungen",
+    "expiredDocuments": "Abgelaufene Dokumente",
+    "psiEquipment": "Brandschutzausrüstung",
+    "recentAlerts": "Neueste Warnungen",
+    "noAlerts": "Keine neuesten Warnungen",
+    "quickActions": "Schnellaktionen",
+    "trainingCalendar": "Schulungskalender",
+    "scheduleSessions": "Sitzungen planen",
+    "reports": "Berichte",
+    "generateReports": "Berichte erstellen",
+    "scanDocuments": "Dokumente scannen",
+    "uploadProcess": "Hochladen & Verarbeiten",
+    "employees": "Mitarbeiter",
+    "addNewEmployee": "Neuen Mitarbeiter hinzufügen"
+  },
+  "widgets": {
+    "expirySummary": {
+      "title": "Abgelaufen & demnächst ablaufend",
+      "expired": "Abgelaufen",
+      "expiringSoon": "Läuft demnächst ab",
+      "valid": "Gültig",
+      "noData": "Keine Daten verfügbar"
+    },
+    "obligations": {
+      "title": "Rechtliche Verpflichtungen",
+      "compliant": "Konform",
+      "nonCompliant": "Nicht konform",
+      "pending": "Ausstehend",
+      "noObligations": "Keine Verpflichtungen"
+    },
+    "orgSelector": {
+      "allOrganizations": "Alle Organisationen",
+      "search": "Organisation suchen...",
+      "noResults": "Keine Ergebnisse",
+      "employees": "Mitarbeiter"
+    },
+    "recentActivity": {
+      "title": "Neueste Aktivität",
+      "noActivity": "Keine neueste Aktivität"
+    },
+    "bulkActions": {
+      "selected": "ausgewählt",
+      "export": "Exportieren",
+      "delete": "Löschen",
+      "cancel": "Abbrechen",
+      "confirmDelete": "Löschen bestätigen?",
+      "assignTraining": "Schulung zuweisen",
+      "medicalExam": "Medizinische Untersuchung planen",
+      "assignOrg": "Organisation zuweisen",
+      "deactivate": "Deaktivieren"
+    }
   }
 }

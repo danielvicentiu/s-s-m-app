@@ -397,5 +397,103 @@
   },
   "onboarding": {
     "steps": ["Tevékenység", "Alkalmazottak", "Cégadatok", "Megerősítés"]
+  },
+  "sidebar": {
+    "groups": {
+      "main": "Főmenü",
+      "ssm": "Munkavédelem",
+      "psi": "Tűzvédelem",
+      "medical": "Munkaegészségügy",
+      "management": "Kezelés",
+      "alerts": "Riasztások",
+      "admin": "Adminisztráció"
+    },
+    "links": {
+      "dashboard": "Irányítópult",
+      "aiAssistant": "VA-AI Asszisztens",
+      "aiKnowledgeBase": "AI Tudásbázis",
+      "employees": "Alkalmazottak",
+      "ssmTraining": "Munkavédelmi oktatás",
+      "nearMiss": "Near-miss incidensek",
+      "trainingCalendar": "Képzési naptár",
+      "obligations": "Kötelezettségek",
+      "psiEquipment": "Tűzvédelmi berendezések",
+      "iscir": "ISCIR",
+      "dailyChecks": "Napi ellenőrzések",
+      "equipment": "Berendezések",
+      "occupationalMedicine": "Munkaegészségügy",
+      "pdfReports": "PDF Jelentések",
+      "accounting": "Könyvelés",
+      "gdpr": "GDPR",
+      "nis2": "NIS2 Kiberbiztonság",
+      "documentScan": "Dokumentum szkennelés",
+      "dataImport": "Adatimportálás",
+      "alertsNotifications": "Riasztások & Értesítések",
+      "reges": "REGES",
+      "profile": "Profil",
+      "notifications": "Értesítések",
+      "pinSecurity": "PIN Biztonság",
+      "roles": "Szerepkörök",
+      "apiKeys": "API Keys",
+      "batchJobs": "Batch Jobs",
+      "bulkLegalImport": "Jogszabályok tömeges importja"
+    },
+    "moduleInactive": "Modul inaktív - aktiválja a Beállításokban",
+    "user": "Felhasználó"
+  },
+  "dashboardOverview": {
+    "totalEmployees": "Összes alkalmazott",
+    "expiredTrainings": "Lejárt képzések",
+    "upcomingTrainings": "Közelgő képzések",
+    "expiredDocuments": "Lejárt dokumentumok",
+    "psiEquipment": "Tűzvédelmi berendezések",
+    "recentAlerts": "Legutóbbi riasztások",
+    "noAlerts": "Nincs legutóbbi riasztás",
+    "quickActions": "Gyors műveletek",
+    "trainingCalendar": "Képzési naptár",
+    "scheduleSessions": "Foglaljon időpontot",
+    "reports": "Jelentések",
+    "generateReports": "Jelentések generálása",
+    "scanDocuments": "Dokumentum szkennelés",
+    "uploadProcess": "Feltöltés és feldolgozás",
+    "employees": "Alkalmazottak",
+    "addNewEmployee": "Új alkalmazott hozzáadása"
+  },
+  "widgets": {
+    "expirySummary": {
+      "title": "Lejárt és hamarosan lejáró",
+      "expired": "Lejárt",
+      "expiringSoon": "Hamarosan lejár",
+      "valid": "Érvényes",
+      "noData": "Nincs elérhető adat"
+    },
+    "obligations": {
+      "title": "Jogi kötelezettségek",
+      "compliant": "Megfelelő",
+      "nonCompliant": "Nem megfelelő",
+      "pending": "Függőben",
+      "noObligations": "Nincs kötelezettség"
+    },
+    "orgSelector": {
+      "allOrganizations": "Összes szervezet",
+      "search": "Szervezet keresése...",
+      "noResults": "Nincs eredmény",
+      "employees": "alkalmazott"
+    },
+    "recentActivity": {
+      "title": "Legutóbbi tevékenység",
+      "noActivity": "Nincs legutóbbi tevékenység"
+    },
+    "bulkActions": {
+      "selected": "kiválasztva",
+      "export": "Exportálás",
+      "delete": "Törlés",
+      "cancel": "Mégse",
+      "confirmDelete": "Törlés megerősítése?",
+      "assignTraining": "Képzés hozzárendelése",
+      "medicalExam": "Orvosi vizsgálat ütemezése",
+      "assignOrg": "Szervezethez rendelés",
+      "deactivate": "Deaktiválás"
+    }
   }
 }

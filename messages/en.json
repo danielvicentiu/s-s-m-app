@@ -397,5 +397,103 @@
   },
   "onboarding": {
     "steps": ["Activity", "Employees", "Company data", "Confirmation"]
+  },
+  "sidebar": {
+    "groups": {
+      "main": "Main",
+      "ssm": "OHS - Occupational Safety",
+      "psi": "Fire Safety",
+      "medical": "Occupational Medicine",
+      "management": "Management",
+      "alerts": "Alerts",
+      "admin": "Administration"
+    },
+    "links": {
+      "dashboard": "Dashboard",
+      "aiAssistant": "VA-AI Assistant",
+      "aiKnowledgeBase": "AI Knowledge Base",
+      "employees": "Employees",
+      "ssmTraining": "OHS Training",
+      "nearMiss": "Near-miss Incidents",
+      "trainingCalendar": "Training Calendar",
+      "obligations": "Obligations",
+      "psiEquipment": "Fire Safety Equipment",
+      "iscir": "ISCIR",
+      "dailyChecks": "Daily Checks",
+      "equipment": "Equipment",
+      "occupationalMedicine": "Occupational Medicine",
+      "pdfReports": "PDF Reports",
+      "accounting": "Accounting",
+      "gdpr": "GDPR",
+      "nis2": "NIS2 Cybersecurity",
+      "documentScan": "Document Scan",
+      "dataImport": "Data Import",
+      "alertsNotifications": "Alerts & Notifications",
+      "reges": "REGES",
+      "profile": "Profile",
+      "notifications": "Notifications",
+      "pinSecurity": "PIN Security",
+      "roles": "Roles",
+      "apiKeys": "API Keys",
+      "batchJobs": "Batch Jobs",
+      "bulkLegalImport": "Bulk Legal Import"
+    },
+    "moduleInactive": "Module inactive - enable in Settings",
+    "user": "User"
+  },
+  "dashboardOverview": {
+    "totalEmployees": "Total Employees",
+    "expiredTrainings": "Expired Trainings",
+    "upcomingTrainings": "Upcoming Trainings",
+    "expiredDocuments": "Expired Documents",
+    "psiEquipment": "Fire Safety Equipment",
+    "recentAlerts": "Recent Alerts",
+    "noAlerts": "No recent alerts",
+    "quickActions": "Quick Actions",
+    "trainingCalendar": "Training Calendar",
+    "scheduleSessions": "Schedule sessions",
+    "reports": "Reports",
+    "generateReports": "Generate reports",
+    "scanDocuments": "Scan Documents",
+    "uploadProcess": "Upload & processing",
+    "employees": "Employees",
+    "addNewEmployee": "Add new employee"
+  },
+  "widgets": {
+    "expirySummary": {
+      "title": "Expired & Expiring Soon",
+      "expired": "Expired",
+      "expiringSoon": "Expiring soon",
+      "valid": "Valid",
+      "noData": "No data available"
+    },
+    "obligations": {
+      "title": "Legal Obligations",
+      "compliant": "Compliant",
+      "nonCompliant": "Non-compliant",
+      "pending": "Pending",
+      "noObligations": "No obligations"
+    },
+    "orgSelector": {
+      "allOrganizations": "All organizations",
+      "search": "Search organization...",
+      "noResults": "No results",
+      "employees": "employees"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity"
+    },
+    "bulkActions": {
+      "selected": "selected",
+      "export": "Export",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "confirmDelete": "Confirm deletion?",
+      "assignTraining": "Assign training",
+      "medicalExam": "Schedule medical exam",
+      "assignOrg": "Assign to organization",
+      "deactivate": "Deactivate"
+    }
   }
 }

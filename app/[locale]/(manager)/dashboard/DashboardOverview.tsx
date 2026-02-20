@@ -5,7 +5,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import {
   Users,
   Calendar,
@@ -38,6 +39,8 @@ interface DashboardOverviewProps {
 }
 
 export default function DashboardOverview({ selectedOrg }: DashboardOverviewProps) {
+  const t = useTranslations('dashboardOverview')
+  const locale = useLocale()
   const [stats, setStats] = useState<DashboardStats>({
     totalEmployees: 0,
     expiredTrainings: 0,
@@ -83,7 +86,7 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
         {/* Total Employees */}
         <StatCard
           icon={<Users className="h-6 w-6" />}
-          title="Total Angajați"
+          title={t('totalEmployees')}
           value={stats.totalEmployees}
           iconBgColor="bg-blue-100 dark:bg-blue-900/30"
           iconColor="text-blue-600 dark:text-blue-400"
@@ -93,7 +96,7 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
         {/* Expired Trainings */}
         <StatCard
           icon={<AlertTriangle className="h-6 w-6" />}
-          title="Instruiri Expirate"
+          title={t('expiredTrainings')}
           value={stats.expiredTrainings}
           iconBgColor="bg-red-100 dark:bg-red-900/30"
           iconColor="text-red-600 dark:text-red-400"
@@ -104,7 +107,7 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
         {/* Upcoming Trainings */}
         <StatCard
           icon={<Calendar className="h-6 w-6" />}
-          title="Instruiri Următoarele 7 Zile"
+          title={t('upcomingTrainings')}
           value={stats.upcomingTrainings}
           iconBgColor="bg-orange-100 dark:bg-orange-900/30"
           iconColor="text-orange-600 dark:text-orange-400"
@@ -114,7 +117,7 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
         {/* Expired Documents */}
         <StatCard
           icon={<FileText className="h-6 w-6" />}
-          title="Documente Expirate"
+          title={t('expiredDocuments')}
           value={stats.expiredDocuments}
           iconBgColor="bg-purple-100 dark:bg-purple-900/30"
           iconColor="text-purple-600 dark:text-purple-400"
@@ -124,7 +127,7 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
         {/* PSI Equipment */}
         <StatCard
           icon={<Shield className="h-6 w-6" />}
-          title="Echipamente PSI"
+          title={t('psiEquipment')}
           value={stats.psiEquipmentCount}
           iconBgColor="bg-green-100 dark:bg-green-900/30"
           iconColor="text-green-600 dark:text-green-400"
@@ -137,14 +140,14 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-orange-500" />
-            Alerte Recente
+            {t('recentAlerts')}
           </h2>
         </div>
         <div className="p-6">
           {alerts.length === 0 ? (
             <div className="text-center py-8 text-gray-400 dark:text-gray-500">
               <AlertTriangle className="h-12 w-12 mx-auto mb-3 opacity-30" />
-              <p className="text-sm">Nicio alertă recentă</p>
+              <p className="text-sm">{t('noAlerts')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -174,7 +177,7 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
                         {alert.message}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(alert.created_at).toLocaleDateString('ro-RO', {
+                        {new Date(alert.created_at).toLocaleDateString(locale, {
                           day: '2-digit',
                           month: 'long',
                           year: 'numeric',
@@ -196,14 +199,14 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-blue-500" />
-            Acțiuni Rapide
+            {t('quickActions')}
           </h2>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Calendar Instruiri */}
             <Link
-              href="/ro/dashboard/calendar-instruiri"
+              href="/dashboard/training/calendar"
               className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
@@ -211,17 +214,17 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
               </div>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-white text-sm">
-                  Calendar Instruiri
+                  {t('trainingCalendar')}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Programează sesiuni
+                  {t('scheduleSessions')}
                 </div>
               </div>
             </Link>
 
             {/* Rapoarte */}
             <Link
-              href="/ro/reports"
+              href="/dashboard/reports"
               className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:bg-purple-600 transition-colors">
@@ -229,17 +232,17 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
               </div>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-white text-sm">
-                  Rapoarte
+                  {t('reports')}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Generează rapoarte
+                  {t('generateReports')}
                 </div>
               </div>
             </Link>
 
             {/* Scan Documente */}
             <Link
-              href="/ro/documents/scan"
+              href="/dashboard/scan"
               className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center group-hover:bg-green-600 transition-colors">
@@ -247,17 +250,17 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
               </div>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-white text-sm">
-                  Scan Documente
+                  {t('scanDocuments')}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Upload & procesare
+                  {t('uploadProcess')}
                 </div>
               </div>
             </Link>
 
             {/* Angajați */}
             <Link
-              href="/ro/dashboard/angajat-nou"
+              href="/dashboard/angajat-nou"
               className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-orange-500 dark:hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center group-hover:bg-orange-600 transition-colors">
@@ -265,10 +268,10 @@ export default function DashboardOverview({ selectedOrg }: DashboardOverviewProp
               </div>
               <div>
                 <div className="font-semibold text-gray-900 dark:text-white text-sm">
-                  Angajați
+                  {t('employees')}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  Adaugă angajat nou
+                  {t('addNewEmployee')}
                 </div>
               </div>
             </Link>
