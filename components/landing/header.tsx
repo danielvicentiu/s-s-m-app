@@ -4,15 +4,17 @@ import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import LanguageSelector from '@/components/LanguageSelector'
-
-const navLinks = [
-  { href: '#functionalitati', label: 'Funcționalități' },
-  { href: '#preturi', label: 'Prețuri' },
-  { href: '#contact', label: 'Contact' },
-]
+import { useTranslations } from 'next-intl'
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const t = useTranslations('nav')
+
+  const navLinks = [
+    { href: '#functionalitati', label: t('features') },
+    { href: '#preturi', label: t('pricing') },
+    { href: '#contact', label: t('contact') },
+  ]
 
   return (
     <header className="sticky top-0 z-50 bg-header-bg text-header-foreground">
@@ -42,13 +44,13 @@ export function Header() {
             href="/login"
             className="rounded-md px-4 py-2 text-sm font-medium text-header-foreground/80 transition-colors hover:text-header-foreground"
           >
-            Autentificare
+            {t('login')}
           </Link>
           <Link
             href="/onboarding"
             className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
-            Încercare Gratuită
+            {t('trialCta')}
           </Link>
         </div>
 
@@ -85,13 +87,13 @@ export function Header() {
               href="/login"
               className="text-sm font-medium text-header-foreground/80 hover:text-header-foreground"
             >
-              Autentificare
+              {t('login')}
             </Link>
             <Link
               href="/onboarding"
               className="rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-semibold text-primary-foreground"
             >
-              Încercare Gratuită
+              {t('trialCta')}
             </Link>
           </div>
         </div>

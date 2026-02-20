@@ -1,21 +1,36 @@
-const footerLinks = {
-  Platformă: [
-    { label: 'Funcționalități', href: '#functionalitati' },
-    { label: 'Prețuri', href: '#preturi' },
-  ],
-  Resurse: [
-    { label: 'Blog', href: '#' },
-    { label: 'Ghiduri SSM', href: '#' },
-    { label: 'Legislație', href: '#' },
-  ],
-  Companie: [
-    { label: 'Despre noi', href: '#' },
-    { label: 'Contact', href: '#contact' },
-    { label: 'Parteneriate', href: '#' },
-  ],
-}
+'use client'
+
+import { useTranslations } from 'next-intl'
 
 export function Footer() {
+  const t = useTranslations('footer')
+
+  const footerLinks = [
+    {
+      title: t('platform'),
+      links: [
+        { label: t('featuresLink'), href: '#functionalitati' },
+        { label: t('pricingLink'), href: '#preturi' },
+      ],
+    },
+    {
+      title: t('resources'),
+      links: [
+        { label: t('blog'), href: '#' },
+        { label: t('guides'), href: '#' },
+        { label: t('legislation'), href: '#' },
+      ],
+    },
+    {
+      title: t('company'),
+      links: [
+        { label: t('about'), href: '#' },
+        { label: t('contactLink'), href: '#contact' },
+        { label: t('partnerships'), href: '#' },
+      ],
+    },
+  ]
+
   return (
     <footer id="contact" className="bg-header-bg px-6 pb-8 pt-16 text-header-foreground">
       <div className="mx-auto max-w-7xl">
@@ -26,25 +41,24 @@ export function Footer() {
               s-s-m<span className="text-primary">.ro</span>
             </a>
             <p className="mt-3 text-sm leading-relaxed text-header-foreground/60">
-              Platformă completă pentru securitatea și sănătatea în muncă.
-              Conformitate automată pentru angajatorii din România și CEE.
+              {t('description')}
             </p>
             <div className="mt-4 space-y-1 text-sm text-header-foreground/60">
-              <div>📧 contact@s-s-m.ro</div>
-              <div>📞 +40 700 000 000</div>
-              <div>📍 București, România</div>
+              <div>📧 {t('email')}</div>
+              <div>📞 {t('phone')}</div>
+              <div>📍 {t('address')}</div>
             </div>
           </div>
 
           {/* Link columns */}
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
+          {footerLinks.map((section) => (
+            <div key={section.title}>
               <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-header-foreground/40">
-                {title}
+                {section.title}
               </h4>
               <ul className="flex flex-col gap-2.5">
-                {links.map((link) => (
-                  <li key={link.label}>
+                {section.links.map((link) => (
+                  <li key={link.href}>
                     <a
                       href={link.href}
                       className="text-sm text-header-foreground/60 transition-colors hover:text-header-foreground"
@@ -61,17 +75,17 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-header-foreground/10 pt-8 md:flex-row">
           <p className="text-xs text-header-foreground/40">
-            © 2026 s-s-m.ro. Toate drepturile rezervate.
+            {t('copyright')}
           </p>
           <div className="flex items-center gap-6 text-xs text-header-foreground/40">
             <a href="#" className="transition-colors hover:text-header-foreground/60">
-              Termeni și condiții
+              {t('terms')}
             </a>
             <a href="#" className="transition-colors hover:text-header-foreground/60">
-              Politica de confidențialitate
+              {t('privacy')}
             </a>
             <a href="#" className="transition-colors hover:text-header-foreground/60">
-              Cookies
+              {t('cookies')}
             </a>
           </div>
         </div>

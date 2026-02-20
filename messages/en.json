@@ -25,10 +25,79 @@
   "nav": {
     "features": "Features",
     "pricing": "Pricing",
-    "login": "Enter platform",
+    "login": "Sign in",
     "home": "Home",
     "navigation": "Navigation",
-    "contact": "Contact"
+    "contact": "Contact",
+    "trialCta": "Free Trial"
+  },
+  "hero": {
+    "title1": "Workplace Safety.",
+    "titleHighlight": "Digitalized.",
+    "title2": "Simplified.",
+    "subtitle": "Complete platform for OHS, Fire Safety and Occupational Health — automated compliance for employers in Romania and CEE.",
+    "cta": "Start free",
+    "ctaSecondary": "Discover the platform",
+    "trustCompanies": "100+ companies",
+    "trustNoCard": "No credit card",
+    "dashboardTitle": "Control Panel",
+    "dashboardCompliant": "Compliant",
+    "dashboardEmployees": "Employees",
+    "dashboardTrainings": "Trainings completed",
+    "dashboardDocuments": "Documents",
+    "dashboardRisks": "Active risks",
+    "dashboardCompliance": "Overall compliance",
+    "dashboardSSM": "OHS Active",
+    "dashboardModules": "38 live modules",
+    "dashboardScore": "Compliance score",
+    "dashboardScoreChange": "+12% this month"
+  },
+  "trustedBy": {
+    "title": "Over 100 companies chose s-s-m.ro"
+  },
+  "features": {
+    "title": "Everything you need for compliance",
+    "subtitle": "A single platform covering all legal requirements for occupational health and safety.",
+    "ssm": "Occupational Health & Safety (OHS)",
+    "ssmDesc": "Risk assessment, training records and complete OHS documentation, automatically generated.",
+    "psi": "Fire Prevention (PSI)",
+    "psiDesc": "Evacuation plans, periodic trainings and fire safety equipment inspections.",
+    "gdpr": "Data Protection (GDPR)",
+    "gdprDesc": "Processing register, privacy policies and consent management.",
+    "nis2": "NIS2 Directive",
+    "nis2Desc": "Compliance with NIS2 requirements for network and information system security.",
+    "medical": "Occupational Medicine",
+    "medicalDesc": "Automatic scheduling, fitness certificates and medical examination tracking.",
+    "iscir": "ISCIR & Equipment",
+    "iscirDesc": "Equipment registry under ISCIR regulations, with periodic inspection notifications.",
+    "nearMiss": "Near-Miss Reporting",
+    "nearMissDesc": "Quick incident and near-accident reporting with root cause analysis.",
+    "training": "Trainings & Calendar",
+    "trainingDesc": "Planning and tracking mandatory trainings with automatic reminders.",
+    "reports": "PDF Reports & Export",
+    "reportsDesc": "Automatic generation of compliant reports, ready to print or send to authorities."
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "subtitle": "Three simple steps to total compliance.",
+    "step1Title": "Create your account",
+    "step1Desc": "Quick registration in less than 2 minutes. No credit card required.",
+    "step2Title": "Import employees",
+    "step2Desc": "Upload your employee list from Excel or add them manually, one by one.",
+    "step3Title": "Automatic compliance",
+    "step3Desc": "The platform automatically generates documentation and notifies you at every deadline."
+  },
+  "stats": {
+    "modules": "Live modules",
+    "clients": "Active clients",
+    "languages": "Languages supported",
+    "countries": "CEE countries"
+  },
+  "cta": {
+    "title": "Start today — first 30 days free",
+    "subtitle": "No credit card. No obligations. Set up your account in less than 2 minutes.",
+    "placeholder": "email@company.com",
+    "button": "Start free"
   },
   "landing": {
     "badge": "Digital OHS & Fire Safety Platform",
@@ -182,9 +251,24 @@
     }
   },
   "footer": {
-    "description": "Digital platform for OHS & Fire Safety compliance. Occupational health, fire safety equipment, automated alerts.",
+    "description": "Complete platform for occupational health and safety. Automated compliance for employers in Romania and CEE.",
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
-    "address": "Bucharest, Romania"
+    "address": "Bucharest, Romania",
+    "platform": "Platform",
+    "resources": "Resources",
+    "company": "Company",
+    "featuresLink": "Features",
+    "pricingLink": "Pricing",
+    "blog": "Blog",
+    "guides": "OHS Guides",
+    "legislation": "Legislation",
+    "about": "About us",
+    "contactLink": "Contact",
+    "partnerships": "Partnerships",
+    "copyright": "© 2026 s-s-m.ro. All rights reserved.",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookies"
   }
 }

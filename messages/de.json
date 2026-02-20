@@ -25,10 +25,79 @@
   "nav": {
     "features": "Funktionen",
     "pricing": "Preise",
-    "login": "Zur Plattform",
+    "login": "Anmelden",
     "home": "Startseite",
     "navigation": "Navigation",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "trialCta": "Kostenlos testen"
+  },
+  "hero": {
+    "title1": "Arbeitssicherheit.",
+    "titleHighlight": "Digitalisiert.",
+    "title2": "Vereinfacht.",
+    "subtitle": "Komplette Plattform für Arbeitssicherheit, Brandschutz und Arbeitsmedizin — automatisierte Compliance für Arbeitgeber in Rumänien und Mittelosteuropa.",
+    "cta": "Kostenlos starten",
+    "ctaSecondary": "Plattform entdecken",
+    "trustCompanies": "100+ Unternehmen",
+    "trustNoCard": "Keine Kreditkarte",
+    "dashboardTitle": "Systemsteuerung",
+    "dashboardCompliant": "Konform",
+    "dashboardEmployees": "Mitarbeiter",
+    "dashboardTrainings": "Abgeschlossene Schulungen",
+    "dashboardDocuments": "Dokumente",
+    "dashboardRisks": "Aktive Risiken",
+    "dashboardCompliance": "Gesamte Compliance",
+    "dashboardSSM": "Arbeitssicherheit Aktiv",
+    "dashboardModules": "38 aktive Module",
+    "dashboardScore": "Compliance-Score",
+    "dashboardScoreChange": "+12% diesen Monat"
+  },
+  "trustedBy": {
+    "title": "Über 100 Unternehmen vertrauen s-s-m.ro"
+  },
+  "features": {
+    "title": "Alles, was Sie für Compliance benötigen",
+    "subtitle": "Eine einzige Plattform, die alle gesetzlichen Anforderungen für Arbeitssicherheit und Gesundheitsschutz abdeckt.",
+    "ssm": "Arbeitssicherheit (OHS)",
+    "ssmDesc": "Risikobeurteilung, Schulungsnachweise und vollständige Arbeitssicherheitsdokumentation, automatisch generiert.",
+    "psi": "Brandschutz (PSI)",
+    "psiDesc": "Evakuierungspläne, regelmäßige Schulungen und Brandschutzausrüstungsprüfungen.",
+    "gdpr": "Datenschutz (DSGVO)",
+    "gdprDesc": "Verarbeitungsverzeichnis, Datenschutzrichtlinien und Einwilligungsmanagement.",
+    "nis2": "NIS2-Richtlinie",
+    "nis2Desc": "Einhaltung der NIS2-Anforderungen für Netzwerk- und Informationssystemsicherheit.",
+    "medical": "Arbeitsmedizin",
+    "medicalDesc": "Automatische Terminplanung, Eignungsbescheinigungen und Nachverfolgung arbeitsmedizinischer Untersuchungen.",
+    "iscir": "ISCIR & Ausrüstung",
+    "iscirDesc": "Ausrüstungsregister nach ISCIR-Vorschriften mit Benachrichtigungen für regelmäßige Prüfungen.",
+    "nearMiss": "Beinahe-Unfall-Meldung",
+    "nearMissDesc": "Schnelle Meldung von Vorfällen und Beinahe-Unfällen mit Ursachenanalyse.",
+    "training": "Schulungen & Kalender",
+    "trainingDesc": "Planung und Verfolgung obligatorischer Schulungen mit automatischen Erinnerungen.",
+    "reports": "PDF-Berichte & Export",
+    "reportsDesc": "Automatische Erstellung konformer Berichte, druckfertig oder für Behörden."
+  },
+  "howItWorks": {
+    "title": "So funktioniert es",
+    "subtitle": "Drei einfache Schritte zur vollständigen Compliance.",
+    "step1Title": "Konto erstellen",
+    "step1Desc": "Schnelle Registrierung in weniger als 2 Minuten. Keine Kreditkarte erforderlich.",
+    "step2Title": "Mitarbeiter importieren",
+    "step2Desc": "Laden Sie Ihre Mitarbeiterliste aus Excel hoch oder fügen Sie sie manuell hinzu, einen nach dem anderen.",
+    "step3Title": "Automatische Compliance",
+    "step3Desc": "Die Plattform generiert automatisch Dokumentation und benachrichtigt Sie bei jeder Frist."
+  },
+  "stats": {
+    "modules": "Aktive Module",
+    "clients": "Aktive Kunden",
+    "languages": "Unterstützte Sprachen",
+    "countries": "MOE-Länder"
+  },
+  "cta": {
+    "title": "Starten Sie heute — erste 30 Tage kostenlos",
+    "subtitle": "Keine Kreditkarte. Keine Verpflichtungen. Richten Sie Ihr Konto in weniger als 2 Minuten ein.",
+    "placeholder": "email@unternehmen.de",
+    "button": "Kostenlos starten"
   },
   "landing": {
     "badge": "Digitale Plattform für Arbeitssicherheit und Brandschutz",
@@ -182,9 +251,24 @@
     }
   },
   "footer": {
-    "description": "Digitale Plattform für Arbeitssicherheits- und Brandschutz-Compliance.",
+    "description": "Komplette Plattform für Arbeitssicherheit und Gesundheitsschutz. Automatisierte Compliance für Arbeitgeber in Rumänien und Mittelosteuropa.",
     "email": "contact@s-s-m.ro",
     "phone": "+49 30 000 0000",
-    "address": "Berlin, Deutschland"
+    "address": "Berlin, Deutschland",
+    "platform": "Plattform",
+    "resources": "Ressourcen",
+    "company": "Unternehmen",
+    "featuresLink": "Funktionen",
+    "pricingLink": "Preise",
+    "blog": "Blog",
+    "guides": "Arbeitssicherheits-Leitfäden",
+    "legislation": "Gesetzgebung",
+    "about": "Über uns",
+    "contactLink": "Kontakt",
+    "partnerships": "Partnerschaften",
+    "copyright": "© 2026 s-s-m.ro. Alle Rechte vorbehalten.",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzrichtlinie",
+    "cookies": "Cookies"
   }
 }

@@ -28,7 +28,76 @@
     "login": "Belépés",
     "home": "Főoldal",
     "navigation": "Navigáció",
-    "contact": "Kapcsolat"
+    "contact": "Kapcsolat",
+    "trialCta": "Ingyenes próba"
+  },
+  "hero": {
+    "title1": "Munkavédelem.",
+    "titleHighlight": "Digitalizálva.",
+    "title2": "Egyszerűsítve.",
+    "subtitle": "Teljes platform a munkavédelem, tűzvédelem és munkaegészségügy számára — automatikus megfelelés romániai és közép-kelet-európai munkaadók számára.",
+    "cta": "Kezdje ingyen",
+    "ctaSecondary": "Fedezze fel a platformot",
+    "trustCompanies": "100+ vállalat",
+    "trustNoCard": "Nincs szükség hitelkártyára",
+    "dashboardTitle": "Vezérlőpult",
+    "dashboardCompliant": "Megfelelő",
+    "dashboardEmployees": "Alkalmazottak",
+    "dashboardTrainings": "Elvégzett képzések",
+    "dashboardDocuments": "Dokumentumok",
+    "dashboardRisks": "Aktív kockázatok",
+    "dashboardCompliance": "Általános megfelelés",
+    "dashboardSSM": "Munkavédelem aktív",
+    "dashboardModules": "38 aktív modul",
+    "dashboardScore": "Megfelelési pontszám",
+    "dashboardScoreChange": "+12% ebben a hónapban"
+  },
+  "trustedBy": {
+    "title": "Több mint 100 vállalat választotta az s-s-m.ro-t"
+  },
+  "features": {
+    "title": "Minden, amire szüksége van a megfeleléshez",
+    "subtitle": "Egyetlen platform, amely lefedi a munkavédelem összes jogi követelményét.",
+    "ssm": "Munkavédelem (OHS)",
+    "ssmDesc": "Kockázatértékelés, képzési nyilvántartások és teljes munkavédelmi dokumentáció, automatikusan generálva.",
+    "psi": "Tűzvédelem (PSI)",
+    "psiDesc": "Menekülési tervek, időszakos képzések és tűzvédelmi felszerelések ellenőrzése.",
+    "gdpr": "Adatvédelem (GDPR)",
+    "gdprDesc": "Adatkezelési nyilvántartás, adatvédelmi irányelvek és hozzájáruláskezelés.",
+    "nis2": "NIS2 irányelv",
+    "nis2Desc": "Megfelelés a NIS2 hálózat- és információbiztonsági követelményeinek.",
+    "medical": "Munkaegészségügy",
+    "medicalDesc": "Automatikus ütemezés, alkalmassági igazolások és orvosi vizsgálatok nyomon követése.",
+    "iscir": "ISCIR & Berendezések",
+    "iscirDesc": "ISCIR előírások szerinti berendezés-nyilvántartás, időszakos ellenőrzési értesítésekkel.",
+    "nearMiss": "Incidens-jelentés",
+    "nearMissDesc": "Gyors incidensek és majdnem-balesetek jelentése kiváltó okok elemzésével.",
+    "training": "Képzések & Naptár",
+    "trainingDesc": "Kötelező képzések tervezése és nyomon követése automatikus emlékeztetőkkel.",
+    "reports": "PDF Jelentések & Export",
+    "reportsDesc": "Megfelelő jelentések automatikus generálása, nyomtatásra vagy hatóságoknak küldésre készen."
+  },
+  "howItWorks": {
+    "title": "Hogyan működik",
+    "subtitle": "Három egyszerű lépés a teljes megfeleléshez.",
+    "step1Title": "Hozza létre fiókját",
+    "step1Desc": "Gyors regisztráció kevesebb mint 2 perc alatt. Nincs szükség hitelkártyára.",
+    "step2Title": "Alkalmazottak importálása",
+    "step2Desc": "Töltse fel az alkalmazotti listát Excelből, vagy adja hozzá őket manuálisan, egyenként.",
+    "step3Title": "Automatikus megfelelés",
+    "step3Desc": "A platform automatikusan generálja a dokumentációt, és értesíti minden határidőnél."
+  },
+  "stats": {
+    "modules": "Aktív modul",
+    "clients": "Aktív ügyfél",
+    "languages": "Támogatott nyelv",
+    "countries": "KKE ország"
+  },
+  "cta": {
+    "title": "Kezdje ma — az első 30 nap ingyenes",
+    "subtitle": "Nincs hitelkártya. Nincs kötelezettség. Állítsa be fiókját kevesebb mint 2 perc alatt.",
+    "placeholder": "email@vallalat.hu",
+    "button": "Kezdje ingyen"
   },
   "landing": {
     "badge": "Digitális munkavédelmi és tűzvédelmi platform",
@@ -182,9 +251,24 @@
     }
   },
   "footer": {
-    "description": "Digitális platform munkavédelmi és tűzvédelmi megfeleléshez.",
+    "description": "Teljes platform a munkavédelemhez és tűzvédelemhez. Automatikus megfelelés romániai és közép-kelet-európai munkaadók számára.",
     "email": "contact@s-s-m.ro",
     "phone": "+36 1 000 0000",
-    "address": "Budapest, Magyarország"
+    "address": "Budapest, Magyarország",
+    "platform": "Platform",
+    "resources": "Erőforrások",
+    "company": "Vállalat",
+    "featuresLink": "Funkciók",
+    "pricingLink": "Árak",
+    "blog": "Blog",
+    "guides": "Munkavédelmi útmutatók",
+    "legislation": "Jogszabályok",
+    "about": "Rólunk",
+    "contactLink": "Kapcsolat",
+    "partnerships": "Partnerségek",
+    "copyright": "© 2026 s-s-m.ro. Minden jog fenntartva.",
+    "terms": "Felhasználási feltételek",
+    "privacy": "Adatvédelmi irányelvek",
+    "cookies": "Sütik"
   }
 }

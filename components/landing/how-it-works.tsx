@@ -1,39 +1,41 @@
-import { UserPlus, Upload, CheckCircle } from 'lucide-react'
+'use client'
 
-const steps = [
-  {
-    number: '1',
-    icon: UserPlus,
-    title: 'Creează contul',
-    description:
-      'Înregistrare rapidă în mai puțin de 2 minute. Fără card de credit necesar.',
-  },
-  {
-    number: '2',
-    icon: Upload,
-    title: 'Importă angajații',
-    description:
-      'Încarcă lista de angajați din Excel sau adaugă-i manual, unul câte unul.',
-  },
-  {
-    number: '3',
-    icon: CheckCircle,
-    title: 'Conformitate automată',
-    description:
-      'Platforma generează automat documentația și te notifică la fiecare termen limită.',
-  },
-]
+import { UserPlus, Upload, CheckCircle } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 export function HowItWorks() {
+  const t = useTranslations('howItWorks')
+
+  const steps = [
+    {
+      number: '1',
+      icon: UserPlus,
+      title: t('step1Title'),
+      description: t('step1Desc'),
+    },
+    {
+      number: '2',
+      icon: Upload,
+      title: t('step2Title'),
+      description: t('step2Desc'),
+    },
+    {
+      number: '3',
+      icon: CheckCircle,
+      title: t('step3Title'),
+      description: t('step3Desc'),
+    },
+  ]
+
   return (
     <section className="bg-muted/50 px-6 py-20 lg:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <h2 className="text-balance text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
-            Cum funcționează
+            {t('title')}
           </h2>
           <p className="mt-4 text-pretty text-lg leading-relaxed text-muted-foreground">
-            Trei pași simpli pentru conformitate totală.
+            {t('subtitle')}
           </p>
         </div>
 

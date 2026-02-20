@@ -24,11 +24,80 @@
   },
   "nav": {
     "features": "Funcționalități",
-    "pricing": "Preț",
-    "login": "Intră în platformă",
+    "pricing": "Prețuri",
+    "login": "Autentificare",
     "home": "Acasă",
     "navigation": "Navigare",
-    "contact": "Contact"
+    "contact": "Contact",
+    "trialCta": "Încercare Gratuită"
+  },
+  "hero": {
+    "title1": "Securitatea Muncii.",
+    "titleHighlight": "Digitalizată.",
+    "title2": "Simplificată.",
+    "subtitle": "Platformă completă pentru SSM, PSI și medicina muncii — conformitate automată pentru angajatorii din România și CEE.",
+    "cta": "Începe gratuit",
+    "ctaSecondary": "Descoperă platforma",
+    "trustCompanies": "100+ companii",
+    "trustNoCard": "Fără card de credit",
+    "dashboardTitle": "Panou de control",
+    "dashboardCompliant": "Conform",
+    "dashboardEmployees": "Angajați",
+    "dashboardTrainings": "Instruiri completate",
+    "dashboardDocuments": "Documente",
+    "dashboardRisks": "Riscuri active",
+    "dashboardCompliance": "Conformitate generală",
+    "dashboardSSM": "SSM Activ",
+    "dashboardModules": "38 module live",
+    "dashboardScore": "Scor conformitate",
+    "dashboardScoreChange": "+12% luna aceasta"
+  },
+  "trustedBy": {
+    "title": "Peste 100 de companii au ales s-s-m.ro"
+  },
+  "features": {
+    "title": "Tot ce ai nevoie pentru conformitate",
+    "subtitle": "O singură platformă care acoperă toate cerințele legale pentru securitatea și sănătatea în muncă.",
+    "ssm": "Securitate în Muncă (SSM)",
+    "ssmDesc": "Evaluarea riscurilor, fișele de instruire și documentația completă SSM, generate automat.",
+    "psi": "Prevenirea Incendiilor (PSI)",
+    "psiDesc": "Planuri de evacuare, instruiri periodice și verificări ale echipamentelor PSI.",
+    "gdpr": "Protecția Datelor (GDPR)",
+    "gdprDesc": "Registru de prelucrări, politici de confidențialitate și managementul consimțămintelor.",
+    "nis2": "Directiva NIS2",
+    "nis2Desc": "Conformitate cu cerințele NIS2 pentru securitatea rețelelor și a sistemelor informatice.",
+    "medical": "Medicina Muncii",
+    "medicalDesc": "Programări automate, fișele de aptitudine și urmărirea examenelor medicale.",
+    "iscir": "ISCIR & Echipamente",
+    "iscirDesc": "Evidența echipamentelor sub incidența ISCIR, cu notificări pentru verificări periodice.",
+    "nearMiss": "Near-Miss Reporting",
+    "nearMissDesc": "Raportarea rapidă a incidentelor și aproape-accidentelor, cu analiza cauzelor.",
+    "training": "Instruiri & Calendar",
+    "trainingDesc": "Planificarea și urmărirea instruirilor obligatorii, cu reminder-e automate.",
+    "reports": "Rapoarte PDF & Export",
+    "reportsDesc": "Generarea automată de rapoarte conforme, gata de tipărit sau de trimis autorităților."
+  },
+  "howItWorks": {
+    "title": "Cum funcționează",
+    "subtitle": "Trei pași simpli pentru conformitate totală.",
+    "step1Title": "Creează contul",
+    "step1Desc": "Înregistrare rapidă în mai puțin de 2 minute. Fără card de credit necesar.",
+    "step2Title": "Importă angajații",
+    "step2Desc": "Încarcă lista de angajați din Excel sau adaugă-i manual, unul câte unul.",
+    "step3Title": "Conformitate automată",
+    "step3Desc": "Platforma generează automat documentația și te notifică la fiecare termen limită."
+  },
+  "stats": {
+    "modules": "Module live",
+    "clients": "Clienți activi",
+    "languages": "Limbi suportate",
+    "countries": "Țări CEE"
+  },
+  "cta": {
+    "title": "Începe astăzi — primele 30 de zile gratuit",
+    "subtitle": "Fără card de credit. Fără obligații. Configurează-ți contul în mai puțin de 2 minute.",
+    "placeholder": "adresa@companie.ro",
+    "button": "Începe gratuit"
   },
   "landing": {
     "badge": "Platformă digitală SSM & PSI",
@@ -182,9 +251,24 @@
     }
   },
   "footer": {
-    "description": "Platformă digitală pentru conformitate SSM & PSI. Medicina muncii, echipamente PSI, alerte automate.",
+    "description": "Platformă completă pentru securitatea și sănătatea în muncă. Conformitate automată pentru angajatorii din România și CEE.",
     "email": "contact@s-s-m.ro",
     "phone": "+40 700 000 000",
-    "address": "București, România"
+    "address": "București, România",
+    "platform": "Platformă",
+    "resources": "Resurse",
+    "company": "Companie",
+    "featuresLink": "Funcționalități",
+    "pricingLink": "Prețuri",
+    "blog": "Blog",
+    "guides": "Ghiduri SSM",
+    "legislation": "Legislație",
+    "about": "Despre noi",
+    "contactLink": "Contact",
+    "partnerships": "Parteneriate",
+    "copyright": "© 2026 s-s-m.ro. Toate drepturile rezervate.",
+    "terms": "Termeni și condiții",
+    "privacy": "Politica de confidențialitate",
+    "cookies": "Cookies"
   }
 }

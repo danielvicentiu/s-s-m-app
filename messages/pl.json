@@ -25,10 +25,79 @@
   "nav": {
     "features": "Funkcje",
     "pricing": "Cennik",
-    "login": "Wejdź do platformy",
+    "login": "Zaloguj się",
     "home": "Strona główna",
     "navigation": "Nawigacja",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "trialCta": "Bezpłatna wersja próbna"
+  },
+  "hero": {
+    "title1": "Bezpieczeństwo pracy.",
+    "titleHighlight": "Zdigitalizowane.",
+    "title2": "Uproszczone.",
+    "subtitle": "Kompletna platforma BHP, ochrony przeciwpożarowej i medycyny pracy — automatyczna zgodność dla pracodawców w Rumunii i Europie Środkowo-Wschodniej.",
+    "cta": "Rozpocznij bezpłatnie",
+    "ctaSecondary": "Odkryj platformę",
+    "trustCompanies": "100+ firm",
+    "trustNoCard": "Bez karty kredytowej",
+    "dashboardTitle": "Panel sterowania",
+    "dashboardCompliant": "Zgodny",
+    "dashboardEmployees": "Pracownicy",
+    "dashboardTrainings": "Ukończone szkolenia",
+    "dashboardDocuments": "Dokumenty",
+    "dashboardRisks": "Aktywne ryzyka",
+    "dashboardCompliance": "Ogólna zgodność",
+    "dashboardSSM": "BHP Aktywne",
+    "dashboardModules": "38 aktywnych modułów",
+    "dashboardScore": "Wynik zgodności",
+    "dashboardScoreChange": "+12% w tym miesiącu"
+  },
+  "trustedBy": {
+    "title": "Ponad 100 firm wybrało s-s-m.ro"
+  },
+  "features": {
+    "title": "Wszystko, czego potrzebujesz do zgodności",
+    "subtitle": "Jedna platforma obejmująca wszystkie wymagania prawne dotyczące bezpieczeństwa i higieny pracy.",
+    "ssm": "Bezpieczeństwo i higiena pracy (BHP)",
+    "ssmDesc": "Ocena ryzyka, karty szkoleń i kompletna dokumentacja BHP, generowane automatycznie.",
+    "psi": "Ochrona przeciwpożarowa (PSI)",
+    "psiDesc": "Plany ewakuacji, szkolenia okresowe i przeglądy sprzętu przeciwpożarowego.",
+    "gdpr": "Ochrona danych (RODO)",
+    "gdprDesc": "Rejestr przetwarzania, polityki prywatności i zarządzanie zgodami.",
+    "nis2": "Dyrektywa NIS2",
+    "nis2Desc": "Zgodność z wymaganiami NIS2 dotyczącymi bezpieczeństwa sieci i systemów informatycznych.",
+    "medical": "Medycyna pracy",
+    "medicalDesc": "Automatyczne planowanie, zaświadczenia o zdolności do pracy i śledzenie badań lekarskich.",
+    "iscir": "ISCIR & Urządzenia",
+    "iscirDesc": "Rejestr urządzeń podlegających ISCIR z powiadomieniami o okresowych przeglądach.",
+    "nearMiss": "Zgłaszanie zdarzeń potencjalnie wypadkowych",
+    "nearMissDesc": "Szybkie zgłaszanie incydentów i zdarzeń potencjalnie wypadkowych z analizą przyczyn.",
+    "training": "Szkolenia & Kalendarz",
+    "trainingDesc": "Planowanie i śledzenie obowiązkowych szkoleń z automatycznymi przypomnieniami.",
+    "reports": "Raporty PDF & Eksport",
+    "reportsDesc": "Automatyczne generowanie zgodnych raportów, gotowych do druku lub wysyłki do organów."
+  },
+  "howItWorks": {
+    "title": "Jak to działa",
+    "subtitle": "Trzy proste kroki do pełnej zgodności.",
+    "step1Title": "Utwórz konto",
+    "step1Desc": "Szybka rejestracja w mniej niż 2 minuty. Bez karty kredytowej.",
+    "step2Title": "Importuj pracowników",
+    "step2Desc": "Prześlij listę pracowników z Excela lub dodaj ich ręcznie, jednego po drugim.",
+    "step3Title": "Automatyczna zgodność",
+    "step3Desc": "Platforma automatycznie generuje dokumentację i powiadamia Cię przy każdym terminie."
+  },
+  "stats": {
+    "modules": "Aktywnych modułów",
+    "clients": "Aktywnych klientów",
+    "languages": "Obsługiwanych języków",
+    "countries": "Krajów Europy Środkowo-Wschodniej"
+  },
+  "cta": {
+    "title": "Zacznij dziś — pierwsze 30 dni bezpłatnie",
+    "subtitle": "Bez karty kredytowej. Bez zobowiązań. Skonfiguruj konto w mniej niż 2 minuty.",
+    "placeholder": "email@firma.pl",
+    "button": "Zacznij bezpłatnie"
   },
   "landing": {
     "badge": "Platforma cyfrowa BHP i ochrony przeciwpożarowej",
@@ -182,9 +251,24 @@
     }
   },
   "footer": {
-    "description": "Platforma cyfrowa dla zgodności BHP i ochrony przeciwpożarowej. Medycyna pracy, sprzęt przeciwpożarowy, automatyczne alerty.",
+    "description": "Kompletna platforma bezpieczeństwa i higieny pracy. Automatyczna zgodność dla pracodawców w Rumunii i Europie Środkowo-Wschodniej.",
     "email": "contact@s-s-m.ro",
     "phone": "+48 22 000 0000",
-    "address": "Warszawa, Polska"
+    "address": "Warszawa, Polska",
+    "platform": "Platforma",
+    "resources": "Zasoby",
+    "company": "Firma",
+    "featuresLink": "Funkcje",
+    "pricingLink": "Cennik",
+    "blog": "Blog",
+    "guides": "Poradniki BHP",
+    "legislation": "Przepisy prawne",
+    "about": "O nas",
+    "contactLink": "Kontakt",
+    "partnerships": "Partnerstwa",
+    "copyright": "© 2026 s-s-m.ro. Wszystkie prawa zastrzeżone.",
+    "terms": "Regulamin",
+    "privacy": "Polityka prywatności",
+    "cookies": "Pliki cookie"
   }
 }
