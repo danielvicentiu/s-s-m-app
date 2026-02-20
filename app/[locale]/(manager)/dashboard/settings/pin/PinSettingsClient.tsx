@@ -6,12 +6,14 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Shield, Lock, CheckCircle, Info } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   hasPin: boolean
 }
 
 export default function PinSettingsClient({ hasPin }: Props) {
+  const t = useTranslations('pinSettings')
   const [pinSaved, setPinSaved] = useState(hasPin)
   const [showForm, setShowForm] = useState(!hasPin)
   const [newPin, setNewPin] = useState('')
@@ -21,11 +23,11 @@ export default function PinSettingsClient({ hasPin }: Props) {
 
   const handleSave = async () => {
     if (!newPin || newPin.length < 4 || newPin.length > 6 || !/^\d+$/.test(newPin)) {
-      setMessage({ type: 'error', text: 'PIN-ul trebuie să aibă 4-6 cifre numerice.' })
+      setMessage({ type: 'error', text: t('errorPinFormat') })
       return
     }
     if (newPin !== confirmPin) {
-      setMessage({ type: 'error', text: 'PIN-urile nu coincid. Încearcă din nou.' })
+      setMessage({ type: 'error', text: t('errorPinMismatch') })
       return
     }
 
@@ -42,21 +44,21 @@ export default function PinSettingsClient({ hasPin }: Props) {
       const data = await res.json()
 
       if (!res.ok) {
-        setMessage({ type: 'error', text: data.error || 'Eroare la salvare PIN.' })
+        setMessage({ type: 'error', text: data.error || t('errorSave') })
         return
       }
 
       // Persist has_pin cookie — 1 year
       document.cookie = `has_pin=true; max-age=${365 * 24 * 60 * 60}; path=/; SameSite=Lax`
 
-      setMessage({ type: 'success', text: 'PIN salvat cu succes' })
+      setMessage({ type: 'success', text: t('successSaved') })
       setPinSaved(true)
       setShowForm(false)
       setNewPin('')
       setConfirmPin('')
     } catch (err) {
       console.error('PIN set error:', err)
-      setMessage({ type: 'error', text: 'Eroare de conexiune. Încearcă din nou.' })
+      setMessage({ type: 'error', text: t('errorConnection') })
     } finally {
       setSaving(false)
     }
@@ -85,8 +87,8 @@ export default function PinSettingsClient({ hasPin }: Props) {
             <ArrowLeft className="h-5 w-5 text-gray-600" />
           </Link>
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Securitate PIN</h1>
-            <p className="text-sm text-gray-500">Autentificare rapidă cu PIN</p>
+            <h1 className="text-2xl font-black text-gray-900">{t('pageTitle')}</h1>
+            <p className="text-sm text-gray-500">{t('pageSubtitle')}</p>
           </div>
         </div>
       </header>
@@ -109,7 +111,7 @@ export default function PinSettingsClient({ hasPin }: Props) {
         <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Setări PIN rapid
+            {t('cardTitle')}
           </h2>
 
           {/* Status: PIN active, no form */}
@@ -118,9 +120,9 @@ export default function PinSettingsClient({ hasPin }: Props) {
               <div className="flex items-center gap-3 rounded-xl bg-green-50 border border-green-200 p-4">
                 <CheckCircle className="h-5 w-5 text-green-600 shrink-0" />
                 <div>
-                  <p className="font-semibold text-green-900">PIN activ ✅</p>
+                  <p className="font-semibold text-green-900">{t('pinActive')}</p>
                   <p className="text-sm text-green-700">
-                    Poți folosi PIN-ul pentru autentificare rapidă la dashboard.
+                    {t('pinActiveDesc')}
                   </p>
                 </div>
               </div>
@@ -130,7 +132,7 @@ export default function PinSettingsClient({ hasPin }: Props) {
                 className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition"
               >
                 <Lock className="h-4 w-4" />
-                Schimbă PIN
+                {t('changePin')}
               </button>
             </div>
           ) : (
@@ -138,13 +140,13 @@ export default function PinSettingsClient({ hasPin }: Props) {
             <div className="space-y-4">
               {!pinSaved && (
                 <p className="text-sm text-gray-600 pb-1">
-                  Nu aveți PIN configurat. Setați un PIN de 4-6 cifre pentru autentificare rapidă.
+                  {t('noPinMessage')}
                 </p>
               )}
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  PIN nou (4-6 cifre)
+                  {t('labelNewPin')}
                 </label>
                 <input
                   type="password"
@@ -162,7 +164,7 @@ export default function PinSettingsClient({ hasPin }: Props) {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Confirmă PIN
+                  {t('labelConfirmPin')}
                 </label>
                 <input
                   type="password"
@@ -185,7 +187,7 @@ export default function PinSettingsClient({ hasPin }: Props) {
                   disabled={saving || !newPin || !confirmPin}
                   className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {saving ? 'Se salvează...' : 'Salvează PIN'}
+                  {saving ? t('saving') : t('saveButton')}
                 </button>
 
                 {pinSaved && (
@@ -194,7 +196,7 @@ export default function PinSettingsClient({ hasPin }: Props) {
                     onClick={cancelChange}
                     className="px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition"
                   >
-                    Anulează
+                    {t('cancel')}
                   </button>
                 )}
               </div>
@@ -206,14 +208,14 @@ export default function PinSettingsClient({ hasPin }: Props) {
         <div className="bg-blue-50 rounded-2xl border border-blue-200 p-6">
           <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
             <Info className="h-4 w-4" />
-            Cum funcționează PIN-ul rapid?
+            {t('infoTitle')}
           </h3>
           <ul className="text-sm text-blue-700 space-y-1.5">
-            <li>• Setează un PIN de 4-6 cifre pentru acces rapid la dashboard</li>
-            <li>• La fiecare sesiune nouă, vei fi rugat să introduci PIN-ul</li>
-            <li>• După 5 încercări greșite, accesul PIN se blochează 15 minute</li>
-            <li>• Verificarea PIN rămâne activă 24 de ore</li>
-            <li>• Poți oricând să te conectezi cu email dacă uiți PIN-ul</li>
+            <li>• {t('infoItem1')}</li>
+            <li>• {t('infoItem2')}</li>
+            <li>• {t('infoItem3')}</li>
+            <li>• {t('infoItem4')}</li>
+            <li>• {t('infoItem5')}</li>
           </ul>
         </div>
       </main>

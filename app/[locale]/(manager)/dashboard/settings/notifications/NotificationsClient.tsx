@@ -4,6 +4,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
 import Link from 'next/link';
 import {
@@ -56,99 +57,12 @@ interface Props {
   initialQuietHours: QuietHours;
 }
 
-// Alert type definitions with icons and descriptions
-const ALERT_TYPES = [
-  {
-    key: 'training_expiring',
-    label: 'Instruire în expirare',
-    description: 'Instruiri care expiră în următoarele 30 de zile',
-    icon: '📚',
-    category: 'Instruiri',
-  },
-  {
-    key: 'training_expired',
-    label: 'Instruire expirată',
-    description: 'Instruiri care au expirat și necesită reînnoire',
-    icon: '⚠️',
-    category: 'Instruiri',
-  },
-  {
-    key: 'medical_expiring',
-    label: 'Examen medical în expirare',
-    description: 'Examene medicale care expiră în următoarele 30 de zile',
-    icon: '🏥',
-    category: 'Medicina Muncii',
-  },
-  {
-    key: 'medical_expired',
-    label: 'Examen medical expirat',
-    description: 'Examene medicale expirate',
-    icon: '🚨',
-    category: 'Medicina Muncii',
-  },
-  {
-    key: 'equipment_expiring',
-    label: 'Echipament în expirare',
-    description: 'Echipamente PSI/SSM care expiră în curând',
-    icon: '🧯',
-    category: 'Echipamente',
-  },
-  {
-    key: 'equipment_expired',
-    label: 'Echipament expirat',
-    description: 'Echipamente expirate care necesită verificare/înlocuire',
-    icon: '❌',
-    category: 'Echipamente',
-  },
-  {
-    key: 'documents_pending',
-    label: 'Documente în așteptare',
-    description: 'Documente care necesită semnătură sau aprobare',
-    icon: '📄',
-    category: 'Documente',
-  },
-  {
-    key: 'documents_expiring',
-    label: 'Documente în expirare',
-    description: 'Autorizații, acreditări care expiră',
-    icon: '📋',
-    category: 'Documente',
-  },
-  {
-    key: 'legislation_updates',
-    label: 'Actualizări legislative',
-    description: 'Modificări în legislația SSM/PSI relevantă',
-    icon: '📜',
-    category: 'Legislație',
-  },
-  {
-    key: 'incident_created',
-    label: 'Incident nou',
-    description: 'Notificare imediată la raportarea unui incident',
-    icon: '🆘',
-    category: 'Incidente',
-  },
-  {
-    key: 'compliance_critical',
-    label: 'Conformitate critică',
-    description: 'Alerte de conformitate cu termen scurt',
-    icon: '⚡',
-    category: 'Conformitate',
-  },
-];
-
 const CHANNEL_INFO = {
   email: { icon: Mail, label: 'Email', color: 'blue' },
   push: { icon: Bell, label: 'Push', color: 'purple' },
   sms: { icon: Smartphone, label: 'SMS', color: 'green' },
   whatsapp: { icon: MessageSquare, label: 'WhatsApp', color: 'emerald' },
 };
-
-const TIMING_OPTIONS = [
-  { value: 'immediate', label: 'Imediat', description: 'Notificare instantanee' },
-  { value: 'daily_digest', label: 'Rezumat zilnic', description: 'O dată pe zi, dimineața' },
-  { value: 'weekly_digest', label: 'Rezumat săptămânal', description: 'Lunea dimineața' },
-];
 
 const DAYS_OF_WEEK = [
   { value: 0, label: 'D' }, // Sunday
@@ -165,7 +79,94 @@ export default function NotificationsClient({
   initialSettings,
   initialQuietHours,
 }: Props) {
+  const t = useTranslations('notificationSettings');
   const supabase = createSupabaseBrowser();
+
+  const ALERT_TYPES = [
+    {
+      key: 'training_expiring',
+      label: t('alertTrainingExpiring'),
+      description: t('alertTrainingExpiringDesc'),
+      icon: '📚',
+      category: t('categoryTrainings'),
+    },
+    {
+      key: 'training_expired',
+      label: t('alertTrainingExpired'),
+      description: t('alertTrainingExpiredDesc'),
+      icon: '⚠️',
+      category: t('categoryTrainings'),
+    },
+    {
+      key: 'medical_expiring',
+      label: t('alertMedicalExpiring'),
+      description: t('alertMedicalExpiringDesc'),
+      icon: '🏥',
+      category: t('categoryMedical'),
+    },
+    {
+      key: 'medical_expired',
+      label: t('alertMedicalExpired'),
+      description: t('alertMedicalExpiredDesc'),
+      icon: '🚨',
+      category: t('categoryMedical'),
+    },
+    {
+      key: 'equipment_expiring',
+      label: t('alertEquipmentExpiring'),
+      description: t('alertEquipmentExpiringDesc'),
+      icon: '🧯',
+      category: t('categoryEquipment'),
+    },
+    {
+      key: 'equipment_expired',
+      label: t('alertEquipmentExpired'),
+      description: t('alertEquipmentExpiredDesc'),
+      icon: '❌',
+      category: t('categoryEquipment'),
+    },
+    {
+      key: 'documents_pending',
+      label: t('alertDocumentsPending'),
+      description: t('alertDocumentsPendingDesc'),
+      icon: '📄',
+      category: t('categoryDocuments'),
+    },
+    {
+      key: 'documents_expiring',
+      label: t('alertDocumentsExpiring'),
+      description: t('alertDocumentsExpiringDesc'),
+      icon: '📋',
+      category: t('categoryDocuments'),
+    },
+    {
+      key: 'legislation_updates',
+      label: t('alertLegislationUpdates'),
+      description: t('alertLegislationUpdatesDesc'),
+      icon: '📜',
+      category: t('categoryLegislation'),
+    },
+    {
+      key: 'incident_created',
+      label: t('alertIncidentCreated'),
+      description: t('alertIncidentCreatedDesc'),
+      icon: '🆘',
+      category: t('categoryIncidents'),
+    },
+    {
+      key: 'compliance_critical',
+      label: t('alertComplianceCritical'),
+      description: t('alertComplianceCriticalDesc'),
+      icon: '⚡',
+      category: t('categoryCompliance'),
+    },
+  ];
+
+  const TIMING_OPTIONS = [
+    { value: 'immediate', label: t('timingImmediate'), description: t('timingImmediateDesc') },
+    { value: 'daily_digest', label: t('timingDaily'), description: t('timingDailyDesc') },
+    { value: 'weekly_digest', label: t('timingWeekly'), description: t('timingWeeklyDesc') },
+  ];
 
   // Initialize default settings for each alert type
   const defaultSettings: AlertTypeSettings = {
@@ -286,13 +287,13 @@ export default function NotificationsClient({
 
       if (quietHoursError) throw quietHoursError;
 
-      setMessage({ type: 'success', text: 'Setări salvate cu succes!' });
+      setMessage({ type: 'success', text: t('savedSuccess') });
 
       // Clear success message after 3 seconds
       setTimeout(() => setMessage(null), 3000);
     } catch (error: any) {
       console.error('Error saving notification settings:', error);
-      setMessage({ type: 'error', text: 'Eroare la salvare: ' + error.message });
+      setMessage({ type: 'error', text: t('savedError') + ': ' + error.message });
     } finally {
       setSaving(false);
     }
@@ -323,10 +324,10 @@ export default function NotificationsClient({
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                   <Bell className="w-7 h-7 text-blue-600" />
-                  Setări Notificări
+                  {t('title')}
                 </h1>
                 <p className="text-sm text-gray-600 mt-1">
-                  Configurare canale și frecvență notificări per tip de alertă
+                  {t('subtitle')}
                 </p>
               </div>
             </div>
@@ -336,7 +337,7 @@ export default function NotificationsClient({
               className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               <Save className="w-4 h-4" />
-              {saving ? 'Se salvează...' : 'Salvează setări'}
+              {saving ? t('saving') : t('saveSettings')}
             </button>
           </div>
         </div>
@@ -368,12 +369,10 @@ export default function NotificationsClient({
             <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-blue-900 mb-2">
-                Personalizează notificările tale
+                {t('infoBannerTitle')}
               </h3>
               <p className="text-sm text-blue-800 leading-relaxed">
-                Configurează pentru fiecare tip de alertă canalele de notificare preferate (email,
-                push, SMS, WhatsApp) și frecvența de livrare (imediat, rezumat zilnic sau
-                săptămânal). Setările de quiet hours previne notificările în orele de odihnă.
+                {t('infoBannerDesc')}
               </p>
             </div>
           </div>
@@ -384,9 +383,9 @@ export default function NotificationsClient({
           <div className="flex items-center gap-3 mb-6">
             <Moon className="w-6 h-6 text-purple-600" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Ore de liniște (Quiet Hours)</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('quietHoursTitle')}</h2>
               <p className="text-sm text-gray-600 mt-0.5">
-                Nu primi notificări în intervalul specificat
+                {t('quietHoursDesc')}
               </p>
             </div>
           </div>
@@ -403,7 +402,7 @@ export default function NotificationsClient({
                 className="w-5 h-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500"
               />
               <span className="font-medium text-gray-700 group-hover:text-gray-900">
-                Activează orele de liniște
+                {t('enableQuietHours')}
               </span>
             </label>
 
@@ -414,7 +413,7 @@ export default function NotificationsClient({
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       <Clock className="w-4 h-4 inline mr-1" />
-                      Ora de început
+                      {t('startTime')}
                     </label>
                     <input
                       type="time"
@@ -428,7 +427,7 @@ export default function NotificationsClient({
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       <Clock className="w-4 h-4 inline mr-1" />
-                      Ora de sfârșit
+                      {t('endTime')}
                     </label>
                     <input
                       type="time"
@@ -444,7 +443,7 @@ export default function NotificationsClient({
                 {/* Days of Week */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Zilele săptămânii
+                    {t('daysOfWeek')}
                   </label>
                   <div className="flex gap-2">
                     {DAYS_OF_WEEK.map((day) => (
@@ -514,7 +513,7 @@ export default function NotificationsClient({
                           {/* Channels */}
                           <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700 mb-3">
-                              Canale de notificare
+                              {t('notificationChannels')}
                             </label>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                               {(Object.keys(CHANNEL_INFO) as NotificationChannel[]).map(
@@ -544,7 +543,7 @@ export default function NotificationsClient({
                           {/* Timing */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-3">
-                              Frecvență notificări
+                              {t('notificationFrequency')}
                             </label>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                               {TIMING_OPTIONS.map((option) => (
@@ -587,7 +586,7 @@ export default function NotificationsClient({
             className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg"
           >
             <Save className="w-5 h-5" />
-            {saving ? 'Se salvează...' : 'Salvează toate setările'}
+            {saving ? t('saving') : t('saveAllSettings')}
           </button>
         </div>
       </div>

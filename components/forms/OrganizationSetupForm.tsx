@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import {
   Building2,
@@ -155,6 +156,7 @@ export default function OrganizationSetupForm({
   onSuccess,
   onCancel,
 }: Props) {
+  const t = useTranslations('forms')
   const supabase = createSupabaseBrowser()
 
   // ========== STATE ==========
@@ -229,11 +231,11 @@ export default function OrganizationSetupForm({
           contactPhone: prev.contactPhone || anafData.phone,
         }))
       } else {
-        setCuiError('CUI valid, dar nu a fost găsit în registrul ANAF')
+        setCuiError(t('orgSetup.cuiNotFoundANAF'))
       }
     } catch (err) {
       console.error('ANAF error:', err)
-      setCuiError('Eroare la verificarea ANAF')
+      setCuiError(t('orgSetup.cuiANAFError'))
     } finally {
       setLoadingANAF(false)
     }
@@ -296,11 +298,11 @@ export default function OrganizationSetupForm({
     try {
       // Validation
       if (!formData.cui || !formData.name || !formData.caen) {
-        throw new Error('Completează toate câmpurile obligatorii')
+        throw new Error(t('orgSetup.errorRequiredFields'))
       }
 
       if (cuiError) {
-        throw new Error('Corectează erorile de validare înainte de salvare')
+        throw new Error(t('orgSetup.errorFixValidation'))
       }
 
       // 1. Create organization
@@ -369,7 +371,7 @@ export default function OrganizationSetupForm({
       }, 1500)
     } catch (err: any) {
       console.error('Submit error:', err)
-      setError(err.message || 'Eroare la salvarea organizației')
+      setError(err.message || t('orgSetup.errorSave'))
     } finally {
       setLoading(false)
     }
@@ -399,9 +401,9 @@ export default function OrganizationSetupForm({
         <div className="bg-green-600/10 border border-green-600/30 rounded-2xl p-8 text-center">
           <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-white mb-2">
-            Organizație creată cu succes!
+            {t('orgSetup.successTitle')}
           </h3>
-          <p className="text-gray-400">Redirecționare către dashboard...</p>
+          <p className="text-gray-400">{t('orgSetup.successRedirect')}</p>
         </div>
       </div>
     )
@@ -416,10 +418,10 @@ export default function OrganizationSetupForm({
             <Building2 className="w-8 h-8 text-white" />
             <div>
               <h2 className="text-2xl font-bold text-white">
-                Setup Organizație Nouă
+                {t('orgSetup.title')}
               </h2>
               <p className="text-blue-100 text-sm mt-1">
-                Completează datele firmei pentru a începe
+                {t('orgSetup.subtitle')}
               </p>
             </div>
           </div>
@@ -438,7 +440,7 @@ export default function OrganizationSetupForm({
           {/* CUI Field */}
           <div>
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              CUI (Cod Unic de Identificare) <span className="text-red-400">*</span>
+              {t('orgSetup.labelCUI')} <span className="text-red-400">*</span>
             </label>
             <div className="relative">
               <input
@@ -447,7 +449,7 @@ export default function OrganizationSetupForm({
                 value={formData.cui}
                 onChange={handleInputChange}
                 onBlur={handleCUIBlur}
-                placeholder="Ex: 12345678 sau RO12345678"
+                placeholder={t('orgSetup.cuiPlaceholder')}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {loadingANAF && (
@@ -466,7 +468,7 @@ export default function OrganizationSetupForm({
             {anafFound && !cuiError && (
               <p className="text-green-400 text-xs mt-1 flex items-center gap-1">
                 <CheckCircle2 className="w-3 h-3" />
-                Firmă găsită în registrul ANAF - câmpurile au fost completate automat
+                {t('orgSetup.cuiFoundANAF')}
               </p>
             )}
           </div>
@@ -474,14 +476,14 @@ export default function OrganizationSetupForm({
           {/* Organization Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Denumire Firmă <span className="text-red-400">*</span>
+              {t('orgSetup.labelName')} <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              placeholder="Ex: BUILD MAX CONSTRUCT SRL"
+              placeholder={t('orgSetup.namePlaceholder')}
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -490,14 +492,14 @@ export default function OrganizationSetupForm({
           {/* Address */}
           <div>
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Adresa Sediu
+              {t('orgSetup.labelAddress')}
             </label>
             <input
               type="text"
               name="address"
               value={formData.address}
               onChange={handleInputChange}
-              placeholder="Ex: Str. Constructorilor nr. 45"
+              placeholder={t('orgSetup.addressPlaceholder')}
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -506,7 +508,7 @@ export default function OrganizationSetupForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-300 mb-2">
-                Județ
+                {t('orgSetup.labelCounty')}
               </label>
               <select
                 name="county"
@@ -514,7 +516,7 @@ export default function OrganizationSetupForm({
                 onChange={handleInputChange}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Selectează județul</option>
+                <option value="">{t('orgSetup.selectCounty')}</option>
                 {RO_COUNTIES.map((county) => (
                   <option key={county} value={county}>
                     {county}
@@ -525,14 +527,14 @@ export default function OrganizationSetupForm({
 
             <div>
               <label className="block text-sm font-semibold text-gray-300 mb-2">
-                Localitate
+                {t('orgSetup.labelCity')}
               </label>
               <input
                 type="text"
                 name="city"
                 value={formData.city}
                 onChange={handleInputChange}
-                placeholder="Ex: București"
+                placeholder={t('orgSetup.cityPlaceholder')}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -541,7 +543,7 @@ export default function OrganizationSetupForm({
           {/* CAEN Search */}
           <div className="relative">
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              CAEN Principal <span className="text-red-400">*</span>
+              {t('orgSetup.labelCAEN')} <span className="text-red-400">*</span>
             </label>
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
@@ -550,7 +552,7 @@ export default function OrganizationSetupForm({
                 value={caenSearch}
                 onChange={(e) => setCaenSearch(e.target.value)}
                 onFocus={() => caenSearch.length >= 2 && setShowCaenSuggestions(true)}
-                placeholder="Caută activitatea principală (ex: construcții, restaurant...)"
+                placeholder={t('orgSetup.caenPlaceholder')}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -594,7 +596,7 @@ export default function OrganizationSetupForm({
                     }}
                     className="text-gray-400 hover:text-white transition-colors text-sm"
                   >
-                    Schimbă
+                    {t('orgSetup.caenChange')}
                   </button>
                 </div>
               </div>
@@ -604,7 +606,7 @@ export default function OrganizationSetupForm({
           {/* Employee Count Range */}
           <div>
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Număr Angajați
+              {t('orgSetup.labelEmployeeCount')}
             </label>
             <select
               name="employeeCountRange"
@@ -623,14 +625,14 @@ export default function OrganizationSetupForm({
           {/* Contact Person */}
           <div>
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Persoană Contact
+              {t('orgSetup.labelContactPerson')}
             </label>
             <input
               type="text"
               name="contactPerson"
               value={formData.contactPerson}
               onChange={handleInputChange}
-              placeholder="Ex: Ion Popescu"
+              placeholder={t('orgSetup.contactPersonPlaceholder')}
               className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -639,28 +641,28 @@ export default function OrganizationSetupForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-300 mb-2">
-                Telefon Contact
+                {t('orgSetup.labelContactPhone')}
               </label>
               <input
                 type="tel"
                 name="contactPhone"
                 value={formData.contactPhone}
                 onChange={handleInputChange}
-                placeholder="Ex: 0723456789"
+                placeholder={t('orgSetup.phonePlaceholder')}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-gray-300 mb-2">
-                Email Contact
+                {t('orgSetup.labelContactEmail')}
               </label>
               <input
                 type="email"
                 name="contactEmail"
                 value={formData.contactEmail}
                 onChange={handleInputChange}
-                placeholder="contact@firma.ro"
+                placeholder={t('orgSetup.emailPlaceholder')}
                 className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -675,7 +677,7 @@ export default function OrganizationSetupForm({
                 className="px-6 py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
                 disabled={loading}
               >
-                Anulează
+                {t('orgSetup.cancel')}
               </button>
             )}
 
@@ -687,11 +689,11 @@ export default function OrganizationSetupForm({
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Se salvează...
+                  {t('orgSetup.saving')}
                 </>
               ) : (
                 <>
-                  Creează Organizația
+                  {t('orgSetup.create')}
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}

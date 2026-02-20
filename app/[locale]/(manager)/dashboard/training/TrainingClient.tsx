@@ -5,6 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   getTrainingModules,
   getTrainingDashboard,
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export default function TrainingClient({ user, organizations, initialSelectedOrg }: Props) {
+  const t = useTranslations('training')
   // Organization selector
   const [selectedOrgId, setSelectedOrgId] = useState(initialSelectedOrg)
 
@@ -84,7 +86,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
   // ============================================================
   const loadData = useCallback(async () => {
     if (!selectedOrgId) {
-      setError('Selectează o organizație pentru a vizualiza instruirile.');
+      setError(t('selectOrgMessage'));
       setLoading(false);
       return;
     }
@@ -204,7 +206,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
       });
 
       if (!response.ok) {
-        throw new Error('Eroare la generare PDF');
+        throw new Error(t('errorGeneratePdf'));
       }
 
       const blob = await response.blob();
@@ -260,7 +262,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-slate-400 text-lg">Se încarcă modulul de instruire...</div>
+        <div className="text-slate-400 text-lg">{t('loadingModule')}</div>
       </div>
     );
   }
@@ -269,13 +271,13 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="bg-red-900/30 border border-red-800 rounded-xl p-6 max-w-lg">
-          <h2 className="text-red-400 font-bold text-lg mb-2">Eroare</h2>
+          <h2 className="text-red-400 font-bold text-lg mb-2">{t('errorTitle')}</h2>
           <p className="text-red-300 text-sm">{error}</p>
           <button
             onClick={loadData}
             className="mt-4 px-4 py-2 bg-red-800 hover:bg-red-700 text-white rounded-lg text-sm"
           >
-            Reîncearcă
+            {t('retry')}
           </button>
         </div>
       </div>
@@ -294,21 +296,21 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Instruire SSM/PSI</h1>
-              <p className="text-slate-400 text-sm mt-1">Gestionare instruiri, sesiuni, conformitate</p>
+              <h1 className="text-2xl font-bold text-white">{t('pageTitle')}</h1>
+              <p className="text-slate-400 text-sm mt-1">{t('pageSubtitle')}</p>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowAssignModal(true)}
                 className="px-4 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-medium text-sm transition-colors"
               >
-                + Atribuie Instruire
+                + {t('assignTraining')}
               </button>
               <button
                 onClick={() => setShowRecordModal(true)}
                 className="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-medium text-sm transition-colors"
               >
-                📝 Înregistrează Sesiune
+                📝 {t('recordSession')}
               </button>
             </div>
           </div>
@@ -316,7 +318,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
           {/* Organization Selector */}
           {organizations.length > 1 && (
             <div className="flex items-center gap-2">
-              <label className="text-slate-400 text-sm">Organizație:</label>
+              <label className="text-slate-400 text-sm">{t('orgLabel')}</label>
               <select
                 value={selectedOrgId}
                 onChange={(e) => setSelectedOrgId(e.target.value)}
@@ -335,21 +337,21 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
         {/* STATS CARDS */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-            <StatCard label="Total Atribuite" value={stats.total_assigned} color="text-slate-300" />
-            <StatCard label="Completate" value={`${stats.completed} (${stats.completion_rate}%)`} color="text-emerald-400" />
-            <StatCard label="În Curs" value={stats.in_progress} color="text-amber-400" />
-            <StatCard label="Depășite" value={stats.overdue} color={stats.overdue > 0 ? 'text-red-400' : 'text-slate-400'} />
-            <StatCard label="Scor Mediu Test" value={`${stats.avg_test_score}%`} color="text-blue-400" />
-            <StatCard label="Scadente 30 Zile" value={stats.upcoming_due} color="text-amber-400" />
+            <StatCard label={t('statTotalAssigned')} value={stats.total_assigned} color="text-slate-300" />
+            <StatCard label={t('statCompleted')} value={`${stats.completed} (${stats.completion_rate}%)`} color="text-emerald-400" />
+            <StatCard label={t('statInProgress')} value={stats.in_progress} color="text-amber-400" />
+            <StatCard label={t('statOverdue')} value={stats.overdue} color={stats.overdue > 0 ? 'text-red-400' : 'text-slate-400'} />
+            <StatCard label={t('statAvgScore')} value={`${stats.avg_test_score}%`} color="text-blue-400" />
+            <StatCard label={t('statDue30Days')} value={stats.upcoming_due} color="text-amber-400" />
           </div>
         )}
 
         {/* TABS */}
         <div className="flex gap-1 mb-6 bg-slate-900 rounded-xl p-1 w-fit">
           {[
-            { key: 'assignments' as TabType, label: 'Atribuiri' },
-            { key: 'workers' as TabType, label: 'Angajați' },
-            { key: 'modules' as TabType, label: 'Module' },
+            { key: 'assignments' as TabType, label: t('tabAssignments') },
+            { key: 'workers' as TabType, label: t('tabWorkers') },
+            { key: 'modules' as TabType, label: t('tabModules') },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -397,19 +399,19 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-800">
-                    <th className="text-left px-4 py-3 text-slate-400 font-medium">Angajat</th>
-                    <th className="text-left px-4 py-3 text-slate-400 font-medium">Modul</th>
-                    <th className="text-left px-4 py-3 text-slate-400 font-medium">Status</th>
-                    <th className="text-left px-4 py-3 text-slate-400 font-medium">Termen</th>
-                    <th className="text-left px-4 py-3 text-slate-400 font-medium">Verificare</th>
-                    <th className="text-left px-4 py-3 text-slate-400 font-medium">Instructor</th>
+                    <th className="text-left px-4 py-3 text-slate-400 font-medium">{t('colEmployee')}</th>
+                    <th className="text-left px-4 py-3 text-slate-400 font-medium">{t('colModule')}</th>
+                    <th className="text-left px-4 py-3 text-slate-400 font-medium">{t('colStatus')}</th>
+                    <th className="text-left px-4 py-3 text-slate-400 font-medium">{t('colDeadline')}</th>
+                    <th className="text-left px-4 py-3 text-slate-400 font-medium">{t('colVerification')}</th>
+                    <th className="text-left px-4 py-3 text-slate-400 font-medium">{t('colInstructor')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dashboard.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="px-4 py-12 text-center text-slate-500">
-                        Nicio atribuire găsită. Click "Atribuie Instruire" pentru a începe.
+                        {t('noAssignments')}
                       </td>
                     </tr>
                   ) : (
@@ -495,7 +497,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
           <div className="space-y-3">
             {workerStatuses.length === 0 ? (
               <div className="bg-slate-900 rounded-xl border border-slate-800 p-12 text-center text-slate-500">
-                Niciun angajat cu instruiri atribuite.
+                {t('noWorkersWithTrainings')}
               </div>
             ) : (
               workerStatuses.map((ws) => (
@@ -513,7 +515,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                     <div className="flex items-center gap-3">
                       {ws.next_due && (
                         <span className="text-slate-400 text-xs">
-                          Următoarea: {new Date(ws.next_due).toLocaleDateString('ro-RO')}
+                          {t('nextDue')}: {new Date(ws.next_due).toLocaleDateString('ro-RO')}
                         </span>
                       )}
                       <button
@@ -573,7 +575,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                     </span>
                     {mod.is_mandatory && (
                       <span className="text-xs px-1.5 py-0.5 rounded bg-red-900/30 text-red-400 font-medium">
-                        Obligatoriu
+                        {t('mandatory')}
                       </span>
                     )}
                   </div>
@@ -610,17 +612,17 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-white mb-6">Atribuie Instruire</h2>
+                <h2 className="text-xl font-bold text-white mb-6">{t('modalAssignTitle')}</h2>
 
                 {/* Module selector */}
                 <div className="mb-4">
-                  <label className="block text-slate-400 text-sm mb-1.5">Modul de instruire</label>
+                  <label className="block text-slate-400 text-sm mb-1.5">{t('labelTrainingModule')}</label>
                   <select
                     value={assignModuleId}
                     onChange={(e) => setAssignModuleId(e.target.value)}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                   >
-                    <option value="">— Selectează modulul —</option>
+                    <option value="">— {t('selectModule')} —</option>
                     {modules.map((mod) => (
                       <option key={mod.id} value={mod.id}>
                         {mod.code} — {mod.title} ({mod.duration_minutes_required} min)
@@ -632,7 +634,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
 
                 {/* Due date */}
                 <div className="mb-4">
-                  <label className="block text-slate-400 text-sm mb-1.5">Termen limită (opțional)</label>
+                  <label className="block text-slate-400 text-sm mb-1.5">{t('labelDeadlineOptional')}</label>
                   <input
                     type="date"
                     value={assignDueDate}
@@ -644,18 +646,18 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                 {/* Worker selection */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-slate-400 text-sm">Angajați</label>
+                    <label className="text-slate-400 text-sm">{t('labelWorkers')}</label>
                     <button
                       onClick={handleSelectAll}
                       className="text-teal-400 text-xs hover:text-teal-300"
                     >
-                      {assignSelectAll ? 'Deselectează tot' : 'Selectează tot'}
+                      {assignSelectAll ? t('deselectAll') : t('selectAll')}
                     </button>
                   </div>
                   <div className="bg-slate-800 border border-slate-700 rounded-lg max-h-48 overflow-y-auto">
                     {workers.length === 0 ? (
                       <div className="px-3 py-4 text-slate-500 text-sm text-center">
-                        Niciun angajat găsit în organizație
+                        {t('noWorkersFound')}
                       </div>
                     ) : (
                       workers.map((w) => (
@@ -688,14 +690,14 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                     onClick={() => setShowAssignModal(false)}
                     className="flex-1 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm"
                   >
-                    Anulează
+                    {t('cancel')}
                   </button>
                   <button
                     onClick={handleAssign}
                     disabled={!assignModuleId || assignWorkerIds.length === 0}
                     className="flex-1 px-4 py-2.5 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-xl text-sm font-medium"
                   >
-                    Atribuie
+                    {t('assign')}
                   </button>
                 </div>
               </div>
@@ -710,18 +712,18 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-white mb-6">Înregistrează Sesiune de Instruire</h2>
+                <h2 className="text-xl font-bold text-white mb-6">{t('modalRecordTitle')}</h2>
 
                 <div className="grid grid-cols-2 gap-4">
                   {/* Module */}
                   <div className="col-span-2">
-                    <label className="block text-slate-400 text-sm mb-1.5">Modul</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelModule')}</label>
                     <select
                       value={recordModuleId}
                       onChange={(e) => setRecordModuleId(e.target.value)}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     >
-                      <option value="">— Selectează modulul —</option>
+                      <option value="">— {t('selectModule')} —</option>
                       {modules.map((mod) => (
                         <option key={mod.id} value={mod.id}>
                           {mod.code} — {mod.title}
@@ -732,13 +734,13 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
 
                   {/* Worker */}
                   <div className="col-span-2">
-                    <label className="block text-slate-400 text-sm mb-1.5">Angajat</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelWorker')}</label>
                     <select
                       value={recordWorkerId}
                       onChange={(e) => setRecordWorkerId(e.target.value)}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     >
-                      <option value="">— Selectează angajat —</option>
+                      <option value="">— {t('selectWorker')} —</option>
                       {workers.map((w) => (
                         <option key={w.id} value={w.id}>{w.full_name}</option>
                       ))}
@@ -748,21 +750,21 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                   {/* Instructor (MANDATORY) */}
                   <div className="col-span-2">
                     <label className="block text-slate-400 text-sm mb-1.5">
-                      Instructor <span className="text-red-400">*</span>
-                      <span className="text-slate-600 ml-1">(obligatoriu ITM)</span>
+                      {t('labelInstructor')} <span className="text-red-400">*</span>
+                      <span className="text-slate-600 ml-1">({t('requiredITM')})</span>
                     </label>
                     <input
                       type="text"
                       value={recordInstructor}
                       onChange={(e) => setRecordInstructor(e.target.value)}
-                      placeholder="Nume instructor"
+                      placeholder={t('placeholderInstructorName')}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     />
                   </div>
 
                   {/* Date */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-1.5">Data</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelDate')}</label>
                     <input
                       type="date"
                       value={recordDate}
@@ -773,7 +775,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
 
                   {/* Duration */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-1.5">Durata (min)</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelDurationMin')}</label>
                     <input
                       type="number"
                       value={recordDuration}
@@ -784,7 +786,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
 
                   {/* Language */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-1.5">Limba</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelLanguage')}</label>
                     <select
                       value={recordLanguage}
                       onChange={(e) => setRecordLanguage(e.target.value)}
@@ -802,7 +804,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
 
                   {/* Location */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-1.5">Locația</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelLocation')}</label>
                     <input
                       type="text"
                       value={recordLocation}
@@ -814,10 +816,10 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
 
                   {/* Test results */}
                   <div className="col-span-2 mt-2">
-                    <label className="block text-slate-400 text-sm mb-3 font-medium">Rezultat Test</label>
+                    <label className="block text-slate-400 text-sm mb-3 font-medium">{t('labelTestResult')}</label>
                     <div className="grid grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-slate-500 text-xs mb-1">Nr. întrebări</label>
+                        <label className="block text-slate-500 text-xs mb-1">{t('labelQuestions')}</label>
                         <input
                           type="number"
                           value={recordTestTotal}
@@ -827,7 +829,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-500 text-xs mb-1">Corecte</label>
+                        <label className="block text-slate-500 text-xs mb-1">{t('labelCorrect')}</label>
                         <input
                           type="number"
                           value={recordTestCorrect}
@@ -838,7 +840,7 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-500 text-xs mb-1">Scor</label>
+                        <label className="block text-slate-500 text-xs mb-1">{t('labelScore')}</label>
                         <div className={`w-full rounded-lg px-3 py-2 text-sm font-bold text-center ${
                           testScore >= 70 ? 'bg-emerald-900/30 text-emerald-400' : 'bg-red-900/30 text-red-400'
                         }`}>
@@ -855,14 +857,14 @@ export default function TrainingClient({ user, organizations, initialSelectedOrg
                     onClick={() => { setShowRecordModal(false); resetRecordForm(); }}
                     className="flex-1 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm"
                   >
-                    Anulează
+                    {t('cancel')}
                   </button>
                   <button
                     onClick={handleRecordSession}
                     disabled={!recordModuleId || !recordWorkerId || !recordInstructor}
                     className="flex-1 px-4 py-2.5 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-xl text-sm font-medium"
                   >
-                    Înregistrează
+                    {t('record')}
                   </button>
                 </div>
               </div>

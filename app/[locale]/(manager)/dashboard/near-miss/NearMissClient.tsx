@@ -5,6 +5,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import {
   BarChart,
   Bar,
@@ -84,41 +85,8 @@ interface NearMissStats {
 }
 
 // ============================================================
-// LABELS
+// LABELS — moved inside components that use useTranslations
 // ============================================================
-
-const CATEGORY_LABELS: Record<NearMissCategory, string> = {
-  cadere_nivel: 'Cădere la același nivel',
-  cadere_inaltime: 'Cădere de la înălțime',
-  lovire: 'Lovire de/cu obiecte',
-  taiere: 'Tăiere/Înțepare',
-  electrocutare: 'Electrocutare',
-  substante_chimice: 'Substanțe chimice',
-  incendiu: 'Incendiu',
-  explozie: 'Explozie',
-  alunecare: 'Alunecare',
-  prindere_echipament: 'Prindere în echipament',
-  ergonomic: 'Ergonomic/Suprasolicitate',
-  psihosocial: 'Risc psihosocial',
-  transport: 'Transport/Circulație',
-  altul: 'Altul',
-}
-
-const STATUS_LABELS: Record<NearMissStatus, string> = {
-  raportat: 'Raportat',
-  in_investigare: 'În investigare',
-  masuri_aplicate: 'Măsuri aplicate',
-  inchis: 'Închis',
-  anulat: 'Anulat',
-}
-
-const SEVERITY_LABELS: Record<NearMissSeverity, string> = {
-  minor: 'Minor',
-  moderate: 'Moderat',
-  major: 'Major',
-  critical: 'Critic',
-  fatal: 'Fatal',
-}
 
 // ============================================================
 // COLORS
@@ -157,6 +125,41 @@ interface Props {
 // ============================================================
 
 export default function NearMissClient({ user, organizations, initialSelectedOrg }: Props) {
+  const t = useTranslations('nearMiss')
+
+  const CATEGORY_LABELS: Record<NearMissCategory, string> = {
+    cadere_nivel: t('catFallSameLevel'),
+    cadere_inaltime: t('catFallHeight'),
+    lovire: t('catHitObjects'),
+    taiere: t('catCutPierce'),
+    electrocutare: t('catElectrocution'),
+    substante_chimice: t('catChemicals'),
+    incendiu: t('catFire'),
+    explozie: t('catExplosion'),
+    alunecare: t('catSlip'),
+    prindere_echipament: t('catCaughtInEquipment'),
+    ergonomic: t('catErgonomic'),
+    psihosocial: t('catPsychosocial'),
+    transport: t('catTransport'),
+    altul: t('catOther'),
+  }
+
+  const STATUS_LABELS: Record<NearMissStatus, string> = {
+    raportat: t('statusReported'),
+    in_investigare: t('statusInvestigating'),
+    masuri_aplicate: t('statusMeasuresApplied'),
+    inchis: t('statusClosed'),
+    anulat: t('statusCancelled'),
+  }
+
+  const SEVERITY_LABELS: Record<NearMissSeverity, string> = {
+    minor: t('severityMinor'),
+    moderate: t('severityModerate'),
+    major: t('severityMajor'),
+    critical: t('severityCritical'),
+    fatal: t('severityFatal'),
+  }
+
   const [selectedOrgId, setSelectedOrgId] = useState(initialSelectedOrg)
   const [activeTab, setActiveTab] = useState<'reports' | 'statistics'>('reports')
   const [reports, setReports] = useState<NearMissReport[]>([])
@@ -193,7 +196,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
 
   const loadReports = useCallback(async () => {
     if (!selectedOrgId) {
-      setError('Selectează o organizație pentru a vizualiza rapoartele.')
+      setError(t('selectOrgError'))
       setLoading(false)
       return
     }
@@ -231,7 +234,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
       setReports(reportsJson.reports || [])
       setStats(statsJson)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Eroare necunoscută')
+      setError(err instanceof Error ? err.message : t('unknownError'))
     } finally {
       setLoading(false)
     }
@@ -254,7 +257,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
       !formData.location ||
       !formData.description
     ) {
-      alert('Te rog completează toate câmpurile obligatorii.')
+      alert(t('fillRequiredFields'))
       return
     }
 
@@ -272,7 +275,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
 
       if (!res.ok) throw new Error('Failed to create report')
 
-      alert('Raport creat cu succes!')
+      alert(t('reportCreated'))
       setShowAddModal(false)
       setFormData({
         reported_by: '',
@@ -287,7 +290,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
       })
       loadReports()
     } catch (err) {
-      alert('Eroare la crearea raportului: ' + (err instanceof Error ? err.message : 'Eroare necunoscută'))
+      alert(t('errorCreatingReport') + ': ' + (err instanceof Error ? err.message : t('unknownError')))
     }
   }
 
@@ -303,17 +306,17 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
 
       if (!res.ok) throw new Error('Failed to update report')
 
-      alert('Raport actualizat cu succes!')
+      alert(t('reportUpdated'))
       setShowDetailModal(false)
       setSelectedReport(null)
       loadReports()
     } catch (err) {
-      alert('Eroare la actualizarea raportului: ' + (err instanceof Error ? err.message : 'Eroare necunoscută'))
+      alert(t('errorUpdatingReport') + ': ' + (err instanceof Error ? err.message : t('unknownError')))
     }
   }
 
   const handleDeleteReport = async (reportId: string) => {
-    if (!confirm('Ești sigur că vrei să ștergi acest raport?')) return
+    if (!confirm(t('confirmDeleteReport'))) return
 
     try {
       const res = await fetch(`/api/near-miss/${reportId}`, {
@@ -322,12 +325,12 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
 
       if (!res.ok) throw new Error('Failed to delete report')
 
-      alert('Raport șters cu succes!')
+      alert(t('reportDeleted'))
       setShowDetailModal(false)
       setSelectedReport(null)
       loadReports()
     } catch (err) {
-      alert('Eroare la ștergerea raportului: ' + (err instanceof Error ? err.message : 'Eroare necunoscută'))
+      alert(t('errorDeletingReport') + ': ' + (err instanceof Error ? err.message : t('unknownError')))
     }
   }
 
@@ -346,7 +349,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Near-Miss Reporting</h1>
-          <p className="text-gray-600 mt-1">Raportare incidente aproape-accidente SSM</p>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
 
         {/* Organization Selector */}
@@ -356,7 +359,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
             onChange={(e) => setSelectedOrgId(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="all">Toate organizațiile</option>
+            <option value="all">{t('allOrganizations')}</option>
             {organizations.map((org) => (
               <option key={org.id} value={org.id}>
                 {org.name}
@@ -368,7 +371,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
             onClick={() => setShowAddModal(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition whitespace-nowrap"
           >
-            + Raportează Incident
+            + {t('reportIncident')}
           </button>
         </div>
       </div>
@@ -377,19 +380,19 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
       {stats && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white p-6 rounded-2xl border border-gray-200">
-            <p className="text-sm text-gray-600">Total rapoarte</p>
+            <p className="text-sm text-gray-600">{t('totalReports')}</p>
             <p className="text-3xl font-bold text-gray-900 mt-2">{stats.summary.total}</p>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-gray-200">
-            <p className="text-sm text-gray-600">Deschise</p>
+            <p className="text-sm text-gray-600">{t('open')}</p>
             <p className="text-3xl font-bold text-orange-600 mt-2">{stats.summary.open}</p>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-gray-200">
-            <p className="text-sm text-gray-600">În investigare</p>
+            <p className="text-sm text-gray-600">{t('inInvestigation')}</p>
             <p className="text-3xl font-bold text-blue-600 mt-2">{stats.summary.inInvestigation}</p>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-gray-200">
-            <p className="text-sm text-gray-600">Închise luna aceasta</p>
+            <p className="text-sm text-gray-600">{t('closedThisMonth')}</p>
             <p className="text-3xl font-bold text-green-600 mt-2">{stats.summary.closedThisMonth}</p>
           </div>
         </div>
@@ -407,7 +410,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Rapoarte
+              {t('tabReports')}
             </button>
             <button
               onClick={() => setActiveTab('statistics')}
@@ -417,7 +420,7 @@ export default function NearMissClient({ user, organizations, initialSelectedOrg
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Statistici
+              {t('tabStatistics')}
             </button>
           </div>
         </div>
@@ -497,12 +500,47 @@ function ReportsTab({
   onFilterPeriodChange,
   onRowClick,
 }: ReportsTabProps) {
+  const t = useTranslations('nearMiss')
+
+  const CATEGORY_LABELS: Record<NearMissCategory, string> = {
+    cadere_nivel: t('catFallSameLevel'),
+    cadere_inaltime: t('catFallHeight'),
+    lovire: t('catHitObjects'),
+    taiere: t('catCutPierce'),
+    electrocutare: t('catElectrocution'),
+    substante_chimice: t('catChemicals'),
+    incendiu: t('catFire'),
+    explozie: t('catExplosion'),
+    alunecare: t('catSlip'),
+    prindere_echipament: t('catCaughtInEquipment'),
+    ergonomic: t('catErgonomic'),
+    psihosocial: t('catPsychosocial'),
+    transport: t('catTransport'),
+    altul: t('catOther'),
+  }
+
+  const STATUS_LABELS: Record<NearMissStatus, string> = {
+    raportat: t('statusReported'),
+    in_investigare: t('statusInvestigating'),
+    masuri_aplicate: t('statusMeasuresApplied'),
+    inchis: t('statusClosed'),
+    anulat: t('statusCancelled'),
+  }
+
+  const SEVERITY_LABELS: Record<NearMissSeverity, string> = {
+    minor: t('severityMinor'),
+    moderate: t('severityModerate'),
+    major: t('severityMajor'),
+    critical: t('severityCritical'),
+    fatal: t('severityFatal'),
+  }
+
   if (loading) {
-    return <div className="text-center py-12 text-gray-500">Se încarcă...</div>
+    return <div className="text-center py-12 text-gray-500">{t('loading')}</div>
   }
 
   if (error) {
-    return <div className="text-center py-12 text-red-600">Eroare: {error}</div>
+    return <div className="text-center py-12 text-red-600">{t('error')}: {error}</div>
   }
 
   return (
@@ -514,7 +552,7 @@ function ReportsTab({
           onChange={(e) => onFilterStatusChange(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="">Toate statusurile</option>
+          <option value="">{t('allStatuses')}</option>
           {Object.entries(STATUS_LABELS).map(([key, label]) => (
             <option key={key} value={key}>
               {label}
@@ -527,7 +565,7 @@ function ReportsTab({
           onChange={(e) => onFilterSeverityChange(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="">Toate severitățile</option>
+          <option value="">{t('allSeverities')}</option>
           {Object.entries(SEVERITY_LABELS).map(([key, label]) => (
             <option key={key} value={key}>
               {label}
@@ -540,40 +578,40 @@ function ReportsTab({
           onChange={(e) => onFilterPeriodChange(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="30">Ultimele 30 zile</option>
-          <option value="90">Ultimele 90 zile</option>
-          <option value="365">Ultimul an</option>
+          <option value="30">{t('last30Days')}</option>
+          <option value="90">{t('last90Days')}</option>
+          <option value="365">{t('lastYear')}</option>
         </select>
       </div>
 
       {/* Table */}
       {reports.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">Nu există rapoarte în această perioadă.</div>
+        <div className="text-center py-12 text-gray-500">{t('noReportsInPeriod')}</div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nr. raport
+                  {t('colReportNumber')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Data incident
+                  {t('colIncidentDate')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Locație
+                  {t('colLocation')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Categorie
+                  {t('colCategory')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Severitate
+                  {t('colSeverity')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  {t('colStatus')}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Raportat de
+                  {t('colReportedBy')}
                 </th>
               </tr>
             </thead>
@@ -634,16 +672,43 @@ interface StatisticsTabProps {
 }
 
 function StatisticsTab({ stats, loading, error }: StatisticsTabProps) {
+  const t = useTranslations('nearMiss')
+
+  const CATEGORY_LABELS: Record<NearMissCategory, string> = {
+    cadere_nivel: t('catFallSameLevel'),
+    cadere_inaltime: t('catFallHeight'),
+    lovire: t('catHitObjects'),
+    taiere: t('catCutPierce'),
+    electrocutare: t('catElectrocution'),
+    substante_chimice: t('catChemicals'),
+    incendiu: t('catFire'),
+    explozie: t('catExplosion'),
+    alunecare: t('catSlip'),
+    prindere_echipament: t('catCaughtInEquipment'),
+    ergonomic: t('catErgonomic'),
+    psihosocial: t('catPsychosocial'),
+    transport: t('catTransport'),
+    altul: t('catOther'),
+  }
+
+  const SEVERITY_LABELS: Record<NearMissSeverity, string> = {
+    minor: t('severityMinor'),
+    moderate: t('severityModerate'),
+    major: t('severityMajor'),
+    critical: t('severityCritical'),
+    fatal: t('severityFatal'),
+  }
+
   if (loading) {
-    return <div className="text-center py-12 text-gray-500">Se încarcă...</div>
+    return <div className="text-center py-12 text-gray-500">{t('loading')}</div>
   }
 
   if (error) {
-    return <div className="text-center py-12 text-red-600">Eroare: {error}</div>
+    return <div className="text-center py-12 text-red-600">{t('error')}: {error}</div>
   }
 
   if (!stats) {
-    return <div className="text-center py-12 text-gray-500">Nu există date disponibile.</div>
+    return <div className="text-center py-12 text-gray-500">{t('noDataAvailable')}</div>
   }
 
   // Prepare category chart data with labels
@@ -668,7 +733,7 @@ function StatisticsTab({ stats, loading, error }: StatisticsTabProps) {
     <div className="space-y-8">
       {/* Category Distribution */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Top 5 categorii incidente</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('top5Categories')}</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={categoryData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -682,7 +747,7 @@ function StatisticsTab({ stats, loading, error }: StatisticsTabProps) {
 
       {/* Monthly Trend */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Trend lunar (ultimele 12 luni)</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('monthlyTrend')}</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={monthlyData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -690,14 +755,14 @@ function StatisticsTab({ stats, loading, error }: StatisticsTabProps) {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="count" stroke="#10b981" strokeWidth={2} name="Rapoarte" />
+            <Line type="monotone" dataKey="count" stroke="#10b981" strokeWidth={2} name={t('tabReports')} />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
       {/* Severity Distribution */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribuție severitate</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('severityDistribution')}</h3>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
@@ -744,7 +809,33 @@ interface AddReportModalProps {
 }
 
 function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddReportModalProps) {
+  const t = useTranslations('nearMiss')
   const [witnessInput, setWitnessInput] = useState('')
+
+  const CATEGORY_LABELS: Record<NearMissCategory, string> = {
+    cadere_nivel: t('catFallSameLevel'),
+    cadere_inaltime: t('catFallHeight'),
+    lovire: t('catHitObjects'),
+    taiere: t('catCutPierce'),
+    electrocutare: t('catElectrocution'),
+    substante_chimice: t('catChemicals'),
+    incendiu: t('catFire'),
+    explozie: t('catExplosion'),
+    alunecare: t('catSlip'),
+    prindere_echipament: t('catCaughtInEquipment'),
+    ergonomic: t('catErgonomic'),
+    psihosocial: t('catPsychosocial'),
+    transport: t('catTransport'),
+    altul: t('catOther'),
+  }
+
+  const SEVERITY_LABELS: Record<NearMissSeverity, string> = {
+    minor: t('severityMinor'),
+    moderate: t('severityModerate'),
+    major: t('severityMajor'),
+    critical: t('severityCritical'),
+    fatal: t('severityFatal'),
+  }
 
   const addWitness = () => {
     if (witnessInput.trim()) {
@@ -767,7 +858,7 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white">
-          <h2 className="text-2xl font-bold text-gray-900">Raportează Incident Near-Miss</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t('reportIncidentTitle')}</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
             ×
           </button>
@@ -777,7 +868,7 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
           {/* Reported By */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Raportat de <span className="text-red-500">*</span>
+              {t('reportedBy')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -792,7 +883,7 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Data incident <span className="text-red-500">*</span>
+                {t('incidentDate')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -803,7 +894,7 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ora incident</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('incidentTime')}</label>
               <input
                 type="time"
                 value={formData.incident_time}
@@ -816,7 +907,7 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
           {/* Location */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Locație <span className="text-red-500">*</span>
+              {t('location')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -832,7 +923,7 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Categorie <span className="text-red-500">*</span>
+                {t('category')} <span className="text-red-500">*</span>
               </label>
               <select
                 value={formData.category}
@@ -851,7 +942,7 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Severitate potențială <span className="text-red-500">*</span>
+                {t('potentialSeverity')} <span className="text-red-500">*</span>
               </label>
               <select
                 value={formData.potential_severity}
@@ -876,21 +967,21 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descriere <span className="text-red-500">*</span>
+              {t('description')} <span className="text-red-500">*</span>
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => onFormDataChange({ ...formData, description: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               rows={4}
-              placeholder="Descrie incidentul în detaliu..."
+              placeholder={t('descriptionPlaceholder')}
               required
             />
           </div>
 
           {/* Witnesses */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Martori</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('witnesses')}</label>
             <div className="flex gap-2 mb-2">
               <input
                 type="text"
@@ -898,14 +989,14 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
                 onChange={(e) => setWitnessInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addWitness())}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Nume martor"
+                placeholder={t('witnessNamePlaceholder')}
               />
               <button
                 type="button"
                 onClick={addWitness}
                 className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
               >
-                Adaugă
+                {t('add')}
               </button>
             </div>
             {formData.witnesses.length > 0 && (
@@ -931,13 +1022,13 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
 
           {/* Immediate Actions */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Acțiuni imediate</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('immediateActions')}</label>
             <textarea
               value={formData.immediate_actions}
               onChange={(e) => onFormDataChange({ ...formData, immediate_actions: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               rows={3}
-              placeholder="Ce acțiuni au fost luate imediat după incident?"
+              placeholder={t('immediateActionsPlaceholder')}
             />
           </div>
 
@@ -947,14 +1038,14 @@ function AddReportModal({ formData, onFormDataChange, onSubmit, onClose }: AddRe
               type="submit"
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
-              Salvează raport
+              {t('saveReport')}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
             >
-              Anulează
+              {t('cancel')}
             </button>
           </div>
         </form>
@@ -975,8 +1066,42 @@ interface DetailModalProps {
 }
 
 function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) {
+  const t = useTranslations('nearMiss')
   const [editMode, setEditMode] = useState(false)
   const [editData, setEditData] = useState(report)
+
+  const STATUS_LABELS: Record<NearMissStatus, string> = {
+    raportat: t('statusReported'),
+    in_investigare: t('statusInvestigating'),
+    masuri_aplicate: t('statusMeasuresApplied'),
+    inchis: t('statusClosed'),
+    anulat: t('statusCancelled'),
+  }
+
+  const SEVERITY_LABELS: Record<NearMissSeverity, string> = {
+    minor: t('severityMinor'),
+    moderate: t('severityModerate'),
+    major: t('severityMajor'),
+    critical: t('severityCritical'),
+    fatal: t('severityFatal'),
+  }
+
+  const CATEGORY_LABELS: Record<NearMissCategory, string> = {
+    cadere_nivel: t('catFallSameLevel'),
+    cadere_inaltime: t('catFallHeight'),
+    lovire: t('catHitObjects'),
+    taiere: t('catCutPierce'),
+    electrocutare: t('catElectrocution'),
+    substante_chimice: t('catChemicals'),
+    incendiu: t('catFire'),
+    explozie: t('catExplosion'),
+    alunecare: t('catSlip'),
+    prindere_echipament: t('catCaughtInEquipment'),
+    ergonomic: t('catErgonomic'),
+    psihosocial: t('catPsychosocial'),
+    transport: t('catTransport'),
+    altul: t('catOther'),
+  }
 
   const handleSave = () => {
     onUpdate(editData)
@@ -1020,20 +1145,20 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
           {/* Details */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-600">Raportat de</p>
+              <p className="text-sm text-gray-600">{t('reportedBy')}</p>
               <p className="font-medium">{report.reported_by}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Locație</p>
+              <p className="text-sm text-gray-600">{t('location')}</p>
               <p className="font-medium">{report.location}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Categorie</p>
+              <p className="text-sm text-gray-600">{t('category')}</p>
               <p className="font-medium">{CATEGORY_LABELS[report.category]}</p>
             </div>
             {report.incident_time && (
               <div>
-                <p className="text-sm text-gray-600">Ora</p>
+                <p className="text-sm text-gray-600">{t('incidentTime')}</p>
                 <p className="font-medium">{report.incident_time}</p>
               </div>
             )}
@@ -1041,14 +1166,14 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
 
           {/* Description */}
           <div>
-            <p className="text-sm text-gray-600 mb-1">Descriere</p>
+            <p className="text-sm text-gray-600 mb-1">{t('description')}</p>
             <p className="text-gray-900">{report.description}</p>
           </div>
 
           {/* Witnesses */}
           {report.witnesses && report.witnesses.length > 0 && (
             <div>
-              <p className="text-sm text-gray-600 mb-1">Martori</p>
+              <p className="text-sm text-gray-600 mb-1">{t('witnesses')}</p>
               <div className="flex flex-wrap gap-2">
                 {report.witnesses.map((witness, index) => (
                   <span key={index} className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">
@@ -1062,7 +1187,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
           {/* Immediate Actions */}
           {report.immediate_actions && (
             <div>
-              <p className="text-sm text-gray-600 mb-1">Acțiuni imediate</p>
+              <p className="text-sm text-gray-600 mb-1">{t('immediateActions')}</p>
               <p className="text-gray-900">{report.immediate_actions}</p>
             </div>
           )}
@@ -1071,7 +1196,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
           {editMode ? (
             <div className="space-y-4 pt-4 border-t border-gray-200">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('colStatus')}</label>
                 <select
                   value={editData.status}
                   onChange={(e) => setEditData({ ...editData, status: e.target.value as NearMissStatus })}
@@ -1086,7 +1211,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Cauză rădăcină</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('rootCause')}</label>
                 <textarea
                   value={editData.root_cause || ''}
                   onChange={(e) => setEditData({ ...editData, root_cause: e.target.value })}
@@ -1096,7 +1221,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Acțiuni corective</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('correctiveActions')}</label>
                 <textarea
                   value={editData.corrective_actions || ''}
                   onChange={(e) => setEditData({ ...editData, corrective_actions: e.target.value })}
@@ -1107,7 +1232,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Responsabil</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('responsible')}</label>
                   <input
                     type="text"
                     value={editData.responsible_person || ''}
@@ -1116,7 +1241,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Termen limită</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('deadline')}</label>
                   <input
                     type="date"
                     value={editData.deadline || ''}
@@ -1134,25 +1259,25 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
               <div className="space-y-4 pt-4 border-t border-gray-200">
                 {report.root_cause && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Cauză rădăcină</p>
+                    <p className="text-sm text-gray-600 mb-1">{t('rootCause')}</p>
                     <p className="text-gray-900">{report.root_cause}</p>
                   </div>
                 )}
                 {report.corrective_actions && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Acțiuni corective</p>
+                    <p className="text-sm text-gray-600 mb-1">{t('correctiveActions')}</p>
                     <p className="text-gray-900">{report.corrective_actions}</p>
                   </div>
                 )}
                 {report.responsible_person && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Responsabil</p>
+                    <p className="text-sm text-gray-600 mb-1">{t('responsible')}</p>
                     <p className="text-gray-900">{report.responsible_person}</p>
                   </div>
                 )}
                 {report.deadline && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Termen limită</p>
+                    <p className="text-sm text-gray-600 mb-1">{t('deadline')}</p>
                     <p className="text-gray-900">
                       {new Date(report.deadline).toLocaleDateString('ro-RO')}
                     </p>
@@ -1170,7 +1295,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
                   onClick={handleSave}
                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                 >
-                  Salvează modificări
+                  {t('saveChanges')}
                 </button>
                 <button
                   onClick={() => {
@@ -1179,7 +1304,7 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
                   }}
                   className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
                 >
-                  Anulează
+                  {t('cancel')}
                 </button>
               </>
             ) : (
@@ -1188,13 +1313,13 @@ function DetailModal({ report, onUpdate, onDelete, onClose }: DetailModalProps) 
                   onClick={() => setEditMode(true)}
                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                 >
-                  Editează
+                  {t('edit')}
                 </button>
                 <button
                   onClick={() => onDelete(report.id)}
                   className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
                 >
-                  Șterge
+                  {t('delete')}
                 </button>
               </>
             )}

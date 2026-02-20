@@ -4,6 +4,7 @@
 // M9_ISCIR: Operator daily-check page for macarale / stivuitoare
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -63,65 +64,6 @@ interface ISCIRDailyClientProps {
   today: string
 }
 
-// ─── Default check items per equipment type ───────────────────────────────
-
-const DEFAULT_CHECK_ITEMS: Record<string, Record<string, string>> = {
-  macara: {
-    cablu_tractiune: 'Cablu tracțiune funcțional',
-    frane_functionale: 'Frâne funcționale',
-    dispozitive_siguranta: 'Dispozitive de siguranță OK',
-    sistem_ungere: 'Sistem de ungere funcțional',
-    carlig_prindere: 'Cârlig și dispozitive de prindere OK',
-    limitatoare_cursa: 'Limitatoare de cursă OK',
-    avertizare_sonora: 'Avertizare sonoră/vizuală funcțională',
-    structura_vizual: 'Structură fără fisuri/deformări vizibile',
-  },
-  stivuitor: {
-    frana_serviciu: 'Frână de serviciu funcțională',
-    frana_mana: 'Frână de mână funcțională',
-    hidraulic_fara_scurgeri: 'Sistemul hidraulic fără scurgeri',
-    furci_ok: 'Furci și sistem de ridicare OK',
-    pneuri_roti: 'Pneuri/roți în stare bună',
-    iluminat: 'Iluminat funcțional',
-    avertizare_sonora: 'Avertizare sonoră funcțională',
-    centura_siguranta: 'Centură de siguranță OK',
-    dispozitive_siguranta: 'Dispozitive de siguranță OK',
-    nivel_combustibil: 'Nivel combustibil/baterie suficient',
-  },
-  lift: {
-    usi_siguranta: 'Uși și dispozitive de siguranță OK',
-    limitatoare_viteza: 'Limitatoare de viteză funcționale',
-    iluminat: 'Iluminat interior funcțional',
-    avertizare_sonora: 'Avertizare sonoră funcțională',
-    cablu_tractiune: 'Cabluri tracțiune fără deteriorări',
-    frane: 'Frâne funcționale',
-  },
-  default: {
-    echipament_functional: 'Echipament funcțional',
-    fara_scurgeri: 'Fără scurgeri sau defecte vizibile',
-    dispozitive_siguranta: 'Dispozitive de siguranță OK',
-    zona_libera: 'Zona de lucru curată și liberă',
-  },
-}
-
-function getCheckItemsForType(equipmentType: string): Record<string, string> {
-  return DEFAULT_CHECK_ITEMS[equipmentType] || DEFAULT_CHECK_ITEMS.default
-}
-
-// ─── Label maps ───────────────────────────────────────────────────────────────
-
-const EQUIPMENT_TYPE_LABELS: Record<string, string> = {
-  cazan: 'Cazan',
-  recipient_presiune: 'Recipient sub presiune',
-  lift: 'Lift',
-  macara: 'Macara',
-  stivuitor: 'Stivuitor',
-  instalatie_gpl: 'Instalație GPL',
-  compresor: 'Compresor',
-  autoclave: 'Autoclave',
-  altul: 'Altul',
-}
-
 // ─── Main component ────────────────────────────────────────────────────────
 
 export default function ISCIRDailyClient({
@@ -133,6 +75,65 @@ export default function ISCIRDailyClient({
   preselectedEquipmentId,
   today,
 }: ISCIRDailyClientProps) {
+  const t = useTranslations('iscirDaily')
+  const tIscir = useTranslations('iscir')
+
+  // ─── Default check items per equipment type (using translations) ──────────
+  const DEFAULT_CHECK_ITEMS: Record<string, Record<string, string>> = {
+    macara: {
+      cablu_tractiune: t('checkItems.macara.cabluTractiune'),
+      frane_functionale: t('checkItems.macara.franeFunctionale'),
+      dispozitive_siguranta: t('checkItems.macara.dispozitiveSiguranta'),
+      sistem_ungere: t('checkItems.macara.sistemUngere'),
+      carlig_prindere: t('checkItems.macara.carligPrindere'),
+      limitatoare_cursa: t('checkItems.macara.limitatoareCursa'),
+      avertizare_sonora: t('checkItems.macara.avertizareSonora'),
+      structura_vizual: t('checkItems.macara.structuraVizual'),
+    },
+    stivuitor: {
+      frana_serviciu: t('checkItems.stivuitor.franaServiciu'),
+      frana_mana: t('checkItems.stivuitor.franaMana'),
+      hidraulic_fara_scurgeri: t('checkItems.stivuitor.hidraulicFaraScurgeri'),
+      furci_ok: t('checkItems.stivuitor.furciOk'),
+      pneuri_roti: t('checkItems.stivuitor.pneuriRoti'),
+      iluminat: t('checkItems.stivuitor.iluminat'),
+      avertizare_sonora: t('checkItems.stivuitor.avertizareSonora'),
+      centura_siguranta: t('checkItems.stivuitor.centuraSiguranta'),
+      dispozitive_siguranta: t('checkItems.stivuitor.dispozitiveSiguranta'),
+      nivel_combustibil: t('checkItems.stivuitor.nivelCombustibil'),
+    },
+    lift: {
+      usi_siguranta: t('checkItems.lift.usiSiguranta'),
+      limitatoare_viteza: t('checkItems.lift.limitatoareViteza'),
+      iluminat: t('checkItems.lift.iluminat'),
+      avertizare_sonora: t('checkItems.lift.avertizareSonora'),
+      cablu_tractiune: t('checkItems.lift.cabluTractiune'),
+      frane: t('checkItems.lift.frane'),
+    },
+    default: {
+      echipament_functional: t('checkItems.default.echipamentFunctional'),
+      fara_scurgeri: t('checkItems.default.faraScurgeri'),
+      dispozitive_siguranta: t('checkItems.default.dispozitiveSiguranta'),
+      zona_libera: t('checkItems.default.zonaLibera'),
+    },
+  }
+
+  function getCheckItemsForType(equipmentType: string): Record<string, string> {
+    return DEFAULT_CHECK_ITEMS[equipmentType] || DEFAULT_CHECK_ITEMS.default
+  }
+
+  const EQUIPMENT_TYPE_LABELS: Record<string, string> = {
+    cazan: tIscir('equipmentType.cazan'),
+    recipient_presiune: tIscir('equipmentType.recipientPresiune'),
+    lift: tIscir('equipmentType.lift'),
+    macara: tIscir('equipmentType.macara'),
+    stivuitor: tIscir('equipmentType.stivuitor'),
+    instalatie_gpl: tIscir('equipmentType.instalatieGpl'),
+    compresor: tIscir('equipmentType.compresor'),
+    autoclave: tIscir('equipmentType.autoclave'),
+    altul: tIscir('equipmentType.altul'),
+  }
+
   // Map equipmentId → today's check
   const todayCheckMap = new Map<string, ISCIRDailyCheck>(
     todayChecks.map((c) => [c.equipment_id, c])
@@ -228,11 +229,11 @@ export default function ISCIRDailyClient({
         })
         setActiveEquipment(null)
       } else {
-        alert(data.error || 'Eroare la salvarea verificării')
+        alert(data.error || tIscir('errors.saveVerification'))
       }
     } catch (e) {
       console.error('Submit check error:', e)
-      alert('Eroare la salvarea verificării zilnice')
+      alert(t('errors.saveDailyCheck'))
     } finally {
       setSubmitting(false)
     }
@@ -259,7 +260,7 @@ export default function ISCIRDailyClient({
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Înapoi la ISCIR
+          {tIscir('detail.backToIscir')}
         </Link>
       </div>
 
@@ -269,7 +270,7 @@ export default function ISCIRDailyClient({
             <ClipboardCheck className="w-6 h-6 text-green-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Verificări zilnice ISCIR</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
             <p className="text-sm text-gray-500 capitalize">{todayFormatted}</p>
           </div>
         </div>
@@ -283,7 +284,7 @@ export default function ISCIRDailyClient({
             window.location.href = `/dashboard/iscir/daily${newOrg ? `?org=${newOrg}` : ''}`
           }}
         >
-          <option value="all">Toate organizațiile</option>
+          <option value="all">{tIscir('filter.allOrgs')}</option>
           {organizations.map((org) => (
             <option key={org.id} value={org.id}>
               {org.name}
@@ -299,7 +300,7 @@ export default function ISCIRDailyClient({
             <Wrench className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Total echipamente</p>
+            <p className="text-sm text-gray-500">{t('stats.total')}</p>
             <p className="text-2xl font-bold text-gray-900">{equipment.length}</p>
           </div>
         </div>
@@ -309,7 +310,7 @@ export default function ISCIRDailyClient({
             <CheckCircle2 className="w-5 h-5 text-green-600" />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Verificate azi</p>
+            <p className="text-sm text-gray-500">{t('stats.checkedToday')}</p>
             <p className="text-2xl font-bold text-green-600">{localCheckedCount}</p>
           </div>
         </div>
@@ -327,7 +328,7 @@ export default function ISCIRDailyClient({
             />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Neverificate</p>
+            <p className="text-sm text-gray-500">{t('stats.unchecked')}</p>
             <p
               className={`text-2xl font-bold ${
                 equipment.length - localCheckedCount > 0 ? 'text-orange-600' : 'text-gray-400'
@@ -343,7 +344,7 @@ export default function ISCIRDailyClient({
       {equipment.length > 0 && (
         <div className="bg-white rounded-2xl p-5 border border-gray-200">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">Progres verificări azi</span>
+            <span className="text-sm font-medium text-gray-700">{t('progressLabel')}</span>
             <span className="text-sm font-semibold text-gray-900">
               {localCheckedCount}/{equipment.length}
             </span>
@@ -360,7 +361,7 @@ export default function ISCIRDailyClient({
           {localCheckedCount === equipment.length && equipment.length > 0 && (
             <p className="text-sm text-green-600 font-medium mt-2 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" />
-              Toate verificările zilnice au fost completate!
+              {t('allCompleted')}
             </p>
           )}
         </div>
@@ -370,12 +371,12 @@ export default function ISCIRDailyClient({
       {equipment.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-200 py-16 text-center">
           <Wrench className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-          <h3 className="text-lg font-semibold text-gray-900">Nu există echipamente</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('empty.title')}</h3>
           <p className="text-sm text-gray-500 mt-1">
-            Niciun echipament cu verificare zilnică necesară nu a fost găsit.
+            {t('empty.description')}
           </p>
           <p className="text-sm text-gray-400 mt-1">
-            Activați &ldquo;Verificare zilnică necesară&rdquo; pe echipamentele de tip macara sau stivuitor.
+            {t('empty.hint')}
           </p>
         </div>
       ) : (
@@ -431,11 +432,11 @@ export default function ISCIRDailyClient({
                       {isChecked && existing && (
                         <p className="text-xs text-green-700 mt-1 flex items-center gap-1">
                           <User className="w-3 h-3" />
-                          Verificat de {existing.operator_name}
+                          {t('checkedBy')} {existing.operator_name}
                           {existing.issues_found && (
                             <span className="ml-2 text-orange-600 flex items-center gap-1">
                               <AlertTriangle className="w-3 h-3" />
-                              Probleme semnalate
+                              {t('issuesReported')}
                             </span>
                           )}
                         </p>
@@ -469,7 +470,7 @@ export default function ISCIRDailyClient({
                       }`}
                     >
                       <ClipboardCheck className="w-4 h-4" />
-                      {isChecked ? 'Actualizează' : 'Verifică'}
+                      {isChecked ? t('update') : t('verify')}
                       <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
@@ -486,7 +487,7 @@ export default function ISCIRDailyClient({
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             {/* Modal header */}
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Verificare zilnică</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('modal.title')}</h2>
               <p className="text-sm text-gray-500 mt-0.5">
                 {activeEquipment.identifier} —{' '}
                 {EQUIPMENT_TYPE_LABELS[activeEquipment.equipment_type] ||
@@ -499,7 +500,7 @@ export default function ISCIRDailyClient({
               {/* Operator name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Nume operator *
+                  {t('modal.operatorName')}
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -515,7 +516,7 @@ export default function ISCIRDailyClient({
 
               {/* Checklist items */}
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-3">Puncte de verificare *</p>
+                <p className="text-sm font-medium text-gray-700 mb-3">{t('modal.checkPoints')}</p>
                 <div className="space-y-2.5">
                   {Object.entries(getCheckItemsForType(activeEquipment.equipment_type)).map(
                     ([key, label]) => (
@@ -574,18 +575,18 @@ export default function ISCIRDailyClient({
                 className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                Bifează toate punctele OK
+                {t('modal.checkAllOk')}
               </button>
 
               {/* Issues */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Probleme constatate (opțional)
+                  {t('modal.issuesOptional')}
                 </label>
                 <textarea
                   value={issuesFound}
                   onChange={(e) => setIssuesFound(e.target.value)}
-                  placeholder="Descrieți orice problemă sau defecțiune observată..."
+                  placeholder={t('modal.issuesPlaceholder')}
                   rows={3}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                 />
@@ -613,9 +614,9 @@ export default function ISCIRDailyClient({
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Semnătură electronică</p>
+                  <p className="text-sm font-medium text-gray-700">{t('modal.signatureTitle')}</p>
                   <p className="text-xs text-gray-500">
-                    Confirm că am efectuat verificarea și datele completate sunt corecte.
+                    {t('modal.signatureConfirm')}
                   </p>
                 </div>
               </label>
@@ -627,7 +628,7 @@ export default function ISCIRDailyClient({
                 onClick={() => setActiveEquipment(null)}
                 className="px-4 py-2.5 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Anulează
+                {tIscir('form.cancel')}
               </button>
               <button
                 onClick={handleSubmitCheck}
@@ -637,12 +638,12 @@ export default function ISCIRDailyClient({
                 {submitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Se salvează...
+                    {tIscir('form.saving')}
                   </>
                 ) : (
                   <>
                     <CheckCircle2 className="w-4 h-4" />
-                    Confirmă verificarea
+                    {t('modal.confirm')}
                   </>
                 )}
               </button>
@@ -665,12 +666,12 @@ export default function ISCIRDailyClient({
             onClick={(e) => e.stopPropagation()}
           >
             <QrCode className="w-8 h-8 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Cod QR operator</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">{tIscir('detail.qrCode')}</h3>
             <p className="text-sm text-gray-500 mb-1">
               <strong>{qrEquipment.identifier}</strong>
             </p>
             <p className="text-xs text-gray-400 mb-4">
-              Scanează cu telefonul pentru a accesa direct verificarea zilnică
+              {t('qr.scanInstruction')}
             </p>
 
             {qrLoading ? (
@@ -688,7 +689,7 @@ export default function ISCIRDailyClient({
               </>
             ) : (
               <div className="w-48 h-48 mx-auto bg-red-50 rounded-xl flex items-center justify-center">
-                <p className="text-sm text-red-500 px-4">Eroare la generarea QR</p>
+                <p className="text-sm text-red-500 px-4">{tIscir('detail.qrError')}</p>
               </div>
             )}
 
@@ -699,7 +700,7 @@ export default function ISCIRDailyClient({
               }}
               className="mt-6 w-full px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Închide
+              {tIscir('detail.close')}
             </button>
           </div>
         </div>

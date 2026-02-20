@@ -4,6 +4,7 @@
 // AI Knowledge Base — Upload, search, results
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {
   Upload, Search, Brain, MessageSquare, Code2,
@@ -48,6 +49,7 @@ export default function AIKBClient({
   initialQuery,
   stats: initialStats,
 }: Props) {
+  const t = useTranslations('aiKnowledgeBase')
   const [selectedOrgId, setSelectedOrgId] = useState(initialOrgId)
   const [query, setQuery] = useState(initialQuery)
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations)
@@ -96,12 +98,12 @@ export default function AIKBClient({
   // File processing
   const processFile = async (file: File) => {
     if (!file.name.endsWith('.json')) {
-      setImportError('Selectează un fișier JSON valid (exportat din Claude.ai).')
+      setImportError(t('selectJsonFile'))
       return
     }
 
     if (file.size > 50 * 1024 * 1024) {
-      setImportError('Fișierul este prea mare (max 50 MB).')
+      setImportError(t('fileTooLarge'))
       return
     }
 
@@ -115,7 +117,7 @@ export default function AIKBClient({
       try {
         parsed = JSON.parse(text)
       } catch {
-        setImportError('Fișierul nu este un JSON valid.')
+        setImportError(t('invalidJson'))
         setUploading(false)
         return
       }
@@ -132,7 +134,7 @@ export default function AIKBClient({
       ) {
         conversationsArray = (parsed as Record<string, unknown>).conversations as unknown[]
       } else {
-        setImportError('Format nerecunoscut. Exportul Claude.ai trebuie să fie un array JSON.')
+        setImportError(t('unknownFormat'))
         setUploading(false)
         return
       }
@@ -148,7 +150,7 @@ export default function AIKBClient({
 
       const data = await res.json()
       if (!res.ok) {
-        setImportError(data.error || 'Eroare la import.')
+        setImportError(data.error || t('importError'))
       } else {
         setImportResult(data)
         // Refresh stats
@@ -160,7 +162,7 @@ export default function AIKBClient({
         doSearch('')
       }
     } catch (e) {
-      setImportError(e instanceof Error ? e.message : 'Eroare necunoscută.')
+      setImportError(e instanceof Error ? e.message : t('unknownError'))
     } finally {
       setUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -348,7 +350,7 @@ export default function AIKBClient({
               <p className="text-sm text-gray-500">
                 {query.length >= 2
                   ? `Niciun rezultat pentru „${query}"`
-                  : 'Nu există conversații importate. Încarcă un export Claude.ai.'}
+                  : t('noConversations')}
               </p>
             </div>
           ) : (
@@ -372,7 +374,7 @@ export default function AIKBClient({
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {conv.title || 'Conversație fără titlu'}
+                          {conv.title || t('untitledConversation')}
                         </p>
                         {conv.snippet ? (
                           <p className="text-xs text-gray-400 truncate mt-0.5">{conv.snippet}</p>

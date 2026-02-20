@@ -4,6 +4,7 @@
 // Dashboard Alerte & Notificări — 3 tab-uri: Istoric, Configurare, Consum
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -71,25 +72,6 @@ interface Props {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-const ALERT_TYPE_LABELS: Record<string, string> = {
-  training_expiry: 'Instruire SSM',
-  medical_expiry: 'Fișă medicală',
-  psi_expiry: 'Echipament PSI',
-  iscir_expiry: 'Echipament ISCIR',
-  monthly_report: 'Raport lunar',
-  escalation: 'Escaladare',
-  compliance_warning: 'Conformitate',
-}
-
-const STATUS_LABELS: Record<string, { label: string; className: string }> = {
-  queued: { label: 'În așteptare', className: 'bg-gray-100 text-gray-700' },
-  sent: { label: 'Trimis', className: 'bg-blue-100 text-blue-700' },
-  delivered: { label: 'Livrat', className: 'bg-green-100 text-green-700' },
-  read: { label: 'Citit', className: 'bg-purple-100 text-purple-700' },
-  failed: { label: 'Eșuat', className: 'bg-red-100 text-red-700' },
-  undelivered: { label: 'Nelivrat', className: 'bg-orange-100 text-orange-700' },
-}
-
 function ChannelIcon({ channel }: { channel: string }) {
   if (channel === 'whatsapp') {
     return (
@@ -146,7 +128,28 @@ export default function AlertsClient({
   alertUsage,
   isTwilioConfigured,
 }: Props) {
+  const t = useTranslations('alerts')
   const supabase = createSupabaseBrowser()
+
+  const ALERT_TYPE_LABELS: Record<string, string> = {
+    training_expiry: t('typeTrainingExpiry'),
+    medical_expiry: t('typeMedicalExpiry'),
+    psi_expiry: t('typePsiExpiry'),
+    iscir_expiry: t('typeIscirExpiry'),
+    monthly_report: t('typeMonthlyReport'),
+    escalation: t('typeEscalation'),
+    compliance_warning: t('typeComplianceWarning'),
+  }
+
+  const STATUS_LABELS: Record<string, { label: string; className: string }> = {
+    queued: { label: t('statusQueued'), className: 'bg-gray-100 text-gray-700' },
+    sent: { label: t('statusSent'), className: 'bg-blue-100 text-blue-700' },
+    delivered: { label: t('statusDelivered'), className: 'bg-green-100 text-green-700' },
+    read: { label: t('statusRead'), className: 'bg-purple-100 text-purple-700' },
+    failed: { label: t('statusFailed'), className: 'bg-red-100 text-red-700' },
+    undelivered: { label: t('statusUndelivered'), className: 'bg-orange-100 text-orange-700' },
+  }
+
   const [activeTab, setActiveTab] = useState<'history' | 'config' | 'usage'>('history')
   const [filterType, setFilterType] = useState('')
   const [filterChannel, setFilterChannel] = useState('')
@@ -196,11 +199,11 @@ export default function AlertsClient({
         )
 
       if (error) throw error
-      setSaveMessage({ type: 'success', text: 'Configurare salvată cu succes!' })
+      setSaveMessage({ type: 'success', text: t('saveSuccess') })
       setTimeout(() => setSaveMessage(null), 3000)
     } catch (err: any) {
       console.error('Save config error:', err)
-      setSaveMessage({ type: 'error', text: 'Eroare la salvare: ' + err.message })
+      setSaveMessage({ type: 'error', text: t('saveError') + ': ' + err.message })
     } finally {
       setSaving(false)
     }
@@ -231,7 +234,7 @@ export default function AlertsClient({
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Alerte & Notificări</h1>
               <p className="text-sm text-gray-500">
-                {org ? org.name : 'Nicio organizație selectată'} — WhatsApp, SMS, Email cascade
+                {org ? org.name : t('noOrgSelected')} — WhatsApp, SMS, Email cascade
               </p>
             </div>
           </div>
@@ -255,9 +258,9 @@ export default function AlertsClient({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-1 border-b border-gray-200">
             {[
-              { key: 'history', label: 'Istoric Alerte' },
-              { key: 'config', label: 'Configurare' },
-              { key: 'usage', label: 'Consum & Costuri' },
+              { key: 'history', label: t('tabHistory') },
+              { key: 'config', label: t('tabConfig') },
+              { key: 'usage', label: t('tabUsage') },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -287,7 +290,7 @@ export default function AlertsClient({
                   onChange={(e) => setFilterType(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">Toate tipurile</option>
+                  <option value="">{t('allTypes')}</option>
                   {Object.entries(ALERT_TYPE_LABELS).map(([k, v]) => (
                     <option key={k} value={k}>{v}</option>
                   ))}
@@ -298,7 +301,7 @@ export default function AlertsClient({
                   onChange={(e) => setFilterChannel(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">Toate canalele</option>
+                  <option value="">{t('allChannels')}</option>
                   <option value="whatsapp">WhatsApp</option>
                   <option value="sms">SMS</option>
                   <option value="email">Email</option>
@@ -309,7 +312,7 @@ export default function AlertsClient({
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">Toate statusurile</option>
+                  <option value="">{t('allStatuses')}</option>
                   {Object.entries(STATUS_LABELS).map(([k, v]) => (
                     <option key={k} value={k}>{v.label}</option>
                   ))}

@@ -5,6 +5,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import type {
   TrainingCalendarItem,
   TrainingCalendarStats,
@@ -34,6 +35,7 @@ interface CalendarDay {
 }
 
 export default function TrainingCalendarClient({ user, organizations, initialSelectedOrg }: Props) {
+  const t = useTranslations('trainingCalendar')
   // Organization selector
   const [selectedOrgId, setSelectedOrgId] = useState(initialSelectedOrg)
 
@@ -78,7 +80,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
   // ============================================================
   const loadData = useCallback(async () => {
     if (!selectedOrgId) {
-      setError('Selectează o organizație pentru a vizualiza calendarul.')
+      setError(t('selectOrgMessage'))
       setLoading(false)
       return
     }
@@ -117,7 +119,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
       ).sort()
       setInstructors(uniqueInstructors)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Eroare necunoscută')
+      setError(err instanceof Error ? err.message : t('unknownError'))
     } finally {
       setLoading(false)
     }
@@ -208,7 +210,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
   // ============================================================
   const handleAddTraining = async () => {
     if (!formEmployeeId || !formInstructor) {
-      alert('Te rog completează toate câmpurile obligatorii.')
+      alert(t('errorRequiredFields'))
       return
     }
 
@@ -230,14 +232,14 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
 
       if (!res.ok) {
         const errorData = await res.json()
-        throw new Error(errorData.error || 'Eroare la adăugare instruire')
+        throw new Error(errorData.error || t('errorAddTraining'))
       }
 
       setShowAddModal(false)
       resetForm()
       await loadData()
     } catch (err) {
-      alert(`Eroare: ${err instanceof Error ? err.message : 'Necunoscută'}`)
+      alert(`${t('errorPrefix')}: ${err instanceof Error ? err.message : t('unknownError')}`)
     }
   }
 
@@ -254,16 +256,16 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
 
   // Predefined topics
   const PREDEFINED_TOPICS = [
-    'Instructaj periodic SSM',
-    'Instructaj introductiv general',
-    'Instructaj la locul de muncă',
-    'Prevenire incendii PSI',
-    'Prim ajutor',
-    'Riscuri specifice locului de muncă',
-    'Echipamente de protecție',
-    'Semnalizare de securitate',
-    'Evacuare în caz de urgență',
-    'Substanțe periculoase',
+    t('topicPeriodic'),
+    t('topicIG'),
+    t('topicLLM'),
+    t('topicPSI'),
+    t('topicFirstAid'),
+    t('topicRisks'),
+    t('topicPPE'),
+    t('topicSignage'),
+    t('topicEvacuation'),
+    t('topicHazardous'),
   ]
 
   const handleTopicSelect = (topic: string) => {
@@ -346,7 +348,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-slate-400 text-lg">Se încarcă calendarul...</div>
+        <div className="text-slate-400 text-lg">{t('loadingCalendar')}</div>
       </div>
     )
   }
@@ -355,13 +357,13 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="bg-red-900/30 border border-red-800 rounded-xl p-6 max-w-lg">
-          <h2 className="text-red-400 font-bold text-lg mb-2">Eroare</h2>
+          <h2 className="text-red-400 font-bold text-lg mb-2">{t('errorTitle')}</h2>
           <p className="text-red-300 text-sm">{error}</p>
           <button
             onClick={loadData}
             className="mt-4 px-4 py-2 bg-red-800 hover:bg-red-700 text-white rounded-lg text-sm"
           >
-            Reîncearcă
+            {t('retry')}
           </button>
         </div>
       </div>
@@ -378,23 +380,23 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Calendar Instruiri SSM</h1>
+              <h1 className="text-2xl font-bold text-white">{t('pageTitle')}</h1>
               <p className="text-slate-400 text-sm mt-1">
-                Programare și urmărire instruiri IG, LLM, Periodică
+                {t('pageSubtitle')}
               </p>
             </div>
             <button
               onClick={() => setShowAddModal(true)}
               className="px-4 py-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-xl font-medium text-sm transition-colors"
             >
-              + Adaugă Instruire
+              {t('addTraining')}
             </button>
           </div>
 
           {/* Organization Selector */}
           {organizations.length > 1 && (
             <div className="flex items-center gap-2">
-              <label className="text-slate-400 text-sm">Organizație:</label>
+              <label className="text-slate-400 text-sm">{t('orgLabel')}</label>
               <select
                 value={selectedOrgId}
                 onChange={(e) => setSelectedOrgId(e.target.value)}
@@ -414,13 +416,13 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
             <StatCard
-              label="Programate Luna Curentă"
+              label={t('statScheduled')}
               value={stats.total_programate_luna_curenta}
               color="text-blue-400"
             />
-            <StatCard label="Efectuate" value={stats.total_efectuate} color="text-emerald-400" />
-            <StatCard label="Expirate" value={stats.total_expirate} color="text-red-400" />
-            <StatCard label="Upcoming 7 Zile" value={stats.upcoming_7_zile} color="text-amber-400" />
+            <StatCard label={t('statCompleted')} value={stats.total_efectuate} color="text-emerald-400" />
+            <StatCard label={t('statExpired')} value={stats.total_expirate} color="text-red-400" />
+            <StatCard label={t('statUpcoming7')} value={stats.upcoming_7_zile} color="text-amber-400" />
           </div>
         )}
 
@@ -435,7 +437,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              📅 Calendar
+              📅 {t('viewCalendar')}
             </button>
             <button
               onClick={() => setViewMode('list')}
@@ -443,7 +445,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                 viewMode === 'list' ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-white'
               }`}
             >
-              📋 Listă
+              📋 {t('viewList')}
             </button>
           </div>
 
@@ -454,22 +456,22 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
               onChange={(e) => setFilterType(e.target.value)}
               className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white"
             >
-              <option value="">Toate tipurile</option>
+              <option value="">{t('allTypes')}</option>
               <option value="ig">IG</option>
               <option value="llm">LLM</option>
-              <option value="periodica">Periodică</option>
-              <option value="tematica">Tematică</option>
+              <option value="periodica">{t('typePeriodica')}</option>
+              <option value="tematica">{t('typeTematica')}</option>
             </select>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white"
             >
-              <option value="">Toate statusurile</option>
-              <option value="programat">Programat</option>
-              <option value="efectuat">Efectuat</option>
-              <option value="expirat">Expirat</option>
-              <option value="anulat">Anulat</option>
+              <option value="">{t('allStatuses')}</option>
+              <option value="programat">{t('statusScheduled')}</option>
+              <option value="efectuat">{t('statusCompleted')}</option>
+              <option value="expirat">{t('statusExpired')}</option>
+              <option value="anulat">{t('statusCancelled')}</option>
             </select>
           </div>
         </div>
@@ -483,7 +485,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                 onClick={handlePrevMonth}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors"
               >
-                ← Anterior
+                ← {t('prevMonth')}
               </button>
               <h2 className="text-xl font-bold">
                 {currentMonth.toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' })}
@@ -492,14 +494,14 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                 onClick={handleNextMonth}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors"
               >
-                Următor →
+                {t('nextMonth')} →
               </button>
             </div>
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-7 gap-2">
               {/* Weekday headers */}
-              {['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'].map((day) => (
+              {[t('dayMon'), t('dayTue'), t('dayWed'), t('dayThu'), t('dayFri'), t('daySat'), t('daySun')].map((day) => (
                 <div key={day} className="text-center text-slate-500 text-sm font-medium py-2">
                   {day}
                 </div>
@@ -535,7 +537,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                       ))}
                       {day.trainings.length > 2 && (
                         <div className="text-xs text-slate-500 px-2">
-                          +{day.trainings.length - 2} mai multe
+                          +{day.trainings.length - 2} {t('moreItems')}
                         </div>
                       )}
                     </div>
@@ -550,24 +552,24 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
         {viewMode === 'list' && (
           <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-800">
-              <h2 className="text-lg font-bold">Instruiri Următoarele 90 Zile</h2>
+              <h2 className="text-lg font-bold">{t('listViewTitle')}</h2>
             </div>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-800">
-                  <th className="text-left px-6 py-3 text-slate-400 font-medium">Data</th>
-                  <th className="text-left px-6 py-3 text-slate-400 font-medium">Angajat</th>
-                  <th className="text-left px-6 py-3 text-slate-400 font-medium">Tip Instruire</th>
-                  <th className="text-left px-6 py-3 text-slate-400 font-medium">Firmă</th>
-                  <th className="text-left px-6 py-3 text-slate-400 font-medium">Status</th>
-                  <th className="text-left px-6 py-3 text-slate-400 font-medium">Instructor</th>
+                  <th className="text-left px-6 py-3 text-slate-400 font-medium">{t('colDate')}</th>
+                  <th className="text-left px-6 py-3 text-slate-400 font-medium">{t('colEmployee')}</th>
+                  <th className="text-left px-6 py-3 text-slate-400 font-medium">{t('colTrainingType')}</th>
+                  <th className="text-left px-6 py-3 text-slate-400 font-medium">{t('colCompany')}</th>
+                  <th className="text-left px-6 py-3 text-slate-400 font-medium">{t('colStatus')}</th>
+                  <th className="text-left px-6 py-3 text-slate-400 font-medium">{t('colInstructor')}</th>
                 </tr>
               </thead>
               <tbody>
                 {upcomingTrainings.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
-                      Nicio instruire programată în următoarele 90 de zile.
+                      {t('noUpcomingTrainings')}
                     </td>
                   </tr>
                 ) : (
@@ -579,10 +581,10 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                         </div>
                         <div className={`text-xs ${getDaysUntilColor(t.days_until_scheduled)}`}>
                           {t.days_until_scheduled === 0
-                            ? 'Astăzi'
+                            ? t('today')
                             : t.days_until_scheduled === 1
-                            ? 'Mâine'
-                            : `în ${t.days_until_scheduled} zile`}
+                            ? t('tomorrow')
+                            : t('inDays', { count: t.days_until_scheduled })}
                         </div>
                       </td>
                       <td className="px-6 py-3">
@@ -618,20 +620,20 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
               <div className="p-6">
-                <h2 className="text-xl font-bold text-white mb-6">Adaugă Instruire</h2>
+                <h2 className="text-xl font-bold text-white mb-6">{t('modalAddTitle')}</h2>
 
                 <div className="space-y-4">
                   {/* Employee */}
                   <div>
                     <label className="block text-slate-400 text-sm mb-1.5">
-                      Angajat <span className="text-red-400">*</span>
+                      {t('labelEmployee')} <span className="text-red-400">*</span>
                     </label>
                     <select
                       value={formEmployeeId}
                       onChange={(e) => setFormEmployeeId(e.target.value)}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     >
-                      <option value="">— Selectează angajat —</option>
+                      <option value="">{t('selectEmployee')}</option>
                       {employees.map((emp) => (
                         <option key={emp.id} value={emp.id}>
                           {emp.full_name}
@@ -643,24 +645,24 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                   {/* Training Type */}
                   <div>
                     <label className="block text-slate-400 text-sm mb-1.5">
-                      Tip Instruire <span className="text-red-400">*</span>
+                      {t('labelTrainingType')} <span className="text-red-400">*</span>
                     </label>
                     <select
                       value={formTrainingType}
                       onChange={(e) => setFormTrainingType(e.target.value as TrainingType)}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     >
-                      <option value="ig">IG (Introductiv Generală)</option>
-                      <option value="llm">LLM (La Locul de Muncă)</option>
-                      <option value="periodica">Periodică</option>
-                      <option value="tematica">Tematică</option>
+                      <option value="ig">{t('typeIGFull')}</option>
+                      <option value="llm">{t('typeLLMFull')}</option>
+                      <option value="periodica">{t('typePeriodica')}</option>
+                      <option value="tematica">{t('typeTematica')}</option>
                     </select>
                   </div>
 
                   {/* Date */}
                   <div>
                     <label className="block text-slate-400 text-sm mb-1.5">
-                      Data <span className="text-red-400">*</span>
+                      {t('labelDate')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="date"
@@ -673,7 +675,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                   {/* Instructor */}
                   <div>
                     <label className="block text-slate-400 text-sm mb-1.5">
-                      Instructor <span className="text-red-400">*</span>
+                      {t('labelInstructor')} <span className="text-red-400">*</span>
                     </label>
                     {formInstructorMode === 'select' ? (
                       <select
@@ -688,13 +690,13 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                         }}
                         className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                       >
-                        <option value="">— Selectează instructor —</option>
+                        <option value="">{t('selectInstructor')}</option>
                         {instructors.map((instructor) => (
                           <option key={instructor} value={instructor}>
                             {instructor}
                           </option>
                         ))}
-                        <option value="__custom__">✏️ Altul...</option>
+                        <option value="__custom__">✏️ {t('otherInstructor')}</option>
                       </select>
                     ) : (
                       <div className="flex gap-2">
@@ -702,7 +704,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                           type="text"
                           value={formInstructor}
                           onChange={(e) => setFormInstructor(e.target.value)}
-                          placeholder="Nume instructor"
+                          placeholder={t('instructorPlaceholder')}
                           className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                         />
                         <button
@@ -712,7 +714,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                             setFormInstructor('')
                           }}
                           className="px-3 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
-                          title="Înapoi la listă"
+                          title={t('backToList')}
                         >
                           ↩
                         </button>
@@ -722,26 +724,26 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
 
                   {/* Duration */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-1.5">Durata (ore)</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelDuration')}</label>
                     <select
                       value={formDuration}
                       onChange={(e) => setFormDuration(parseInt(e.target.value))}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     >
-                      <option value={1}>1 oră</option>
-                      <option value={2}>2 ore</option>
-                      <option value={3}>3 ore</option>
-                      <option value={4}>4 ore</option>
-                      <option value={5}>5 ore</option>
-                      <option value={6}>6 ore</option>
-                      <option value={7}>7 ore</option>
-                      <option value={8}>8 ore</option>
+                      <option value={1}>{t('hour', { count: 1 })}</option>
+                      <option value={2}>{t('hours', { count: 2 })}</option>
+                      <option value={3}>{t('hours', { count: 3 })}</option>
+                      <option value={4}>{t('hours', { count: 4 })}</option>
+                      <option value={5}>{t('hours', { count: 5 })}</option>
+                      <option value={6}>{t('hours', { count: 6 })}</option>
+                      <option value={7}>{t('hours', { count: 7 })}</option>
+                      <option value={8}>{t('hours', { count: 8 })}</option>
                     </select>
                   </div>
 
                   {/* Topics */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-1.5">Teme Abordate</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelTopics')}</label>
                     <select
                       onChange={(e) => {
                         if (e.target.value) {
@@ -751,7 +753,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                       }}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm mb-2"
                     >
-                      <option value="">+ Adaugă temă predefinită</option>
+                      <option value="">{t('addPredefinedTopic')}</option>
                       {PREDEFINED_TOPICS.map((topic) => (
                         <option key={topic} value={topic}>
                           {topic}
@@ -761,7 +763,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                     <textarea
                       value={formTopics}
                       onChange={(e) => setFormTopics(e.target.value)}
-                      placeholder="Lista temelor discutate..."
+                      placeholder={t('topicsPlaceholder')}
                       rows={3}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     />
@@ -769,11 +771,11 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
 
                   {/* Notes */}
                   <div>
-                    <label className="block text-slate-400 text-sm mb-1.5">Notițe</label>
+                    <label className="block text-slate-400 text-sm mb-1.5">{t('labelNotes')}</label>
                     <textarea
                       value={formNotes}
                       onChange={(e) => setFormNotes(e.target.value)}
-                      placeholder="Notițe suplimentare..."
+                      placeholder={t('notesPlaceholder')}
                       rows={2}
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-white text-sm"
                     />
@@ -789,14 +791,14 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                     }}
                     className="flex-1 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm"
                   >
-                    Anulează
+                    {t('cancel')}
                   </button>
                   <button
                     onClick={handleAddTraining}
                     disabled={!formEmployeeId || !formInstructor}
                     className="flex-1 px-4 py-2.5 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-xl text-sm font-medium"
                   >
-                    Adaugă
+                    {t('add')}
                   </button>
                 </div>
               </div>
@@ -812,7 +814,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
             <div className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <h2 className="text-xl font-bold text-white mb-4">
-                  Instruiri din {selectedDate && new Date(selectedDate).toLocaleDateString('ro-RO')}
+                  {t('modalDayTitle', { date: selectedDate ? new Date(selectedDate).toLocaleDateString('ro-RO') : '' })}
                 </h2>
 
                 <div className="space-y-3">
@@ -832,22 +834,22 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
-                          <span className="text-slate-500">Tip:</span>{' '}
+                          <span className="text-slate-500">{t('detailType')}:</span>{' '}
                           <span className={`text-xs px-1.5 py-0.5 rounded ${getTrainingTypeColor(t.training_type)}`}>
                             {TRAINING_TYPE_LABELS[t.training_type]}
                           </span>
                         </div>
                         <div>
-                          <span className="text-slate-500">Instructor:</span>{' '}
+                          <span className="text-slate-500">{t('detailInstructor')}:</span>{' '}
                           <span className="text-white">{t.instructor}</span>
                         </div>
                         <div>
-                          <span className="text-slate-500">Durata:</span>{' '}
+                          <span className="text-slate-500">{t('detailDuration')}:</span>{' '}
                           <span className="text-white">{t.duration_hours}h</span>
                         </div>
                         {t.topics && (
                           <div className="col-span-2">
-                            <span className="text-slate-500">Teme:</span>{' '}
+                            <span className="text-slate-500">{t('detailTopics')}:</span>{' '}
                             <span className="text-white">{t.topics}</span>
                           </div>
                         )}
@@ -861,7 +863,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                     onClick={() => setShowDayModal(false)}
                     className="w-full px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm"
                   >
-                    Închide
+                    {t('close')}
                   </button>
                 </div>
               </div>

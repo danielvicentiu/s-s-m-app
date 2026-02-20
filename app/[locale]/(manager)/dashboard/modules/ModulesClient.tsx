@@ -1,6 +1,7 @@
 'use client'
 
 // app/[locale]/dashboard/modules/ModulesClient.tsx
+import { useTranslations } from 'next-intl'
 // Vizualizare module disponibile — status per organizație
 // Read-only: activarea se face exclusiv de super-admin
 
@@ -124,7 +125,7 @@ interface ModulesClientProps {
 }
 
 // ── Status badge ──
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, t }: { status: string; t: (key: string) => string }) {
   const styles: Record<string, string> = {
     active: 'bg-green-100 text-green-800 border border-green-200',
     trial: 'bg-amber-100 text-amber-800 border border-amber-200',
@@ -133,10 +134,10 @@ function StatusBadge({ status }: { status: string }) {
   }
 
   const labels: Record<string, string> = {
-    active: 'Activ',
-    trial: 'Trial',
-    suspended: 'Suspendat',
-    inactive: 'Inactiv',
+    active: t('status.active'),
+    trial: t('status.trial'),
+    suspended: t('status.suspended'),
+    inactive: t('status.inactive'),
   }
 
   return (
@@ -147,7 +148,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 // ── Category badge ──
-function CategoryBadge({ category }: { category: string }) {
+function CategoryBadge({ category, t }: { category: string; t: (key: string) => string }) {
   const styles: Record<string, string> = {
     core: 'bg-blue-50 text-blue-700 border border-blue-200',
     standalone: 'bg-gray-50 text-gray-600 border border-gray-200',
@@ -155,9 +156,9 @@ function CategoryBadge({ category }: { category: string }) {
   }
 
   const labels: Record<string, string> = {
-    core: 'Inclus',
-    standalone: 'Standard',
-    premium: 'Premium',
+    core: t('category.core'),
+    standalone: t('category.standalone'),
+    premium: t('category.premium'),
   }
 
   return (
@@ -175,6 +176,8 @@ export default function ModulesClient({
   definitions,
   activeModules,
 }: ModulesClientProps) {
+  const t = useTranslations('modules')
+
   // Construiește un map rapid module_key → status
   const activeMap = new Map(activeModules.map(m => [m.module_key, m]))
 
@@ -214,8 +217,8 @@ export default function ModulesClient({
             {getIcon(def.icon)}
           </div>
           <div className="flex flex-col items-end gap-1">
-            <StatusBadge status={status} />
-            <CategoryBadge category={def.category} />
+            <StatusBadge status={status} t={t} />
+            <CategoryBadge category={def.category} t={t} />
           </div>
         </div>
 
@@ -234,7 +237,7 @@ export default function ModulesClient({
         {status === 'trial' && activeEntry?.trial_expires_at && (
           <div className="mt-3 pt-3 border-t border-amber-100">
             <p className="text-xs text-amber-700">
-              Trial expiră: {new Date(activeEntry.trial_expires_at).toLocaleDateString('ro-RO')}
+              {t('card.trialExpires')} {new Date(activeEntry.trial_expires_at).toLocaleDateString('ro-RO')}
             </p>
           </div>
         )}
@@ -243,7 +246,7 @@ export default function ModulesClient({
         {status === 'active' && activeEntry?.activated_at && (
           <div className="mt-3 pt-3 border-t border-gray-100">
             <p className="text-xs text-gray-400">
-              Activ din: {new Date(activeEntry.activated_at).toLocaleDateString('ro-RO')}
+              {t('card.activeSince')} {new Date(activeEntry.activated_at).toLocaleDateString('ro-RO')}
             </p>
           </div>
         )}
@@ -252,7 +255,7 @@ export default function ModulesClient({
         {status === 'inactive' && (
           <div className="mt-3 pt-3 border-t border-gray-100">
             <p className="text-xs text-gray-400 italic">
-              Contactați administratorul pentru activare
+              {t('card.contactAdmin')}
             </p>
           </div>
         )}
@@ -270,12 +273,11 @@ export default function ModulesClient({
               Dashboard
             </a>
             <span>/</span>
-            <span className="text-gray-900 font-medium">Module</span>
+            <span className="text-gray-900 font-medium">{t('breadcrumb')}</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Module disponibile</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Modulele active pentru <span className="font-medium text-gray-700">{orgName}</span>.
-            Activarea modulelor se face de administratorul platformei.
+            {t('subtitle', { orgName })}
           </p>
         </div>
 
@@ -283,17 +285,17 @@ export default function ModulesClient({
         <div className="grid grid-cols-3 gap-4 mb-8">
           <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
             <div className="text-2xl font-bold text-green-600">{totalActive}</div>
-            <div className="text-xs text-gray-500 mt-1">Module active</div>
+            <div className="text-xs text-gray-500 mt-1">{t('stats.active')}</div>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
             <div className="text-2xl font-bold text-amber-600">{totalTrial}</div>
-            <div className="text-xs text-gray-500 mt-1">În trial</div>
+            <div className="text-xs text-gray-500 mt-1">{t('stats.trial')}</div>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
             <div className="text-2xl font-bold text-gray-400">
               {definitions.length - totalActive - totalTrial}
             </div>
-            <div className="text-xs text-gray-500 mt-1">Disponibile</div>
+            <div className="text-xs text-gray-500 mt-1">{t('stats.available')}</div>
           </div>
         </div>
 
@@ -303,10 +305,9 @@ export default function ModulesClient({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-sm font-medium text-blue-800">Informație</p>
+            <p className="text-sm font-medium text-blue-800">{t('info.title')}</p>
             <p className="text-sm text-blue-700 mt-0.5">
-              Această pagină este doar pentru vizualizare. Pentru a activa sau dezactiva module,
-              contactați echipa s-s-m.ro la{' '}
+              {t('info.message')}{' '}
               <a href="mailto:support@s-s-m.ro" className="underline font-medium">support@s-s-m.ro</a>.
             </p>
           </div>
@@ -316,9 +317,9 @@ export default function ModulesClient({
         {coreModules.length > 0 && (
           <section className="mb-10">
             <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-base font-semibold text-gray-900">Module de bază</h2>
+              <h2 className="text-base font-semibold text-gray-900">{t('section.core')}</h2>
               <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                Incluse
+                {t('category.core')}
               </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -331,9 +332,9 @@ export default function ModulesClient({
         {standaloneModules.length > 0 && (
           <section className="mb-10">
             <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-base font-semibold text-gray-900">Module standard</h2>
+              <h2 className="text-base font-semibold text-gray-900">{t('section.standalone')}</h2>
               <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
-                Standard
+                {t('category.standalone')}
               </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -346,9 +347,9 @@ export default function ModulesClient({
         {premiumModules.length > 0 && (
           <section className="mb-10">
             <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-base font-semibold text-gray-900">Module premium</h2>
+              <h2 className="text-base font-semibold text-gray-900">{t('section.premium')}</h2>
               <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
-                Premium
+                {t('category.premium')}
               </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -365,16 +366,16 @@ export default function ModulesClient({
             </svg>
           </div>
           <h3 className="text-sm font-semibold text-gray-700 mb-1">
-            Vrei să activezi un modul nou?
+            {t('footer.title')}
           </h3>
           <p className="text-xs text-gray-500 mb-4">
-            Contactați-ne pentru a activa module suplimentare sau pentru a obține o perioadă de trial.
+            {t('footer.message')}
           </p>
           <a
             href="mailto:support@s-s-m.ro"
             className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
           >
-            Contactați administratorul
+            {t('footer.contactButton')}
           </a>
         </div>
       </div>

@@ -5,6 +5,7 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
@@ -51,6 +52,7 @@ type SortDirection = 'asc' | 'desc'
 
 export default function MedicalPageClient() {
   const router = useRouter()
+  const t = useTranslations('medical')
   const supabase = createSupabaseBrowser()
 
   // State
@@ -144,18 +146,18 @@ export default function MedicalPageClient() {
   }
 
   const examinationTypes: Record<string, string> = {
-    periodic: 'Periodic',
-    angajare: 'Angajare',
-    reluare: 'Reluare muncă',
-    la_cerere: 'La cerere',
-    supraveghere: 'Supraveghere'
+    periodic: t('examType.periodic'),
+    angajare: t('examType.angajare'),
+    reluare: t('examType.reluare'),
+    la_cerere: t('examType.laCerere'),
+    supraveghere: t('examType.supraveghere'),
   }
 
   const resultLabels: Record<string, string> = {
-    apt: 'Apt',
-    apt_conditionat: 'Apt condiționat',
-    inapt_temporar: 'Inapt temporar',
-    inapt: 'Inapt'
+    apt: t('result.apt'),
+    apt_conditionat: t('result.aptConditionat'),
+    inapt_temporar: t('result.inaptTemporar'),
+    inapt: t('result.inapt'),
   }
 
   const resultColors: Record<string, string> = {
@@ -309,10 +311,10 @@ export default function MedicalPageClient() {
             <div>
               <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <Stethoscope className="h-5 w-5 text-blue-600" />
-                Examene Medicale
+                {t('page.title')}
               </h1>
               <p className="text-sm text-gray-400">
-                {loading ? 'Se încarcă...' : `${filteredAndSorted.length} examene înregistrate`}
+                {loading ? t('loading.data') : t('page.count', { count: filteredAndSorted.length })}
               </p>
             </div>
           </div>
@@ -321,7 +323,7 @@ export default function MedicalPageClient() {
             className="bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
-            Programează examen
+            {t('form.scheduleExam')}
           </button>
         </div>
       </header>
@@ -332,19 +334,19 @@ export default function MedicalPageClient() {
           <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
             <div className="text-3xl font-black text-gray-900">{stats.total}</div>
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
-              Total examene
+              {t('page.totalExams')}
             </div>
           </div>
           <div className="bg-orange-50 rounded-xl border border-orange-100 p-4 text-center">
             <div className="text-3xl font-black text-orange-500">{stats.expiring}</div>
             <div className="text-xs font-semibold text-orange-500 uppercase tracking-widest mt-1">
-              Expiră în 30 zile
+              {t('stats.expiring30')}
             </div>
           </div>
           <div className="bg-red-50 rounded-xl border border-red-100 p-4 text-center">
             <div className="text-3xl font-black text-red-600">{stats.expired}</div>
             <div className="text-xs font-semibold text-red-500 uppercase tracking-widest mt-1">
-              Expirate
+              {t('stats.expired')}
             </div>
           </div>
         </div>
@@ -358,7 +360,7 @@ export default function MedicalPageClient() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Caută după angajat, funcție, medic, clinică..."
+              placeholder={t('page.searchPlaceholder')}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
@@ -373,7 +375,7 @@ export default function MedicalPageClient() {
               }}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
             >
-              <option value="all">Toate tipurile</option>
+              <option value="all">{t('filter.allTypes')}</option>
               {Object.entries(examinationTypes).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
@@ -387,7 +389,7 @@ export default function MedicalPageClient() {
               }}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
             >
-              <option value="all">Toate rezultatele</option>
+              <option value="all">{t('filter.allResults')}</option>
               {Object.entries(resultLabels).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
@@ -401,10 +403,10 @@ export default function MedicalPageClient() {
               }}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
             >
-              <option value="all">Toate statusurile</option>
-              <option value="valid">Valide</option>
-              <option value="expiring">Expiră curând</option>
-              <option value="expired">Expirate</option>
+              <option value="all">{t('filter.allStatuses')}</option>
+              <option value="valid">{t('filter.valid')}</option>
+              <option value="expiring">{t('filter.expiringSoon')}</option>
+              <option value="expired">{t('filter.expired')}</option>
             </select>
           </div>
         </div>
@@ -429,13 +431,13 @@ export default function MedicalPageClient() {
             // EMPTY STATE
             <EmptyState
               icon={Stethoscope}
-              title={exams.length === 0 ? 'Niciun examen' : 'Niciun rezultat'}
+              title={exams.length === 0 ? t('page.noExams') : t('page.noResults')}
               description={
                 exams.length === 0
-                  ? 'Adaugă primul examen medical pentru a începe.'
-                  : 'Nu există examene care să corespundă căutării tale.'
+                  ? t('page.noExamsDesc')
+                  : t('page.noResultsDesc')
               }
-              actionLabel={exams.length === 0 ? 'Programează examen' : undefined}
+              actionLabel={exams.length === 0 ? t('form.scheduleExam') : undefined}
               onAction={exams.length === 0 ? () => router.push('/dashboard/medical/new') : undefined}
             />
           ) : (
@@ -446,43 +448,43 @@ export default function MedicalPageClient() {
                   onClick={() => handleSort('employee_name')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Angajat {getSortIcon('employee_name')}
+                  {t('col.employee')} {getSortIcon('employee_name')}
                 </button>
                 <button
                   onClick={() => handleSort('examination_type')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Tip examen {getSortIcon('examination_type')}
+                  {t('page.colExamType')} {getSortIcon('examination_type')}
                 </button>
                 <button
                   onClick={() => handleSort('examination_date')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Data {getSortIcon('examination_date')}
+                  {t('col.date')} {getSortIcon('examination_date')}
                 </button>
                 <button
                   onClick={() => handleSort('doctor_name')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Medic {getSortIcon('doctor_name')}
+                  {t('page.colDoctor')} {getSortIcon('doctor_name')}
                 </button>
                 <button
                   onClick={() => handleSort('result')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Rezultat {getSortIcon('result')}
+                  {t('col.result')} {getSortIcon('result')}
                 </button>
                 <button
                   onClick={() => handleSort('next_exam')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Următor examen {getSortIcon('next_exam')}
+                  {t('page.colNextExam')} {getSortIcon('next_exam')}
                 </button>
                 <button
                   onClick={() => handleSort('status')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Status {getSortIcon('status')}
+                  {t('col.status')} {getSortIcon('status')}
                 </button>
               </div>
 
@@ -577,7 +579,7 @@ export default function MedicalPageClient() {
                 <div className="border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                   {/* Page size selector */}
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <span>Afișează:</span>
+                    <span>{t('page.show')}:</span>
                     <select
                       value={pageSize}
                       onChange={(e) => {
@@ -591,7 +593,7 @@ export default function MedicalPageClient() {
                       <option value={50}>50</option>
                       <option value={100}>100</option>
                     </select>
-                    <span>/ {filteredAndSorted.length} total</span>
+                    <span>/ {filteredAndSorted.length} {t('page.total')}</span>
                   </div>
 
                   {/* Page navigation */}
@@ -604,7 +606,7 @@ export default function MedicalPageClient() {
                       <ChevronUp className="h-4 w-4 rotate-[-90deg]" />
                     </button>
                     <span className="text-sm text-gray-600 min-w-[100px] text-center">
-                      Pagina {currentPage} din {totalPages}
+                      {t('page.pagination', { current: currentPage, total: totalPages })}
                     </span>
                     <button
                       onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}

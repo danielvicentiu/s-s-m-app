@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { ApiKey, ApiKeyPermission } from '@/lib/types'
 import { Key, Plus, Copy, RotateCw, Trash2, CheckCircle2, Clock, Shield } from 'lucide-react'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
@@ -17,24 +18,26 @@ interface NewKeyModalData {
   permissions: ApiKeyPermission[]
 }
 
-const AVAILABLE_PERMISSIONS: { value: ApiKeyPermission; label: string; description: string }[] = [
-  { value: 'read:employees', label: 'Citire angajați', description: 'Vizualizare listă angajați' },
-  { value: 'write:employees', label: 'Scriere angajați', description: 'Creare/modificare angajați' },
-  { value: 'read:trainings', label: 'Citire instruiri', description: 'Vizualizare instruiri SSM' },
-  { value: 'write:trainings', label: 'Scriere instruiri', description: 'Creare/modificare instruiri' },
-  { value: 'read:medical', label: 'Citire medicina muncii', description: 'Vizualizare examene medicale' },
-  { value: 'write:medical', label: 'Scriere medicina muncii', description: 'Adăugare examene medicale' },
-  { value: 'read:equipment', label: 'Citire echipamente', description: 'Vizualizare echipamente PSI' },
-  { value: 'write:equipment', label: 'Scriere echipamente', description: 'Creare/modificare echipamente' },
-  { value: 'read:alerts', label: 'Citire alerte', description: 'Vizualizare notificări și alerte' },
-  { value: 'read:documents', label: 'Citire documente', description: 'Vizualizare documente' },
-  { value: 'write:documents', label: 'Scriere documente', description: 'Încărcare documente' },
-  { value: 'read:reports', label: 'Citire rapoarte', description: 'Generare și vizualizare rapoarte' },
-  { value: 'webhook:manage', label: 'Gestionare webhooks', description: 'Creare și gestionare webhooks' },
-  { value: 'admin:all', label: 'Administrator complet', description: 'Acces total la toate resursele' },
-]
-
 export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, userId }: ApiKeysClientProps) {
+  const t = useTranslations('apiKeys')
+
+  const AVAILABLE_PERMISSIONS: { value: ApiKeyPermission; label: string; description: string }[] = [
+    { value: 'read:employees', label: t('permReadEmployees'), description: t('permReadEmployeesDesc') },
+    { value: 'write:employees', label: t('permWriteEmployees'), description: t('permWriteEmployeesDesc') },
+    { value: 'read:trainings', label: t('permReadTrainings'), description: t('permReadTrainingsDesc') },
+    { value: 'write:trainings', label: t('permWriteTrainings'), description: t('permWriteTrainingsDesc') },
+    { value: 'read:medical', label: t('permReadMedical'), description: t('permReadMedicalDesc') },
+    { value: 'write:medical', label: t('permWriteMedical'), description: t('permWriteMedicalDesc') },
+    { value: 'read:equipment', label: t('permReadEquipment'), description: t('permReadEquipmentDesc') },
+    { value: 'write:equipment', label: t('permWriteEquipment'), description: t('permWriteEquipmentDesc') },
+    { value: 'read:alerts', label: t('permReadAlerts'), description: t('permReadAlertsDesc') },
+    { value: 'read:documents', label: t('permReadDocuments'), description: t('permReadDocumentsDesc') },
+    { value: 'write:documents', label: t('permWriteDocuments'), description: t('permWriteDocumentsDesc') },
+    { value: 'read:reports', label: t('permReadReports'), description: t('permReadReportsDesc') },
+    { value: 'webhook:manage', label: t('permWebhookManage'), description: t('permWebhookManageDesc') },
+    { value: 'admin:all', label: t('permAdminAll'), description: t('permAdminAllDesc') },
+  ]
+
   const [apiKeys, setApiKeys] = useState<ApiKey[]>(initialKeys)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [newKeyData, setNewKeyData] = useState<NewKeyModalData>({
@@ -66,12 +69,12 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
 
   const handleCreateKey = async () => {
     if (!newKeyData.name.trim()) {
-      showToast('Numele este obligatoriu', 'error')
+      showToast(t('errorNameRequired'), 'error')
       return
     }
 
     if (newKeyData.permissions.length === 0) {
-      showToast('Selectați cel puțin o permisiune', 'error')
+      showToast(t('errorPermissionRequired'), 'error')
       return
     }
 
@@ -106,7 +109,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
       setNewKeyData({ name: '', description: '', permissions: [] })
       setShowCreateModal(false)
 
-      showToast('Cheie API creată cu succes')
+      showToast(t('toastKeyCreated'))
     } catch (error: any) {
       showToast(error.message || 'Eroare la crearea cheii API', 'error')
     } finally {
@@ -117,8 +120,8 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
   const handleRevokeKey = async (keyId: string, keyName: string) => {
     setConfirmDialog({
       isOpen: true,
-      title: 'Revocă cheia API',
-      message: `Sigur doriți să revocați cheia "${keyName}"? Această acțiune este ireversibilă și toate request-urile cu această cheie vor eșua.`,
+      title: t('revokeTitle'),
+      message: t('revokeMessage', { name: keyName }),
       isDestructive: true,
       onConfirm: async () => {
         setLoading(true)
@@ -140,7 +143,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
               : key
           ))
 
-          showToast('Cheia API a fost revocată')
+          showToast(t('toastKeyRevoked'))
         } catch (error: any) {
           showToast(error.message || 'Eroare la revocare', 'error')
         } finally {
@@ -154,8 +157,8 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
   const handleRotateKey = async (keyId: string, keyName: string) => {
     setConfirmDialog({
       isOpen: true,
-      title: 'Rotește cheia API',
-      message: `Doriți să rotați cheia "${keyName}"? Cheia veche va fi revocată și va fi generată una nouă cu aceleași permisiuni.`,
+      title: t('rotateTitle'),
+      message: t('rotateMessage', { name: keyName }),
       onConfirm: async () => {
         setLoading(true)
         try {
@@ -184,7 +187,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
           // Show the new key
           setCreatedKey({ key: result.plainTextKey, name: result.apiKey.name })
 
-          showToast('Cheia API a fost rotită cu succes')
+          showToast(t('toastKeyRotated'))
         } catch (error: any) {
           showToast(error.message || 'Eroare la rotație', 'error')
         } finally {
@@ -201,7 +204,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
       setCopiedId(id)
       setTimeout(() => setCopiedId(null), 2000)
     } catch (error) {
-      showToast('Eroare la copiere', 'error')
+      showToast(t('errorCopy'), 'error')
     }
   }
 
@@ -215,7 +218,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
   }
 
   const formatDate = (date: string | null) => {
-    if (!date) return 'Niciodată'
+    if (!date) return t('never')
     return new Date(date).toLocaleDateString('ro-RO', {
       year: 'numeric',
       month: 'short',
@@ -230,7 +233,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
           <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-          Revocată
+          {t('statusRevoked')}
         </span>
       )
     }
@@ -239,7 +242,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
           <span className="w-1.5 h-1.5 rounded-full bg-gray-500" />
-          Inactivă
+          {t('statusInactive')}
         </span>
       )
     }
@@ -247,7 +250,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
     return (
       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
         <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-        Activă
+        {t('statusActive')}
       </span>
     )
   }
@@ -259,9 +262,9 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Chei API</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('title')}</h1>
               <p className="text-gray-600">
-                Gestionează cheile API pentru integrări externe și acces programatic la platformă
+                {t('subtitle')}
               </p>
             </div>
             <button
@@ -269,7 +272,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
               <Plus className="h-5 w-5" />
-              Cheie nouă
+              {t('newKey')}
             </button>
           </div>
         </div>
@@ -303,19 +306,19 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                     <Key className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">Cheie API creată cu succes!</h3>
+                    <h3 className="text-xl font-bold text-gray-900">{t('keyCreatedSuccess')}</h3>
                     <p className="text-sm text-gray-600">{createdKey.name}</p>
                   </div>
                 </div>
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
                   <p className="text-sm text-yellow-900 font-medium">
-                    ⚠️ Această cheie va fi afișată o singură dată. Copiați-o și păstrați-o într-un loc sigur.
+                    ⚠️ {t('keyOnceWarning')}
                   </p>
                 </div>
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Cheia API</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('apiKeyLabel')}</label>
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
@@ -330,12 +333,12 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                     {copiedId === 'created-key' ? (
                       <>
                         <CheckCircle2 className="h-4 w-4" />
-                        Copiat
+                        {t('copied')}
                       </>
                     ) : (
                       <>
                         <Copy className="h-4 w-4" />
-                        Copiază
+                        {t('copy')}
                       </>
                     )}
                   </button>
@@ -347,7 +350,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                   onClick={() => setCreatedKey(null)}
                   className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
                 >
-                  Închide
+                  {t('close')}
                 </button>
               </div>
             </div>
@@ -359,12 +362,12 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
           <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
             <div className="absolute inset-0 bg-black/50" onClick={() => !loading && setShowCreateModal(false)} />
             <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-3xl mx-4 my-8 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Creare cheie API nouă</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">{t('createModalTitle')}</h3>
 
               <div className="space-y-4 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nume cheie <span className="text-red-500">*</span>
+                    {t('keyName')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -376,7 +379,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Descriere (opțional)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('keyDescription')}</label>
                   <textarea
                     value={newKeyData.description}
                     onChange={(e) => setNewKeyData({ ...newKeyData, description: e.target.value })}
@@ -388,7 +391,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Permisiuni <span className="text-red-500">*</span>
+                    {t('permissions')} <span className="text-red-500">*</span>
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-4">
                     {AVAILABLE_PERMISSIONS.map((perm) => (
@@ -414,7 +417,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                     ))}
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Selectate: {newKeyData.permissions.length} permisiuni
+                    {t('selectedPermissions', { count: newKeyData.permissions.length })}
                   </p>
                 </div>
               </div>
@@ -425,7 +428,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                   disabled={loading}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50"
                 >
-                  Anulează
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={handleCreateKey}
@@ -433,7 +436,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                   className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
                 >
                   {loading && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                  Creează cheie
+                  {t('createKey')}
                 </button>
               </div>
             </div>
@@ -447,14 +450,14 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Key className="h-8 w-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Nicio cheie API</h3>
-              <p className="text-gray-600 mb-4">Creați prima cheie API pentru a începe integrarea.</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('noKeys')}</h3>
+              <p className="text-gray-600 mb-4">{t('noKeysDesc')}</p>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
                 <Plus className="h-4 w-4" />
-                Crează prima cheie
+                {t('createFirstKey')}
               </button>
             </div>
           ) : (
@@ -463,25 +466,25 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Nume
+                      {t('colName')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Cheie
+                      {t('colKey')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      {t('colStatus')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Utilizare
+                      {t('colUsage')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Creat
+                      {t('colCreated')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Ultima folosire
+                      {t('colLastUsed')}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Acțiuni
+                      {t('colActions')}
                     </th>
                   </tr>
                 </thead>
@@ -510,7 +513,7 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                           <button
                             onClick={() => copyToClipboard(key.key_prefix, key.id)}
                             className="text-gray-400 hover:text-gray-600"
-                            title="Copiază prefix"
+                            title={t('copyPrefix')}
                           >
                             {copiedId === key.id ? (
                               <CheckCircle2 className="h-4 w-4 text-green-600" />
@@ -549,14 +552,14 @@ export default function ApiKeysClient({ organizationId, apiKeys: initialKeys, us
                               <button
                                 onClick={() => handleRotateKey(key.id, key.name)}
                                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                title="Rotește cheia"
+                                title={t('rotateKey')}
                               >
                                 <RotateCw className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => handleRevokeKey(key.id, key.name)}
                                 className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                title="Revocă cheia"
+                                title={t('revokeKey')}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </button>

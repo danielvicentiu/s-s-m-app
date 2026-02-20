@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   AccountingContract,
   AccountingDeadline,
@@ -17,6 +18,7 @@ import DeadlineCard from '@/components/accounting/DeadlineCard';
 type TabType = 'dashboard' | 'contracts' | 'deadlines' | 'activity';
 
 export default function ContabilitateClient() {
+  const t = useTranslations('accounting')
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<AccountingDashboardStats | null>(null);
@@ -117,9 +119,9 @@ export default function ContabilitateClient() {
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-6">
-            <h1 className="text-3xl font-bold text-gray-900">Contabilitate & Fiscal</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
             <p className="mt-2 text-sm text-gray-600">
-              Gestionare contracte, termene fiscale și monitorizare KPI
+              {t('subtitle')}
             </p>
           </div>
 
@@ -133,7 +135,7 @@ export default function ContabilitateClient() {
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Dashboard
+              {t('tabDashboard')}
             </button>
             <button
               onClick={() => setActiveTab('contracts')}
@@ -143,7 +145,7 @@ export default function ContabilitateClient() {
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Contracte
+              {t('tabContracts')}
             </button>
             <button
               onClick={() => setActiveTab('deadlines')}
@@ -153,7 +155,7 @@ export default function ContabilitateClient() {
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Termene
+              {t('tabDeadlines')}
             </button>
             <button
               onClick={() => setActiveTab('activity')}
@@ -163,7 +165,7 @@ export default function ContabilitateClient() {
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Jurnal
+              {t('tabActivity')}
             </button>
           </div>
         </div>
@@ -177,7 +179,7 @@ export default function ContabilitateClient() {
           </div>
         )}
 
-        {!loading && activeTab === 'dashboard' && <DashboardTab stats={stats} />}
+        {!loading && activeTab === 'dashboard' && <DashboardTab stats={stats} t={t} />}
         {!loading && activeTab === 'contracts' && (
           <ContractsTab
             contracts={contracts}
@@ -186,12 +188,13 @@ export default function ContabilitateClient() {
               setEditingContract(contract);
               setShowContractForm(true);
             }}
+            t={t}
           />
         )}
         {!loading && activeTab === 'deadlines' && (
-          <DeadlinesTab deadlines={deadlines} onStatusChange={handleUpdateDeadlineStatus} />
+          <DeadlinesTab deadlines={deadlines} onStatusChange={handleUpdateDeadlineStatus} t={t} />
         )}
-        {!loading && activeTab === 'activity' && <ActivityTab activityLog={activityLog} />}
+        {!loading && activeTab === 'activity' && <ActivityTab activityLog={activityLog} t={t} />}
       </div>
 
       {/* Contract Form Modal */}
@@ -209,9 +212,9 @@ export default function ContabilitateClient() {
 }
 
 // Dashboard Tab Component
-function DashboardTab({ stats }: { stats: AccountingDashboardStats | null }) {
+function DashboardTab({ stats, t }: { stats: AccountingDashboardStats | null; t: (key: string) => string }) {
   if (!stats) {
-    return <div className="text-gray-500">Nu există date disponibile</div>;
+    return <div className="text-gray-500">{t('noData')}</div>;
   }
 
   return (
@@ -220,18 +223,18 @@ function DashboardTab({ stats }: { stats: AccountingDashboardStats | null }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Contracte active</h3>
+            <h3 className="text-sm font-medium text-gray-600">{t('activeContracts')}</h3>
             <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats.activeContracts}</p>
-          <p className="text-sm text-gray-500 mt-1">din {stats.totalContracts} total</p>
+          <p className="text-sm text-gray-500 mt-1">{t('ofTotal', { total: stats.totalContracts })}</p>
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Venit lunar</h3>
+            <h3 className="text-sm font-medium text-gray-600">{t('monthlyRevenue')}</h3>
             <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -247,35 +250,35 @@ function DashboardTab({ stats }: { stats: AccountingDashboardStats | null }) {
 
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Termene (7 zile)</h3>
+            <h3 className="text-sm font-medium text-gray-600">{t('deadlines7days')}</h3>
             <svg className="w-8 h-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats.upcomingDeadlines7days}</p>
-          <p className="text-sm text-gray-500 mt-1">viitoare</p>
+          <p className="text-sm text-gray-500 mt-1">{t('upcoming')}</p>
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Restante</h3>
+            <h3 className="text-sm font-medium text-gray-600">{t('overdue')}</h3>
             <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats.overdueCount}</p>
-          <p className="text-sm text-red-600 mt-1">necesită atenție</p>
+          <p className="text-sm text-red-600 mt-1">{t('needsAttention')}</p>
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Rată completare</h3>
+            <h3 className="text-sm font-medium text-gray-600">{t('completionRate')}</h3>
             <svg className="w-8 h-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats.completionRate}%</p>
-          <p className="text-sm text-gray-500 mt-1">ultimele 30 zile</p>
+          <p className="text-sm text-gray-500 mt-1">{t('last30days')}</p>
         </div>
       </div>
     </div>
@@ -287,16 +290,18 @@ function ContractsTab({
   contracts,
   onAddContract,
   onEditContract,
+  t,
 }: {
   contracts: AccountingContract[];
   onAddContract: () => void;
   onEditContract: (contract: AccountingContract) => void;
+  t: (key: string, opts?: Record<string, unknown>) => string;
 }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-900">
-          Contracte ({contracts.length})
+          {t('contractsTitle')} ({contracts.length})
         </h2>
         <button
           onClick={onAddContract}
@@ -305,7 +310,7 @@ function ContractsTab({
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          Adaugă contract
+          {t('addContract')}
         </button>
       </div>
 
@@ -314,13 +319,13 @@ function ContractsTab({
           <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Niciun contract încă</h3>
-          <p className="text-gray-600 mb-6">Începe prin a adăuga primul contract de contabilitate</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{t('noContracts')}</h3>
+          <p className="text-gray-600 mb-6">{t('noContractsDesc')}</p>
           <button
             onClick={onAddContract}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
-            Adaugă primul contract
+            {t('addFirstContract')}
           </button>
         </div>
       ) : (
@@ -330,22 +335,22 @@ function ContractsTab({
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Client
+                    {t('colClient')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     CUI
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Servicii
+                    {t('colServices')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Tarif lunar
+                    {t('colMonthlyFee')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Status
+                    {t('colStatus')}
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Acțiuni
+                    {t('colActions')}
                   </th>
                 </tr>
               </thead>
@@ -393,7 +398,7 @@ function ContractsTab({
                             : 'bg-gray-100 text-gray-700'
                         }`}
                       >
-                        {contract.status === 'active' ? 'Activ' : contract.status === 'suspended' ? 'Suspendat' : 'Terminat'}
+                        {contract.status === 'active' ? t('statusActive') : contract.status === 'suspended' ? t('statusSuspended') : t('statusTerminated')}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
@@ -401,7 +406,7 @@ function ContractsTab({
                         onClick={() => onEditContract(contract)}
                         className="text-blue-600 hover:text-blue-700 font-medium"
                       >
-                        Editează
+                        {t('editContract')}
                       </button>
                     </td>
                   </tr>
@@ -419,9 +424,11 @@ function ContractsTab({
 function DeadlinesTab({
   deadlines,
   onStatusChange,
+  t,
 }: {
   deadlines: AccountingDeadline[];
   onStatusChange: (deadlineId: string, newStatus: string) => Promise<void>;
+  t: (key: string, opts?: Record<string, unknown>) => string;
 }) {
   const upcomingDeadlines = deadlines.filter((d) => {
     const daysRemaining = Math.ceil((new Date(d.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
@@ -442,7 +449,7 @@ function DeadlinesTab({
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            Restante ({overdueDeadlines.length})
+            {t('overdueTitle')} ({overdueDeadlines.length})
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {overdueDeadlines.map((deadline) => (
@@ -462,11 +469,11 @@ function DeadlinesTab({
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          Termene viitoare ({upcomingDeadlines.length})
+          {t('upcomingDeadlines')} ({upcomingDeadlines.length})
         </h2>
         {upcomingDeadlines.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
-            <p className="text-gray-500">Niciun termen viitor</p>
+            <p className="text-gray-500">{t('noUpcomingDeadlines')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -485,12 +492,12 @@ function DeadlinesTab({
 }
 
 // Activity Tab Component
-function ActivityTab({ activityLog }: { activityLog: any[] }) {
+function ActivityTab({ activityLog, t }: { activityLog: any[]; t: (key: string) => string }) {
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-900">Jurnal activitate</h2>
+      <h2 className="text-xl font-semibold text-gray-900">{t('activityLog')}</h2>
       <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
-        <p className="text-gray-500">Jurnalul de activitate va fi disponibil curând</p>
+        <p className="text-gray-500">{t('activityLogSoon')}</p>
       </div>
     </div>
   );

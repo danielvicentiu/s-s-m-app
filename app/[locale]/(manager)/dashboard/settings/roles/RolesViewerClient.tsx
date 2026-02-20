@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Shield, Lock, Globe, Info, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { PermissionsMatrix } from '@/components/admin/PermissionsMatrix';
 import { Resource, Action, UserRole } from '@/lib/rbac';
 
@@ -31,6 +32,7 @@ interface RolesViewerClientProps {
 }
 
 export function RolesViewerClient({ roles, organizationName, userRoles }: RolesViewerClientProps) {
+  const t = useTranslations('roles')
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(
     roles.length > 0 ? roles[0].id : null
   );
@@ -54,17 +56,17 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
                 </Link>
                 <ChevronRight className="h-4 w-4" />
                 <Link href="/dashboard/settings" className="hover:text-gray-700">
-                  Setări
+                  {t('breadcrumbSettings')}
                 </Link>
                 <ChevronRight className="h-4 w-4" />
-                <span className="text-gray-900 font-medium">Roluri</span>
+                <span className="text-gray-900 font-medium">{t('breadcrumbRoles')}</span>
               </div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                 <Shield className="h-7 w-7 text-blue-600" />
-                Roluri și Permisiuni
+                {t('pageTitle')}
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                Vizualizare roluri disponibile pentru {organizationName}
+                {t('pageSubtitle', { organizationName })}
               </p>
             </div>
           </div>
@@ -74,13 +76,12 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
             <div className="flex items-start gap-3">
               <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <h3 className="text-sm font-semibold text-blue-900">Vizualizare Read-Only</h3>
+                <h3 className="text-sm font-semibold text-blue-900">{t('readOnlyTitle')}</h3>
                 <p className="text-sm text-blue-700 mt-1">
-                  Această pagină prezintă rolurile și permisiunile disponibile în sistem. Pentru a modifica
-                  roluri sau pentru a asigna utilizatori, contactați un super administrator.
+                  {t('readOnlyDesc')}
                 </p>
                 <div className="mt-3">
-                  <p className="text-sm text-blue-900 font-medium">Rolurile tale active:</p>
+                  <p className="text-sm text-blue-900 font-medium">{t('yourActiveRoles')}</p>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {userRoles.map((role, idx) => (
                       <span
@@ -106,7 +107,7 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden sticky top-6">
               <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                  Roluri Disponibile
+                  {t('availableRoles')}
                 </h3>
               </div>
               <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
@@ -134,7 +135,7 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
                             </div>
                             {isUserRole && (
                               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-green-100 text-green-800 font-medium">
-                                Tu
+                                {t('you')}
                               </span>
                             )}
                           </div>
@@ -151,7 +152,7 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
                               <span className="text-xs text-gray-400">Global</span>
                             )}
                             <span className="text-xs text-gray-500">
-                              {role.permissions.length} permisiuni
+                              {t('permissionsCount', { count: role.permissions.length })}
                             </span>
                           </div>
                         </div>
@@ -163,7 +164,7 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
                 {roles.length === 0 && (
                   <div className="px-4 py-8 text-center">
                     <Shield className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                    <p className="text-sm text-gray-500">Niciun rol disponibil</p>
+                    <p className="text-sm text-gray-500">{t('noRoles')}</p>
                   </div>
                 )}
               </div>
@@ -189,7 +190,7 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
                         {userHasRole(selectedRole.role_key) && (
                           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-green-50 text-green-700 text-xs font-medium">
                             <Shield className="h-3 w-3" />
-                            Rolul tău
+                            {t('yourRole')}
                           </span>
                         )}
                       </div>
@@ -202,12 +203,12 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
                           <strong className="font-medium text-gray-700">
                             {selectedRole.permissions.length}
                           </strong>{' '}
-                          permisiuni active
+                          {t('activePermissions')}
                         </span>
                         {selectedRole.country_code && (
                           <span className="inline-flex items-center gap-1">
                             <Globe className="h-3 w-3" />
-                            Disponibil în {selectedRole.country_code}
+                            {t('availableIn', { countryCode: selectedRole.country_code })}
                           </span>
                         )}
                       </div>
@@ -219,11 +220,10 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
                 <div className="p-6">
                   <div className="mb-4">
                     <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                      Matrice Permisiuni (Read-Only)
+                      {t('matrixTitle')}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      Această matrice arată permisiunile asociate acestui rol. Fiecare bifă reprezintă o
-                      permisiune activă pentru o combinație Resursă × Acțiune.
+                      {t('matrixDesc')}
                     </p>
                   </div>
 
@@ -239,9 +239,9 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
             ) : (
               <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
                 <Shield className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Selectează un rol</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('selectRole')}</h3>
                 <p className="text-sm text-gray-500">
-                  Alege un rol din lista din stânga pentru a vedea permisiunile asociate
+                  {t('selectRoleDesc')}
                 </p>
               </div>
             )}
@@ -251,7 +251,7 @@ export function RolesViewerClient({ roles, organizationName, userRoles }: RolesV
         {/* LINK ÎNAPOI */}
         <div className="mt-6">
           <Link href="/dashboard/settings" className="text-sm text-gray-500 hover:text-gray-700">
-            ← Înapoi la Setări
+            {t('backToSettings')}
           </Link>
         </div>
       </main>

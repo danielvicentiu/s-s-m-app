@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { CHEMICAL_HAZARDS, ChemicalHazard } from '@/lib/data/chemical-hazards'
 import {
@@ -155,6 +156,7 @@ export default function RiskAssessmentForm({
   editingId,
   initialData,
 }: Props) {
+  const t = useTranslations('forms')
   const supabase = createSupabaseBrowser()
 
   // ========== STATE ==========
@@ -263,7 +265,7 @@ export default function RiskAssessmentForm({
       }
     } catch (err: any) {
       console.error('Error loading hazards:', err)
-      setError('Eroare la încărcarea pericolelor: ' + err.message)
+      setError(t('riskAssessment.errorLoadHazards') + ': ' + err.message)
     }
   }
 
@@ -305,7 +307,7 @@ export default function RiskAssessmentForm({
 
   const handleAddHazard = () => {
     if (!currentHazard.hazard_name || !currentHazard.hazard_name.trim()) {
-      setError('Nume pericol este obligatoriu')
+      setError(t('riskAssessment.errorHazardNameRequired'))
       return
     }
 
@@ -383,20 +385,20 @@ export default function RiskAssessmentForm({
     try {
       // Validation
       if (!formData.organization_id) {
-        throw new Error('Organizația este obligatorie')
+        throw new Error(t('riskAssessment.errorOrgRequired'))
       }
       if (!formData.workplace_name.trim()) {
-        throw new Error('Locul de muncă este obligatoriu')
+        throw new Error(t('riskAssessment.errorWorkplaceRequired'))
       }
       if (hazards.length === 0) {
-        throw new Error('Adăugați cel puțin un pericol')
+        throw new Error(t('riskAssessment.errorAddHazard'))
       }
 
       // Get current user
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      if (!user) throw new Error('Utilizator neautentificat')
+      if (!user) throw new Error(t('riskAssessment.errorNotAuthenticated'))
 
       if (editingId) {
         // UPDATE existing risk assessment
@@ -459,7 +461,7 @@ export default function RiskAssessmentForm({
           .single()
 
         if (insertError) throw insertError
-        if (!newAssessment) throw new Error('Eroare la crearea evaluării')
+        if (!newAssessment) throw new Error(t('riskAssessment.errorCreateAssessment'))
 
         // Insert hazards
         const hazardsToInsert = hazards.map((h) => ({
@@ -488,7 +490,7 @@ export default function RiskAssessmentForm({
       }, 1500)
     } catch (err: any) {
       console.error('Error saving risk assessment:', err)
-      setError(err.message || 'Eroare la salvarea evaluării de risc')
+      setError(err.message || t('riskAssessment.errorSave'))
     } finally {
       setLoading(false)
     }
@@ -536,10 +538,10 @@ export default function RiskAssessmentForm({
         </div>
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-gray-900">
-            {editingId ? 'Editare Evaluare Riscuri' : 'Evaluare Riscuri Noi'}
+            {editingId ? t('riskAssessment.editTitle') : t('riskAssessment.newTitle')}
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            Identificare pericole și evaluare nivel risc per loc de muncă
+            {t('riskAssessment.subtitle')}
           </p>
         </div>
       </div>
@@ -549,7 +551,7 @@ export default function RiskAssessmentForm({
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-red-900">Eroare</p>
+            <p className="text-sm font-medium text-red-900">{t('riskAssessment.errorTitle')}</p>
             <p className="text-sm text-red-700 mt-1">{error}</p>
           </div>
         </div>
@@ -560,7 +562,7 @@ export default function RiskAssessmentForm({
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 text-green-600" />
           <p className="text-sm font-medium text-green-900">
-            Evaluare de risc salvată cu succes!
+            {t('riskAssessment.successMessage')}
           </p>
         </div>
       )}
@@ -570,21 +572,21 @@ export default function RiskAssessmentForm({
         <div className="bg-gray-50 rounded-xl p-6 space-y-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <MapPin className="w-5 h-5 text-blue-600" />
-            Informații Generale
+            {t('riskAssessment.sectionGeneral')}
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Location Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Selectare Locație (opțional)
+                {t('riskAssessment.labelLocation')}
               </label>
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               >
-                <option value="">-- Selectează locație --</option>
+                <option value="">{t('riskAssessment.selectLocation')}</option>
                 {locations.map((location) => (
                   <option key={location.id} value={location.id}>
                     {location.name}
@@ -597,7 +599,7 @@ export default function RiskAssessmentForm({
             {/* Organization */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Organizație <span className="text-red-500">*</span>
+                {t('riskAssessment.labelOrg')} <span className="text-red-500">*</span>
               </label>
               <select
                 required
@@ -608,7 +610,7 @@ export default function RiskAssessmentForm({
                 disabled={!!selectedLocation}
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100"
               >
-                <option value="">-- Selectează organizație --</option>
+                <option value="">{t('riskAssessment.selectOrg')}</option>
                 {organizations.map((org) => (
                   <option key={org.id} value={org.id}>
                     {org.name}
@@ -620,7 +622,7 @@ export default function RiskAssessmentForm({
             {/* Workplace Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Loc de Muncă <span className="text-red-500">*</span>
+                {t('riskAssessment.labelWorkplace')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -629,7 +631,7 @@ export default function RiskAssessmentForm({
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, workplace_name: e.target.value }))
                 }
-                placeholder="ex: Atelier Mecanic, Birou Contabilitate"
+                placeholder={t('riskAssessment.workplacePlaceholder')}
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
@@ -637,7 +639,7 @@ export default function RiskAssessmentForm({
             {/* Department */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Departament
+                {t('riskAssessment.labelDepartment')}
               </label>
               <input
                 type="text"
@@ -645,7 +647,7 @@ export default function RiskAssessmentForm({
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, department: e.target.value }))
                 }
-                placeholder="ex: Producție, Administrație"
+                placeholder={t('riskAssessment.departmentPlaceholder')}
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
@@ -653,7 +655,7 @@ export default function RiskAssessmentForm({
             {/* Assessment Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Data Evaluării <span className="text-red-500">*</span>
+                {t('riskAssessment.labelAssessmentDate')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -669,7 +671,7 @@ export default function RiskAssessmentForm({
             {/* Review Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Data Revizuire
+                {t('riskAssessment.labelReviewDate')}
               </label>
               <input
                 type="date"
@@ -683,7 +685,7 @@ export default function RiskAssessmentForm({
 
             {/* Status */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('riskAssessment.labelStatus')}</label>
               <div className="flex gap-3">
                 {ASSESSMENT_STATUS.map((status) => (
                   <label
@@ -713,7 +715,7 @@ export default function RiskAssessmentForm({
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-orange-600" />
-              Pericole Identificate ({hazards.length})
+              {t('riskAssessment.sectionHazards', { count: hazards.length })}
             </h3>
             <button
               type="button"
@@ -721,19 +723,19 @@ export default function RiskAssessmentForm({
               className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm font-medium"
             >
               <Plus className="w-4 h-4" />
-              Adaugă Pericol
+              {t('riskAssessment.addHazard')}
             </button>
           </div>
 
           {/* Add Hazard Form */}
           {showAddHazard && (
             <div className="bg-white rounded-xl p-6 border-2 border-blue-200 space-y-4">
-              <h4 className="font-semibold text-gray-900">Adaugă Pericol Nou</h4>
+              <h4 className="font-semibold text-gray-900">{t('riskAssessment.addHazardTitle')}</h4>
 
               {/* Hazard Source Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tip Pericol
+                  {t('riskAssessment.labelHazardType')}
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {HAZARD_SOURCES.map((source) => (
@@ -770,13 +772,13 @@ export default function RiskAssessmentForm({
               {currentHazard.hazard_source === 'chemical' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Căutare Substanță Chimică
+                    {t('riskAssessment.labelChemicalSearch')}
                   </label>
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Caută după nume sau CAS..."
+                    placeholder={t('riskAssessment.chemicalSearchPlaceholder')}
                     className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   {filteredChemicals.length > 0 && (
@@ -805,7 +807,7 @@ export default function RiskAssessmentForm({
                 currentHazard.hazard_source !== 'custom' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Pericole Predefinite
+                      {t('riskAssessment.labelPredefinedHazards')}
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {getPredefinedHazards(currentHazard.hazard_source).map((hazard) => (
@@ -834,7 +836,7 @@ export default function RiskAssessmentForm({
               {/* Hazard Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nume Pericol <span className="text-red-500">*</span>
+                  {t('riskAssessment.labelHazardName')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -843,7 +845,7 @@ export default function RiskAssessmentForm({
                   onChange={(e) =>
                     setCurrentHazard((prev) => ({ ...prev, hazard_name: e.target.value }))
                   }
-                  placeholder="Denumire pericol"
+                  placeholder={t('riskAssessment.hazardNamePlaceholder')}
                   className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -851,7 +853,7 @@ export default function RiskAssessmentForm({
               {/* Hazard Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Descriere Pericol
+                  {t('riskAssessment.labelHazardDesc')}
                 </label>
                 <textarea
                   value={currentHazard.hazard_description || ''}
@@ -862,7 +864,7 @@ export default function RiskAssessmentForm({
                     }))
                   }
                   rows={2}
-                  placeholder="Detalii suplimentare despre pericol"
+                  placeholder={t('riskAssessment.hazardDescPlaceholder')}
                   className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -871,7 +873,7 @@ export default function RiskAssessmentForm({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Probabilitate (1-5)
+                    {t('riskAssessment.labelProbability')}
                   </label>
                   <input
                     type="range"
@@ -888,17 +890,17 @@ export default function RiskAssessmentForm({
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>Rar (1)</span>
+                    <span>{t('riskAssessment.probabilityRare')}</span>
                     <span className="font-semibold text-blue-600 text-base">
                       {currentHazard.probability || 3}
                     </span>
-                    <span>Foarte probabil (5)</span>
+                    <span>{t('riskAssessment.probabilityVeryLikely')}</span>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Severitate (1-5)
+                    {t('riskAssessment.labelSeverity')}
                   </label>
                   <input
                     type="range"
@@ -915,18 +917,18 @@ export default function RiskAssessmentForm({
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>Minoră (1)</span>
+                    <span>{t('riskAssessment.severityMinor')}</span>
                     <span className="font-semibold text-orange-600 text-base">
                       {currentHazard.severity || 3}
                     </span>
-                    <span>Catastrofală (5)</span>
+                    <span>{t('riskAssessment.severityCatastrophic')}</span>
                   </div>
                 </div>
               </div>
 
               {/* Initial Risk Level Display */}
               <div className="bg-gray-100 rounded-xl p-4">
-                <div className="text-sm text-gray-700 mb-2">Nivel Risc Inițial:</div>
+                <div className="text-sm text-gray-700 mb-2">{t('riskAssessment.initialRiskLevel')}:</div>
                 <div className="flex items-center gap-3">
                   <div
                     className={`px-4 py-2 rounded-lg font-bold text-white ${
@@ -980,7 +982,7 @@ export default function RiskAssessmentForm({
               {/* Control Measures */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Măsuri de Control
+                  {t('riskAssessment.labelControlMeasures')}
                 </label>
                 <textarea
                   value={currentHazard.control_measures || ''}
@@ -991,18 +993,18 @@ export default function RiskAssessmentForm({
                     }))
                   }
                   rows={3}
-                  placeholder="Descrieți măsurile de control implementate sau planificate..."
+                  placeholder={t('riskAssessment.controlMeasuresPlaceholder')}
                   className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               {/* Residual Risk */}
               <div className="bg-blue-50 rounded-xl p-4 space-y-3">
-                <h5 className="font-semibold text-gray-900">Risc Rezidual (după măsuri)</h5>
+                <h5 className="font-semibold text-gray-900">{t('riskAssessment.residualRisk')}</h5>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Probabilitate Reziduală
+                      {t('riskAssessment.labelResidualProbability')}
                     </label>
                     <input
                       type="range"
@@ -1025,7 +1027,7 @@ export default function RiskAssessmentForm({
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Severitate Reziduală
+                      {t('riskAssessment.labelResidualSeverity')}
                     </label>
                     <input
                       type="range"
@@ -1049,7 +1051,7 @@ export default function RiskAssessmentForm({
 
                 {currentHazard.residual_probability && currentHazard.residual_severity && (
                   <div className="flex items-center gap-3 mt-3">
-                    <div className="text-sm text-gray-700">Nivel Risc Rezidual:</div>
+                    <div className="text-sm text-gray-700">{t('riskAssessment.residualRiskLevel')}:</div>
                     <div
                       className={`px-4 py-2 rounded-lg font-bold text-white ${
                         getRiskColor(
@@ -1107,14 +1109,14 @@ export default function RiskAssessmentForm({
                   onClick={handleAddHazard}
                   className="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium"
                 >
-                  Adaugă Pericol
+                  {t('riskAssessment.addHazardConfirm')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowAddHazard(false)}
                   className="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-medium"
                 >
-                  Anulează
+                  {t('riskAssessment.cancelHazard')}
                 </button>
               </div>
             </div>
@@ -1147,7 +1149,7 @@ export default function RiskAssessmentForm({
                       type="button"
                       onClick={() => handleRemoveHazard(hazard.id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Șterge pericol"
+                      title={t('riskAssessment.deleteHazard')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -1157,7 +1159,7 @@ export default function RiskAssessmentForm({
                     {/* Probability */}
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        Probabilitate
+                        {t('riskAssessment.colProbability')}
                       </label>
                       <input
                         type="range"
@@ -1180,7 +1182,7 @@ export default function RiskAssessmentForm({
                     {/* Severity */}
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        Severitate
+                        {t('riskAssessment.colSeverity')}
                       </label>
                       <input
                         type="range"
@@ -1203,7 +1205,7 @@ export default function RiskAssessmentForm({
                     {/* Risk Level */}
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        Nivel Risc
+                        {t('riskAssessment.colRiskLevel')}
                       </label>
                       <div className="flex items-center justify-center gap-2 mt-2">
                         <div
@@ -1231,7 +1233,7 @@ export default function RiskAssessmentForm({
                   {/* Control Measures */}
                   <div>
                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                      Măsuri de Control
+                      {t('riskAssessment.labelControlMeasures')}
                     </label>
                     <textarea
                       value={hazard.control_measures}
@@ -1241,18 +1243,18 @@ export default function RiskAssessmentForm({
                         })
                       }
                       rows={2}
-                      placeholder="Măsuri de control..."
+                      placeholder={t('riskAssessment.controlMeasuresShortPlaceholder')}
                       className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
                   {/* Residual Risk */}
                   <div className="bg-blue-50 rounded-lg p-3 space-y-2">
-                    <h6 className="text-xs font-semibold text-gray-700">Risc Rezidual</h6>
+                    <h6 className="text-xs font-semibold text-gray-700">{t('riskAssessment.residualRiskShort')}</h6>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                       <div>
                         <label className="block text-xs text-gray-600 mb-1">
-                          Prob. Reziduală
+                          {t('riskAssessment.residualProbShort')}
                         </label>
                         <input
                           type="number"
@@ -1272,7 +1274,7 @@ export default function RiskAssessmentForm({
                       </div>
                       <div>
                         <label className="block text-xs text-gray-600 mb-1">
-                          Sev. Reziduală
+                          {t('riskAssessment.residualSevShort')}
                         </label>
                         <input
                           type="number"
@@ -1325,7 +1327,7 @@ export default function RiskAssessmentForm({
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <Activity className="w-5 h-5 text-indigo-600" />
-              Sumar Evaluare Riscuri
+              {t('riskAssessment.sectionSummary')}
             </h3>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1333,21 +1335,21 @@ export default function RiskAssessmentForm({
                 <div className="text-2xl font-bold text-red-600">
                   {criticalHazards.length}
                 </div>
-                <div className="text-sm text-gray-600 mt-1">Risc CRITIC (≥20)</div>
+                <div className="text-sm text-gray-600 mt-1">{t('riskAssessment.riskCritical')}</div>
               </div>
               <div className="bg-white rounded-xl p-4 border border-orange-200">
                 <div className="text-2xl font-bold text-orange-600">{highHazards.length}</div>
-                <div className="text-sm text-gray-600 mt-1">Risc RIDICAT (15-19)</div>
+                <div className="text-sm text-gray-600 mt-1">{t('riskAssessment.riskHigh')}</div>
               </div>
               <div className="bg-white rounded-xl p-4 border border-yellow-200">
                 <div className="text-2xl font-bold text-yellow-600">
                   {mediumHazards.length}
                 </div>
-                <div className="text-sm text-gray-600 mt-1">Risc MEDIU (10-14)</div>
+                <div className="text-sm text-gray-600 mt-1">{t('riskAssessment.riskMedium')}</div>
               </div>
               <div className="bg-white rounded-xl p-4 border border-blue-200">
                 <div className="text-2xl font-bold text-blue-600">{lowHazards.length}</div>
-                <div className="text-sm text-gray-600 mt-1">Risc SCĂZUT (&lt;10)</div>
+                <div className="text-sm text-gray-600 mt-1">{t('riskAssessment.riskLow')}</div>
               </div>
             </div>
 
@@ -1357,10 +1359,9 @@ export default function RiskAssessmentForm({
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-red-900">Acțiuni Prioritare Necesare</p>
+                    <p className="font-semibold text-red-900">{t('riskAssessment.priorityActionsTitle')}</p>
                     <p className="text-sm text-red-700 mt-1">
-                      {criticalHazards.length} pericol(e) cu risc CRITIC identificat(e). Măsuri
-                      de control imediate obligatorii!
+                      {t('riskAssessment.priorityActionsDesc', { count: criticalHazards.length })}
                     </p>
                   </div>
                 </div>
@@ -1372,13 +1373,13 @@ export default function RiskAssessmentForm({
         {/* Notes */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Observații Generale
+            {t('riskAssessment.labelNotes')}
           </label>
           <textarea
             value={formData.notes}
             onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
             rows={3}
-            placeholder="Notițe, observații sau recomandări suplimentare..."
+            placeholder={t('riskAssessment.notesPlaceholder')}
             className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -1393,12 +1394,12 @@ export default function RiskAssessmentForm({
             {loading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Salvare...
+                {t('riskAssessment.saving')}
               </>
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                {editingId ? 'Actualizare Evaluare' : 'Salvare Evaluare'}
+                {editingId ? t('riskAssessment.updateAssessment') : t('riskAssessment.saveAssessment')}
               </>
             )}
           </button>
@@ -1411,7 +1412,7 @@ export default function RiskAssessmentForm({
               className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold disabled:opacity-50 flex items-center gap-2"
             >
               <X className="w-5 h-5" />
-              Anulare
+              {t('riskAssessment.cancel')}
             </button>
           )}
         </div>

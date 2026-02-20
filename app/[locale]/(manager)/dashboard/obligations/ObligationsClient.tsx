@@ -5,6 +5,7 @@
 // Features: selector org, stats, filtre (domeniu, severitate, search), expand detalii
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import {
   ChevronDown,
   ChevronUp,
@@ -79,6 +80,7 @@ export default function ObligationsClient({
   initialOrgId,
   organizations
 }: ObligationsClientProps) {
+  const t = useTranslations('obligations')
   const [selectedOrgId, setSelectedOrgId] = useState(initialOrgId)
   const [obligations, setObligations] = useState<OrganizationObligation[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
@@ -127,7 +129,7 @@ export default function ObligationsClient({
   }, [selectedOrgId, domainFilter, severityFilter, searchText])
 
   // Get selected org name
-  const selectedOrgName = organizations.find(o => o.id === selectedOrgId)?.name || 'Organizația dvs.'
+  const selectedOrgName = organizations.find(o => o.id === selectedOrgId)?.name || t('yourOrganization')
 
   // Domain badge helper
   const getDomainBadge = (domain: string) => {
@@ -153,9 +155,9 @@ export default function ObligationsClient({
   // Severity badge helper
   const getSeverityBadge = (severity: string) => {
     const badges: Record<string, { bg: string; text: string; label: string }> = {
-      critical: { bg: 'bg-red-100', text: 'text-red-800', label: 'Critică' },
-      major: { bg: 'bg-amber-100', text: 'text-amber-800', label: 'Majoră' },
-      minor: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Minoră' }
+      critical: { bg: 'bg-red-100', text: 'text-red-800', label: t('severityCritical') },
+      major: { bg: 'bg-amber-100', text: 'text-amber-800', label: t('severityMajor') },
+      minor: { bg: 'bg-gray-100', text: 'text-gray-800', label: t('severityMinor') }
     }
 
     const badge = badges[severity] || badges.minor
@@ -171,10 +173,10 @@ export default function ObligationsClient({
   // Status badge helper
   const getStatusBadge = (status: string) => {
     const badges: Record<string, { bg: string; text: string; icon: any; label: string }> = {
-      pending: { bg: 'bg-amber-100', text: 'text-amber-800', icon: Clock, label: 'Pendintă' },
-      acknowledged: { bg: 'bg-blue-100', text: 'text-blue-800', icon: CheckCircle2, label: 'Confirmată' },
-      compliant: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle2, label: 'Conformă' },
-      non_compliant: { bg: 'bg-red-100', text: 'text-red-800', icon: AlertTriangle, label: 'Non-conformă' }
+      pending: { bg: 'bg-amber-100', text: 'text-amber-800', icon: Clock, label: t('statusPending') },
+      acknowledged: { bg: 'bg-blue-100', text: 'text-blue-800', icon: CheckCircle2, label: t('statusAcknowledged') },
+      compliant: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle2, label: t('statusCompliant') },
+      non_compliant: { bg: 'bg-red-100', text: 'text-red-800', icon: AlertTriangle, label: t('statusNonCompliant') }
     }
 
     const badge = badges[status] || badges.pending
@@ -196,11 +198,10 @@ export default function ObligationsClient({
           <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
             <Scale className="h-16 w-16 text-gray-300 mx-auto mb-6" />
             <h3 className="text-xl font-semibold text-gray-900 mb-3">
-              Nu aveți obligații legislative publicate încă
+              {t('noObligationsTitle')}
             </h3>
             <p className="text-gray-600 max-w-md mx-auto">
-              Consultantul dvs. SSM/PSI va publica obligațiile legislative relevante
-              pentru activitatea organizației dvs. în funcție de domeniul de activitate și țară.
+              {t('noObligationsDesc')}
             </p>
           </div>
         </div>
@@ -217,7 +218,7 @@ export default function ObligationsClient({
             <div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                 <Scale className="h-7 w-7 text-blue-600" />
-                Obligațiile tale legislative
+                {t('title')}
               </h1>
             </div>
 
@@ -247,7 +248,7 @@ export default function ObligationsClient({
               <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Total obligații</p>
+                    <p className="text-sm text-gray-600">{t('totalObligations')}</p>
                     <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
                   </div>
                   <FileText className="h-8 w-8 text-gray-400" />
@@ -271,7 +272,7 @@ export default function ObligationsClient({
               <div className="bg-red-50 rounded-xl p-4 border border-red-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-red-700">Severitate critică</p>
+                    <p className="text-sm text-red-700">{t('criticalSeverity')}</p>
                     <p className="text-2xl font-bold text-red-900 mt-1">{stats.criticalCount}</p>
                   </div>
                   <AlertTriangle className="h-8 w-8 text-red-500" />
@@ -282,7 +283,7 @@ export default function ObligationsClient({
               <div className="bg-green-50 rounded-xl p-4 border border-green-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-green-700">Noi (ultima lună)</p>
+                    <p className="text-sm text-green-700">{t('newLastMonth')}</p>
                     <p className="text-2xl font-bold text-green-900 mt-1">{stats.newCount}</p>
                   </div>
                   <TrendingUp className="h-8 w-8 text-green-500" />
@@ -300,43 +301,43 @@ export default function ObligationsClient({
             {/* Filtru domeniu */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Domeniu
+                {t('domain')}
               </label>
               <select
                 value={domainFilter}
                 onChange={(e) => setDomainFilter(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Toate</option>
+                <option value="all">{t('all')}</option>
                 <option value="SSM">SSM</option>
                 <option value="PSI">PSI</option>
                 <option value="GDPR">GDPR</option>
-                <option value="Fiscal">Fiscal</option>
-                <option value="Altele">Altele</option>
+                <option value="Fiscal">{t('fiscal')}</option>
+                <option value="Altele">{t('others')}</option>
               </select>
             </div>
 
             {/* Filtru severitate */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Severitate
+                {t('severity')}
               </label>
               <select
                 value={severityFilter}
                 onChange={(e) => setSeverityFilter(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Toate</option>
-                <option value="critical">Critică</option>
-                <option value="major">Majoră</option>
-                <option value="minor">Minoră</option>
+                <option value="all">{t('all')}</option>
+                <option value="critical">{t('severityCritical')}</option>
+                <option value="major">{t('severityMajor')}</option>
+                <option value="minor">{t('severityMinor')}</option>
               </select>
             </div>
 
             {/* Search text */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Căutare în obligații
+                {t('searchLabel')}
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -344,7 +345,7 @@ export default function ObligationsClient({
                   type="text"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Caută în text sau referință..."
+                  placeholder={t('searchPlaceholder')}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -358,16 +359,16 @@ export default function ObligationsClient({
         {loading ? (
           <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Se încarcă obligațiile...</p>
+            <p className="text-gray-600">{t('loading')}</p>
           </div>
         ) : obligations.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
             <Scale className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Nicio obligație găsită
+              {t('noResultsTitle')}
             </h3>
             <p className="text-sm text-gray-500">
-              Nu există obligații care să corespundă filtrelor selectate.
+              {t('noResultsDesc')}
             </p>
           </div>
         ) : (
@@ -397,7 +398,7 @@ export default function ObligationsClient({
                         {/* Referință legislativă */}
                         <div className="mb-2">
                           <span className="text-xs font-medium text-gray-500">
-                            Referință legislativă:
+                            {t('legalReference')}:
                           </span>{' '}
                           <span className="text-sm font-semibold text-blue-600">
                             {obl.obligation.source_legal_act}
@@ -413,12 +414,12 @@ export default function ObligationsClient({
                         {/* Quick info */}
                         <div className="flex flex-wrap gap-4 mt-3 text-xs text-gray-500">
                           {obl.obligation.frequency && (
-                            <span>Frecvență: {obl.obligation.frequency}</span>
+                            <span>{t('frequency')}: {obl.obligation.frequency}</span>
                           )}
                           {obl.obligation.deadline && (
-                            <span>Termen: {obl.obligation.deadline}</span>
+                            <span>{t('deadline')}: {obl.obligation.deadline}</span>
                           )}
-                          <span>Publicat: {new Date(obl.assigned_at).toLocaleDateString('ro-RO')}</span>
+                          <span>{t('published')}: {new Date(obl.assigned_at).toLocaleDateString('ro-RO')}</span>
                         </div>
                       </div>
 
@@ -437,14 +438,14 @@ export default function ObligationsClient({
                   {isExpanded && (
                     <div className="border-t border-gray-200 bg-gray-50 p-6">
                       <h4 className="text-sm font-semibold text-gray-900 mb-4">
-                        Detalii obligație
+                        {t('obligationDetails')}
                       </h4>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Textul complet */}
                         <div className="md:col-span-2">
                           <p className="text-sm font-medium text-gray-700 mb-2">
-                            Textul complet al obligației:
+                            {t('fullText')}:
                           </p>
                           <div className="bg-white rounded-lg border border-gray-200 p-4">
                             <p className="text-sm text-gray-900 leading-relaxed">
@@ -457,7 +458,7 @@ export default function ObligationsClient({
                         {obl.obligation.source_article_id && (
                           <div className="md:col-span-2">
                             <p className="text-sm font-medium text-gray-700 mb-2">
-                              Articolul exact din lege:
+                              {t('exactArticle')}:
                             </p>
                             <div className="bg-white rounded-lg border border-gray-200 p-4">
                               <p className="text-sm text-gray-600">
@@ -474,7 +475,7 @@ export default function ObligationsClient({
                         {obl.obligation.who && obl.obligation.who.length > 0 && (
                           <div>
                             <p className="text-sm font-medium text-gray-700 mb-2">
-                              Responsabil:
+                              {t('responsible')}:
                             </p>
                             <div className="bg-white rounded-lg border border-gray-200 p-4">
                               <p className="text-sm text-gray-900">
@@ -487,17 +488,17 @@ export default function ObligationsClient({
                         {/* Frecvență + Termen */}
                         <div>
                           <p className="text-sm font-medium text-gray-700 mb-2">
-                            Frecvență și termen:
+                            {t('frequencyAndDeadline')}:
                           </p>
                           <div className="bg-white rounded-lg border border-gray-200 p-4">
                             {obl.obligation.frequency && (
                               <p className="text-sm text-gray-900">
-                                Frecvență: {obl.obligation.frequency}
+                                {t('frequency')}: {obl.obligation.frequency}
                               </p>
                             )}
                             {obl.obligation.deadline && (
                               <p className="text-sm text-gray-900 mt-1">
-                                Termen: {obl.obligation.deadline}
+                                {t('deadline')}: {obl.obligation.deadline}
                               </p>
                             )}
                           </div>
@@ -507,7 +508,7 @@ export default function ObligationsClient({
                         {obl.obligation.penalty && (
                           <div className="md:col-span-2">
                             <p className="text-sm font-medium text-gray-700 mb-2">
-                              Sancțiuni asociate:
+                              {t('associatedPenalties')}:
                             </p>
                             <div className="bg-red-50 rounded-lg border border-red-200 p-4">
                               <p className="text-sm text-red-900 font-medium">
@@ -526,7 +527,7 @@ export default function ObligationsClient({
                         {obl.obligation.evidence_required && obl.obligation.evidence_required.length > 0 && (
                           <div className="md:col-span-2">
                             <p className="text-sm font-medium text-gray-700 mb-2">
-                              Dovezi necesare:
+                              {t('requiredEvidence')}:
                             </p>
                             <div className="bg-white rounded-lg border border-gray-200 p-4">
                               <ul className="list-disc list-inside text-sm text-gray-900 space-y-1">
@@ -542,7 +543,7 @@ export default function ObligationsClient({
                         {obl.notes && (
                           <div className="md:col-span-2">
                             <p className="text-sm font-medium text-gray-700 mb-2">
-                              Note:
+                              {t('notes')}:
                             </p>
                             <div className="bg-blue-50 rounded-lg border border-blue-200 p-4">
                               <p className="text-sm text-blue-900">{obl.notes}</p>
@@ -555,16 +556,16 @@ export default function ObligationsClient({
                       <div className="mt-4 pt-4 border-t border-gray-200">
                         <div className="flex flex-wrap gap-4 text-xs text-gray-500">
                           <span>
-                            Asignat la: {new Date(obl.assigned_at).toLocaleDateString('ro-RO')}
+                            {t('assignedAt')}: {new Date(obl.assigned_at).toLocaleDateString('ro-RO')}
                           </span>
                           {obl.acknowledged_at && (
                             <span>
-                              Confirmat la: {new Date(obl.acknowledged_at).toLocaleDateString('ro-RO')}
+                              {t('acknowledgedAt')}: {new Date(obl.acknowledged_at).toLocaleDateString('ro-RO')}
                             </span>
                           )}
                           {obl.compliant_at && (
                             <span>
-                              Marcat conform la: {new Date(obl.compliant_at).toLocaleDateString('ro-RO')}
+                              {t('compliantAt')}: {new Date(obl.compliant_at).toLocaleDateString('ro-RO')}
                             </span>
                           )}
                         </div>

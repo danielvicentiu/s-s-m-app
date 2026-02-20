@@ -3,6 +3,7 @@
 // app/[locale]/dashboard/iscir/ISCIRClient.tsx
 // M9_ISCIR: Client component with tabs for equipment, verifications, alerts
 
+import { useTranslations } from 'next-intl'
 import { useState, useEffect } from 'react'
 import {
   Gauge,
@@ -87,40 +88,6 @@ interface ISCIRClientProps {
   }
 }
 
-const EQUIPMENT_TYPE_LABELS: Record<string, string> = {
-  cazan: 'Cazan',
-  recipient_presiune: 'Recipient sub presiune',
-  lift: 'Lift',
-  macara: 'Macara',
-  stivuitor: 'Stivuitor',
-  instalatie_gpl: 'Instalație GPL',
-  compresor: 'Compresor',
-  autoclave: 'Autoclave',
-  altul: 'Altul'
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  activ: 'Activ',
-  expirat: 'Expirat',
-  in_verificare: 'În verificare',
-  oprit: 'Oprit',
-  casat: 'Casat'
-}
-
-const VERIFICATION_TYPE_LABELS: Record<string, string> = {
-  periodica: 'Periodică',
-  accidentala: 'Accidentală',
-  punere_in_functiune: 'Punere în funcțiune',
-  reparatie: 'Reparație',
-  modernizare: 'Modernizare'
-}
-
-const RESULT_LABELS: Record<string, string> = {
-  admis: 'Admis',
-  respins: 'Respins',
-  admis_conditionat: 'Admis condiționat'
-}
-
 export default function ISCIRClient({
   user,
   equipment: initialEquipment,
@@ -128,6 +95,42 @@ export default function ISCIRClient({
   selectedOrgId,
   stats: initialStats
 }: ISCIRClientProps) {
+  const t = useTranslations('iscir')
+
+  const EQUIPMENT_TYPE_LABELS: Record<string, string> = {
+    cazan: t('equipmentType.cazan'),
+    recipient_presiune: t('equipmentType.recipientPresiune'),
+    lift: t('equipmentType.lift'),
+    macara: t('equipmentType.macara'),
+    stivuitor: t('equipmentType.stivuitor'),
+    instalatie_gpl: t('equipmentType.instalatieGpl'),
+    compresor: t('equipmentType.compresor'),
+    autoclave: t('equipmentType.autoclave'),
+    altul: t('equipmentType.altul'),
+  }
+
+  const STATUS_LABELS: Record<string, string> = {
+    activ: t('status.activ'),
+    expirat: t('status.expirat'),
+    in_verificare: t('status.inVerificare'),
+    oprit: t('status.oprit'),
+    casat: t('status.casat'),
+  }
+
+  const VERIFICATION_TYPE_LABELS: Record<string, string> = {
+    periodica: t('verificationType.periodica'),
+    accidentala: t('verificationType.accidentala'),
+    punere_in_functiune: t('verificationType.punereInFunctiune'),
+    reparatie: t('verificationType.reparatie'),
+    modernizare: t('verificationType.modernizare'),
+  }
+
+  const RESULT_LABELS: Record<string, string> = {
+    admis: t('result.admis'),
+    respins: t('result.respins'),
+    admis_conditionat: t('result.admisConditionat'),
+  }
+
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [loading, setLoading] = useState(false)
   const [equipment, setEquipment] = useState<ISCIREquipment[]>(initialEquipment)
@@ -288,11 +291,11 @@ export default function ISCIRClient({
         setShowEquipmentForm(false)
         await loadEquipment()
       } else {
-        alert(data.error || 'Eroare la salvarea echipamentului')
+        alert(data.error || t('errors.saveEquipment'))
       }
     } catch (error) {
       console.error('Error saving equipment:', error)
-      alert('Eroare la salvarea echipamentului')
+      alert(t('errors.saveEquipment'))
     } finally {
       setLoading(false)
     }
@@ -313,11 +316,11 @@ export default function ISCIRClient({
         await loadEquipment()
       } else {
         const data = await response.json()
-        alert(data.error || 'Eroare la ștergerea echipamentului')
+        alert(data.error || t('errors.deleteEquipment'))
       }
     } catch (error) {
       console.error('Error deleting equipment:', error)
-      alert('Eroare la ștergerea echipamentului')
+      alert(t('errors.deleteEquipment'))
     } finally {
       setDeleteLoading(false)
     }
@@ -354,11 +357,11 @@ export default function ISCIRClient({
           await loadVerifications()
         }
       } else {
-        alert(data.error || 'Eroare la salvarea verificării')
+        alert(data.error || t('errors.saveVerification'))
       }
     } catch (error) {
       console.error('Error saving verification:', error)
-      alert('Eroare la salvarea verificării')
+      alert(t('errors.saveVerification'))
     } finally {
       setLoading(false)
     }
@@ -382,13 +385,13 @@ export default function ISCIRClient({
     const daysUntil = Math.floor((nextDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 
     if (daysUntil < 0) {
-      return <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Expirat</span>
+      return <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">{t('alert.expired')}</span>
     } else if (daysUntil <= 30) {
-      return <span className="px-2 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-800">Urgent</span>
+      return <span className="px-2 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-800">{t('alert.urgent')}</span>
     } else if (daysUntil <= 90) {
-      return <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">Atenție</span>
+      return <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">{t('alert.warning')}</span>
     }
-    return <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">OK</span>
+    return <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">{t('alert.ok')}</span>
   }
 
   return (
@@ -400,8 +403,8 @@ export default function ISCIRClient({
             <Gauge className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Echipamente ISCIR</h1>
-            <p className="text-sm text-gray-500">Gestionare cazane, recipiente sub presiune, lifturi</p>
+            <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+            <p className="text-sm text-gray-500">{t('subtitle')}</p>
           </div>
         </div>
 
@@ -414,7 +417,7 @@ export default function ISCIRClient({
             window.location.href = `/dashboard/iscir${newOrgId ? `?org=${newOrgId}` : ''}`
           }}
         >
-          <option value="all">Toate organizațiile</option>
+          <option value="all">{t('filter.allOrgs')}</option>
           {organizations.map(org => (
             <option key={org.id} value={org.id}>
               {org.name}
@@ -427,10 +430,10 @@ export default function ISCIRClient({
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           {[
-            { id: 'dashboard', label: 'Dashboard', icon: Gauge },
-            { id: 'equipment', label: 'Echipamente', icon: Factory },
-            { id: 'verifications', label: 'Verificări', icon: ClipboardCheck },
-            { id: 'alerts', label: 'Alerte', icon: AlertTriangle }
+            { id: 'dashboard', label: t('tabs.dashboard'), icon: Gauge },
+            { id: 'equipment', label: t('tabs.equipment'), icon: Factory },
+            { id: 'verifications', label: t('tabs.verifications'), icon: ClipboardCheck },
+            { id: 'alerts', label: t('tabs.alerts'), icon: AlertTriangle }
           ].map(tab => (
             <button
               key={tab.id}
@@ -456,7 +459,7 @@ export default function ISCIRClient({
             <div className="bg-white rounded-2xl p-6 border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total echipamente</p>
+                  <p className="text-sm text-gray-600">{t('stats.total')}</p>
                   <p className="text-3xl font-bold text-gray-900 mt-1">{stats.total}</p>
                 </div>
                 <div className="p-3 bg-blue-100 rounded-xl">
@@ -468,7 +471,7 @@ export default function ISCIRClient({
             <div className="bg-white rounded-2xl p-6 border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Active</p>
+                  <p className="text-sm text-gray-600">{t('stats.active')}</p>
                   <p className="text-3xl font-bold text-green-600 mt-1">{stats.activ}</p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-xl">
@@ -480,7 +483,7 @@ export default function ISCIRClient({
             <div className="bg-white rounded-2xl p-6 border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Expirate</p>
+                  <p className="text-sm text-gray-600">{t('stats.expired')}</p>
                   <p className="text-3xl font-bold text-red-600 mt-1">{stats.expirat}</p>
                 </div>
                 <div className="p-3 bg-red-100 rounded-xl">
@@ -492,7 +495,7 @@ export default function ISCIRClient({
             <div className="bg-white rounded-2xl p-6 border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Oprite</p>
+                  <p className="text-sm text-gray-600">{t('stats.stopped')}</p>
                   <p className="text-3xl font-bold text-gray-600 mt-1">{stats.oprit}</p>
                 </div>
                 <div className="p-3 bg-gray-100 rounded-xl">
@@ -505,13 +508,13 @@ export default function ISCIRClient({
           {/* Recent Equipment */}
           <div className="bg-white rounded-2xl p-6 border border-gray-200">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Echipamente recente</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t('recentEquipment')}</h2>
               <button
                 onClick={handleAddEquipment}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
-                Adaugă echipament
+                {t('addEquipment')}
               </button>
             </div>
 
@@ -519,13 +522,13 @@ export default function ISCIRClient({
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tip</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Identificator</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nr. ISCIR</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.type')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.identifier')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.iscirNr')}</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">RSVTI</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Verificare</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acțiuni</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.verification')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.status')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -575,7 +578,7 @@ export default function ISCIRClient({
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Caută echipament..."
+                    placeholder={t('filter.searchPlaceholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -588,7 +591,7 @@ export default function ISCIRClient({
                 onChange={(e) => setFilterType(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">Toate tipurile</option>
+                <option value="all">{t('filter.allTypes')}</option>
                 {Object.entries(EQUIPMENT_TYPE_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
                 ))}
@@ -599,7 +602,7 @@ export default function ISCIRClient({
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">Toate statusurile</option>
+                <option value="all">{t('filter.allStatuses')}</option>
                 {Object.entries(STATUS_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
                 ))}
@@ -610,7 +613,7 @@ export default function ISCIRClient({
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
-                Adaugă echipament
+                {t('addEquipment')}
               </button>
             </div>
           </div>
@@ -621,14 +624,14 @@ export default function ISCIRClient({
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tip</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Identificator</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nr. ISCIR</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Locație</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.type')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.identifier')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.iscirNr')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.location')}</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">RSVTI</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Verificare</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acțiuni</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.verification')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.status')}</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -677,7 +680,7 @@ export default function ISCIRClient({
               {filteredEquipment.length === 0 && (
                 <div className="p-8 text-center text-gray-500">
                   <Factory className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                  <p>Nu există echipamente ISCIR</p>
+                  <p>{t('empty.noEquipment')}</p>
                 </div>
               )}
             </div>
@@ -689,18 +692,18 @@ export default function ISCIRClient({
       {activeTab === 'verifications' && (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
           <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Verificări ISCIR</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('verifications.title')}</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dată</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Echipament</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tip verificare</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Inspector</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rezultat</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Buletin</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('verifications.colDate')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('verifications.colEquipment')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('verifications.colType')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('verifications.colInspector')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('verifications.colResult')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('verifications.colBulletin')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -728,7 +731,7 @@ export default function ISCIRClient({
             {verifications.length === 0 && (
               <div className="p-8 text-center text-gray-500">
                 <ClipboardCheck className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                <p>Nu există verificări înregistrate</p>
+                <p>{t('empty.noVerifications')}</p>
               </div>
             )}
           </div>
@@ -739,19 +742,19 @@ export default function ISCIRClient({
       {activeTab === 'alerts' && (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
           <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Alerte verificări ISCIR</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('alertsTab.title')}</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Echipament</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tip</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Locație</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data verificare</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Zile rămase</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nivel alertă</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acțiuni</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.identifier')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.type')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.location')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('alertsTab.colVerifDate')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('alertsTab.colDaysLeft')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('alertsTab.colAlertLevel')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('table.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -778,7 +781,7 @@ export default function ISCIRClient({
                         className="flex items-center gap-1 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded"
                       >
                         <ClipboardCheck className="w-4 h-4" />
-                        Verifică
+                        {t('alertsTab.verify')}
                       </button>
                     </td>
                   </tr>
@@ -789,7 +792,7 @@ export default function ISCIRClient({
             {alerts.length === 0 && (
               <div className="p-8 text-center text-gray-500">
                 <ShieldAlert className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                <p>Nu există alerte</p>
+                <p>{t('empty.noAlerts')}</p>
               </div>
             )}
           </div>
@@ -802,14 +805,14 @@ export default function ISCIRClient({
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">
-                {editingEquipment ? 'Editează echipament ISCIR' : 'Adaugă echipament ISCIR'}
+                {editingEquipment ? t('form.titleEdit') : t('form.titleAdd')}
               </h2>
             </div>
 
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tip echipament *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.equipmentType')}</label>
                   <select
                     value={formData.equipment_type}
                     onChange={(e) => setFormData({ ...formData, equipment_type: e.target.value })}
@@ -822,7 +825,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Identificator intern *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.identifier')}</label>
                   <input
                     type="text"
                     value={formData.identifier}
@@ -833,7 +836,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nr. înregistrare ISCIR</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.registrationNumber')}</label>
                   <input
                     type="text"
                     value={formData.registration_number || ''}
@@ -843,7 +846,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Producător</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.manufacturer')}</label>
                   <input
                     type="text"
                     value={formData.manufacturer || ''}
@@ -853,7 +856,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.model')}</label>
                   <input
                     type="text"
                     value={formData.model || ''}
@@ -863,7 +866,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Serie fabricație</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.serialNumber')}</label>
                   <input
                     type="text"
                     value={formData.serial_number || ''}
@@ -873,7 +876,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">An fabricație</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.manufactureYear')}</label>
                   <input
                     type="number"
                     value={formData.manufacture_year || ''}
@@ -883,7 +886,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Locație</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.location')}</label>
                   <input
                     type="text"
                     value={formData.location || ''}
@@ -893,7 +896,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Capacitate</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.capacity')}</label>
                   <input
                     type="text"
                     value={formData.capacity || ''}
@@ -904,7 +907,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">RSVTI responsabil</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.rsvtiResponsible')}</label>
                   <input
                     type="text"
                     value={formData.rsvti_responsible || ''}
@@ -914,7 +917,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Dată următoare verificare *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.nextVerifDate')}</label>
                   <input
                     type="date"
                     value={formData.next_verification_date || ''}
@@ -924,7 +927,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Interval verificare (luni)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.verifInterval')}</label>
                   <input
                     type="number"
                     value={formData.verification_interval_months || 12}
@@ -934,7 +937,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nr. autorizație funcționare</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.authorizationNumber')}</label>
                   <input
                     type="text"
                     value={formData.authorization_number || ''}
@@ -944,7 +947,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Data expirare autorizație</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.authorizationExpiry')}</label>
                   <input
                     type="date"
                     value={formData.authorization_expiry || ''}
@@ -954,7 +957,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.status')}</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
@@ -968,7 +971,7 @@ export default function ISCIRClient({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Observații</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.observations')}</label>
                 <textarea
                   value={formData.notes || ''}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -983,14 +986,14 @@ export default function ISCIRClient({
                 onClick={() => setShowEquipmentForm(false)}
                 className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Anulează
+                {t('form.cancel')}
               </button>
               <button
                 onClick={handleSaveEquipment}
                 disabled={loading || !formData.identifier || !formData.next_verification_date}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Se salvează...' : 'Salvează'}
+                {loading ? t('form.saving') : t('form.save')}
               </button>
             </div>
           </div>
@@ -1003,17 +1006,17 @@ export default function ISCIRClient({
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">
-                Înregistrare verificare ISCIR
+                {t('verifForm.title')}
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Echipament: {selectedEquipmentForVerification.identifier}
+                {t('verifForm.equipment')}: {selectedEquipmentForVerification.identifier}
               </p>
             </div>
 
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Data verificare *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.verifDate')}</label>
                   <input
                     type="date"
                     value={verificationFormData.verification_date || ''}
@@ -1023,7 +1026,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tip verificare *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.verifType')}</label>
                   <select
                     value={verificationFormData.verification_type}
                     onChange={(e) => setVerificationFormData({ ...verificationFormData, verification_type: e.target.value })}
@@ -1036,7 +1039,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nume inspector *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.inspectorName')}</label>
                   <input
                     type="text"
                     value={verificationFormData.inspector_name || ''}
@@ -1046,7 +1049,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nr. legitimație inspector</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.inspectorId')}</label>
                   <input
                     type="text"
                     value={verificationFormData.inspector_legitimation || ''}
@@ -1056,7 +1059,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Rezultat *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.result')}</label>
                   <select
                     value={verificationFormData.result}
                     onChange={(e) => setVerificationFormData({ ...verificationFormData, result: e.target.value })}
@@ -1069,7 +1072,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nr. buletin verificare *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.bulletinNumber')}</label>
                   <input
                     type="text"
                     value={verificationFormData.bulletin_number || ''}
@@ -1079,7 +1082,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Data următoare verificare</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.nextVerifDate')}</label>
                   <input
                     type="date"
                     value={verificationFormData.next_verification_date || ''}
@@ -1089,7 +1092,7 @@ export default function ISCIRClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Termen remediere prescripții</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.prescriptionsDeadline')}</label>
                   <input
                     type="date"
                     value={verificationFormData.deadline_prescriptions || ''}
@@ -1100,7 +1103,7 @@ export default function ISCIRClient({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Observații</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.observations')}</label>
                 <textarea
                   value={verificationFormData.observations || ''}
                   onChange={(e) => setVerificationFormData({ ...verificationFormData, observations: e.target.value })}
@@ -1110,7 +1113,7 @@ export default function ISCIRClient({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Prescripții / Măsuri impuse</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('verifForm.prescriptions')}</label>
                 <textarea
                   value={verificationFormData.prescriptions || ''}
                   onChange={(e) => setVerificationFormData({ ...verificationFormData, prescriptions: e.target.value })}
@@ -1125,14 +1128,14 @@ export default function ISCIRClient({
                 onClick={() => setShowVerificationForm(false)}
                 className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Anulează
+                {t('form.cancel')}
               </button>
               <button
                 onClick={handleSaveVerification}
                 disabled={loading || !verificationFormData.verification_date || !verificationFormData.inspector_name || !verificationFormData.bulletin_number}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Se salvează...' : 'Salvează verificare'}
+                {loading ? t('form.saving') : t('verifForm.saveVerification')}
               </button>
             </div>
           </div>
@@ -1147,12 +1150,11 @@ export default function ISCIRClient({
               <div className="p-3 bg-red-100 rounded-full">
                 <AlertTriangle className="w-6 h-6 text-red-600" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-900">Confirmă ștergerea</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('deleteDialog.title')}</h2>
             </div>
 
             <p className="text-gray-600 mb-6">
-              Sigur doriți să ștergeți echipamentul <strong>{equipmentToDelete.identifier}</strong>?
-              Această acțiune va șterge și toate verificările asociate și nu poate fi anulată.
+              {t('deleteDialog.message', { identifier: equipmentToDelete.identifier })}
             </p>
 
             <div className="flex justify-end gap-3">
@@ -1163,14 +1165,14 @@ export default function ISCIRClient({
                 }}
                 className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Anulează
+                {t('form.cancel')}
               </button>
               <button
                 onClick={handleDeleteEquipment}
                 disabled={deleteLoading}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {deleteLoading ? 'Se șterge...' : 'Șterge'}
+                {deleteLoading ? t('deleteDialog.deleting') : t('deleteDialog.delete')}
               </button>
             </div>
           </div>

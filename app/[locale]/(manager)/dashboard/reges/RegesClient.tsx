@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { ArrowLeft, Plus, RefreshCw, Link as LinkIcon, Send, FileText, Database, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react'
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function RegesClient({ user, connections, outbox, organizations }: Props) {
+  const t = useTranslations('reges')
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'connections' | 'transmissions' | 'nomenclatures'>('connections')
   const [showConnectionModal, setShowConnectionModal] = useState(false)
@@ -34,7 +36,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
 
   async function handleCreateConnection() {
     if (!connectionForm.organizationId || !connectionForm.cui || !connectionForm.regesUserId || !connectionForm.regesEmployerId || !connectionForm.username || !connectionForm.password) {
-      alert('Completează toate câmpurile (inclusiv username și password REGES)')
+      alert(t('alertFillAllFields'))
       return
     }
 
@@ -63,7 +65,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
       setShowConnectionModal(false)
       setConnectionForm({ organizationId: '', cui: '', regesUserId: '', regesEmployerId: '', username: '', password: '' })
       router.refresh()
-      alert('Conexiune REGES creată cu succes!')
+      alert(t('alertConnectionCreated'))
     } catch (error: any) {
       console.error('Error creating connection:', error)
       alert(`Eroare: ${error.message}`)
@@ -74,7 +76,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
 
   async function handleSync() {
     if (connections.length === 0) {
-      alert('Nicio conexiune REGES configurată. Adaugă o conexiune mai întâi.')
+      alert(t('alertNoConnections'))
       return
     }
 
@@ -141,9 +143,9 @@ export default function RegesClient({ user, connections, outbox, organizations }
             <div>
               <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <LinkIcon className="h-5 w-5 text-blue-600" />
-                Integrare REGES
+                {t('title')}
               </h1>
-              <p className="text-sm text-gray-400">Management conexiuni ANRE și transmiteri automate</p>
+              <p className="text-sm text-gray-400">{t('subtitle')}</p>
             </div>
           </div>
           <button
@@ -151,7 +153,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
             className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition"
           >
             <RefreshCw className="w-4 h-4" />
-            Reîmprospătează
+            {t('refresh')}
           </button>
         </div>
       </header>
@@ -169,7 +171,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
               }`}
             >
               <LinkIcon className="inline-block w-4 h-4 mr-2" />
-              Conexiuni REGES
+              {t('tabConnections')}
             </button>
             <button
               onClick={() => setActiveTab('transmissions')}
@@ -180,7 +182,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
               }`}
             >
               <Send className="inline-block w-4 h-4 mr-2" />
-              Transmiteri
+              {t('tabTransmissions')}
             </button>
             <button
               onClick={() => setActiveTab('nomenclatures')}
@@ -191,7 +193,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
               }`}
             >
               <Database className="inline-block w-4 h-4 mr-2" />
-              Nomenclatoare
+              {t('tabNomenclatures')}
             </button>
           </div>
 
@@ -200,9 +202,9 @@ export default function RegesClient({ user, connections, outbox, organizations }
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">Conexiuni REGES configurate</h2>
+                  <h2 className="text-lg font-bold text-gray-900">{t('connectionsTitle')}</h2>
                   <p className="text-sm text-gray-500">
-                    {connections.length} conexiune{connections.length !== 1 ? '' : 'ă'} activă
+                    {t('connectionsCount', { count: connections.length })}
                   </p>
                 </div>
                 <button
@@ -210,16 +212,16 @@ export default function RegesClient({ user, connections, outbox, organizations }
                   className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-700 transition"
                 >
                   <Plus className="w-4 h-4" />
-                  Conectare REGES
+                  {t('connectButton')}
                 </button>
               </div>
 
               {connections.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
                   <LinkIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500 font-medium">Nicio conexiune REGES configurată</p>
+                  <p className="text-gray-500 font-medium">{t('noConnectionsTitle')}</p>
                   <p className="text-sm text-gray-400 mt-1">
-                    Adaugă prima conexiune pentru a începe transmiterea datelor către ANRE
+                    {t('noConnectionsDesc')}
                   </p>
                 </div>
               ) : (
@@ -227,12 +229,12 @@ export default function RegesClient({ user, connections, outbox, organizations }
                   <table className="w-full">
                     <thead>
                       <tr className="text-left text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-200">
-                        <th className="px-4 py-3">Organizație</th>
+                        <th className="px-4 py-3">{t('colOrganization')}</th>
                         <th className="px-4 py-3">CUI</th>
                         <th className="px-4 py-3">REGES User ID</th>
                         <th className="px-4 py-3">REGES Employer ID</th>
-                        <th className="px-4 py-3">Status</th>
-                        <th className="px-4 py-3">Ultima sincronizare</th>
+                        <th className="px-4 py-3">{t('colStatus')}</th>
+                        <th className="px-4 py-3">{t('colLastSync')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -248,7 +250,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
                           <td className="px-4 py-4 text-sm text-gray-500">
                             {conn.last_sync_at
                               ? new Date(conn.last_sync_at).toLocaleString('ro-RO')
-                              : 'Niciodată'}
+                              : t('never')}
                           </td>
                         </tr>
                       ))}
@@ -263,16 +265,16 @@ export default function RegesClient({ user, connections, outbox, organizations }
           {activeTab === 'transmissions' && (
             <div className="p-6">
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Istoric transmiteri REGES</h2>
-                <p className="text-sm text-gray-500">Ultimele {outbox.length} transmiteri</p>
+                <h2 className="text-lg font-bold text-gray-900">{t('transmissionsTitle')}</h2>
+                <p className="text-sm text-gray-500">{t('transmissionsCount', { count: outbox.length })}</p>
               </div>
 
               {outbox.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
                   <Send className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500 font-medium">Nicio transmitere înregistrată</p>
+                  <p className="text-gray-500 font-medium">{t('noTransmissionsTitle')}</p>
                   <p className="text-sm text-gray-400 mt-1">
-                    Transmiterile automate vor apărea aici după configurare
+                    {t('noTransmissionsDesc')}
                   </p>
                 </div>
               ) : (
@@ -281,12 +283,12 @@ export default function RegesClient({ user, connections, outbox, organizations }
                     <thead>
                       <tr className="text-left text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-200">
                         <th className="px-4 py-3">ID</th>
-                        <th className="px-4 py-3">Tip mesaj</th>
-                        <th className="px-4 py-3">Organizație</th>
-                        <th className="px-4 py-3">Status</th>
-                        <th className="px-4 py-3">Încercări</th>
-                        <th className="px-4 py-3">Creat la</th>
-                        <th className="px-4 py-3">Trimis la</th>
+                        <th className="px-4 py-3">{t('colMsgType')}</th>
+                        <th className="px-4 py-3">{t('colOrganization')}</th>
+                        <th className="px-4 py-3">{t('colStatus')}</th>
+                        <th className="px-4 py-3">{t('colAttempts')}</th>
+                        <th className="px-4 py-3">{t('colCreatedAt')}</th>
+                        <th className="px-4 py-3">{t('colSentAt')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -322,8 +324,8 @@ export default function RegesClient({ user, connections, outbox, organizations }
           {activeTab === 'nomenclatures' && (
             <div className="p-6">
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Nomenclatoare REGES</h2>
-                <p className="text-sm text-gray-500">Coduri COR, CAEN și alte clasificări ANRE</p>
+                <h2 className="text-lg font-bold text-gray-900">{t('nomenclaturesTitle')}</h2>
+                <p className="text-sm text-gray-500">{t('nomenclaturesDesc')}</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -339,7 +341,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
                     </div>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Sincronizare automată cu nomenclatorul COR actualizat de ANRE.
+                    {t('corDesc')}
                   </p>
                 </div>
 
@@ -355,7 +357,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
                     </div>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Sincronizare automată cu nomenclatorul CAEN actualizat de INS.
+                    {t('caenDesc')}
                   </p>
                 </div>
               </div>
@@ -368,15 +370,15 @@ export default function RegesClient({ user, connections, outbox, organizations }
       {showConnectionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl">
-            <h2 className="text-2xl font-black text-gray-900 mb-2">Conectare REGES</h2>
+            <h2 className="text-2xl font-black text-gray-900 mb-2">{t('modalTitle')}</h2>
             <p className="text-sm text-gray-600 mb-6">
-              Configurează conexiunea REGES pentru o organizație
+              {t('modalDesc')}
             </p>
 
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">
-                  Organizație <span className="text-red-500">*</span>
+                  {t('fieldOrganization')} <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={connectionForm.organizationId}
@@ -385,10 +387,10 @@ export default function RegesClient({ user, connections, outbox, organizations }
                   }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                 >
-                  <option value="">— Selectează organizația —</option>
+                  <option value="">— {t('selectOrganization')} —</option>
                   {organizations.map((org: any) => (
                     <option key={org.id} value={org.id}>
-                      {org.name} ({org.cui || 'Fără CUI'})
+                      {org.name} ({org.cui || t('noCui')})
                     </option>
                   ))}
                 </select>
@@ -420,7 +422,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-mono"
                   placeholder="USER_XXXX"
                 />
-                <p className="text-xs text-gray-500 mt-1">Primit de la ANRE prin email</p>
+                <p className="text-xs text-gray-500 mt-1">{t('receivedFromANRE')}</p>
               </div>
 
               <div>
@@ -436,12 +438,12 @@ export default function RegesClient({ user, connections, outbox, organizations }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-mono"
                   placeholder="EMPLOYER_YYYY"
                 />
-                <p className="text-xs text-gray-500 mt-1">Primit de la ANRE prin email</p>
+                <p className="text-xs text-gray-500 mt-1">{t('receivedFromANRE')}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">
-                  Username REGES <span className="text-red-500">*</span>
+                  {t('fieldUsernameREGES')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -450,14 +452,14 @@ export default function RegesClient({ user, connections, outbox, organizations }
                     setConnectionForm({ ...connectionForm, username: e.target.value })
                   }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="username din REGES"
+                  placeholder={t('usernamePlaceholder')}
                 />
-                <p className="text-xs text-gray-500 mt-1">Username din REGES Setări → Acces → Chei API</p>
+                <p className="text-xs text-gray-500 mt-1">{t('usernameHint')}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">
-                  Password REGES <span className="text-red-500">*</span>
+                  {t('fieldPasswordREGES')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -468,7 +470,7 @@ export default function RegesClient({ user, connections, outbox, organizations }
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="••••••••"
                 />
-                <p className="text-xs text-gray-500 mt-1">Password REGES (va fi criptat cu AES-256-GCM)</p>
+                <p className="text-xs text-gray-500 mt-1">{t('passwordHint')}</p>
               </div>
             </div>
 
@@ -481,14 +483,14 @@ export default function RegesClient({ user, connections, outbox, organizations }
                 disabled={loading}
                 className="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition disabled:opacity-50"
               >
-                Anulează
+                {t('cancel')}
               </button>
               <button
                 onClick={handleCreateConnection}
                 disabled={loading}
                 className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
               >
-                {loading ? 'Se salvează...' : 'Salvează'}
+                {loading ? t('saving') : t('save')}
               </button>
             </div>
           </div>

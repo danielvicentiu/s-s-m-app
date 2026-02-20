@@ -5,6 +5,7 @@
 // Anthropic calls, RAG legislativ, conversation history, system prompt
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { ConversationSidebar } from '@/components/assistant/ConversationSidebar'
 import { ChatHeader } from '@/components/assistant/ChatHeader'
 import { MessageBubble, TypingIndicator } from '@/components/assistant/MessageBubble'
@@ -33,6 +34,7 @@ export default function AIAssistantClient({
   activeOrgId: initialOrgId,
   initialConversations,
 }: Props) {
+  const t = useTranslations('aiAssistant')
   const [selectedOrgId, setSelectedOrgId] = useState(initialOrgId)
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations)
   const [activeConversationId, setActiveConversationId] = useState<string | undefined>(undefined)
@@ -120,7 +122,7 @@ export default function AIAssistantClient({
 
       if (!res.ok) {
         const err = await res.json()
-        throw new Error(err.error || 'Eroare la server')
+        throw new Error(err.error || t('serverError'))
       }
 
       const data = await res.json()
@@ -160,7 +162,7 @@ export default function AIAssistantClient({
     } catch (error) {
       const errMessage: ChatMessage = {
         role: 'assistant',
-        content: `⚠️ Eroare: ${error instanceof Error ? error.message : 'Nu am putut procesa cererea.'}`,
+        content: `⚠️ Eroare: ${error instanceof Error ? error.message : t('errorProcessing')}`,
         timestamp: new Date().toISOString(),
       }
       setMessages(prev => [...prev, errMessage])
@@ -186,7 +188,7 @@ export default function AIAssistantClient({
       {organizations.length > 1 && (
         <div className="hidden lg:block absolute top-0 left-0 w-[250px] border-b border-border bg-card px-3 py-2 z-10">
           <label className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-            Organizație
+            {t('orgLabel')}
           </label>
           <select
             value={selectedOrgId}
@@ -227,7 +229,7 @@ export default function AIAssistantClient({
               {/* Org selector for mobile */}
               {organizations.length > 1 && (
                 <div className="mb-4 w-full max-w-xs lg:hidden">
-                  <label className="block text-xs font-medium text-muted-foreground mb-1">Organizație</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">{t('orgLabel')}</label>
                   <select
                     value={selectedOrgId}
                     onChange={e => { setSelectedOrgId(e.target.value); startNewConversation() }}

@@ -6,6 +6,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import {
   Layers,
@@ -28,10 +29,10 @@ interface Props {
 }
 
 const VALID_TYPES = [
-  { value: 'psi_check', label: 'Verificare PSI' },
-  { value: 'medical_check', label: 'Verificare medicală' },
-  { value: 'iscir_check', label: 'Verificare ISCIR' },
-  { value: 'legislative_update', label: 'Actualizare legislativă' },
+  { value: 'psi_check' },
+  { value: 'medical_check' },
+  { value: 'iscir_check' },
+  { value: 'legislative_update' },
 ] as const
 
 type BatchJobType = (typeof VALID_TYPES)[number]['value']
@@ -57,40 +58,40 @@ function fmtDuration(startedAt: string | null, completedAt: string | null): stri
   return `${Math.floor(ms / 60000)}m ${Math.floor((ms % 60000) / 1000)}s`
 }
 
-const STATUS_BADGE: Record<string, { cls: string; icon: React.ReactNode; label: string }> = {
-  pending: {
-    label: 'În așteptare',
-    cls: 'bg-gray-100 text-gray-600',
-    icon: <Clock className="h-3.5 w-3.5" />,
-  },
-  processing: {
-    label: 'Procesare',
-    cls: 'bg-blue-50 text-blue-700',
-    icon: <Loader2 className="h-3.5 w-3.5 animate-spin" />,
-  },
-  done: {
-    label: 'Finalizat',
-    cls: 'bg-green-50 text-green-700',
-    icon: <CheckCircle2 className="h-3.5 w-3.5" />,
-  },
-  failed: {
-    label: 'Eșuat',
-    cls: 'bg-red-50 text-red-700',
-    icon: <XCircle className="h-3.5 w-3.5" />,
-  },
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  legislative_update: 'Actualizare legislativă',
-  psi_check: 'Verificare PSI',
-  medical_check: 'Verificare medicală',
-  iscir_check: 'Verificare ISCIR',
+// STATUS_BADGE icons/cls (labels moved inside component)
+const STATUS_BADGE_STYLE: Record<string, { cls: string; icon: React.ReactNode }> = {
+  pending: { cls: 'bg-gray-100 text-gray-600', icon: <Clock className="h-3.5 w-3.5" /> },
+  processing: { cls: 'bg-blue-50 text-blue-700', icon: <Loader2 className="h-3.5 w-3.5 animate-spin" /> },
+  done: { cls: 'bg-green-50 text-green-700', icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
+  failed: { cls: 'bg-red-50 text-red-700', icon: <XCircle className="h-3.5 w-3.5" /> },
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function BatchPageClient({ initialJobs }: Props) {
+  const t = useTranslations('batch')
   const router = useRouter()
+
+  const TYPE_LABELS: Record<string, string> = {
+    legislative_update: t('typeLegislativeUpdate'),
+    psi_check: t('typePsiCheck'),
+    medical_check: t('typeMedicalCheck'),
+    iscir_check: t('typeIscirCheck'),
+  }
+
+  const STATUS_BADGE: Record<string, { cls: string; icon: React.ReactNode; label: string }> = {
+    pending: { ...STATUS_BADGE_STYLE.pending, label: t('statusPending') },
+    processing: { ...STATUS_BADGE_STYLE.processing, label: t('statusProcessing') },
+    done: { ...STATUS_BADGE_STYLE.done, label: t('statusDone') },
+    failed: { ...STATUS_BADGE_STYLE.failed, label: t('statusFailed') },
+  }
+
+  const VALID_TYPES_LABELED = [
+    { value: 'psi_check', label: t('typePsiCheck') },
+    { value: 'medical_check', label: t('typeMedicalCheck') },
+    { value: 'iscir_check', label: t('typeIscirCheck') },
+    { value: 'legislative_update', label: t('typeLegislativeUpdate') },
+  ]
 
   // State
   const [jobs, setJobs] = useState<BatchJob[]>(initialJobs)
@@ -146,12 +147,12 @@ export default function BatchPageClient({ initialJobs }: Props) {
         jobId?: string
       }
 
-      if (!res.ok) throw new Error(data.message ?? 'Eroare la procesare')
+      if (!res.ok) throw new Error(data.message ?? t('processingError'))
 
       if (data.processed) {
         setRunMessage(`Job ${data.jobId?.slice(0, 8)} → ${data.status}`)
       } else {
-        setRunMessage('Nu există job-uri în așteptare.')
+        setRunMessage(t('noPendingJobs'))
       }
       await fetchJobs()
     } catch (err) {
@@ -297,11 +298,11 @@ export default function BatchPageClient({ initialJobs }: Props) {
         {/* STATS ROW */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
-            { label: 'Total', value: stats.total, cls: 'text-gray-900' },
-            { label: 'În așteptare', value: stats.pending, cls: 'text-gray-600' },
-            { label: 'Procesare', value: stats.processing, cls: 'text-blue-600' },
-            { label: 'Finalizate', value: stats.done, cls: 'text-green-600' },
-            { label: 'Eșuate', value: stats.failed, cls: 'text-red-600' },
+            { label: t('statTotal'), value: stats.total, cls: 'text-gray-900' },
+            { label: t('statPending'), value: stats.pending, cls: 'text-gray-600' },
+            { label: t('statProcessing'), value: stats.processing, cls: 'text-blue-600' },
+            { label: t('statDone'), value: stats.done, cls: 'text-green-600' },
+            { label: t('statFailed'), value: stats.failed, cls: 'text-red-600' },
           ].map(({ label, value, cls }) => (
             <div
               key={label}
@@ -351,7 +352,7 @@ export default function BatchPageClient({ initialJobs }: Props) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50">
-                    {['Tip', 'Status', 'Progress', 'Durată', 'Creat la', 'Acțiuni'].map(
+                    {[t('colType'), t('colStatus'), t('colProgress'), t('colDuration'), t('colCreated'), t('colActions')].map(
                       (h) => (
                         <th
                           key={h}
@@ -487,9 +488,9 @@ export default function BatchPageClient({ initialJobs }: Props) {
                   onChange={(e) => setCreateType(e.target.value as BatchJobType)}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-800 pr-8"
                 >
-                  {VALID_TYPES.map((t) => (
-                    <option key={t.value} value={t.value}>
-                      {t.label}
+                  {VALID_TYPES_LABELED.map((vt) => (
+                    <option key={vt.value} value={vt.value}>
+                      {vt.label}
                     </option>
                   ))}
                 </select>

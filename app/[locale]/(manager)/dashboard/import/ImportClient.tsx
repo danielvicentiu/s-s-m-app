@@ -5,6 +5,7 @@
 
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
@@ -38,51 +39,7 @@ type ImportRow = {
   validation: ValidationResult
 }
 
-// Field definitions pentru fiecare tip import
-const FIELD_DEFINITIONS: Record<ImportType, Array<{ field: string; label: string; required: boolean; type: string }>> = {
-  employees: [
-    { field: 'full_name', label: 'Nume complet', required: true, type: 'string' },
-    { field: 'cnp', label: 'CNP', required: true, type: 'string' },
-    { field: 'email', label: 'Email', required: false, type: 'email' },
-    { field: 'phone', label: 'Telefon', required: false, type: 'string' },
-    { field: 'job_title', label: 'Funcție', required: true, type: 'string' },
-    { field: 'department', label: 'Departament', required: false, type: 'string' },
-    { field: 'hire_date', label: 'Data angajare', required: false, type: 'date' },
-    { field: 'cor_code', label: 'Cod COR', required: false, type: 'string' },
-  ],
-  trainings: [
-    { field: 'employee_name', label: 'Nume angajat', required: true, type: 'string' },
-    { field: 'training_type', label: 'Tip instruire', required: true, type: 'string' },
-    { field: 'training_date', label: 'Data instruire', required: true, type: 'date' },
-    { field: 'expiry_date', label: 'Data expirare', required: false, type: 'date' },
-    { field: 'instructor_name', label: 'Instructor', required: false, type: 'string' },
-    { field: 'notes', label: 'Observații', required: false, type: 'string' },
-  ],
-  medical: [
-    { field: 'employee_name', label: 'Nume angajat', required: true, type: 'string' },
-    { field: 'cnp_hash', label: 'CNP', required: false, type: 'string' },
-    { field: 'job_title', label: 'Funcție', required: false, type: 'string' },
-    { field: 'examination_type', label: 'Tip examen', required: true, type: 'select' },
-    { field: 'examination_date', label: 'Data examen', required: true, type: 'date' },
-    { field: 'expiry_date', label: 'Data expirare', required: true, type: 'date' },
-    { field: 'result', label: 'Rezultat', required: true, type: 'select' },
-    { field: 'doctor_name', label: 'Medic', required: false, type: 'string' },
-    { field: 'clinic_name', label: 'Clinică', required: false, type: 'string' },
-    { field: 'restrictions', label: 'Restricții', required: false, type: 'string' },
-    { field: 'notes', label: 'Observații', required: false, type: 'string' },
-  ],
-  equipment: [
-    { field: 'equipment_type', label: 'Tip echipament', required: true, type: 'string' },
-    { field: 'description', label: 'Descriere', required: false, type: 'string' },
-    { field: 'location', label: 'Locație', required: false, type: 'string' },
-    { field: 'serial_number', label: 'Serie', required: false, type: 'string' },
-    { field: 'last_inspection_date', label: 'Ultima verificare', required: false, type: 'date' },
-    { field: 'expiry_date', label: 'Data expirare', required: true, type: 'date' },
-    { field: 'next_inspection_date', label: 'Următoarea verificare', required: false, type: 'date' },
-    { field: 'inspector_name', label: 'Inspector', required: false, type: 'string' },
-    { field: 'notes', label: 'Observații', required: false, type: 'string' },
-  ],
-}
+// Field definitions are built inside the component using t() — see below
 
 // Pattern-uri auto-detecție
 const COLUMN_PATTERNS: Record<string, string[]> = {
@@ -128,6 +85,54 @@ const TABLE_MAPPING: Record<ImportType, string> = {
 
 export default function ImportClient({ user, organizations, locale }: Props) {
   const router = useRouter()
+  const t = useTranslations('dataImport')
+
+  // Field definitions pentru fiecare tip import
+  const FIELD_DEFINITIONS: Record<ImportType, Array<{ field: string; label: string; required: boolean; type: string }>> = {
+    employees: [
+      { field: 'full_name', label: t('fields.fullName'), required: true, type: 'string' },
+      { field: 'cnp', label: 'CNP', required: true, type: 'string' },
+      { field: 'email', label: 'Email', required: false, type: 'email' },
+      { field: 'phone', label: t('fields.phone'), required: false, type: 'string' },
+      { field: 'job_title', label: t('fields.jobTitle'), required: true, type: 'string' },
+      { field: 'department', label: t('fields.department'), required: false, type: 'string' },
+      { field: 'hire_date', label: t('fields.hireDate'), required: false, type: 'date' },
+      { field: 'cor_code', label: t('fields.corCode'), required: false, type: 'string' },
+    ],
+    trainings: [
+      { field: 'employee_name', label: t('fields.employeeName'), required: true, type: 'string' },
+      { field: 'training_type', label: t('fields.trainingType'), required: true, type: 'string' },
+      { field: 'training_date', label: t('fields.trainingDate'), required: true, type: 'date' },
+      { field: 'expiry_date', label: t('fields.expiryDate'), required: false, type: 'date' },
+      { field: 'instructor_name', label: t('fields.instructor'), required: false, type: 'string' },
+      { field: 'notes', label: t('fields.notes'), required: false, type: 'string' },
+    ],
+    medical: [
+      { field: 'employee_name', label: t('fields.employeeName'), required: true, type: 'string' },
+      { field: 'cnp_hash', label: 'CNP', required: false, type: 'string' },
+      { field: 'job_title', label: t('fields.jobTitle'), required: false, type: 'string' },
+      { field: 'examination_type', label: t('fields.examinationType'), required: true, type: 'select' },
+      { field: 'examination_date', label: t('fields.examinationDate'), required: true, type: 'date' },
+      { field: 'expiry_date', label: t('fields.expiryDate'), required: true, type: 'date' },
+      { field: 'result', label: t('fields.result'), required: true, type: 'select' },
+      { field: 'doctor_name', label: t('fields.doctor'), required: false, type: 'string' },
+      { field: 'clinic_name', label: t('fields.clinic'), required: false, type: 'string' },
+      { field: 'restrictions', label: t('fields.restrictions'), required: false, type: 'string' },
+      { field: 'notes', label: t('fields.notes'), required: false, type: 'string' },
+    ],
+    equipment: [
+      { field: 'equipment_type', label: t('fields.equipmentType'), required: true, type: 'string' },
+      { field: 'description', label: t('fields.description'), required: false, type: 'string' },
+      { field: 'location', label: t('fields.location'), required: false, type: 'string' },
+      { field: 'serial_number', label: t('fields.serialNumber'), required: false, type: 'string' },
+      { field: 'last_inspection_date', label: t('fields.lastInspection'), required: false, type: 'date' },
+      { field: 'expiry_date', label: t('fields.expiryDate'), required: true, type: 'date' },
+      { field: 'next_inspection_date', label: t('fields.nextInspection'), required: false, type: 'date' },
+      { field: 'inspector_name', label: t('fields.inspector'), required: false, type: 'string' },
+      { field: 'notes', label: t('fields.notes'), required: false, type: 'string' },
+    ],
+  }
+
   const [step, setStep] = useState(1)
   const [importType, setImportType] = useState<ImportType>('employees')
   const [selectedOrgId, setSelectedOrgId] = useState<string>(organizations[0]?.id || '')
@@ -251,7 +256,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
       const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
       if (jsonData.length === 0) {
-        alert('Fișierul este gol')
+        alert(t('errors.emptyFile'))
         return
       }
 
@@ -266,7 +271,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
       setStep(2)
     } catch (error) {
       console.error('Error reading file:', error)
-      alert('Eroare la citirea fișierului')
+      alert(t('errors.readError'))
     }
   }
 
@@ -300,7 +305,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
   // Step 4: Execute import
   const handleImport = async () => {
     if (!selectedOrgId) {
-      alert('Selectează o organizație')
+      alert(t('errors.selectOrg'))
       return
     }
 
@@ -403,7 +408,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
             {/* Organization selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Organizație
+                {t('step1.organizationLabel')}
               </label>
               <select
                 value={selectedOrgId}
@@ -421,14 +426,14 @@ export default function ImportClient({ user, organizations, locale }: Props) {
             {/* Import Type Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tip import
+                {t('step1.importTypeLabel')}
               </label>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { value: 'employees', label: 'Angajați', icon: '👥' },
-                  { value: 'trainings', label: 'Instruiri', icon: '📚' },
-                  { value: 'medical', label: 'Fișe medicale', icon: '🏥' },
-                  { value: 'equipment', label: 'Echipamente', icon: '🔧' },
+                  { value: 'employees', label: t('types.employees'), icon: '👥' },
+                  { value: 'trainings', label: t('types.trainings'), icon: '📚' },
+                  { value: 'medical', label: t('types.medical'), icon: '🏥' },
+                  { value: 'equipment', label: t('types.equipment'), icon: '🔧' },
                 ].map((type) => (
                   <button
                     key={type.value}
@@ -449,7 +454,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
             {/* File Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Încarcă fișier CSV sau Excel
+                {t('step1.uploadLabel')}
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
                 <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
@@ -464,7 +469,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                   htmlFor="file-upload"
                   className="cursor-pointer text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  Selectează fișier
+                  {t('step1.selectFile')}
                 </label>
                 <p className="text-sm text-gray-500 mt-2">
                   sau drag & drop aici
@@ -481,17 +486,17 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                 <FileSpreadsheet className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-blue-900">
-                    Descarcă template
+                    {t('step1.downloadTemplate')}
                   </h3>
                   <p className="text-sm text-blue-700 mt-1">
-                    Folosește template-ul nostru pentru a asigura compatibilitatea datelor
+                    {t('step1.downloadTemplateHint')}
                   </p>
                   <button
                     onClick={handleDownloadTemplate}
                     className="text-sm text-blue-600 hover:text-blue-700 font-medium mt-2 inline-flex items-center"
                   >
                     <Download className="h-4 w-4 mr-1" />
-                    Descarcă template_{importType}.xlsx
+                    {t('step1.downloadTemplateFile', { importType })}
                   </button>
                 </div>
               </div>
@@ -511,7 +516,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
 
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium">Mapare coloane</h3>
+                <h3 className="text-lg font-medium">{t('step2.mappingTitle')}</h3>
                 <button
                   onClick={() => {
                     const detected = autoDetectMapping(columns)
@@ -519,7 +524,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                   }}
                   className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  🪄 Auto-detectare
+                  🪄 {t('step2.autoDetect')}
                 </button>
               </div>
               <div className="space-y-3">
@@ -557,7 +562,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                           }}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
-                          <option value="">-- Nesetat --</option>
+                          <option value="">-- {t('step2.notSet')} --</option>
                           {columns.map((col) => (
                             <option key={col} value={col}>
                               {col}
@@ -590,7 +595,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                     <div className="text-2xl font-bold text-green-900">
                       {validCount}
                     </div>
-                    <div className="text-sm text-green-700">Valid</div>
+                    <div className="text-sm text-green-700">{t('step3.valid')}</div>
                   </div>
                   <CheckCircle className="h-8 w-8 text-green-600" />
                 </div>
@@ -601,7 +606,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                     <div className="text-2xl font-bold text-yellow-900">
                       {warningCount}
                     </div>
-                    <div className="text-sm text-yellow-700">Avertismente</div>
+                    <div className="text-sm text-yellow-700">{t('step3.warnings')}</div>
                   </div>
                   <AlertCircle className="h-8 w-8 text-yellow-600" />
                 </div>
@@ -612,7 +617,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                     <div className="text-2xl font-bold text-red-900">
                       {errorCount}
                     </div>
-                    <div className="text-sm text-red-700">Erori</div>
+                    <div className="text-sm text-red-700">{t('step3.errors')}</div>
                   </div>
                   <AlertCircle className="h-8 w-8 text-red-600" />
                 </div>
@@ -626,16 +631,16 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                   <thead className="bg-gray-50 sticky top-0">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Rând
+                        {t('step3.row')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Status
+                        {t('step3.status')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Date
+                        {t('step3.data')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Probleme
+                        {t('step3.issues')}
                       </th>
                     </tr>
                   </thead>
@@ -699,7 +704,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
               <>
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
                   <h3 className="text-lg font-medium text-blue-900 mb-2">
-                    Pregătit pentru import
+                    {t('step4.readyTitle')}
                   </h3>
                   <p className="text-blue-700">
                     <strong>{validRows.length}</strong> înregistrări valide vor fi
@@ -715,7 +720,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600 flex items-center gap-2">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        Importare în curs...
+                        {t('step4.importing')}
                       </span>
                       <span className="font-medium">{importProgress}%</span>
                     </div>
@@ -731,7 +736,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                     onClick={handleImport}
                     className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors"
                   >
-                    Confirmă import
+                    {t('step4.confirmImport')}
                   </button>
                 )}
               </>
@@ -739,7 +744,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
               <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
                 <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-green-900 mb-2">
-                  Import finalizat!
+                  {t('step4.doneTitle')}
                 </h3>
                 <p className="text-green-700 mb-2">
                   <strong>{importStats.success}</strong> înregistrări importate cu succes
@@ -753,7 +758,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                   onClick={() => router.push(`/${locale}/dashboard`)}
                   className="bg-green-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-700 transition-colors"
                 >
-                  Înapoi la dashboard
+                  {t('step4.backToDashboard')}
                 </button>
               </div>
             )}
@@ -775,11 +780,11 @@ export default function ImportClient({ user, organizations, locale }: Props) {
             className="text-gray-600 hover:text-gray-900 mb-4 flex items-center"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi
+            {t('nav.back')}
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">Import date</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
           <p className="text-gray-600 mt-2">
-            Importă date din CSV sau Excel în 4 pași simpli
+            {t('subtitle')}
           </p>
         </div>
 
@@ -787,10 +792,10 @@ export default function ImportClient({ user, organizations, locale }: Props) {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             {[
-              { num: 1, label: 'Încărcare fișier' },
-              { num: 2, label: 'Mapare coloane' },
-              { num: 3, label: 'Previzualizare' },
-              { num: 4, label: 'Import' },
+              { num: 1, label: t('steps.upload') },
+              { num: 2, label: t('steps.mapping') },
+              { num: 3, label: t('steps.preview') },
+              { num: 4, label: t('steps.import') },
             ].map((s, index) => (
               <div key={s.num} className="flex items-center flex-1">
                 <div className="flex items-center">
@@ -833,7 +838,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                 className="flex items-center text-gray-600 hover:text-gray-900"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Înapoi
+                {t('nav.back')}
               </button>
               <button
                 onClick={() => {
@@ -848,7 +853,7 @@ export default function ImportClient({ user, organizations, locale }: Props) {
                 }
                 className="flex items-center bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
-                Continuă
+                {t('nav.continue')}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </button>
             </div>

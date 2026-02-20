@@ -5,6 +5,7 @@
 // Data: 17 Februarie 2026
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Report, REPORT_TYPE_LABELS, ReportType } from '@/lib/types'
 
 interface ReportsClientProps {
@@ -20,6 +21,7 @@ export default function ReportsClient({
   organizations,
   selectedOrgId,
 }: ReportsClientProps) {
+  const t = useTranslations('reports')
   const [reports, setReports] = useState<Report[]>(initialReports)
   const [selectedOrg, setSelectedOrg] = useState(selectedOrgId || 'all')
   const [isGenerating, setIsGenerating] = useState(false)
@@ -37,7 +39,7 @@ export default function ReportsClient({
   // Handle generate report
   const handleGenerateReport = async () => {
     if (selectedOrg === 'all') {
-      alert('Vă rugăm selectați o organizație specifică')
+      alert(t('alertSelectOrg'))
       return
     }
 
@@ -61,7 +63,7 @@ export default function ReportsClient({
       // Add new report to list
       setReports([data.report, ...reports])
       setShowGenerateDialog(false)
-      alert('Raport generat cu succes!')
+      alert(t('alertReportGenerated'))
     } catch (error: any) {
       console.error('Generate report error:', error)
       alert('Eroare: ' + error.message)
@@ -109,9 +111,9 @@ export default function ReportsClient({
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">📊 Rapoarte PDF Automate</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
               <p className="text-gray-600 mt-1">
-                Generează și descarcă rapoarte SSM și PSI
+                {t('subtitle')}
               </p>
             </div>
             <button
@@ -119,21 +121,21 @@ export default function ReportsClient({
               disabled={selectedOrg === 'all'}
               className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              + Generează Raport Nou
+              + {t('generateNew')}
             </button>
           </div>
 
           {/* Organization Filter */}
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Filtrează după organizație
+              {t('filterByOrg')}
             </label>
             <select
               value={selectedOrg}
               onChange={(e) => handleOrgChange(e.target.value)}
               className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="all">Toate organizațiile</option>
+              <option value="all">{t('allOrganizations')}</option>
               {organizations.map((org) => (
                 <option key={org.id} value={org.id}>
                   {org.name} {org.cui ? `(${org.cui})` : ''}
@@ -142,7 +144,7 @@ export default function ReportsClient({
             </select>
             {selectedOrg === 'all' && (
               <p className="text-sm text-amber-600 mt-2">
-                ⚠️ Selectați o organizație pentru a putea genera rapoarte noi
+                ⚠️ {t('selectOrgHint')}
               </p>
             )}
           </div>
@@ -154,10 +156,10 @@ export default function ReportsClient({
             <div className="p-12 text-center">
               <div className="text-6xl mb-4">📄</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Nu există rapoarte generate
+                {t('noReportsTitle')}
               </h3>
               <p className="text-gray-600">
-                Generați primul raport pentru a-l vedea aici
+                {t('noReportsDesc')}
               </p>
             </div>
           ) : (
@@ -166,19 +168,19 @@ export default function ReportsClient({
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Titlu Raport
+                      {t('colTitle')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Tip
+                      {t('colType')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Organizație
+                      {t('colOrganization')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Data Generare
+                      {t('colGeneratedAt')}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Acțiuni
+                      {t('colActions')}
                     </th>
                   </tr>
                 </thead>
@@ -213,13 +215,13 @@ export default function ReportsClient({
                           onClick={() => handleViewReport(report)}
                           className="text-blue-600 hover:text-blue-900 transition-colors"
                         >
-                          Vizualizează
+                          {t('view')}
                         </button>
                         <button
                           onClick={() => handleDownloadPDF(report)}
                           className="text-green-600 hover:text-green-900 transition-colors"
                         >
-                          Descarcă PDF
+                          {t('downloadPdf')}
                         </button>
                       </td>
                     </tr>
@@ -236,12 +238,12 @@ export default function ReportsClient({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Generează Raport Nou
+              {t('generateNew')}
             </h2>
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tip Raport
+                {t('reportType')}
               </label>
               <select
                 value={selectedReportType}
@@ -258,11 +260,11 @@ export default function ReportsClient({
 
             <div className="mb-6 p-4 bg-blue-50 rounded-xl">
               <p className="text-sm text-blue-900">
-                <strong>Organizație selectată:</strong>{' '}
+                <strong>{t('selectedOrg')}:</strong>{' '}
                 {organizations.find((o) => o.id === selectedOrg)?.name || 'N/A'}
               </p>
               <p className="text-xs text-blue-700 mt-2">
-                Raportul va include toate datele disponibile pentru această organizație.
+                {t('reportIncludesAllData')}
               </p>
             </div>
 
@@ -272,14 +274,14 @@ export default function ReportsClient({
                 disabled={isGenerating}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
-                Anulează
+                {t('cancel')}
               </button>
               <button
                 onClick={handleGenerateReport}
                 disabled={isGenerating}
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
-                {isGenerating ? 'Generare...' : 'Generează'}
+                {isGenerating ? t('generating') : t('generate')}
               </button>
             </div>
           </div>

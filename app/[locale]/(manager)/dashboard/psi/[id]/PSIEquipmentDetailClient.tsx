@@ -4,6 +4,7 @@
 // M2_PSI: Client component — detalii echipament + istoric inspecții + marchează verificat
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import {
   ArrowLeft,
@@ -43,6 +44,7 @@ export default function PSIEquipmentDetailClient({
   organizations,
   locale
 }: PSIEquipmentDetailClientProps) {
+  const t = useTranslations('psi')
   const router = useRouter()
   const [equipment, setEquipment] = useState<PSIEquipment>(initialEquipment)
   const [inspections, setInspections] = useState<PSIInspection[]>(initialInspections)
@@ -60,7 +62,7 @@ export default function PSIEquipmentDetailClient({
 
     if (!response.ok) {
       const err = await response.json()
-      throw new Error(err.message || 'Eroare la salvarea echipamentului')
+      throw new Error(err.message || t('errorSavingEquipment'))
     }
 
     const updated = await response.json()
@@ -76,7 +78,7 @@ export default function PSIEquipmentDetailClient({
 
     if (!response.ok) {
       const err = await response.json()
-      throw new Error(err.message || 'Eroare la salvarea inspecției')
+      throw new Error(err.message || t('errorSavingInspection'))
     }
 
     const newInspection = await response.json()
@@ -123,7 +125,7 @@ export default function PSIEquipmentDetailClient({
               className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 text-sm font-medium"
             >
               <ArrowLeft className="h-4 w-4" />
-              Înapoi
+              {t('back')}
             </button>
           </div>
           <div className="flex items-start justify-between">
@@ -152,14 +154,14 @@ export default function PSIEquipmentDetailClient({
                 className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
                 <Edit className="h-4 w-4" />
-                Editează
+                {t('edit')}
               </button>
               <button
                 onClick={handleQuickVerify}
                 className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
               >
                 <ClipboardCheck className="h-4 w-4" />
-                Marchează verificat
+                {t('markVerified')}
               </button>
             </div>
           </div>
@@ -177,7 +179,7 @@ export default function PSIEquipmentDetailClient({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Status card */}
           <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-xs font-medium text-gray-500 uppercase mb-3">Status</p>
+            <p className="text-xs font-medium text-gray-500 uppercase mb-3">{t('statusLabel')}</p>
             <span className={`inline-flex px-3 py-1.5 rounded-full text-sm font-medium ${
               equipment.status === 'operational' ? 'bg-green-100 text-green-700' :
               equipment.status === 'needs_inspection' ? 'bg-amber-100 text-amber-700' :
@@ -190,15 +192,15 @@ export default function PSIEquipmentDetailClient({
 
           {/* Next inspection */}
           <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-xs font-medium text-gray-500 uppercase mb-3">Inspecție</p>
+            <p className="text-xs font-medium text-gray-500 uppercase mb-3">{t('inspectionLabel')}</p>
             <StatusBadge nextInspectionDate={equipment.next_inspection_date} showDate />
           </div>
 
           {/* Last inspection */}
           <div className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-xs font-medium text-gray-500 uppercase mb-3">Ultima inspecție</p>
+            <p className="text-xs font-medium text-gray-500 uppercase mb-3">{t('lastInspectionLabel')}</p>
             <p className="text-sm font-semibold text-gray-900">
-              {equipment.last_inspection_date || <span className="text-gray-400 italic">Niciodată</span>}
+              {equipment.last_inspection_date || <span className="text-gray-400 italic">{t('never')}</span>}
             </p>
           </div>
         </div>
@@ -207,22 +209,22 @@ export default function PSIEquipmentDetailClient({
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Info className="h-4 w-4 text-gray-400" />
-            Detalii echipament
+            {t('equipmentDetails')}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
-            <Detail label="Tip" value={PSI_EQUIPMENT_TYPE_LABELS[equipment.equipment_type]} />
-            <Detail label="Identificator / Serie" value={equipment.identifier} />
-            <Detail label="Locație" value={equipment.location} />
-            <Detail label="Producător" value={equipment.manufacturer} />
-            <Detail label="Model" value={equipment.model} />
-            <Detail label="Capacitate" value={equipment.capacity} />
-            <Detail label="Tip agent" value={equipment.agent_type} />
-            <Detail label="Data fabricației" value={equipment.manufacture_date} />
-            <Detail label="Data instalării" value={equipment.installation_date} />
+            <Detail label={t('detailType')} value={PSI_EQUIPMENT_TYPE_LABELS[equipment.equipment_type]} />
+            <Detail label={t('detailIdentifier')} value={equipment.identifier} />
+            <Detail label={t('detailLocation')} value={equipment.location} />
+            <Detail label={t('detailManufacturer')} value={equipment.manufacturer} />
+            <Detail label={t('detailModel')} value={equipment.model} />
+            <Detail label={t('detailCapacity')} value={equipment.capacity} />
+            <Detail label={t('detailAgentType')} value={equipment.agent_type} />
+            <Detail label={t('detailManufactureDate')} value={equipment.manufacture_date} />
+            <Detail label={t('detailInstallationDate')} value={equipment.installation_date} />
           </div>
           {equipment.notes && (
             <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="text-xs font-medium text-gray-500 uppercase mb-1">Observații</p>
+              <p className="text-xs font-medium text-gray-500 uppercase mb-1">{t('detailNotes')}</p>
               <p className="text-sm text-gray-700">{equipment.notes}</p>
             </div>
           )}
@@ -233,7 +235,7 @@ export default function PSIEquipmentDetailClient({
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h2 className="text-base font-semibold text-gray-900 flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gray-400" />
-              Istoric inspecții
+              {t('inspectionHistory')}
               <span className="ml-1 text-sm font-normal text-gray-500">({inspections.length})</span>
             </h2>
             <button
@@ -241,19 +243,19 @@ export default function PSIEquipmentDetailClient({
               className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
             >
               <ClipboardCheck className="h-4 w-4" />
-              Adaugă inspecție
+              {t('addInspection')}
             </button>
           </div>
 
           {inspections.length === 0 ? (
             <div className="p-12 text-center">
               <Clock className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-sm text-gray-500">Nicio inspecție înregistrată pentru acest echipament</p>
+              <p className="text-sm text-gray-500">{t('noInspectionsForEquipment')}</p>
               <button
                 onClick={() => setShowInspectionForm(true)}
                 className="mt-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
               >
-                Înregistrează prima inspecție
+                {t('recordFirstInspection')}
               </button>
             </div>
           ) : (
@@ -271,19 +273,19 @@ export default function PSIEquipmentDetailClient({
                           </span>
                         </div>
                         <p className="text-sm text-gray-600 mt-0.5">
-                          Inspector: <span className="font-medium">{insp.inspector_name}</span>
+                          {t('inspector')}: <span className="font-medium">{insp.inspector_name}</span>
                           {insp.inspector_license && ` (aut. ${insp.inspector_license})`}
                         </p>
                         {insp.findings && (
                           <p className="text-sm text-gray-500 mt-1 italic">{insp.findings}</p>
                         )}
                         {insp.bulletin_number && (
-                          <p className="text-xs text-gray-400 mt-1">Buletin nr. {insp.bulletin_number}</p>
+                          <p className="text-xs text-gray-400 mt-1">{t('bulletinNo')} {insp.bulletin_number}</p>
                         )}
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0 ml-4">
-                      <p className="text-xs text-gray-500">Următoarea</p>
+                      <p className="text-xs text-gray-500">{t('nextInspectionShort')}</p>
                       <p className="text-sm font-medium text-gray-900">{insp.next_inspection_date}</p>
                     </div>
                   </div>

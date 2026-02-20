@@ -7,40 +7,10 @@
  */
 
 import { useState, useEffect, useCallback, Fragment } from 'react';
+import { useTranslations } from 'next-intl';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
 import type { ScanTemplate, TemplateCategory } from '@/lib/scan-pipeline';
 import { validateCNP, validateCUI } from '@/lib/utils/validators';
-
-const FIELD_LABELS: Record<string, string> = {
-  tip_document: 'Tip document',
-  furnizor_nume: 'Furnizor',
-  furnizor_cui: 'CUI Furnizor',
-  furnizor_adresa: 'Adresă furnizor',
-  cumparator_nume: 'Cumparator',
-  cumparator_cui: 'CUI Cumparator',
-  data_document: 'Data document',
-  numar_document: 'Nr. Document',
-  suma_totala: 'Sumă totală',
-  subtotal_fara_tva: 'Subtotal fara TVA',
-  tva: 'TVA',
-  tva_total: 'TVA Total',
-  total_cu_tva: 'Total cu TVA',
-  moneda: 'Monedă',
-  metoda_plata: 'Metodă plată',
-  descriere_produse: 'Descriere produse',
-  adresa_furnizor: 'Adresă furnizor',
-  cota_tva_detalii: 'Detalii cote TVA',
-};
-
-// Categorii pentru grupare template-uri
-const CATEGORIES: Record<string, { label_ro: string; label_en: string }> = {
-  ssm: { label_ro: 'SSM - Securitate și Sănătate', label_en: 'Occupational Health & Safety' },
-  psi: { label_ro: 'PSI - Prevenire Incendii', label_en: 'Fire Safety' },
-  medical: { label_ro: 'Medical', label_en: 'Medical' },
-  equipment: { label_ro: 'Echipamente', label_en: 'Equipment' },
-  general: { label_ro: 'General', label_en: 'General' },
-  accounting: { label_ro: 'Contabilitate', label_en: 'Accounting' },
-};
 
 type Step = 'select-type' | 'upload' | 'processing' | 'results';
 type ProcessStatus = 'pending' | 'processing' | 'completed' | 'failed';
@@ -80,6 +50,38 @@ interface ReceivedDoc {
 }
 
 export default function ScanClient() {
+  const t = useTranslations('scan');
+
+  const FIELD_LABELS: Record<string, string> = {
+    tip_document: t('fieldTipDocument'),
+    furnizor_nume: t('fieldFurnizorNume'),
+    furnizor_cui: t('fieldFurnizorCui'),
+    furnizor_adresa: t('fieldFurnizorAdresa'),
+    cumparator_nume: t('fieldCumparatorNume'),
+    cumparator_cui: t('fieldCumparatorCui'),
+    data_document: t('fieldDataDocument'),
+    numar_document: t('fieldNumarDocument'),
+    suma_totala: t('fieldSumaTotala'),
+    subtotal_fara_tva: t('fieldSubtotalFaraTva'),
+    tva: t('fieldTva'),
+    tva_total: t('fieldTvaTotal'),
+    total_cu_tva: t('fieldTotalCuTva'),
+    moneda: t('fieldMoneda'),
+    metoda_plata: t('fieldMetodaPlata'),
+    descriere_produse: t('fieldDescriereProdusse'),
+    adresa_furnizor: t('fieldAdresaFurnizor'),
+    cota_tva_detalii: t('fieldCotaTvaDetalii'),
+  };
+
+  const CATEGORIES: Record<string, { label_ro: string; label_en: string }> = {
+    ssm: { label_ro: t('catSsm'), label_en: 'Occupational Health & Safety' },
+    psi: { label_ro: t('catPsi'), label_en: 'Fire Safety' },
+    medical: { label_ro: t('catMedical'), label_en: 'Medical' },
+    equipment: { label_ro: t('catEquipment'), label_en: 'Equipment' },
+    general: { label_ro: t('catGeneral'), label_en: 'General' },
+    accounting: { label_ro: t('catAccounting'), label_en: 'Accounting' },
+  };
+
   const [currentStep, setCurrentStep] = useState<Step>('select-type');
   const [templates, setTemplates] = useState<ScanTemplate[]>([]);
   const [categorizedTemplates, setCategorizedTemplates] = useState<TemplateCategory[]>([]);
@@ -528,13 +530,13 @@ export default function ScanClient() {
   const getStatusLabel = (status: ProcessStatus) => {
     switch (status) {
       case 'processing':
-        return 'Se procesează...';
+        return t('statusProcessing');
       case 'completed':
-        return 'Finalizat';
+        return t('statusCompleted');
       case 'failed':
-        return 'Eroare';
+        return t('statusFailed');
       default:
-        return 'În așteptare';
+        return t('statusPending');
     }
   };
 
@@ -549,18 +551,18 @@ export default function ScanClient() {
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Scan Documente Universal</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
         <p className="text-gray-600 mt-1">
-          Extrage automat date din documente SSM/PSI/Medical/Echipamente/Contabilitate folosind AI
+          {t('subtitle')}
         </p>
       </div>
 
       {/* Mobile Client Portal */}
       <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg flex items-center justify-between">
         <div>
-          <h3 className="font-semibold text-blue-900">Portal Client Mobil</h3>
+          <h3 className="font-semibold text-blue-900">{t('mobilePortalTitle')}</h3>
           <p className="text-sm text-blue-700">
-            Genereaza un link unic pentru ca clientul tau sa trimita documente direct de pe telefon fara cont.
+            {t('mobilePortalDesc')}
           </p>
         </div>
         <button
@@ -591,7 +593,7 @@ export default function ScanClient() {
       {orgsLoaded && orgs.length > 1 && (
         <div className="bg-white border rounded-lg p-3 mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Organizație activă
+            {t('activeOrganization')}
           </label>
           <select
             value={orgId || ''}
@@ -608,14 +610,14 @@ export default function ScanClient() {
       )}
       {orgsLoaded && orgs.length === 0 && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-          Nu ești asociat cu nicio organizație.
+          {t('noOrgAssociated')}
         </div>
       )}
 
       {/* Error Alert */}
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800">
-          <p className="font-medium">Eroare</p>
+          <p className="font-medium">{t('errorLabel')}</p>
           <p className="text-sm">{error}</p>
         </div>
       )}
@@ -624,7 +626,7 @@ export default function ScanClient() {
       {currentStep === 'select-type' && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Pasul 1: Selectează tipul de document
+            {t('step1Title')}
           </h2>
 
           {/* Auto-detect option - PRIM buton cu stil distinct */}
@@ -699,12 +701,12 @@ export default function ScanClient() {
       {currentStep === 'upload' && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Pasul 2: Încarcă documentele</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('step2Title')}</h2>
             <button
               onClick={() => setCurrentStep('select-type')}
               className="text-sm text-blue-600 hover:text-blue-700"
             >
-              ← Înapoi
+              {t('back')}
             </button>
           </div>
 
@@ -756,7 +758,7 @@ export default function ScanClient() {
           {files.length > 0 && (
             <div className="space-y-3 mb-6">
               <h3 className="text-sm font-medium text-gray-700">
-                Documente selectate ({files.length})
+                {t('selectedFiles', { count: files.length })}
               </h3>
               {files.map((fileItem) => (
                 <div
@@ -783,7 +785,7 @@ export default function ScanClient() {
                     onClick={() => handleRemoveFile(fileItem.id)}
                     className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
-                    Șterge
+                    {t('delete')}
                   </button>
                 </div>
               ))}
@@ -797,7 +799,7 @@ export default function ScanClient() {
               disabled={isProcessing}
               className="w-full py-3 px-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
             >
-              Procesează {files.length} {files.length === 1 ? 'document' : 'documente'}
+              {t('processFiles', { count: files.length })}
             </button>
           )}
         </div>
@@ -807,14 +809,14 @@ export default function ScanClient() {
       {currentStep === 'processing' && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">
-            Procesare în curs...
+            {t('processingInProgress')}
           </h2>
 
           {/* Global progress bar */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">
-                Progres global: {stats.completed + stats.failed} / {stats.total}
+                {t('globalProgress')}: {stats.completed + stats.failed} / {stats.total}
               </span>
               <span className="text-sm font-medium text-gray-700">
                 {Math.round(((stats.completed + stats.failed) / stats.total) * 100)}%
@@ -834,15 +836,15 @@ export default function ScanClient() {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-center">
               <p className="text-2xl font-bold text-green-800">{stats.completed}</p>
-              <p className="text-xs text-green-600">Reușite</p>
+              <p className="text-xs text-green-600">{t('statsSuccess')}</p>
             </div>
             <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
               <p className="text-2xl font-bold text-red-800">{stats.failed}</p>
-              <p className="text-xs text-red-600">Eșuate</p>
+              <p className="text-xs text-red-600">{t('statsFailed')}</p>
             </div>
             <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center">
               <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
-              <p className="text-xs text-gray-600">Total</p>
+              <p className="text-xs text-gray-600">{t('statsTotal')}</p>
             </div>
           </div>
 
@@ -883,24 +885,24 @@ export default function ScanClient() {
           <div className="grid grid-cols-3 gap-4">
             <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-center">
               <p className="text-2xl font-bold text-green-800">{stats.completed}</p>
-              <p className="text-xs text-green-600">Reușite</p>
+              <p className="text-xs text-green-600">{t('statsSuccess')}</p>
             </div>
             <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
               <p className="text-2xl font-bold text-red-800">{stats.failed}</p>
-              <p className="text-xs text-red-600">Eșuate</p>
+              <p className="text-xs text-red-600">{t('statsFailed')}</p>
             </div>
             <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center">
               <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
-              <p className="text-xs text-gray-600">Total</p>
+              <p className="text-xs text-gray-600">{t('statsTotal')}</p>
             </div>
           </div>
 
           {/* Tabs navigation */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Rezultate procesare</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t('resultsTitle')}</h2>
               <button onClick={resetWizard} className="text-sm text-blue-600 hover:text-blue-700">
-                ← Scanează alte documente
+                {t('scanOtherDocuments')}
               </button>
             </div>
 
@@ -927,7 +929,7 @@ export default function ScanClient() {
               <div>
                 {files[activeResultTab].status === 'failed' ? (
                   <div className="p-6 bg-red-50 border border-red-200 rounded-xl">
-                    <p className="font-medium text-red-800">Procesare eșuată</p>
+                    <p className="font-medium text-red-800">{t('processingFailed')}</p>
                     <p className="text-sm text-red-600 mt-1">
                       {files[activeResultTab].error || 'Eroare necunoscută'}
                     </p>
@@ -936,7 +938,7 @@ export default function ScanClient() {
                   <div className="grid grid-cols-2 gap-6">
                     {/* Left: Image preview */}
                     <div>
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Document original</h3>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">{t('originalDocument')}</h3>
                       <img
                         src={files[activeResultTab].preview}
                         alt={files[activeResultTab].file.name}
@@ -950,7 +952,7 @@ export default function ScanClient() {
 
                     {/* Right: Editable fields */}
                     <div>
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Date extrase</h3>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">{t('extractedData')}</h3>
 
                       {/* Detected type (pentru auto-detect) */}
                       {files[activeResultTab].detectedType && (
@@ -970,7 +972,7 @@ export default function ScanClient() {
                               />
                             </svg>
                             <div className="flex-1">
-                              <p className="text-xs font-medium text-blue-900">Tip detectat automat:</p>
+                              <p className="text-xs font-medium text-blue-900">{t('autoDetectedType')}:</p>
                               <p className="text-xs text-blue-700 mt-0.5">
                                 {templates.find(t => t.template_key === files[activeResultTab].detectedType)?.name_ro || files[activeResultTab].detectedType}
                               </p>
@@ -1083,7 +1085,7 @@ export default function ScanClient() {
                         disabled={!files[activeResultTab].scanId}
                         className="w-full py-2 px-4 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors"
                       >
-                        Salvează acest document
+                        {t('saveDocument')}
                       </button>
                     </div>
                   </div>
@@ -1097,36 +1099,36 @@ export default function ScanClient() {
       {/* Documente primite via Portal Client */}
       <div className="bg-white rounded-lg shadow p-4 mt-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Documente primite via Portal Client</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t('receivedDocsTitle')}</h2>
           <button
             onClick={fetchReceivedDocs}
             className="text-xs text-blue-600 hover:text-blue-700 px-2 py-1 rounded hover:bg-blue-50 transition-colors"
           >
-            ↻ Actualizează
+            ↻ {t('refresh')}
           </button>
         </div>
 
         {receivedDocs.length === 0 ? (
-          <p className="text-sm text-gray-500 text-center py-6">Niciun document primit încă.</p>
+          <p className="text-sm text-gray-500 text-center py-6">{t('noReceivedDocs')}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Data upload
+                    {t('colUploadDate')}
                   </th>
                   <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Sursă
+                    {t('colSource')}
                   </th>
                   <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
+                    {t('colStatus')}
                   </th>
                   <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tip document
+                    {t('colDocType')}
                   </th>
                   <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Imagine
+                    {t('colImage')}
                   </th>
                 </tr>
               </thead>
@@ -1139,10 +1141,10 @@ export default function ScanClient() {
                     error: 'bg-red-100 text-red-800',
                   };
                   const statusLabels: Record<string, string> = {
-                    pending: 'În așteptare',
-                    completed: 'Finalizat',
-                    reviewed: 'Verificat',
-                    error: 'Eroare',
+                    pending: t('statusPending'),
+                    completed: t('statusCompleted'),
+                    reviewed: t('statusReviewed'),
+                    error: t('statusFailed'),
                   };
                   const source = doc.created_by ? 'Manual' : 'Portal';
                   const statusColor = statusColors[doc.status] ?? 'bg-gray-100 text-gray-800';
@@ -1185,7 +1187,7 @@ export default function ScanClient() {
                           {tipDocument ? (
                             tipDocument
                           ) : (
-                            <span className="text-gray-400 italic">Nedetectat</span>
+                            <span className="text-gray-400 italic">{t('notDetected')}</span>
                           )}
                         </td>
                         <td className="py-3 px-3">
@@ -1281,10 +1283,10 @@ export default function ScanClient() {
                                     className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
                                   >
                                     {confirmingDocId === doc.id
-                                      ? 'Se procesează...'
+                                      ? t('statusProcessing')
                                       : doc.status === 'reviewed'
-                                      ? 'Deja verificat'
-                                      : 'Confirmă verificarea'}
+                                      ? t('alreadyVerified')
+                                      : t('confirmVerification')}
                                   </button>
                                 </div>
                               </div>

@@ -6,6 +6,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser as createClient } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/Badge'
@@ -118,6 +119,7 @@ function getStatus(expiryDate: string): { status: 'expired' | 'expiring' | 'vali
 }
 
 export default function EquipmentClient({ user, organizations, equipment: initialEquipment, equipmentTypes }: Props) {
+  const t = useTranslations('equipmentPSI')
   // Convertește equipment_types din DB la format { value, label } pentru dropdown-uri
   const EQUIPMENT_TYPES = equipmentTypes.length > 0
     ? equipmentTypes.map(et => ({ value: et.id, label: et.name }))
@@ -296,8 +298,8 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-xl font-black text-gray-900">🧯 Echipamente PSI</h1>
-              <p className="text-sm text-gray-500">Gestionare stingătoare, truse, hidranți, detectoare</p>
+              <h1 className="text-xl font-black text-gray-900">🧯 {t('pageTitle')}</h1>
+              <p className="text-sm text-gray-500">{t('pageSubtitle')}</p>
             </div>
           </div>
           {/* RBAC: Buton "Adaugă" vizibil doar dacă user are permisiune 'create' pe 'equipment' */}
@@ -306,7 +308,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               onClick={openAdd}
               className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" /> Adaugă echipament
+              <Plus className="w-4 h-4" /> {t('addEquipment')}
             </button>
           )}
         </div>
@@ -317,19 +319,19 @@ export default function EquipmentClient({ user, organizations, equipment: initia
         <div className="grid grid-cols-4 gap-4">
           <div className="bg-white rounded-xl border border-gray-200 py-4 text-center">
             <div className="text-3xl font-black text-gray-900">{stats.total}</div>
-            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Total</div>
+            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">{t('statTotal')}</div>
           </div>
           <div className="bg-red-50 rounded-xl border border-red-100 py-4 text-center">
             <div className="text-3xl font-black text-red-600">{stats.expired}</div>
-            <div className="text-[11px] font-bold text-red-500 uppercase tracking-widest">Expirate</div>
+            <div className="text-[11px] font-bold text-red-500 uppercase tracking-widest">{t('statExpired')}</div>
           </div>
           <div className="bg-orange-50 rounded-xl border border-orange-100 py-4 text-center">
             <div className="text-3xl font-black text-orange-500">{stats.expiring}</div>
-            <div className="text-[11px] font-bold text-orange-500 uppercase tracking-widest">Expiră &lt;30 zile</div>
+            <div className="text-[11px] font-bold text-orange-500 uppercase tracking-widest">{t('statExpiring')}</div>
           </div>
           <div className="bg-green-50 rounded-xl border border-green-100 py-4 text-center">
             <div className="text-3xl font-black text-green-600">{stats.valid}</div>
-            <div className="text-[11px] font-bold text-green-600 uppercase tracking-widest">Valide</div>
+            <div className="text-[11px] font-bold text-green-600 uppercase tracking-widest">{t('statValid')}</div>
           </div>
         </div>
 
@@ -351,7 +353,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               onChange={e => { setFilterOrg(e.target.value); setPage(1) }}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
             >
-              <option value="all">Toate organizațiile</option>
+              <option value="all">{t('allOrganizations')}</option>
               {organizations.map((o: any) => (
                 <option key={o.id} value={o.id}>{o.name}</option>
               ))}
@@ -361,7 +363,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               onChange={e => { setFilterType(e.target.value); setPage(1) }}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
             >
-              <option value="all">Toate tipurile</option>
+              <option value="all">{t('allTypes')}</option>
               {EQUIPMENT_TYPES.map(et => (
                 <option key={et.value} value={et.value}>{et.label}</option>
               ))}
@@ -371,10 +373,10 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               onChange={e => { setFilterStatus(e.target.value); setPage(1) }}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
             >
-              <option value="all">Toate statusurile</option>
-              <option value="expired">Expirate</option>
-              <option value="expiring">Expiră curând</option>
-              <option value="valid">Valide</option>
+              <option value="all">{t('allStatuses')}</option>
+              <option value="expired">{t('statExpired')}</option>
+              <option value="expiring">{t('expiringSoon')}</option>
+              <option value="valid">{t('statValid')}</option>
             </select>
           </div>
         </div>
@@ -382,9 +384,9 @@ export default function EquipmentClient({ user, organizations, equipment: initia
         {/* Table */}
         {filtered.length === 0 ? (
           <EmptyState
-            title="Niciun echipament"
-            description="Adaugă primul echipament PSI pentru a începe monitorizarea."
-            actionLabel="+ Adaugă echipament"
+            title={t('noEquipment')}
+            description={t('noEquipmentDesc')}
+            actionLabel={t('addEquipment')}
             onAction={openAdd}
           />
         ) : (
@@ -394,23 +396,23 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                 <thead>
                   <tr className="text-left text-[11px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">
                     <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('equipment_type')}>
-                      Tip <SortIcon field="equipment_type" />
+                      {t('colType')} <SortIcon field="equipment_type" />
                     </th>
                     <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('description')}>
-                      Note <SortIcon field="description" />
+                      {t('colNotes')} <SortIcon field="description" />
                     </th>
                     <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('location')}>
-                      Locație <SortIcon field="location" />
+                      {t('colLocation')} <SortIcon field="location" />
                     </th>
-                    <th className="px-4 py-3">Serie</th>
+                    <th className="px-4 py-3">{t('colSerial')}</th>
                     <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('last_check_date')}>
-                      Verificat <SortIcon field="last_check_date" />
+                      {t('colChecked')} <SortIcon field="last_check_date" />
                     </th>
                     <th className="px-4 py-3 cursor-pointer hover:text-gray-600" onClick={() => handleSort('expiry_date')}>
-                      Expiră <SortIcon field="expiry_date" />
+                      {t('colExpiry')} <SortIcon field="expiry_date" />
                     </th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3 text-right">Acțiuni</th>
+                    <th className="px-4 py-3">{t('colStatus')}</th>
+                    <th className="px-4 py-3 text-right">{t('colActions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
@@ -438,7 +440,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                         <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.last_check_date)}</td>
                         <td className="px-4 py-3 text-sm text-gray-500">{fmtDate(e.expiry_date)}</td>
                         <td className="px-4 py-3">
-                          <StatusBadge status={status} label={status === 'expired' ? `Expirat ${days} zile` : status === 'expiring' ? `Expiră în ${days} zile` : `Valid ${days} zile`} />
+                          <StatusBadge status={status} label={status === 'expired' ? t('statusExpired', { days }) : status === 'expiring' ? t('statusExpiring', { days }) : t('statusValid', { days })} />
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -493,7 +495,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
           <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
               <h2 className="text-lg font-bold text-gray-900">
-                {editingId ? 'Editează echipament' : 'Adaugă echipament'}
+                {editingId ? t('editEquipment') : t('addEquipment')}
               </h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
                 <X className="w-5 h-5" />
@@ -502,7 +504,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
             <div className="px-6 py-4 space-y-4">
               {/* Organizație */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Organizație *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldOrg')}</label>
                 <select
                   value={form.organization_id}
                   onChange={e => setForm({ ...form, organization_id: e.target.value })}
@@ -516,7 +518,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
 
               {/* Tip echipament */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Tip echipament *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldType')}</label>
                 <select
                   value={form.equipment_type}
                   onChange={e => setForm({ ...form, equipment_type: e.target.value, model: '' })}
@@ -531,7 +533,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               {/* Model stingător — apare doar la tip = stingator */}
               {form.equipment_type === 'stingator' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Model stingător *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldExtModel')}</label>
                   <select
                     value={form.model}
                     onChange={e => setForm({ ...form, model: e.target.value })}
@@ -574,7 +576,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
 
               {/* Locație */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Locație fizică</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldLocation')}</label>
                 <input
                   type="text"
                   placeholder="ex: Etaj 2, lângă lift"
@@ -586,7 +588,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
 
               {/* Număr serie */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Număr de serie</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldSerial')}</label>
                 <input
                   type="text"
                   placeholder="ex: SN-2024-00123"
@@ -599,7 +601,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
               {/* Date row */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Ultima verificare *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldLastCheck')}</label>
                   <input
                     type="date"
                     value={form.last_check_date}
@@ -608,7 +610,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Expiră la *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldExpiry')}</label>
                   <input
                     type="date"
                     value={form.expiry_date}
@@ -620,7 +622,7 @@ export default function EquipmentClient({ user, organizations, equipment: initia
 
               {/* Note / Observații — la final */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Note / Observații</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('fieldNotes')}</label>
                 <input
                   type="text"
                   placeholder="ex: Verificat de Star Sting SRL, suport perete, etc."
@@ -636,14 +638,14 @@ export default function EquipmentClient({ user, organizations, equipment: initia
                 onClick={() => setShowModal(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800"
               >
-                Anulează
+                {t('cancel')}
               </button>
               <button
                 onClick={handleSave}
                 disabled={loading || !form.organization_id || !form.expiry_date}
                 className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition disabled:opacity-50"
               >
-                {loading ? 'Salvez...' : editingId ? 'Salvează modificările' : 'Adaugă echipamentul'}
+                {loading ? t('saving') : editingId ? t('saveChanges') : t('addEquipmentBtn')}
               </button>
             </div>
           </div>
@@ -653,9 +655,9 @@ export default function EquipmentClient({ user, organizations, equipment: initia
       {/* Confirm Delete */}
       <ConfirmDialog
         isOpen={!!deleteId}
-        title="Șterge echipamentul?"
-        message="Echipamentul va fi șters permanent. Această acțiune nu poate fi anulată."
-        confirmLabel="Șterge"
+        title={t('deleteTitle')}
+        message={t('deleteMessage')}
+        confirmLabel={t('deleteConfirm')}
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
         isDestructive

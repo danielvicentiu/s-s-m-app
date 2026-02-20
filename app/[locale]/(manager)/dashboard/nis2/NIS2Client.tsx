@@ -5,6 +5,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import type {
   NIS2Assessment,
   NIS2ChecklistItem,
@@ -78,19 +79,14 @@ const CHECKLIST_CATEGORIES: NIS2ChecklistCategory[] = [
   'hr_security', 'access_control', 'asset_management', 'training_awareness',
 ]
 
-const NIS2_SECTORS = [
-  'Energie', 'Transport', 'Bancar', 'Infrastructură piețe financiare',
-  'Sănătate', 'Apă potabilă', 'Apă uzată', 'Infrastructură digitală',
-  'Servicii ICT', 'Administrație publică', 'Spațiu', 'Poștă și curierat',
-  'Gestionare deșeuri', 'Chimice', 'Alimentar', 'Producție',
-  'Furnizori servicii digitale', 'Cercetare',
-]
+// NIS2_SECTORS is defined inside components using useTranslations
 
 // ============================================================
 // MAIN COMPONENT
 // ============================================================
 
 export default function NIS2Client({ user, organizations, initialSelectedOrg }: Props) {
+  const t = useTranslations('nis2')
   const [selectedOrg, setSelectedOrg] = useState(initialSelectedOrg)
   const [activeTab, setActiveTab] = useState<TabType>('assessment')
   const [loading, setLoading] = useState(false)
@@ -213,11 +209,11 @@ export default function NIS2Client({ user, organizations, initialSelectedOrg }: 
         await loadAssessments()
         await loadChecklist(assessment.id)
       } else {
-        alert('Eroare la crearea evaluării')
+        alert(t('errorCreatingAssessment'))
       }
     } catch (err) {
       console.error('Error creating assessment:', err)
-      alert('Eroare la crearea evaluării')
+      alert(t('errorCreatingAssessment'))
     } finally {
       setLoading(false)
     }
@@ -306,11 +302,11 @@ export default function NIS2Client({ user, organizations, initialSelectedOrg }: 
         })
         await loadIncidents()
       } else {
-        alert('Eroare la crearea incidentului')
+        alert(t('errorCreatingIncident'))
       }
     } catch (err) {
       console.error('Error creating incident:', err)
-      alert('Eroare la crearea incidentului')
+      alert(t('errorCreatingIncident'))
     } finally {
       setLoading(false)
     }
@@ -336,7 +332,7 @@ export default function NIS2Client({ user, organizations, initialSelectedOrg }: 
   }
 
   const handleDeleteIncident = async (id: string) => {
-    if (!confirm('Ești sigur că vrei să ștergi acest incident?')) return
+    if (!confirm(t('confirmDeleteIncident'))) return
     try {
       await fetch(`/api/nis2/incidents/${id}`, { method: 'DELETE' })
       setIncidents(prev => prev.filter(i => i.id !== id))
@@ -392,7 +388,7 @@ export default function NIS2Client({ user, organizations, initialSelectedOrg }: 
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">NIS2 Cybersecurity</h1>
-            <p className="text-sm text-gray-500">Conformitate directivă NIS2 • Evaluare • Incidente</p>
+            <p className="text-sm text-gray-500">{t('subtitle')}</p>
           </div>
         </div>
 
@@ -410,23 +406,23 @@ export default function NIS2Client({ user, organizations, initialSelectedOrg }: 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Scor conformitate</p>
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('complianceScore')}</p>
           <p className="text-3xl font-bold text-blue-600">
             {selectedAssessment ? selectedAssessment.overall_score : 0}%
           </p>
         </div>
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Evaluări</p>
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('assessments')}</p>
           <p className="text-3xl font-bold text-gray-900">{assessments.length}</p>
         </div>
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Incidente active</p>
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('activeIncidents')}</p>
           <p className="text-3xl font-bold text-orange-600">
             {incidents.filter(i => i.status !== 'closed').length}
           </p>
         </div>
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Critice (24h)</p>
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('critical24h')}</p>
           <p className="text-3xl font-bold text-red-600">
             {incidents.filter(i => i.severity === 'critical' && i.status !== 'closed').length}
           </p>
@@ -437,9 +433,9 @@ export default function NIS2Client({ user, organizations, initialSelectedOrg }: 
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div className="flex border-b border-gray-200">
           {([
-            { key: 'assessment', label: 'Evaluare NIS2', icon: '📋' },
-            { key: 'incidents', label: 'Incidente Cyber', icon: '⚠️' },
-            { key: 'report', label: 'Raport NIS2', icon: '📊' },
+            { key: 'assessment', label: t('tabAssessment'), icon: '📋' },
+            { key: 'incidents', label: t('tabIncidents'), icon: '⚠️' },
+            { key: 'report', label: t('tabReport'), icon: '📊' },
           ] as const).map(tab => (
             <button
               key={tab.key}
@@ -549,19 +545,28 @@ function AssessmentTab({
   onSelectAssessment, onNewAssessment, onFormChange, onCreateAssessment,
   onCancelNew, onToggleCompliant, onUpdateEvidence, onWizardStep, onChecklistByCategory,
 }: AssessmentTabProps) {
+  const t = useTranslations('nis2')
   const [activeCategory, setActiveCategory] = useState<NIS2ChecklistCategory>('governance')
+
+  const NIS2_SECTORS = [
+    t('sectorEnergy'), t('sectorTransport'), t('sectorBanking'), t('sectorFinancialMarket'),
+    t('sectorHealth'), t('sectorDrinkingWater'), t('sectorWastewater'), t('sectorDigitalInfra'),
+    t('sectorICT'), t('sectorPublicAdmin'), t('sectorSpace'), t('sectorPostal'),
+    t('sectorWasteManagement'), t('sectorChemical'), t('sectorFood'), t('sectorManufacturing'),
+    t('sectorDigitalServices'), t('sectorResearch'),
+  ]
 
   if (showNewForm) {
     return (
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">Evaluare NIS2 Nouă</h2>
-          <p className="text-sm text-gray-500">Pasul 1: Clasificare organizație</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-1">{t('newAssessmentTitle')}</h2>
+          <p className="text-sm text-gray-500">{t('newAssessmentStep1')}</p>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Categorie NIS2</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('nis2Category')}</label>
             <select
               value={newForm.nis2_category}
               onChange={e => onFormChange({ ...newForm, nis2_category: e.target.value as NIS2Category })}
@@ -574,13 +579,13 @@ function AssessmentTab({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sector activitate</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('activitySector')}</label>
             <select
               value={newForm.sector}
               onChange={e => onFormChange({ ...newForm, sector: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Selectează sectorul...</option>
+              <option value="">{t('selectSector')}</option>
               {NIS2_SECTORS.map(s => (
                 <option key={s} value={s}>{s}</option>
               ))}
@@ -589,48 +594,48 @@ function AssessmentTab({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Număr angajați</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('employeeCount')}</label>
               <select
                 value={newForm.employee_count_range}
                 onChange={e => onFormChange({ ...newForm, employee_count_range: e.target.value as '1-49' | '50-249' | '250+' })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
-                <option value="1-49">1–49 angajați</option>
-                <option value="50-249">50–249 angajați</option>
-                <option value="250+">250+ angajați</option>
+                <option value="1-49">{t('employees149')}</option>
+                <option value="50-249">{t('employees50249')}</option>
+                <option value="250+">{t('employees250plus')}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Cifra de afaceri</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('annualTurnover')}</label>
               <select
                 value={newForm.annual_turnover_range}
                 onChange={e => onFormChange({ ...newForm, annual_turnover_range: e.target.value as 'under_10m' | '10m_50m' | 'over_50m' })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
-                <option value="under_10m">Sub 10M €</option>
-                <option value="10m_50m">10M – 50M €</option>
-                <option value="over_50m">Peste 50M €</option>
+                <option value="under_10m">{t('turnoverUnder10m')}</option>
+                <option value="10m_50m">{t('turnover10m50m')}</option>
+                <option value="over_50m">{t('turnoverOver50m')}</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Note</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('notes')}</label>
             <textarea
               value={newForm.notes}
               onChange={e => onFormChange({ ...newForm, notes: e.target.value })}
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              placeholder="Note suplimentare..."
+              placeholder={t('notesPlaceholder')}
             />
           </div>
 
           {newForm.nis2_category !== 'out_of_scope' && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-              <strong>Informație NIS2:</strong>{' '}
+              <strong>{t('nis2InfoLabel')}</strong>{' '}
               {newForm.nis2_category === 'essential'
-                ? 'Entitățile esențiale sunt supuse cerințelor stricte NIS2 și auditului obligatoriu din oficiu.'
-                : 'Entitățile importante sunt supuse cerințelor NIS2 și auditului la cerere sau în urma incidentelor.'}
+                ? t('nis2InfoEssential')
+                : t('nis2InfoImportant')}
             </div>
           )}
         </div>
@@ -641,13 +646,13 @@ function AssessmentTab({
             disabled={loading || !newForm.nis2_category}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
           >
-            {loading ? 'Se creează...' : 'Creează evaluare'}
+            {loading ? t('creating') : t('createAssessment')}
           </button>
           <button
             onClick={onCancelNew}
             className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
           >
-            Anulează
+            {t('cancel')}
           </button>
         </div>
       </div>
@@ -668,7 +673,7 @@ function AssessmentTab({
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="font-medium text-gray-900">{NIS2_CATEGORY_LABELS[a.nis2_category]}</p>
-                    <p className="text-sm text-gray-500">{a.assessment_date} • {a.sector || 'Sector nespecificat'}</p>
+                    <p className="text-sm text-gray-500">{a.assessment_date} • {a.sector || t('sectorUnspecified')}</p>
                   </div>
                   <div className="text-right">
                     <span className="text-2xl font-bold text-blue-600">{a.overall_score}%</span>
@@ -687,7 +692,7 @@ function AssessmentTab({
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Evaluare NIS2 nouă
+          {t('newAssessmentBtn')}
         </button>
       </div>
     )
@@ -707,19 +712,19 @@ function AssessmentTab({
             {NIS2_CATEGORY_LABELS[selectedAssessment.nis2_category]}
           </h2>
           <p className="text-sm text-gray-500">
-            {selectedAssessment.assessment_date} • {selectedAssessment.sector || 'Sector nespecificat'}
+            {selectedAssessment.assessment_date} • {selectedAssessment.sector || t('sectorUnspecified')}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-center">
             <p className="text-3xl font-bold text-blue-600">{score}%</p>
-            <p className="text-xs text-gray-500">Conformitate</p>
+            <p className="text-xs text-gray-500">{t('compliance')}</p>
           </div>
           <button
             onClick={onNewAssessment}
             className="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            + Nouă
+            + {t('newAssessmentBtn')}
           </button>
           {assessments.length > 1 && (
             <select
@@ -741,7 +746,7 @@ function AssessmentTab({
       {/* Progress bar */}
       <div>
         <div className="flex justify-between text-sm text-gray-600 mb-1">
-          <span>{compliantCount} / {checklistItems.length} cerințe îndeplinite</span>
+          <span>{compliantCount} / {checklistItems.length} {t('requirementsMet')}</span>
           <span>{score}%</span>
         </div>
         <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
@@ -785,7 +790,7 @@ function AssessmentTab({
           />
         ))}
         {categoryItems.length === 0 && (
-          <p className="text-gray-400 text-sm">Niciun element în această categorie.</p>
+          <p className="text-gray-400 text-sm">{t('noItemsInCategory')}</p>
         )}
       </div>
     </div>
@@ -805,6 +810,7 @@ function ChecklistItemRow({
   onToggle: () => void
   onUpdateEvidence: (ev: string) => void
 }) {
+  const t = useTranslations('nis2')
   const [showEvidence, setShowEvidence] = useState(false)
   const [evidence, setEvidence] = useState(item.evidence || '')
 
@@ -834,14 +840,14 @@ function ChecklistItemRow({
           </div>
           <p className="text-sm text-gray-900 mt-1">{item.item_text}</p>
           {item.evidence && (
-            <p className="text-xs text-green-700 mt-1">Dovadă: {item.evidence}</p>
+            <p className="text-xs text-green-700 mt-1">{t('evidence')}: {item.evidence}</p>
           )}
         </div>
         <button
           onClick={() => setShowEvidence(!showEvidence)}
           className="text-xs text-blue-600 hover:underline flex-shrink-0"
         >
-          {showEvidence ? 'Ascunde' : 'Dovadă'}
+          {showEvidence ? t('hide') : t('evidence')}
         </button>
       </div>
       {showEvidence && (
@@ -851,13 +857,13 @@ function ChecklistItemRow({
             value={evidence}
             onChange={e => setEvidence(e.target.value)}
             className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="Descriere dovadă..."
+            placeholder={t('evidencePlaceholder')}
           />
           <button
             onClick={() => { onUpdateEvidence(evidence); setShowEvidence(false) }}
             className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            Salvează
+            {t('save')}
           </button>
         </div>
       )}
@@ -902,15 +908,16 @@ function IncidentsTab({
   onSelectIncident, onShowModal, onCloseModal, onFormChange,
   onCreateIncident, onUpdateStatus, onDeleteIncident, getCountdown,
 }: IncidentsTabProps) {
+  const t = useTranslations('nis2')
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-900">Incidente Cybersecurity</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('cybersecurityIncidents')}</h2>
         <button
           onClick={onShowModal}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm transition"
         >
-          + Incident nou
+          + {t('newIncident')}
         </button>
       </div>
 
@@ -919,21 +926,21 @@ function IncidentsTab({
           <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          <p>Niciun incident înregistrat</p>
-          <p className="text-sm mt-1">Adaugă primul incident cybersecurity</p>
+          <p>{t('noIncidents')}</p>
+          <p className="text-sm mt-1">{t('addFirstIncident')}</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nr.</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titlu</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tip</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Severitate</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acțiuni</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colNo')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colTitle')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colType')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colSeverity')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colStatus')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colDate')}</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colActions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -952,7 +959,7 @@ function IncidentsTab({
                       <div className="font-medium text-gray-900">{incident.title}</div>
                       {incident.is_significant && countdown !== null && (
                         <div className={`text-xs mt-0.5 ${countdown < 6 ? 'text-red-600 font-medium' : 'text-orange-600'}`}>
-                          ⏱ {countdown < 1 ? 'EXPIRAT' : `${Math.round(countdown)}h rămas pentru raportare`}
+                          ⏱ {countdown < 1 ? t('expired') : t('hoursLeft', { hours: Math.round(countdown) })}
                         </div>
                       )}
                     </td>
@@ -979,14 +986,14 @@ function IncidentsTab({
                             onClick={() => onUpdateStatus(incident, 'closed')}
                             className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200"
                           >
-                            Închide
+                            {t('close')}
                           </button>
                         )}
                         <button
                           onClick={() => onDeleteIncident(incident.id)}
                           className="px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded"
                         >
-                          Șterge
+                          {t('delete')}
                         </button>
                       </div>
                     </td>
@@ -1018,37 +1025,37 @@ function IncidentsTab({
                   {NIS2_INCIDENT_STATUS_LABELS[selectedIncident.status]}
                 </span>
                 {selectedIncident.is_significant && (
-                  <span className="px-3 py-1 rounded-full text-sm bg-red-100 text-red-800">Semnificativ (raportare obligatorie)</span>
+                  <span className="px-3 py-1 rounded-full text-sm bg-red-100 text-red-800">{t('significantMandatoryReport')}</span>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-500">Tip incident</p>
+                  <p className="text-gray-500">{t('incidentType')}</p>
                   <p className="font-medium">{NIS2_INCIDENT_TYPE_LABELS[selectedIncident.incident_type]}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Data incident</p>
+                  <p className="text-gray-500">{t('incidentDate')}</p>
                   <p className="font-medium">{new Date(selectedIncident.incident_date).toLocaleString('ro-RO')}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Data detectare</p>
+                  <p className="text-gray-500">{t('detectedDate')}</p>
                   <p className="font-medium">{new Date(selectedIncident.detected_date).toLocaleString('ro-RO')}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Utilizatori afectați</p>
+                  <p className="text-gray-500">{t('affectedUsers')}</p>
                   <p className="font-medium">{selectedIncident.affected_users_count}</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-sm text-gray-500 mb-1">Descriere</p>
+                <p className="text-sm text-gray-500 mb-1">{t('description')}</p>
                 <p className="text-gray-900">{selectedIncident.description}</p>
               </div>
 
               {selectedIncident.affected_systems.length > 0 && (
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">Sisteme afectate</p>
+                  <p className="text-sm text-gray-500 mb-1">{t('affectedSystems')}</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedIncident.affected_systems.map((s, i) => (
                       <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">{s}</span>
@@ -1059,7 +1066,7 @@ function IncidentsTab({
 
               {selectedIncident.immediate_actions && (
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">Acțiuni imediate</p>
+                  <p className="text-sm text-gray-500 mb-1">{t('immediateActions')}</p>
                   <p className="text-gray-900">{selectedIncident.immediate_actions}</p>
                 </div>
               )}
@@ -1087,24 +1094,24 @@ function IncidentsTab({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white">
-              <h2 className="text-xl font-bold text-gray-900">Incident Cyber Nou</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('newCyberIncident')}</h2>
               <button onClick={onCloseModal} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Titlu incident *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('incidentTitleField')}</label>
                 <input
                   type="text"
                   value={form.title}
                   onChange={e => onFormChange({ ...form, title: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="ex: Atac ransomware pe server principal"
+                  placeholder={t('incidentTitlePlaceholder')}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tip incident *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('incidentTypeField')}</label>
                   <select
                     value={form.incident_type}
                     onChange={e => onFormChange({ ...form, incident_type: e.target.value as NIS2IncidentType })}
@@ -1116,7 +1123,7 @@ function IncidentsTab({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Severitate *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('severityField')}</label>
                   <select
                     value={form.severity}
                     onChange={e => onFormChange({ ...form, severity: e.target.value as NIS2IncidentSeverity })}
@@ -1131,7 +1138,7 @@ function IncidentsTab({
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Data incident *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('incidentDateField')}</label>
                   <input
                     type="datetime-local"
                     value={form.incident_date}
@@ -1140,7 +1147,7 @@ function IncidentsTab({
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Data detectare *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('detectedDateField')}</label>
                   <input
                     type="datetime-local"
                     value={form.detected_date}
@@ -1151,35 +1158,35 @@ function IncidentsTab({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descriere *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('descriptionField')}</label>
                 <textarea
                   value={form.description}
                   onChange={e => onFormChange({ ...form, description: e.target.value })}
                   rows={3}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="Descrie incidentul în detaliu..."
+                  placeholder={t('descriptionPlaceholder')}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Sisteme afectate (separate prin virgulă)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('affectedSystemsField')}</label>
                 <input
                   type="text"
                   value={form.affected_systems}
                   onChange={e => onFormChange({ ...form, affected_systems: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="ex: Server ERP, VPN, Email"
+                  placeholder={t('affectedSystemsPlaceholder')}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Acțiuni imediate</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('immediateActionsField')}</label>
                 <textarea
                   value={form.immediate_actions}
                   onChange={e => onFormChange({ ...form, immediate_actions: e.target.value })}
                   rows={2}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="Acțiuni luate imediat după detectare..."
+                  placeholder={t('immediateActionsPlaceholder')}
                 />
               </div>
 
@@ -1192,7 +1199,7 @@ function IncidentsTab({
                     className="w-4 h-4 text-blue-600 rounded"
                   />
                   <span className="text-sm text-gray-700">
-                    Incident semnificativ (obligație raportare 24h la DNSC)
+                    {t('significantIncidentLabel')}
                   </span>
                 </label>
               </div>
@@ -1203,13 +1210,13 @@ function IncidentsTab({
                   disabled={loading || !form.title || !form.description}
                   className="flex-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
                 >
-                  {loading ? 'Se salvează...' : 'Salvează incident'}
+                  {loading ? t('saving') : t('saveIncident')}
                 </button>
                 <button
                   onClick={onCloseModal}
                   className="flex-1 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
                 >
-                  Anulează
+                  {t('cancel')}
                 </button>
               </div>
             </div>
@@ -1235,11 +1242,12 @@ interface ReportTabProps {
 function ReportTab({
   selectedAssessment, checklistItems, incidents, getNonCompliantItems, getCategoryScore,
 }: ReportTabProps) {
+  const t = useTranslations('nis2')
   if (!selectedAssessment) {
     return (
       <div className="text-center py-12 text-gray-400">
-        <p>Nu există nicio evaluare selectată.</p>
-        <p className="text-sm mt-1">Creează o evaluare NIS2 în tab-ul Evaluare.</p>
+        <p>{t('noAssessmentSelected')}</p>
+        <p className="text-sm mt-1">{t('createAssessmentHint')}</p>
       </div>
     )
   }
@@ -1255,10 +1263,10 @@ function ReportTab({
       <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Scor Global Conformitate NIS2</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('globalComplianceScore')}</h2>
             <p className="text-sm text-gray-600">
               {NIS2_CATEGORY_LABELS[selectedAssessment.nis2_category]} •{' '}
-              {selectedAssessment.sector || 'Sector nespecificat'}
+              {selectedAssessment.sector || t('sectorUnspecified')}
             </p>
           </div>
           <div className="text-center">
@@ -1266,7 +1274,7 @@ function ReportTab({
               {score}%
             </div>
             <p className="text-sm text-gray-600 mt-1">
-              {score >= 80 ? 'Conformitate bună' : score >= 50 ? 'Conformitate parțială' : 'Conformitate insuficientă'}
+              {score >= 80 ? t('complianceGood') : score >= 50 ? t('compliancePartial') : t('complianceInsufficient')}
             </p>
           </div>
         </div>
@@ -1288,7 +1296,7 @@ function ReportTab({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <p className="text-sm text-red-800 font-medium">
-                {criticalIncidents.length} incident(e) critice active care necesită atenție imediată
+                {t('criticalIncidentsAlert', { count: criticalIncidents.length })}
               </p>
             </div>
           )}
@@ -1298,7 +1306,7 @@ function ReportTab({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p className="text-sm text-orange-800 font-medium">
-                {significantPending.length} incident(e) semnificative neraportate la autorități (termen 24h)
+                {t('significantPendingAlert', { count: significantPending.length })}
               </p>
             </div>
           )}
@@ -1307,7 +1315,7 @@ function ReportTab({
 
       {/* Category breakdown */}
       <div>
-        <h3 className="font-semibold text-gray-900 mb-3">Conformitate pe categorii</h3>
+        <h3 className="font-semibold text-gray-900 mb-3">{t('complianceByCategory')}</h3>
         <div className="space-y-2">
           {CHECKLIST_CATEGORIES.map(cat => {
             const catScore = getCategoryScore(cat)
@@ -1335,7 +1343,7 @@ function ReportTab({
       {nonCompliant.length > 0 && (
         <div>
           <h3 className="font-semibold text-gray-900 mb-3">
-            Acțiuni necesare ({nonCompliant.length} cerințe neîndeplinite)
+            {t('requiredActions', { count: nonCompliant.length })}
           </h3>
           <div className="space-y-2">
             {nonCompliant.slice(0, 10).map(item => (
@@ -1349,7 +1357,7 @@ function ReportTab({
             ))}
             {nonCompliant.length > 10 && (
               <p className="text-sm text-gray-500 text-center">
-                și încă {nonCompliant.length - 10} cerințe neîndeplinite...
+                {t('andMoreRequirements', { count: nonCompliant.length - 10 })}
               </p>
             )}
           </div>
@@ -1358,7 +1366,7 @@ function ReportTab({
 
       {/* Incidents summary */}
       <div>
-        <h3 className="font-semibold text-gray-900 mb-3">Sumar incidente</h3>
+        <h3 className="font-semibold text-gray-900 mb-3">{t('incidentsSummary')}</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {(['low', 'medium', 'high', 'critical'] as NIS2IncidentSeverity[]).map(sev => (
             <div key={sev} className={`p-4 rounded-xl border ${SEVERITY_COLORS[sev]}`}>

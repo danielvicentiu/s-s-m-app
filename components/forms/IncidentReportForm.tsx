@@ -5,6 +5,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { Upload, AlertTriangle, Calendar, Clock, MapPin, Users, Camera, FileText, AlertCircle, CheckCircle2 } from 'lucide-react'
 
@@ -69,6 +70,7 @@ export default function IncidentReportForm({
   editingId,
   initialData,
 }: Props) {
+  const t = useTranslations('forms')
   const supabase = createSupabaseBrowser()
 
   // ========== STATE ==========
@@ -177,11 +179,11 @@ export default function IncidentReportForm({
     const maxSize = 5 * 1024 * 1024 // 5MB per file
     const validFiles = files.filter(file => {
       if (file.size > maxSize) {
-        setError(`Fișierul ${file.name} depășește 5MB`)
+        setError(t('incident.errorFileSize', { name: file.name }))
         return false
       }
       if (!file.type.startsWith('image/')) {
-        setError(`Fișierul ${file.name} nu este o imagine`)
+        setError(t('incident.errorFileType', { name: file.name }))
         return false
       }
       return true
@@ -254,19 +256,19 @@ export default function IncidentReportForm({
 
     // Validation
     if (!formData.organization_id) {
-      setError('Selectează organizația')
+      setError(t('incident.errorSelectOrg'))
       return
     }
     if (!formData.incident_date) {
-      setError('Introdu data incidentului')
+      setError(t('incident.errorEnterDate'))
       return
     }
     if (!formData.incident_time) {
-      setError('Introdu ora incidentului')
+      setError(t('incident.errorEnterTime'))
       return
     }
     if (!formData.description || formData.description.trim().length < 20) {
-      setError('Descrierea trebuie să conțină minimum 20 caractere')
+      setError(t('incident.errorDescriptionMin'))
       return
     }
 
@@ -348,7 +350,7 @@ export default function IncidentReportForm({
       }, 1500)
     } catch (err: any) {
       console.error('Error saving incident:', err)
-      setError(err.message || 'Eroare la salvarea incidentului')
+      setError(err.message || t('incident.errorSave'))
     } finally {
       setLoading(false)
     }
@@ -375,10 +377,10 @@ export default function IncidentReportForm({
         </div>
         <div>
           <h2 className="text-xl font-semibold text-gray-900">
-            {editingId ? 'Modificare incident' : 'Raportare incident / accident'}
+            {editingId ? t('incident.editTitle') : t('incident.reportTitle')}
           </h2>
           <p className="text-sm text-gray-600 mt-1">
-            Completează toate detaliile incidentului pentru înregistrare și investigare
+            {t('incident.subtitle')}
           </p>
         </div>
       </div>
@@ -394,14 +396,14 @@ export default function IncidentReportForm({
       {success && (
         <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700">
           <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-          <span className="text-sm">Incident raportat cu succes!</span>
+          <span className="text-sm">{t('incident.successReported')}</span>
         </div>
       )}
 
       {/* Organization Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Organizație *
+          {t('incident.labelOrg')} *
         </label>
         <select
           required
@@ -410,7 +412,7 @@ export default function IncidentReportForm({
           className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           disabled={loading}
         >
-          <option value="">Selectează organizația</option>
+          <option value="">{t('incident.selectOrg')}</option>
           {organizations.map(org => (
             <option key={org.id} value={org.id}>{org.name}</option>
           ))}
@@ -420,7 +422,7 @@ export default function IncidentReportForm({
       {/* Incident Type */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Tip incident *
+          {t('incident.labelType')} *
         </label>
         <select
           required
@@ -443,7 +445,7 @@ export default function IncidentReportForm({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Calendar className="w-4 h-4 inline mr-1" />
-            Data incidentului *
+            {t('incident.labelDate')} *
           </label>
           <input
             type="date"
@@ -459,7 +461,7 @@ export default function IncidentReportForm({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Clock className="w-4 h-4 inline mr-1" />
-            Ora incidentului *
+            {t('incident.labelTime')} *
           </label>
           <input
             type="time"
@@ -476,7 +478,7 @@ export default function IncidentReportForm({
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           <MapPin className="w-4 h-4 inline mr-1" />
-          Locație incident
+          {t('incident.labelLocation')}
         </label>
         <select
           value={formData.location_id}
@@ -484,7 +486,7 @@ export default function IncidentReportForm({
           className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2"
           disabled={loading}
         >
-          <option value="">Selectează locația (opțional)</option>
+          <option value="">{t('incident.selectLocation')}</option>
           {locations
             .filter(l => l.organization_id === formData.organization_id)
             .map(loc => (
@@ -495,7 +497,7 @@ export default function IncidentReportForm({
         </select>
         <input
           type="text"
-          placeholder="Sau descrie locația (ex: Atelier producție, linia 2)"
+          placeholder={t('incident.locationDescPlaceholder')}
           value={formData.location_description}
           onChange={(e) => setFormData({ ...formData, location_description: e.target.value })}
           className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -506,7 +508,7 @@ export default function IncidentReportForm({
       {/* Affected Employee */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Angajat afectat
+          {t('incident.labelAffectedEmployee')}
         </label>
         <select
           value={formData.affected_employee_id}
@@ -514,7 +516,7 @@ export default function IncidentReportForm({
           className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           disabled={loading}
         >
-          <option value="">Selectează angajatul (opțional pentru near-miss)</option>
+          <option value="">{t('incident.selectAffectedEmployee')}</option>
           {employees
             .filter(e => e.organization_id === formData.organization_id)
             .map(emp => (
@@ -529,12 +531,12 @@ export default function IncidentReportForm({
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           <FileText className="w-4 h-4 inline mr-1" />
-          Descriere detaliată incident *
+          {t('incident.labelDescription')} *
         </label>
         <textarea
           required
           rows={5}
-          placeholder="Descrie ce s-a întâmplat: ce făcea angajatul, ce echipament folosea, cum s-a produs incidentul, ce vătămări au rezultat..."
+          placeholder={t('incident.descriptionPlaceholder')}
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
@@ -542,18 +544,18 @@ export default function IncidentReportForm({
           minLength={20}
         />
         <p className="text-xs text-gray-500 mt-1">
-          Minimum 20 caractere ({formData.description.length}/20)
+          {t('incident.descriptionMinChars', { count: formData.description.length })}
         </p>
       </div>
 
       {/* Immediate Cause */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Cauză imediată
+          {t('incident.labelImmediateCause')}
         </label>
         <textarea
           rows={3}
-          placeholder="Ce a cauzat direct incidentul? (ex: podea alunecoasă, lipsa EIP, echipament defect, eroare umană)"
+          placeholder={t('incident.immediateCausePlaceholder')}
           value={formData.immediate_cause}
           onChange={(e) => setFormData({ ...formData, immediate_cause: e.target.value })}
           className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
@@ -564,11 +566,11 @@ export default function IncidentReportForm({
       {/* Immediate Actions Taken */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Măsuri luate imediat
+          {t('incident.labelImmediateActions')}
         </label>
         <textarea
           rows={3}
-          placeholder="Ce măsuri s-au luat imediat după incident? (ex: prim ajutor, izolare zonă, oprire echipament, evacuare)"
+          placeholder={t('incident.immediateActionsPlaceholder')}
           value={formData.immediate_actions_taken}
           onChange={(e) => setFormData({ ...formData, immediate_actions_taken: e.target.value })}
           className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
@@ -579,7 +581,7 @@ export default function IncidentReportForm({
       {/* Severity */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Severitate *
+          {t('incident.labelSeverity')} *
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {SEVERITY_LEVELS.map(level => (
@@ -613,7 +615,7 @@ export default function IncidentReportForm({
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           <Users className="w-4 h-4 inline mr-1" />
-          Martori
+          {t('incident.labelWitnesses')}
         </label>
         <div className="border border-gray-300 rounded-xl p-4 max-h-48 overflow-y-auto">
           {employees
@@ -638,12 +640,12 @@ export default function IncidentReportForm({
             ))}
           {employees.filter(e => e.organization_id === formData.organization_id).length === 0 && (
             <p className="text-sm text-gray-500 text-center py-4">
-              Nu există angajați disponibili pentru organizația selectată
+              {t('incident.noEmployeesAvailable')}
             </p>
           )}
         </div>
         <p className="text-xs text-gray-500 mt-1">
-          {selectedWitnesses.length} martor(i) selectat(ă)
+          {t('incident.witnessesSelected', { count: selectedWitnesses.length })}
         </p>
       </div>
 
@@ -651,7 +653,7 @@ export default function IncidentReportForm({
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           <Camera className="w-4 h-4 inline mr-1" />
-          Fotografii incident
+          {t('incident.labelPhotos')}
         </label>
         <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
           <input
@@ -668,10 +670,10 @@ export default function IncidentReportForm({
             className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
           >
             <Upload className="w-4 h-4" />
-            <span>Adaugă fotografii</span>
+            <span>{t('incident.addPhotos')}</span>
           </label>
           <p className="text-xs text-gray-500 mt-2">
-            Maximum 5MB per fișier. Formate acceptate: JPG, PNG, WEBP
+            {t('incident.photoInfo')}
           </p>
         </div>
 
@@ -707,7 +709,7 @@ export default function IncidentReportForm({
             <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <h3 className="font-medium text-orange-900 mb-2">
-                Notificare ITM obligatorie
+                {t('incident.itmRequired')}
               </h3>
               <label className="flex items-center gap-2 mb-3">
                 <input
@@ -718,12 +720,12 @@ export default function IncidentReportForm({
                   disabled={loading}
                 />
                 <span className="text-sm text-orange-800">
-                  Confirm necesitatea notificării ITM pentru acest tip de incident
+                  {t('incident.itmConfirm')}
                 </span>
               </label>
               <input
                 type="text"
-                placeholder="Metoda de notificare ITM (ex: telefonic, email, formular online)"
+                placeholder={t('incident.itmMethodPlaceholder')}
                 value={formData.itm_notification_method}
                 onChange={(e) => setFormData({ ...formData, itm_notification_method: e.target.value })}
                 className="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white"
@@ -743,7 +745,7 @@ export default function IncidentReportForm({
             disabled={loading}
             className="px-6 py-2.5 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors disabled:opacity-50"
           >
-            Anulează
+            {t('incident.cancel')}
           </button>
         )}
         <button
@@ -754,7 +756,7 @@ export default function IncidentReportForm({
           {loading && (
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
           )}
-          {uploadingPhotos ? 'Se încarcă fotografiile...' : loading ? 'Se salvează...' : editingId ? 'Actualizează incident' : 'Raportează incident'}
+          {uploadingPhotos ? t('incident.uploadingPhotos') : loading ? t('incident.saving') : editingId ? t('incident.updateIncident') : t('incident.reportIncident')}
         </button>
       </div>
     </form>

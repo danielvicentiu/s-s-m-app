@@ -6,6 +6,7 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -51,6 +52,7 @@ type SortDirection = 'asc' | 'desc'
 
 export default function TrainingsPageClient() {
   const router = useRouter()
+  const t = useTranslations('trainingsPage')
   const supabase = createSupabaseBrowser()
 
   // State
@@ -156,14 +158,14 @@ export default function TrainingsPageClient() {
   }
 
   const trainingTypes: Record<string, string> = {
-    ssm_initial: 'SSM Inițial',
-    ssm_periodic: 'SSM Periodic',
-    psi_initial: 'PSI Inițial',
-    psi_periodic: 'PSI Periodic',
-    primul_ajutor: 'Prim Ajutor',
-    lucru_inaltime: 'Lucru Înălțime',
-    echipamente: 'Echipamente',
-    altul: 'Altul'
+    ssm_initial: 'SSM ' + t('typeInitial'),
+    ssm_periodic: 'SSM ' + t('typePeriodic'),
+    psi_initial: 'PSI ' + t('typeInitial'),
+    psi_periodic: 'PSI ' + t('typePeriodic'),
+    primul_ajutor: t('typeFirstAid'),
+    lucru_inaltime: t('typeHeightWork'),
+    echipamente: t('typeEquipment'),
+    altul: t('typeOther')
   }
 
   // ========== STATS ==========
@@ -312,10 +314,10 @@ export default function TrainingsPageClient() {
             <div>
               <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <GraduationCap className="h-5 w-5 text-blue-600" />
-                Instruiri SSM/PSI
+                {t('pageTitle')}
               </h1>
               <p className="text-sm text-gray-400">
-                {loading ? 'Se încarcă...' : `${filteredAndSorted.length} instruiri înregistrate`}
+                {loading ? t('loading') : t('recordsCount', { count: filteredAndSorted.length })}
               </p>
             </div>
           </div>
@@ -324,7 +326,7 @@ export default function TrainingsPageClient() {
             className="bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
-            Adaugă instruire
+            {t('addTraining')}
           </button>
         </div>
       </header>
@@ -335,19 +337,19 @@ export default function TrainingsPageClient() {
           <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
             <div className="text-3xl font-black text-gray-900">{stats.thisMonth}</div>
             <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
-              Instruiri luna curentă
+              {t('statThisMonth')}
             </div>
           </div>
           <div className="bg-orange-50 rounded-xl border border-orange-100 p-4 text-center">
             <div className="text-3xl font-black text-orange-500">{stats.expiring}</div>
             <div className="text-xs font-semibold text-orange-500 uppercase tracking-widest mt-1">
-              Expiră în 30 zile
+              {t('statExpiring30')}
             </div>
           </div>
           <div className="bg-red-50 rounded-xl border border-red-100 p-4 text-center">
             <div className="text-3xl font-black text-red-600">{stats.expired}</div>
             <div className="text-xs font-semibold text-red-500 uppercase tracking-widest mt-1">
-              Expirate
+              {t('statExpired')}
             </div>
           </div>
         </div>
@@ -361,7 +363,7 @@ export default function TrainingsPageClient() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Caută după angajat, funcție, instructor, locație..."
+              placeholder={t('searchPlaceholder')}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
@@ -376,7 +378,7 @@ export default function TrainingsPageClient() {
               }}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
             >
-              <option value="all">Toate tipurile</option>
+              <option value="all">{t('filterAllTypes')}</option>
               {Object.entries(trainingTypes).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
@@ -390,10 +392,10 @@ export default function TrainingsPageClient() {
               }}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
             >
-              <option value="all">Toate statusurile</option>
-              <option value="valid">Valide</option>
-              <option value="expiring">Expiră curând</option>
-              <option value="expired">Expirate</option>
+              <option value="all">{t('filterAllStatuses')}</option>
+              <option value="valid">{t('filterValid')}</option>
+              <option value="expiring">{t('filterExpiringSoon')}</option>
+              <option value="expired">{t('filterExpired')}</option>
             </select>
           </div>
         </div>
@@ -418,13 +420,13 @@ export default function TrainingsPageClient() {
             // EMPTY STATE
             <EmptyState
               icon={GraduationCap}
-              title={trainings.length === 0 ? 'Nicio instruire' : 'Niciun rezultat'}
+              title={trainings.length === 0 ? t('emptyTitle') : t('emptySearchTitle')}
               description={
                 trainings.length === 0
-                  ? 'Adaugă prima instruire pentru a începe.'
-                  : 'Nu există instruiri care să corespundă căutării tale.'
+                  ? t('emptyDesc')
+                  : t('emptySearchDesc')
               }
-              actionLabel={trainings.length === 0 ? 'Adaugă instruire' : undefined}
+              actionLabel={trainings.length === 0 ? t('addTraining') : undefined}
               onAction={trainings.length === 0 ? () => router.push('/dashboard/trainings/new') : undefined}
             />
           ) : (
@@ -435,43 +437,43 @@ export default function TrainingsPageClient() {
                   onClick={() => handleSort('employee_name')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Angajat {getSortIcon('employee_name')}
+                  {t('colEmployee')} {getSortIcon('employee_name')}
                 </button>
                 <button
                   onClick={() => handleSort('training_type')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Tip instruire {getSortIcon('training_type')}
+                  {t('colType')} {getSortIcon('training_type')}
                 </button>
                 <button
                   onClick={() => handleSort('completion_date')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Data {getSortIcon('completion_date')}
+                  {t('colDate')} {getSortIcon('completion_date')}
                 </button>
                 <button
                   onClick={() => handleSort('duration_hours')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Durata {getSortIcon('duration_hours')}
+                  {t('colDuration')} {getSortIcon('duration_hours')}
                 </button>
                 <button
                   onClick={() => handleSort('instructor_name')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Instructor {getSortIcon('instructor_name')}
+                  {t('colInstructor')} {getSortIcon('instructor_name')}
                 </button>
                 <button
                   onClick={() => handleSort('next_training')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Următoarea {getSortIcon('next_training')}
+                  {t('colNext')} {getSortIcon('next_training')}
                 </button>
                 <button
                   onClick={() => handleSort('status')}
                   className="text-left hover:text-gray-900 transition"
                 >
-                  Status {getSortIcon('status')}
+                  {t('colStatus')} {getSortIcon('status')}
                 </button>
               </div>
 
@@ -535,8 +537,8 @@ export default function TrainingsPageClient() {
                             {nextTraining.daysUntil !== null && (
                               <span className="text-xs text-gray-400">
                                 ({nextTraining.daysUntil > 0
-                                  ? `${nextTraining.daysUntil}z`
-                                  : `${Math.abs(nextTraining.daysUntil)}z dep.`})
+                                  ? t('daysLeft', { count: nextTraining.daysUntil })
+                                  : t('daysOverdue', { count: Math.abs(nextTraining.daysUntil) })})
                               </span>
                             )}
                           </div>
@@ -559,7 +561,7 @@ export default function TrainingsPageClient() {
                 <div className="border-t border-gray-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                   {/* Page size selector */}
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <span>Afișează:</span>
+                    <span>{t('show')}:</span>
                     <select
                       value={pageSize}
                       onChange={(e) => {
@@ -573,7 +575,7 @@ export default function TrainingsPageClient() {
                       <option value={50}>50</option>
                       <option value={100}>100</option>
                     </select>
-                    <span>/ {filteredAndSorted.length} total</span>
+                    <span>/ {filteredAndSorted.length} {t('total')}</span>
                   </div>
 
                   {/* Page navigation */}
@@ -586,7 +588,7 @@ export default function TrainingsPageClient() {
                       <ChevronUp className="h-4 w-4 rotate-[-90deg]" />
                     </button>
                     <span className="text-sm text-gray-600 min-w-[100px] text-center">
-                      Pagina {currentPage} din {totalPages}
+                      {t('page', { current: currentPage, total: totalPages })}
                     </span>
                     <button
                       onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}

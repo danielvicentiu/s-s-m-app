@@ -5,6 +5,7 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
@@ -60,6 +61,7 @@ type ViewMode = 'table' | 'grid'
 // ========== COMPONENT ==========
 
 export default function EquipmentPageClient() {
+  const t = useTranslations('equipmentPage')
   const router = useRouter()
   const supabase = createSupabaseBrowser()
 
@@ -131,10 +133,10 @@ export default function EquipmentPageClient() {
 
   function getStatusLabel(status: EquipmentStatus): string {
     const labels: Record<EquipmentStatus, string> = {
-      active: 'Activ',
-      returned: 'Returnat',
-      damaged: 'Deteriorat',
-      lost: 'Pierdut'
+      active: t('statusActive'),
+      returned: t('statusReturned'),
+      damaged: t('statusDamaged'),
+      lost: t('statusLost'),
     }
     return labels[status] || status
   }
@@ -292,7 +294,7 @@ export default function EquipmentPageClient() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Se încarcă echipamentele...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -311,9 +313,9 @@ export default function EquipmentPageClient() {
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Echipamente</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{t('pageTitle')}</h1>
               <p className="text-sm text-gray-600 mt-1">
-                {sortedEquipment.length} echipament{sortedEquipment.length !== 1 ? 'e' : ''} găsit{sortedEquipment.length !== 1 ? 'e' : ''}
+                {sortedEquipment.length} {t('equipmentFound', { count: sortedEquipment.length })}
               </p>
             </div>
           </div>
@@ -322,7 +324,7 @@ export default function EquipmentPageClient() {
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
-            Adaugă echipament
+            {t('addEquipment')}
           </button>
         </div>
       </div>
@@ -332,7 +334,7 @@ export default function EquipmentPageClient() {
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Active</p>
+              <p className="text-sm text-gray-600">{t('statActive')}</p>
               <p className="text-3xl font-bold text-green-600 mt-1">{stats.active}</p>
             </div>
             <div className="p-3 bg-green-100 rounded-xl">
@@ -344,7 +346,7 @@ export default function EquipmentPageClient() {
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Necesită verificare</p>
+              <p className="text-sm text-gray-600">{t('statNeedsInspection')}</p>
               <p className="text-3xl font-bold text-orange-600 mt-1">{stats.needsInspection}</p>
             </div>
             <div className="p-3 bg-orange-100 rounded-xl">
@@ -356,7 +358,7 @@ export default function EquipmentPageClient() {
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Deteriorate/Pierdute</p>
+              <p className="text-sm text-gray-600">{t('statDamagedLost')}</p>
               <p className="text-3xl font-bold text-red-600 mt-1">{stats.damaged}</p>
             </div>
             <div className="p-3 bg-red-100 rounded-xl">
@@ -374,7 +376,7 @@ export default function EquipmentPageClient() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Caută angajat, echipament, categorie..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -390,7 +392,7 @@ export default function EquipmentPageClient() {
             }}
             className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="all">Toate categoriile</option>
+            <option value="all">{t('allCategories')}</option>
             {uniqueCategories.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
@@ -405,11 +407,11 @@ export default function EquipmentPageClient() {
             }}
             className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="all">Toate statusurile</option>
-            <option value="active">Activ</option>
-            <option value="returned">Returnat</option>
-            <option value="damaged">Deteriorat</option>
-            <option value="lost">Pierdut</option>
+            <option value="all">{t('allStatuses')}</option>
+            <option value="active">{t('statusActive')}</option>
+            <option value="returned">{t('statusReturned')}</option>
+            <option value="damaged">{t('statusDamaged')}</option>
+            <option value="lost">{t('statusLost')}</option>
           </select>
 
           {/* View Mode Toggle */}
@@ -443,12 +445,12 @@ export default function EquipmentPageClient() {
         {paginatedEquipment.length === 0 ? (
           <EmptyState
             icon={Wrench}
-            title="Niciun echipament găsit"
+            title={t('noEquipmentFound')}
             description={debouncedSearch || filterCategory !== 'all' || filterStatus !== 'all'
-              ? "Încercați să modificați filtrele de căutare"
-              : "Adăugați primul echipament pentru a începe"}
+              ? t('tryModifyFilters')
+              : t('addFirstEquipment')}
             onAction={() => router.push("/dashboard/equipment/add")}
-            actionLabel="Adaugă echipament"
+            actionLabel={t('addEquipment')}
           />
         ) : viewMode === 'table' ? (
           // Table View
@@ -462,7 +464,7 @@ export default function EquipmentPageClient() {
                       className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
                     >
                       <div className="flex items-center gap-2">
-                        Denumire echipament
+                        {t('colEquipmentName')}
                         {sortColumn === 'equipment_type' && (
                           sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
                         )}
@@ -473,21 +475,21 @@ export default function EquipmentPageClient() {
                       className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
                     >
                       <div className="flex items-center gap-2">
-                        Categorie
+                        {t('colCategory')}
                         {sortColumn === 'category' && (
                           sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
                         )}
                       </div>
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                      Serie/Nr. Inventar
+                      {t('colSerialInventory')}
                     </th>
                     <th
                       onClick={() => handleSort('employee')}
                       className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
                     >
                       <div className="flex items-center gap-2">
-                        Atribuit către
+                        {t('colAssignedTo')}
                         {sortColumn === 'employee' && (
                           sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
                         )}
@@ -498,24 +500,24 @@ export default function EquipmentPageClient() {
                       className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
                     >
                       <div className="flex items-center gap-2">
-                        Data atribuirii
+                        {t('colAssignmentDate')}
                         {sortColumn === 'assignment_date' && (
                           sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
                         )}
                       </div>
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                      Ultima verificare
+                      {t('colLastInspection')}
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                      Următoarea verificare
+                      {t('colNextInspection')}
                     </th>
                     <th
                       onClick={() => handleSort('status')}
                       className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
                     >
                       <div className="flex items-center gap-2">
-                        Status
+                        {t('colStatus')}
                         {sortColumn === 'status' && (
                           sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
                         )}
@@ -538,7 +540,7 @@ export default function EquipmentPageClient() {
                             {item.equipment_types?.name || '—'}
                           </div>
                           {item.quantity > 1 && (
-                            <div className="text-sm text-gray-600">Cantitate: {item.quantity}</div>
+                            <div className="text-sm text-gray-600">{t('quantity')}: {item.quantity}</div>
                           )}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-700">
@@ -568,7 +570,7 @@ export default function EquipmentPageClient() {
                               {inspectionStatus !== 'valid' && (
                                 <StatusBadge
                                   status={inspectionStatus === 'expired' ? 'expired' : 'expiring'}
-                                  label={inspectionStatus === 'expired' ? 'Expirat' : 'Expiră curând'}
+                                  label={inspectionStatus === 'expired' ? t('expired') : t('expiringSoon')}
                                 />
                               )}
                             </div>
@@ -619,7 +621,7 @@ export default function EquipmentPageClient() {
 
                   <div className="space-y-2 text-sm">
                     <div>
-                      <span className="text-gray-600">Atribuit către:</span>
+                      <span className="text-gray-600">{t('assignedTo')}:</span>
                       <p className="font-medium text-gray-900">{item.employees?.full_name || '—'}</p>
                       {item.employees?.job_title && (
                         <p className="text-gray-600">{item.employees.job_title}</p>
@@ -628,19 +630,19 @@ export default function EquipmentPageClient() {
 
                     {item.quantity > 1 && (
                       <div>
-                        <span className="text-gray-600">Cantitate: </span>
+                        <span className="text-gray-600">{t('quantity')}: </span>
                         <span className="font-medium text-gray-900">{item.quantity}</span>
                       </div>
                     )}
 
                     <div>
-                      <span className="text-gray-600">Data atribuirii: </span>
+                      <span className="text-gray-600">{t('assignmentDate')}: </span>
                       <span className="font-medium text-gray-900">{fmtDate(item.assignment_date)}</span>
                     </div>
 
                     {nextInspection && (
                       <div>
-                        <span className="text-gray-600">Următoarea verificare: </span>
+                        <span className="text-gray-600">{t('nextInspection')}: </span>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="font-medium text-gray-900">{fmtDate(nextInspection)}</span>
                           {inspectionStatus !== 'valid' && (

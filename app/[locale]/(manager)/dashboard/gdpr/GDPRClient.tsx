@@ -6,6 +6,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { DataTable, type DataTableColumn } from '@/components/ui/DataTable'
 import { FormModal } from '@/components/ui/FormModal'
@@ -90,35 +91,36 @@ const emptyDPOForm = {
   notes: '',
 }
 
-const legalBasisLabels: Record<LegalBasis, string> = {
-  consent: 'Consimțământ',
-  contract: 'Contract',
-  legal_obligation: 'Obligație legală',
-  vital_interest: 'Interes vital',
-  public_interest: 'Interes public',
-  legitimate_interest: 'Interes legitim',
-}
-
-const consentTypeLabels: Record<ConsentType, string> = {
-  processing: 'Prelucrare date',
-  marketing: 'Marketing',
-  profiling: 'Profilere',
-  transfer: 'Transfer date',
-  special_categories: 'Categorii speciale',
-  other: 'Altele',
-}
-
-const statusLabels: Record<ProcessingActivityStatus, string> = {
-  active: 'Activ',
-  inactive: 'Inactiv',
-  under_review: 'În revizuire',
-  archived: 'Arhivat',
-}
-
 // ========== MAIN COMPONENT ==========
 
 export default function GDPRClient({ user, organizations, selectedOrgId }: Props) {
   const router = useRouter()
+  const t = useTranslations('gdpr')
+
+  const legalBasisLabels: Record<LegalBasis, string> = {
+    consent: t('legalBasis.consent'),
+    contract: t('legalBasis.contract'),
+    legal_obligation: t('legalBasis.legalObligation'),
+    vital_interest: t('legalBasis.vitalInterest'),
+    public_interest: t('legalBasis.publicInterest'),
+    legitimate_interest: t('legalBasis.legitimateInterest'),
+  }
+
+  const consentTypeLabels: Record<ConsentType, string> = {
+    processing: t('consentType.processing'),
+    marketing: t('consentType.marketing'),
+    profiling: t('consentType.profiling'),
+    transfer: t('consentType.transfer'),
+    special_categories: t('consentType.specialCategories'),
+    other: t('consentType.other'),
+  }
+
+  const statusLabels: Record<ProcessingActivityStatus, string> = {
+    active: t('status.active'),
+    inactive: t('status.inactive'),
+    under_review: t('status.underReview'),
+    archived: t('status.archived'),
+  }
   const [activeTab, setActiveTab] = useState<TabType>('processing')
   const [loading, setLoading] = useState(false)
 
@@ -231,11 +233,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         setProcessingForm(emptyProcessingForm)
         fetchProcessingActivities()
       } else {
-        alert('Eroare la creare')
+        alert(t('errors.createError'))
       }
     } catch (error) {
       console.error('Error creating processing activity:', error)
-      alert('Eroare la creare')
+      alert(t('errors.createError'))
     } finally {
       setLoading(false)
     }
@@ -257,11 +259,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         setEditingProcessing(null)
         fetchProcessingActivities()
       } else {
-        alert('Eroare la actualizare')
+        alert(t('errors.updateError'))
       }
     } catch (error) {
       console.error('Error updating processing activity:', error)
-      alert('Eroare la actualizare')
+      alert(t('errors.updateError'))
     } finally {
       setLoading(false)
     }
@@ -279,11 +281,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         setDeleteProcessingId(null)
         fetchProcessingActivities()
       } else {
-        alert('Eroare la ștergere')
+        alert(t('errors.deleteError'))
       }
     } catch (error) {
       console.error('Error deleting processing activity:', error)
-      alert('Eroare la ștergere')
+      alert(t('errors.deleteError'))
     } finally {
       setLoading(false)
     }
@@ -305,11 +307,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         setConsentForm(emptyConsentForm)
         fetchConsents()
       } else {
-        alert('Eroare la creare')
+        alert(t('errors.createError'))
       }
     } catch (error) {
       console.error('Error creating consent:', error)
-      alert('Eroare la creare')
+      alert(t('errors.createError'))
     } finally {
       setLoading(false)
     }
@@ -331,11 +333,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         setEditingConsent(null)
         fetchConsents()
       } else {
-        alert('Eroare la actualizare')
+        alert(t('errors.updateError'))
       }
     } catch (error) {
       console.error('Error updating consent:', error)
-      alert('Eroare la actualizare')
+      alert(t('errors.updateError'))
     } finally {
       setLoading(false)
     }
@@ -356,11 +358,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       if (res.ok) {
         fetchConsents()
       } else {
-        alert('Eroare la retragere')
+        alert(t('errors.withdrawError'))
       }
     } catch (error) {
       console.error('Error withdrawing consent:', error)
-      alert('Eroare la retragere')
+      alert(t('errors.withdrawError'))
     } finally {
       setLoading(false)
     }
@@ -378,11 +380,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         setDeleteConsentId(null)
         fetchConsents()
       } else {
-        alert('Eroare la ștergere')
+        alert(t('errors.deleteError'))
       }
     } catch (error) {
       console.error('Error deleting consent:', error)
-      alert('Eroare la ștergere')
+      alert(t('errors.deleteError'))
     } finally {
       setLoading(false)
     }
@@ -402,14 +404,14 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       if (res.ok) {
         const data = await res.json()
         setDPO(data)
-        alert('DPO salvat cu succes')
+        alert(t('dpo.savedSuccess'))
         fetchDPO()
       } else {
-        alert('Eroare la salvare')
+        alert(t('errors.saveError'))
       }
     } catch (error) {
       console.error('Error saving DPO:', error)
-      alert('Eroare la salvare')
+      alert(t('errors.saveError'))
     } finally {
       setLoading(false)
     }
@@ -429,7 +431,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
   const processingColumns: DataTableColumn<ProcessingActivity>[] = [
     {
       key: 'activity_name',
-      label: 'Activitate',
+      label: t('table.activity'),
       render: (row) => (
         <div className="font-medium text-gray-900 dark:text-white">
           {row.activity_name}
@@ -438,7 +440,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'purpose',
-      label: 'Scop',
+      label: t('table.purpose'),
       render: (row) => (
         <div className="text-sm text-gray-600 dark:text-gray-400 max-w-xs truncate">
           {row.purpose}
@@ -447,7 +449,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'legal_basis',
-      label: 'Temei juridic',
+      label: t('table.legalBasis'),
       render: (row) => (
         <span className="text-sm text-gray-700 dark:text-gray-300">
           {legalBasisLabels[row.legal_basis]}
@@ -456,7 +458,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('table.status'),
       render: (row) => {
         const variant =
           row.status === 'active'
@@ -483,7 +485,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'actions',
-      label: 'Acțiuni',
+      label: t('table.actions'),
       render: (row) => (
         <div className="flex gap-2">
           <button
@@ -493,14 +495,14 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
               setProcessingModal(true)
             }}
             className="p-1 text-blue-600 hover:bg-blue-50 rounded dark:hover:bg-blue-900/20"
-            title="Editare"
+            title={t('actions.edit')}
           >
             <Pencil className="w-4 h-4" />
           </button>
           <button
             onClick={() => setDeleteProcessingId(row.id)}
             className="p-1 text-red-600 hover:bg-red-50 rounded dark:hover:bg-red-900/20"
-            title="Ștergere"
+            title={t('actions.delete')}
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -512,7 +514,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
   const consentColumns: DataTableColumn<Consent>[] = [
     {
       key: 'person_name',
-      label: 'Persoană',
+      label: t('table.person'),
       render: (row) => (
         <div>
           <div className="font-medium text-gray-900 dark:text-white">
@@ -526,7 +528,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'consent_type',
-      label: 'Tip',
+      label: t('table.type'),
       render: (row) => (
         <span className="text-sm text-gray-700 dark:text-gray-300">
           {consentTypeLabels[row.consent_type]}
@@ -535,7 +537,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'purpose',
-      label: 'Scop',
+      label: t('table.purpose'),
       render: (row) => (
         <div className="text-sm text-gray-600 dark:text-gray-400 max-w-xs truncate">
           {row.purpose}
@@ -544,7 +546,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'given_at',
-      label: 'Data acordării',
+      label: t('table.givenAt'),
       render: (row) => (
         <span className="text-sm text-gray-700 dark:text-gray-300">
           {new Date(row.given_at).toLocaleDateString('ro-RO')}
@@ -553,14 +555,14 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'is_active',
-      label: 'Status',
+      label: t('table.status'),
       render: (row) => {
         if (row.is_active) {
-          return <StatusBadge status="Activ" variant="success" />
+          return <StatusBadge status={t('consent.active')} variant="success" />
         }
         return (
           <div className="flex flex-col">
-            <StatusBadge status="Retras" variant="danger" />
+            <StatusBadge status={t('consent.withdrawn')} variant="danger" />
             {row.withdrawn_at && (
               <span className="text-xs text-gray-500 mt-1">
                 {new Date(row.withdrawn_at).toLocaleDateString('ro-RO')}
@@ -572,16 +574,16 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
     },
     {
       key: 'actions',
-      label: 'Acțiuni',
+      label: t('table.actions'),
       render: (row) => (
         <div className="flex gap-2">
           {row.is_active && (
             <button
               onClick={() => handleWithdrawConsent(row.id)}
               className="px-2 py-1 text-xs text-amber-600 hover:bg-amber-50 rounded dark:hover:bg-amber-900/20"
-              title="Retrage consimțământ"
+              title={t('consent.withdrawTitle')}
             >
-              Retrage
+              {t('consent.withdraw')}
             </button>
           )}
           <button
@@ -600,14 +602,14 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
               setConsentModal(true)
             }}
             className="p-1 text-blue-600 hover:bg-blue-50 rounded dark:hover:bg-blue-900/20"
-            title="Editare"
+            title={t('actions.edit')}
           >
             <Pencil className="w-4 h-4" />
           </button>
           <button
             onClick={() => setDeleteConsentId(row.id)}
             className="p-1 text-red-600 hover:bg-red-50 rounded dark:hover:bg-red-900/20"
-            title="Ștergere"
+            title={t('actions.delete')}
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -625,11 +627,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         <div className="flex items-center gap-3 mb-2">
           <Shield className="w-8 h-8 text-blue-600" />
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Modul GDPR
+            {t('title')}
           </h1>
         </div>
         <p className="text-gray-600 dark:text-gray-400">
-          Registru prelucrări date personale • Consimțăminte • DPO
+          {t('subtitle')}
         </p>
       </div>
 
@@ -643,7 +645,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
             </span>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Activități prelucrare
+            {t('stats.processingActivities')}
           </p>
         </div>
 
@@ -655,7 +657,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
             </span>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Consimțăminte active
+            {t('stats.activeConsents')}
           </p>
         </div>
 
@@ -667,7 +669,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
             </span>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            DPIA necesare
+            {t('stats.dpiaRequired')}
           </p>
         </div>
 
@@ -681,7 +683,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
             )}
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {stats.dpoSet ? 'DPO configurat' : 'DPO neconfigurat'}
+            {stats.dpoSet ? t('stats.dpoConfigured') : t('stats.dpoNotConfigured')}
           </p>
         </div>
       </div>
@@ -699,7 +701,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
           >
             <div className="flex items-center justify-center gap-2">
               <FileCheck className="w-5 h-5" />
-              <span>Registru Prelucrări</span>
+              <span>{t('tabs.processingRegistry')}</span>
             </div>
           </button>
           <button
@@ -712,7 +714,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
           >
             <div className="flex items-center justify-center gap-2">
               <UserCheck className="w-5 h-5" />
-              <span>Consimțăminte</span>
+              <span>{t('tabs.consents')}</span>
             </div>
           </button>
           <button
@@ -741,7 +743,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="Caută activitate sau scop..."
+                      placeholder={t('processing.searchPlaceholder')}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -754,11 +756,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
-                  <option value="all">Toate statusurile</option>
-                  <option value="active">Activ</option>
-                  <option value="inactive">Inactiv</option>
-                  <option value="under_review">În revizuire</option>
-                  <option value="archived">Arhivat</option>
+                  <option value="all">{t('filter.allStatuses')}</option>
+                  <option value="active">{t('status.active')}</option>
+                  <option value="inactive">{t('status.inactive')}</option>
+                  <option value="under_review">{t('status.underReview')}</option>
+                  <option value="archived">{t('status.archived')}</option>
                 </select>
 
                 <select
@@ -766,7 +768,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   onChange={(e) => setLegalBasisFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
-                  <option value="all">Toate temeile</option>
+                  <option value="all">{t('filter.allLegalBases')}</option>
                   {Object.entries(legalBasisLabels).map(([key, label]) => (
                     <option key={key} value={key}>
                       {label}
@@ -783,7 +785,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
-                  Adaugă activitate
+                  {t('processing.addActivity')}
                 </button>
               </div>
 
@@ -791,8 +793,8 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
               {processingActivities.length === 0 ? (
                 <EmptyState
                   icon={FileCheck}
-                  title="Nicio activitate de prelucrare"
-                  message="Adaugă prima activitate de prelucrare date personale pentru a începe registrul GDPR."
+                  title={t('processing.emptyTitle')}
+                  message={t('processing.emptyMessage')}
                 />
               ) : (
                 <DataTable
@@ -813,7 +815,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="Caută persoană sau email..."
+                      placeholder={t('consent.searchPlaceholder')}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -826,9 +828,9 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   onChange={(e) => setConsentActiveFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
-                  <option value="all">Toate</option>
-                  <option value="true">Active</option>
-                  <option value="false">Retrase</option>
+                  <option value="all">{t('filter.all')}</option>
+                  <option value="true">{t('filter.active')}</option>
+                  <option value="false">{t('filter.withdrawn')}</option>
                 </select>
 
                 <button
@@ -840,7 +842,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
-                  Adaugă consimțământ
+                  {t('consent.addConsent')}
                 </button>
               </div>
 
@@ -848,8 +850,8 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
               {consents.length === 0 ? (
                 <EmptyState
                   icon={UserCheck}
-                  title="Niciun consimțământ înregistrat"
-                  message="Adaugă primul consimțământ pentru prelucrare date personale."
+                  title={t('consent.emptyTitle')}
+                  message={t('consent.emptyMessage')}
                 />
               ) : (
                 <DataTable data={consents} columns={consentColumns} />
@@ -862,10 +864,10 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
             <div className="max-w-2xl mx-auto">
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Date DPO (Data Protection Officer)
+                  {t('dpo.title')}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Configurează datele responsabilului cu protecția datelor
+                  {t('dpo.subtitle')}
                 </p>
               </div>
 
@@ -873,7 +875,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 {/* DPO Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Nume DPO *
+                    {t('dpo.nameLabel')}
                   </label>
                   <input
                     type="text"
@@ -882,14 +884,14 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                       setDPOForm({ ...dpoForm, dpo_name: e.target.value })
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    placeholder="Numele complet al DPO"
+                    placeholder={t('dpo.namePlaceholder')}
                   />
                 </div>
 
                 {/* DPO Type */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Tip DPO
+                    {t('dpo.typeLabel')}
                   </label>
                   <div className="flex gap-4">
                     <label className="flex items-center">
@@ -902,7 +904,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                         className="mr-2"
                       />
                       <span className="text-sm text-gray-700 dark:text-gray-300">
-                        Intern
+                        {t('dpo.internal')}
                       </span>
                     </label>
                     <label className="flex items-center">
@@ -915,7 +917,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                         className="mr-2"
                       />
                       <span className="text-sm text-gray-700 dark:text-gray-300">
-                        Extern
+                        {t('dpo.external')}
                       </span>
                     </label>
                   </div>
@@ -925,7 +927,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 {!dpoForm.is_internal && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Denumire firmă DPO
+                      {t('dpo.companyLabel')}
                     </label>
                     <input
                       type="text"
@@ -934,7 +936,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                         setDPOForm({ ...dpoForm, company_name: e.target.value })
                       }
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                      placeholder="Firma furnizoare DPO"
+                      placeholder={t('dpo.companyPlaceholder')}
                     />
                   </div>
                 )}
@@ -943,7 +945,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Email
+                      {t('dpo.emailLabel')}
                     </label>
                     <input
                       type="email"
@@ -958,7 +960,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Telefon
+                      {t('dpo.phoneLabel')}
                     </label>
                     <input
                       type="tel"
@@ -976,7 +978,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Data numirii
+                      {t('dpo.appointmentDateLabel')}
                     </label>
                     <input
                       type="date"
@@ -993,7 +995,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Expirare contract
+                      {t('dpo.contractExpiryLabel')}
                     </label>
                     <input
                       type="date"
@@ -1024,7 +1026,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                       className="mr-2"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
-                      Notificat ANSPDCP
+                      {t('dpo.anspdcpNotified')}
                     </span>
                   </label>
                 </div>
@@ -1032,7 +1034,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 {dpoForm.anspdcp_notified && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Data notificării ANSPDCP
+                      {t('dpo.anspdcpNotificationDateLabel')}
                     </label>
                     <input
                       type="date"
@@ -1051,7 +1053,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 {/* Notes */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Note
+                    {t('dpo.notesLabel')}
                   </label>
                   <textarea
                     value={dpoForm.notes || ''}
@@ -1060,7 +1062,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                     }
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    placeholder="Note suplimentare..."
+                    placeholder={t('dpo.notesPlaceholder')}
                   />
                 </div>
 
@@ -1071,7 +1073,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                     disabled={loading || !dpoForm.dpo_name}
                     className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {loading ? 'Se salvează...' : 'Salvează DPO'}
+                    {loading ? t('dpo.saving') : t('dpo.save')}
                   </button>
                 </div>
               </div>
@@ -1085,8 +1087,8 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
         <FormModal
           title={
             editingProcessing
-              ? 'Editare activitate prelucrare'
-              : 'Activitate nouă de prelucrare'
+              ? t('processing.editTitle')
+              : t('processing.newTitle')
           }
           isOpen={processingModal}
           onClose={() => {
@@ -1097,13 +1099,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
           onSubmit={
             editingProcessing ? handleUpdateProcessing : handleCreateProcessing
           }
-          submitLabel={editingProcessing ? 'Actualizează' : 'Creează'}
+          submitLabel={editingProcessing ? t('actions.update') : t('actions.create')}
           loading={loading}
         >
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Denumire activitate *
+                {t('processing.activityNameLabel')}
               </label>
               <input
                 type="text"
@@ -1115,13 +1117,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   })
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="ex: Gestiune dosare angajați"
+                placeholder={t('processing.activityNamePlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Scop prelucrare *
+                {t('processing.purposeLabel')}
               </label>
               <textarea
                 value={processingForm.purpose}
@@ -1130,13 +1132,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 }
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="Descrierea scopului prelucrării"
+                placeholder={t('processing.purposePlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Temei juridic *
+                {t('processing.legalBasisLabel')}
               </label>
               <select
                 value={processingForm.legal_basis}
@@ -1158,7 +1160,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Categorii de date (separate prin virgulă)
+                {t('processing.dataCategoriesLabel')}
               </label>
               <input
                 type="text"
@@ -1173,13 +1175,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   })
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="ex: nume, prenume, CNP, adresă"
+                placeholder={t('processing.dataCategoriesPlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Categorii persoane vizate (separate prin virgulă)
+                {t('processing.dataSubjectsLabel')}
               </label>
               <input
                 type="text"
@@ -1194,13 +1196,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   })
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="ex: angajați, clienți, furnizori"
+                placeholder={t('processing.dataSubjectsPlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Perioadă stocare
+                {t('processing.retentionPeriodLabel')}
               </label>
               <input
                 type="text"
@@ -1212,7 +1214,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   })
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="ex: 5 ani după încetare contract"
+                placeholder={t('processing.retentionPeriodPlaceholder')}
               />
             </div>
 
@@ -1230,7 +1232,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   className="mr-2"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
-                  Transfer transfrontalier
+                  {t('processing.crossBorderTransfer')}
                 </span>
               </label>
             </div>
@@ -1249,7 +1251,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   className="mr-2"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
-                  DPIA necesară
+                  {t('processing.dpiaRequired')}
                 </span>
               </label>
             </div>
@@ -1270,7 +1272,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                       className="mr-2"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">
-                      DPIA completată
+                      {t('processing.dpiaCompleted')}
                     </span>
                   </label>
                 </div>
@@ -1278,7 +1280,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 {processingForm.dpia_completed && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Data DPIA
+                      {t('processing.dpiaDateLabel')}
                     </label>
                     <input
                       type="date"
@@ -1298,7 +1300,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Status
+                {t('processing.statusLabel')}
               </label>
               <select
                 value={processingForm.status}
@@ -1325,7 +1327,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       {consentModal && (
         <FormModal
           title={
-            editingConsent ? 'Editare consimțământ' : 'Consimțământ nou'
+            editingConsent ? t('consent.editTitle') : t('consent.newTitle')
           }
           isOpen={consentModal}
           onClose={() => {
@@ -1334,13 +1336,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
             setEditingConsent(null)
           }}
           onSubmit={editingConsent ? handleUpdateConsent : handleCreateConsent}
-          submitLabel={editingConsent ? 'Actualizează' : 'Creează'}
+          submitLabel={editingConsent ? t('actions.update') : t('actions.create')}
           loading={loading}
         >
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Nume persoană *
+                {t('consent.personNameLabel')}
               </label>
               <input
                 type="text"
@@ -1349,13 +1351,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                   setConsentForm({ ...consentForm, person_name: e.target.value })
                 }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="Nume complet"
+                placeholder={t('consent.personNamePlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email
+                {t('consent.emailLabel')}
               </label>
               <input
                 type="email"
@@ -1370,7 +1372,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Tip consimțământ *
+                {t('consent.typeLabel')}
               </label>
               <select
                 value={consentForm.consent_type}
@@ -1392,7 +1394,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Scop *
+                {t('consent.purposeLabel')}
               </label>
               <textarea
                 value={consentForm.purpose}
@@ -1401,13 +1403,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 }
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="Scopul pentru care se acordă consimțământul"
+                placeholder={t('consent.purposePlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Data acordării *
+                {t('consent.givenAtLabel')}
               </label>
               <input
                 type="date"
@@ -1421,7 +1423,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Note
+                {t('consent.notesLabel')}
               </label>
               <textarea
                 value={consentForm.notes}
@@ -1430,7 +1432,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 }
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="Note suplimentare"
+                placeholder={t('consent.notesPlaceholder')}
               />
             </div>
           </div>
@@ -1443,10 +1445,10 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
           isOpen={!!deleteProcessingId}
           onClose={() => setDeleteProcessingId(null)}
           onConfirm={handleDeleteProcessing}
-          title="Confirmare ștergere"
-          message="Ești sigur că vrei să ștergi această activitate de prelucrare? Acțiunea este ireversibilă."
-          confirmLabel="Șterge"
-          cancelLabel="Anulează"
+          title={t('confirm.deleteTitle')}
+          message={t('confirm.deleteProcessingMessage')}
+          confirmLabel={t('actions.delete')}
+          cancelLabel={t('actions.cancel')}
           variant="danger"
         />
       )}
@@ -1457,10 +1459,10 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
           isOpen={!!deleteConsentId}
           onClose={() => setDeleteConsentId(null)}
           onConfirm={handleDeleteConsent}
-          title="Confirmare ștergere"
-          message="Ești sigur că vrei să ștergi acest consimțământ? Acțiunea este ireversibilă."
-          confirmLabel="Șterge"
-          cancelLabel="Anulează"
+          title={t('confirm.deleteTitle')}
+          message={t('confirm.deleteConsentMessage')}
+          confirmLabel={t('actions.delete')}
+          cancelLabel={t('actions.cancel')}
           variant="danger"
         />
       )}

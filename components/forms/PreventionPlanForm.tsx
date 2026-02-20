@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import {
   Shield,
@@ -145,6 +146,7 @@ export default function PreventionPlanForm({
   editingId,
   initialData,
 }: Props) {
+  const t = useTranslations('forms')
   const supabase = createSupabaseBrowser()
 
   // ========== STATE ==========
@@ -231,7 +233,7 @@ export default function PreventionPlanForm({
       setRiskAssessments(data || [])
     } catch (err: any) {
       console.error('Error loading risk assessments:', err)
-      setError('Eroare la încărcarea evaluărilor de risc: ' + err.message)
+      setError(t('preventionPlan.errorLoadRiskAssessments') + ': ' + err.message)
     }
   }
 
@@ -270,13 +272,13 @@ export default function PreventionPlanForm({
       }
     } catch (err: any) {
       console.error('Error loading measures:', err)
-      setError('Eroare la încărcarea măsurilor: ' + err.message)
+      setError(t('preventionPlan.errorLoadMeasures') + ': ' + err.message)
     }
   }
 
   const handleLoadFromRiskAssessment = async () => {
     if (!formData.risk_assessment_id) {
-      setError('Selectați o evaluare de risc')
+      setError(t('preventionPlan.errorSelectRiskAssessment'))
       return
     }
 
@@ -294,7 +296,7 @@ export default function PreventionPlanForm({
       if (hazardsError) throw hazardsError
 
       if (!hazards || hazards.length === 0) {
-        setError('Nu există pericole identificate în evaluarea de risc selectată')
+        setError(t('preventionPlan.errorNoHazards'))
         return
       }
 
@@ -338,7 +340,7 @@ export default function PreventionPlanForm({
       setTimeout(() => setSuccess(false), 3000)
     } catch (err: any) {
       console.error('Error loading from risk assessment:', err)
-      setError('Eroare la încărcarea pericolelor: ' + err.message)
+      setError(t('preventionPlan.errorLoadHazards') + ': ' + err.message)
     } finally {
       setLoading(false)
     }
@@ -383,10 +385,10 @@ export default function PreventionPlanForm({
     try {
       // TODO: Implement PDF export using jsPDF or similar
       // For now, just show a message
-      alert('Export PDF va fi implementat în curând')
+      alert(t('preventionPlan.pdfComingSoon'))
     } catch (err: any) {
       console.error('Error exporting PDF:', err)
-      setError('Eroare la exportul PDF: ' + err.message)
+      setError(t('preventionPlan.errorExportPDF') + ': ' + err.message)
     } finally {
       setExportingPDF(false)
     }
@@ -400,26 +402,26 @@ export default function PreventionPlanForm({
     try {
       // Validation
       if (!formData.organization_id) {
-        throw new Error('Organizația este obligatorie')
+        throw new Error(t('preventionPlan.errorOrgRequired'))
       }
       if (!formData.plan_name.trim()) {
-        throw new Error('Numele planului este obligatoriu')
+        throw new Error(t('preventionPlan.errorPlanNameRequired'))
       }
       if (measures.length === 0) {
-        throw new Error('Adăugați cel puțin o măsură de prevenire')
+        throw new Error(t('preventionPlan.errorAddMeasure'))
       }
 
       // Check if all measures have risk name
       const emptyRiskNames = measures.filter((m) => !m.risk_name.trim())
       if (emptyRiskNames.length > 0) {
-        throw new Error('Toate măsurile trebuie să aibă un nume de risc')
+        throw new Error(t('preventionPlan.errorMeasureRiskName'))
       }
 
       // Get current user
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      if (!user) throw new Error('Utilizator neautentificat')
+      if (!user) throw new Error(t('preventionPlan.errorNotAuthenticated'))
 
       if (editingId) {
         // UPDATE existing prevention plan
@@ -497,7 +499,7 @@ export default function PreventionPlanForm({
           .single()
 
         if (insertError) throw insertError
-        if (!newPlan) throw new Error('Eroare la crearea planului')
+        if (!newPlan) throw new Error(t('preventionPlan.errorCreatePlan'))
 
         // Insert measures
         const measuresToInsert = measures.map((m, index) => ({
@@ -534,7 +536,7 @@ export default function PreventionPlanForm({
       }, 1500)
     } catch (err: any) {
       console.error('Error saving prevention plan:', err)
-      setError(err.message || 'Eroare la salvarea planului de prevenire')
+      setError(err.message || t('preventionPlan.errorSave'))
     } finally {
       setLoading(false)
     }
@@ -556,10 +558,10 @@ export default function PreventionPlanForm({
         </div>
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-gray-900">
-            {editingId ? 'Editare Plan Prevenire' : 'Plan Prevenire și Protecție Nou'}
+            {editingId ? t('preventionPlan.editTitle') : t('preventionPlan.newTitle')}
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            Măsuri tehnice, organizatorice și igienico-sanitare per risc identificat
+            {t('preventionPlan.subtitle')}
           </p>
         </div>
       </div>
@@ -569,7 +571,7 @@ export default function PreventionPlanForm({
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-red-900">Eroare</p>
+            <p className="text-sm font-medium text-red-900">{t('preventionPlan.errorTitle')}</p>
             <p className="text-sm text-red-700 mt-1">{error}</p>
           </div>
         </div>
@@ -580,7 +582,7 @@ export default function PreventionPlanForm({
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 text-green-600" />
           <p className="text-sm font-medium text-green-900">
-            Plan de prevenire salvat cu succes!
+            {t('preventionPlan.successMessage')}
           </p>
         </div>
       )}
@@ -590,14 +592,14 @@ export default function PreventionPlanForm({
         <div className="bg-gray-50 rounded-xl p-6 space-y-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <ClipboardList className="w-5 h-5 text-blue-600" />
-            Informații Plan
+            {t('preventionPlan.sectionInfo')}
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Organization */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Organizație <span className="text-red-500">*</span>
+                {t('preventionPlan.labelOrg')} <span className="text-red-500">*</span>
               </label>
               <select
                 required
@@ -607,7 +609,7 @@ export default function PreventionPlanForm({
                 }
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               >
-                <option value="">-- Selectează organizație --</option>
+                <option value="">{t('preventionPlan.selectOrg')}</option>
                 {organizations.map((org) => (
                   <option key={org.id} value={org.id}>
                     {org.name}
@@ -619,7 +621,7 @@ export default function PreventionPlanForm({
             {/* Risk Assessment */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Evaluare Risc (opțional)
+                {t('preventionPlan.labelRiskAssessment')}
               </label>
               <div className="flex gap-2">
                 <select
@@ -630,7 +632,7 @@ export default function PreventionPlanForm({
                   disabled={!formData.organization_id}
                   className="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100"
                 >
-                  <option value="">-- Selectează evaluare --</option>
+                  <option value="">{t('preventionPlan.selectRiskAssessment')}</option>
                   {riskAssessments.map((assessment) => (
                     <option key={assessment.id} value={assessment.id}>
                       {assessment.workplace_name}
@@ -645,7 +647,7 @@ export default function PreventionPlanForm({
                   disabled={!formData.risk_assessment_id || loading}
                   className="px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
-                  Încarcă Riscuri
+                  {t('preventionPlan.loadRisks')}
                 </button>
               </div>
             </div>
@@ -653,7 +655,7 @@ export default function PreventionPlanForm({
             {/* Plan Name */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nume Plan <span className="text-red-500">*</span>
+                {t('preventionPlan.labelPlanName')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -662,7 +664,7 @@ export default function PreventionPlanForm({
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, plan_name: e.target.value }))
                 }
-                placeholder="ex: Plan de Prevenire și Protecție - Atelier Mecanic"
+                placeholder={t('preventionPlan.planNamePlaceholder')}
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
@@ -670,7 +672,7 @@ export default function PreventionPlanForm({
             {/* Plan Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Data Planului <span className="text-red-500">*</span>
+                {t('preventionPlan.labelPlanDate')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -686,7 +688,7 @@ export default function PreventionPlanForm({
             {/* Valid From */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Valabil de la <span className="text-red-500">*</span>
+                {t('preventionPlan.labelValidFrom')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -702,7 +704,7 @@ export default function PreventionPlanForm({
             {/* Valid Until */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Valabil până la
+                {t('preventionPlan.labelValidUntil')}
               </label>
               <input
                 type="date"
@@ -716,7 +718,7 @@ export default function PreventionPlanForm({
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('preventionPlan.labelStatus')}</label>
               <select
                 value={formData.status}
                 onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value }))}
@@ -733,7 +735,7 @@ export default function PreventionPlanForm({
             {/* Approved By */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Aprobat de (nume)
+                {t('preventionPlan.labelApprovedBy')}
               </label>
               <input
                 type="text"
@@ -741,7 +743,7 @@ export default function PreventionPlanForm({
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, approved_by_name: e.target.value }))
                 }
-                placeholder="Nume persoană care aprobă"
+                placeholder={t('preventionPlan.approvedByPlaceholder')}
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
@@ -749,7 +751,7 @@ export default function PreventionPlanForm({
             {/* Approved By Title */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Funcție/Titlu
+                {t('preventionPlan.labelApprovedByTitle')}
               </label>
               <input
                 type="text"
@@ -757,7 +759,7 @@ export default function PreventionPlanForm({
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, approved_by_title: e.target.value }))
                 }
-                placeholder="ex: Director General, Manager SSM"
+                placeholder={t('preventionPlan.approvedByTitlePlaceholder')}
                 className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
@@ -765,7 +767,7 @@ export default function PreventionPlanForm({
             {/* Approval Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Data Aprobării
+                {t('preventionPlan.labelApprovalDate')}
               </label>
               <input
                 type="date"
@@ -784,7 +786,7 @@ export default function PreventionPlanForm({
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <Target className="w-5 h-5 text-green-600" />
-              Măsuri de Prevenire ({measures.length})
+              {t('preventionPlan.sectionMeasures', { count: measures.length })}
             </h3>
             <div className="flex gap-2">
               <button
@@ -793,7 +795,7 @@ export default function PreventionPlanForm({
                 className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 text-sm font-medium"
               >
                 <Plus className="w-4 h-4" />
-                Adaugă Măsură
+                {t('preventionPlan.addMeasure')}
               </button>
               <button
                 type="button"
@@ -802,7 +804,7 @@ export default function PreventionPlanForm({
                 className="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors flex items-center gap-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FileDown className="w-4 h-4" />
-                Export PDF
+                {t('preventionPlan.exportPDF')}
               </button>
             </div>
           </div>
@@ -812,19 +814,19 @@ export default function PreventionPlanForm({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
               <div className="bg-white rounded-lg p-3 border border-red-200">
                 <div className="text-lg font-bold text-red-600">{criticalMeasures.length}</div>
-                <div className="text-xs text-gray-600">Urgent</div>
+                <div className="text-xs text-gray-600">{t('preventionPlan.statUrgent')}</div>
               </div>
               <div className="bg-white rounded-lg p-3 border border-orange-200">
                 <div className="text-lg font-bold text-orange-600">{highMeasures.length}</div>
-                <div className="text-xs text-gray-600">Prioritate Ridicată</div>
+                <div className="text-xs text-gray-600">{t('preventionPlan.statHighPriority')}</div>
               </div>
               <div className="bg-white rounded-lg p-3 border border-gray-200">
                 <div className="text-lg font-bold text-gray-600">{pendingMeasures.length}</div>
-                <div className="text-xs text-gray-600">În așteptare</div>
+                <div className="text-xs text-gray-600">{t('preventionPlan.statPending')}</div>
               </div>
               <div className="bg-white rounded-lg p-3 border border-green-200">
                 <div className="text-lg font-bold text-green-600">{completedMeasures.length}</div>
-                <div className="text-xs text-gray-600">Finalizate</div>
+                <div className="text-xs text-gray-600">{t('preventionPlan.statCompleted')}</div>
               </div>
             </div>
           )}
@@ -834,10 +836,10 @@ export default function PreventionPlanForm({
             <div className="bg-white rounded-xl p-12 text-center border-2 border-dashed border-gray-300">
               <AlertTriangle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500 mb-4">
-                Nu există măsuri de prevenire adăugate
+                {t('preventionPlan.emptyMeasures')}
               </p>
               <p className="text-sm text-gray-400 mb-4">
-                Încărcați riscurile dintr-o evaluare sau adăugați măsuri manual
+                {t('preventionPlan.emptyMeasuresHint')}
               </p>
             </div>
           ) : (
@@ -860,7 +862,7 @@ export default function PreventionPlanForm({
                           onChange={(e) =>
                             handleUpdateMeasure(measure.id, { risk_name: e.target.value })
                           }
-                          placeholder="Nume risc identificat"
+                          placeholder={t('preventionPlan.riskNamePlaceholder')}
                           className="flex-1 px-3 py-1.5 text-base font-semibold bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                         {measure.risk_level && (
@@ -886,7 +888,7 @@ export default function PreventionPlanForm({
                       type="button"
                       onClick={() => handleRemoveMeasure(measure.id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Șterge măsură"
+                      title={t('preventionPlan.deleteMeasure')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -898,7 +900,7 @@ export default function PreventionPlanForm({
                     <div>
                       <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 mb-1.5">
                         <Wrench className="w-3.5 h-3.5 text-gray-500" />
-                        Măsură Tehnică
+                        {t('preventionPlan.labelTechnical')}
                       </label>
                       <textarea
                         value={measure.technical_measure}
@@ -908,7 +910,7 @@ export default function PreventionPlanForm({
                           })
                         }
                         rows={3}
-                        placeholder="Măsuri tehnice de prevenire..."
+                        placeholder={t('preventionPlan.technicalPlaceholder')}
                         className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
@@ -917,7 +919,7 @@ export default function PreventionPlanForm({
                     <div>
                       <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 mb-1.5">
                         <Users className="w-3.5 h-3.5 text-gray-500" />
-                        Măsură Organizatorică
+                        {t('preventionPlan.labelOrganizational')}
                       </label>
                       <textarea
                         value={measure.organizational_measure}
@@ -927,7 +929,7 @@ export default function PreventionPlanForm({
                           })
                         }
                         rows={3}
-                        placeholder="Măsuri organizatorice..."
+                        placeholder={t('preventionPlan.organizationalPlaceholder')}
                         className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
@@ -936,7 +938,7 @@ export default function PreventionPlanForm({
                     <div>
                       <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 mb-1.5">
                         <Heart className="w-3.5 h-3.5 text-gray-500" />
-                        Măsură Igienico-Sanitară
+                        {t('preventionPlan.labelHygiene')}
                       </label>
                       <textarea
                         value={measure.hygiene_measure}
@@ -944,7 +946,7 @@ export default function PreventionPlanForm({
                           handleUpdateMeasure(measure.id, { hygiene_measure: e.target.value })
                         }
                         rows={3}
-                        placeholder="Măsuri igienico-sanitare..."
+                        placeholder={t('preventionPlan.hygienePlaceholder')}
                         className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
@@ -956,7 +958,7 @@ export default function PreventionPlanForm({
                     <div>
                       <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 mb-1.5">
                         <User className="w-3.5 h-3.5 text-gray-500" />
-                        Responsabil
+                        {t('preventionPlan.labelResponsible')}
                       </label>
                       <input
                         type="text"
@@ -966,7 +968,7 @@ export default function PreventionPlanForm({
                             responsible_person: e.target.value,
                           })
                         }
-                        placeholder="Nume"
+                        placeholder={t('preventionPlan.responsiblePlaceholder')}
                         className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
@@ -974,7 +976,7 @@ export default function PreventionPlanForm({
                     {/* Responsible Title */}
                     <div>
                       <label className="text-xs font-medium text-gray-700 mb-1.5 block">
-                        Funcție
+                        {t('preventionPlan.labelResponsibleTitle')}
                       </label>
                       <input
                         type="text"
@@ -984,7 +986,7 @@ export default function PreventionPlanForm({
                             responsible_title: e.target.value,
                           })
                         }
-                        placeholder="Funcție/Titlu"
+                        placeholder={t('preventionPlan.responsibleTitlePlaceholder')}
                         className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
@@ -993,7 +995,7 @@ export default function PreventionPlanForm({
                     <div>
                       <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 mb-1.5">
                         <Clock className="w-3.5 h-3.5 text-gray-500" />
-                        Termen
+                        {t('preventionPlan.labelDeadline')}
                       </label>
                       <input
                         type="date"
@@ -1008,7 +1010,7 @@ export default function PreventionPlanForm({
                     {/* Priority */}
                     <div>
                       <label className="text-xs font-medium text-gray-700 mb-1.5 block">
-                        Prioritate
+                        {t('preventionPlan.labelPriority')}
                       </label>
                       <select
                         value={measure.priority}
@@ -1033,7 +1035,7 @@ export default function PreventionPlanForm({
                     {/* Resources Needed */}
                     <div>
                       <label className="text-xs font-medium text-gray-700 mb-1.5 block">
-                        Resurse Necesare
+                        {t('preventionPlan.labelResources')}
                       </label>
                       <textarea
                         value={measure.resources_needed}
@@ -1043,7 +1045,7 @@ export default function PreventionPlanForm({
                           })
                         }
                         rows={2}
-                        placeholder="Resurse materiale/financiare..."
+                        placeholder={t('preventionPlan.resourcesPlaceholder')}
                         className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
@@ -1052,7 +1054,7 @@ export default function PreventionPlanForm({
                     <div>
                       <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 mb-1.5">
                         <DollarSign className="w-3.5 h-3.5 text-gray-500" />
-                        Cost Estimat (RON)
+                        {t('preventionPlan.labelEstimatedCost')}
                       </label>
                       <input
                         type="number"
@@ -1071,7 +1073,7 @@ export default function PreventionPlanForm({
                     {/* Implementation Status */}
                     <div>
                       <label className="text-xs font-medium text-gray-700 mb-1.5 block">
-                        Status Implementare
+                        {t('preventionPlan.labelImplementationStatus')}
                       </label>
                       <select
                         value={measure.implementation_status}
@@ -1099,13 +1101,13 @@ export default function PreventionPlanForm({
         {/* Notes */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Observații Generale
+            {t('preventionPlan.labelNotes')}
           </label>
           <textarea
             value={formData.notes}
             onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
             rows={3}
-            placeholder="Note, observații sau informații suplimentare despre planul de prevenire..."
+            placeholder={t('preventionPlan.notesPlaceholder')}
             className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -1120,12 +1122,12 @@ export default function PreventionPlanForm({
             {loading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Salvare...
+                {t('preventionPlan.saving')}
               </>
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                {editingId ? 'Actualizare Plan' : 'Salvare Plan'}
+                {editingId ? t('preventionPlan.updatePlan') : t('preventionPlan.savePlan')}
               </>
             )}
           </button>
@@ -1138,7 +1140,7 @@ export default function PreventionPlanForm({
               className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold disabled:opacity-50 flex items-center gap-2"
             >
               <X className="w-5 h-5" />
-              Anulare
+              {t('preventionPlan.cancel')}
             </button>
           )}
         </div>

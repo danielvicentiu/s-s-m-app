@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { DataTable, type DataTableColumn } from '@/components/ui/DataTable'
 import { FormModal } from '@/components/ui/FormModal'
@@ -96,34 +97,8 @@ const emptyAppointmentForm = {
   notes: '',
 }
 
-const examTypes: Record<string, string> = {
-  periodic: 'Periodic',
-  angajare: 'Angajare',
-  reluare: 'Reluare',
-  la_cerere: 'La cerere',
-  control_periodic: 'Control periodic',
-  control_angajare: 'Control angajare',
-  fisa_aptitudine: 'Fișă aptitudine',
-  fisa_psihologica: 'Fișă psihologică',
-}
-
-const resultTypes: Record<string, string> = {
-  apt: 'Apt',
-  apt_conditionat: 'Apt condiționat',
-  inapt_temporar: 'Inapt temporar',
-  inapt: 'Inapt',
-  in_asteptare: 'În așteptare',
-}
-
-const appointmentStatuses: Record<string, string> = {
-  programat: 'Programat',
-  confirmat: 'Confirmat',
-  efectuat: 'Efectuat',
-  anulat: 'Anulat',
-  reprogramat: 'Reprogramat',
-}
-
 // ========== COMPONENT ==========
+// Note: examTypes, resultTypes, appointmentStatuses moved inside component (use t())
 
 export default function MedicalClient({
   user,
@@ -133,6 +108,34 @@ export default function MedicalClient({
   selectedOrgId,
 }: Props) {
   const router = useRouter()
+  const t = useTranslations('medical')
+
+  const examTypes: Record<string, string> = {
+    periodic: t('examType.periodic'),
+    angajare: t('examType.angajare'),
+    reluare: t('examType.reluare'),
+    la_cerere: t('examType.laCerere'),
+    control_periodic: t('examType.controlPeriodic'),
+    control_angajare: t('examType.controlAngajare'),
+    fisa_aptitudine: t('examType.fisaAptitudine'),
+    fisa_psihologica: t('examType.fisaPsihologica'),
+  }
+
+  const resultTypes: Record<string, string> = {
+    apt: t('result.apt'),
+    apt_conditionat: t('result.aptConditionat'),
+    inapt_temporar: t('result.inaptTemporar'),
+    inapt: t('result.inapt'),
+    in_asteptare: t('result.inAsteptare'),
+  }
+
+  const appointmentStatuses: Record<string, string> = {
+    programat: t('appointmentStatus.programat'),
+    confirmat: t('appointmentStatus.confirmat'),
+    efectuat: t('appointmentStatus.efectuat'),
+    anulat: t('appointmentStatus.anulat'),
+    reprogramat: t('appointmentStatus.reprogramat'),
+  }
 
   // RBAC permissions
   const canCreate = useHasPermission('medical', 'create')
@@ -181,9 +184,9 @@ export default function MedicalClient({
   function getDaysText(expiryDate: string): string {
     const expiry = new Date(expiryDate)
     const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-    if (diffDays <= 0) return `Expirat ${Math.abs(diffDays)} zile`
-    if (diffDays <= 30) return `Expiră în ${diffDays} zile`
-    return `Valid ${diffDays} zile`
+    if (diffDays <= 0) return t('daysText.expired', { days: Math.abs(diffDays) })
+    if (diffDays <= 30) return t('daysText.expiring', { days: diffDays })
+    return t('daysText.valid', { days: diffDays })
   }
 
   function fmtDate(d: string | null | undefined): string {
@@ -404,7 +407,7 @@ export default function MedicalClient({
       router.refresh()
     } catch (err) {
       console.error('[MEDICAL] Record save error:', err)
-      alert('Eroare la salvare. Verifică datele și încearcă din nou.')
+      alert(t('errors.saveRecord'))
     } finally {
       setRecordFormLoading(false)
     }
@@ -421,7 +424,7 @@ export default function MedicalClient({
       router.refresh()
     } catch (err) {
       console.error('[MEDICAL] Record delete error:', err)
-      alert('Eroare la ștergere.')
+      alert(t('errors.deleteRecord'))
     } finally {
       setDeleteRecordLoading(false)
     }
@@ -489,7 +492,7 @@ export default function MedicalClient({
       fetchAppointments()
     } catch (err) {
       console.error('[MEDICAL] Appointment save error:', err)
-      alert('Eroare la salvare programare.')
+      alert(t('errors.saveAppointment'))
     } finally {
       setAppointmentFormLoading(false)
     }
@@ -506,7 +509,7 @@ export default function MedicalClient({
       fetchAppointments()
     } catch (err) {
       console.error('[MEDICAL] Appointment delete error:', err)
-      alert('Eroare la ștergere programare.')
+      alert(t('errors.deleteAppointment'))
     } finally {
       setDeleteAppointmentLoading(false)
     }
@@ -517,7 +520,7 @@ export default function MedicalClient({
   const recordsColumns: DataTableColumn<MedicalExamination>[] = [
     {
       key: 'employee_name',
-      label: 'Angajat',
+      label: t('col.employee'),
       render: (row) => (
         <div>
           <div className="font-medium text-gray-900">{row.employee_name || '—'}</div>
@@ -527,12 +530,12 @@ export default function MedicalClient({
     },
     {
       key: 'job_title',
-      label: 'Funcție',
+      label: t('col.jobTitle'),
       render: (row) => <span className="text-sm text-gray-600">{row.job_title || '—'}</span>,
     },
     {
       key: 'examination_type',
-      label: 'Tip',
+      label: t('col.type'),
       render: (row) => (
         <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
           {examTypes[row.examination_type] || row.examination_type}
@@ -541,17 +544,17 @@ export default function MedicalClient({
     },
     {
       key: 'examination_date',
-      label: 'Data examinare',
+      label: t('col.examDate'),
       render: (row) => <span className="text-sm text-gray-600">{fmtDate(row.examination_date)}</span>,
     },
     {
       key: 'expiry_date',
-      label: 'Expiră',
+      label: t('col.expires'),
       render: (row) => <span className="text-sm text-gray-600">{fmtDate(row.expiry_date)}</span>,
     },
     {
       key: 'result',
-      label: 'Rezultat',
+      label: t('col.result'),
       render: (row) => {
         const colors: Record<string, string> = {
           apt: 'bg-green-50 text-green-700',
@@ -569,7 +572,7 @@ export default function MedicalClient({
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('col.status'),
       sortable: false,
       render: (row) => (
         <StatusBadge
@@ -612,7 +615,7 @@ export default function MedicalClient({
   const appointmentsColumns: DataTableColumn<MedicalAppointment>[] = [
     {
       key: 'appointment_date',
-      label: 'Data',
+      label: t('col.date'),
       render: (row) => (
         <div>
           <div className="font-medium text-gray-900">{fmtDate(row.appointment_date)}</div>
@@ -622,7 +625,7 @@ export default function MedicalClient({
     },
     {
       key: 'employee',
-      label: 'Angajat',
+      label: t('col.employee'),
       render: (row) => (
         <div>
           <div className="font-medium text-gray-900">{row.employees?.full_name || '—'}</div>
@@ -632,7 +635,7 @@ export default function MedicalClient({
     },
     {
       key: 'examination_type',
-      label: 'Tip',
+      label: t('col.type'),
       render: (row) => (
         <span className="text-sm text-gray-600">
           {examTypes[row.examination_type] || row.examination_type}
@@ -641,12 +644,12 @@ export default function MedicalClient({
     },
     {
       key: 'clinic_name',
-      label: 'Clinică',
+      label: t('col.clinic'),
       render: (row) => <span className="text-sm text-gray-600">{row.clinic_name || '—'}</span>,
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('col.status'),
       render: (row) => {
         const colors: Record<string, string> = {
           programat: 'bg-blue-50 text-blue-700',
@@ -696,7 +699,7 @@ export default function MedicalClient({
   const alertsColumns: DataTableColumn<AlertRecord>[] = [
     {
       key: 'employee_name',
-      label: 'Angajat',
+      label: t('col.employee'),
       render: (row) => (
         <div>
           <div className="font-medium text-gray-900">{row.full_name || row.employee_name}</div>
@@ -706,7 +709,7 @@ export default function MedicalClient({
     },
     {
       key: 'examination_type',
-      label: 'Tip',
+      label: t('col.type'),
       render: (row) => (
         <span className="text-sm text-gray-600">
           {examTypes[row.examination_type] || row.examination_type}
@@ -715,25 +718,25 @@ export default function MedicalClient({
     },
     {
       key: 'expiry_date',
-      label: 'Data expirare',
+      label: t('col.expiryDate'),
       render: (row) => <span className="text-sm text-gray-600">{fmtDate(row.expiry_date)}</span>,
     },
     {
       key: 'days_until_expiry',
-      label: 'Zile rămase',
+      label: t('col.daysLeft'),
       render: (row) => {
         const days = row.days_until_expiry || 0
         const color = days < 0 ? 'text-red-600' : days <= 30 ? 'text-orange-500' : 'text-yellow-600'
         return (
           <span className={`font-semibold ${color}`}>
-            {days < 0 ? `Expirat ${Math.abs(days)}z` : `${days}z`}
+            {days < 0 ? t('daysText.expiredShort', { days: Math.abs(days) }) : `${days}z`}
           </span>
         )
       },
     },
     {
       key: 'alert_level',
-      label: 'Prioritate',
+      label: t('col.priority'),
       render: (row) => {
         const colors: Record<string, string> = {
           expirat: 'bg-red-50 text-red-700',
@@ -743,11 +746,11 @@ export default function MedicalClient({
           nedefinit: 'bg-gray-50 text-gray-700',
         }
         const labels: Record<string, string> = {
-          expirat: 'Expirat',
-          urgent: 'Urgent',
-          atentie: 'Atenție',
-          ok: 'OK',
-          nedefinit: 'Nedefinit',
+          expirat: t('alertLevel.expirat'),
+          urgent: t('alertLevel.urgent'),
+          atentie: t('alertLevel.atentie'),
+          ok: t('alertLevel.ok'),
+          nedefinit: t('alertLevel.nedefinit'),
         }
         return (
           <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${colors[row.alert_level]}`}>
@@ -775,12 +778,12 @@ export default function MedicalClient({
             <div>
               <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <Stethoscope className="h-5 w-5 text-blue-600" />
-                Medicina Muncii
+                {t('title')}
               </h1>
               <p className="text-sm text-gray-400">
-                {activeTab === 'records' && 'Fișe de aptitudine — management complet'}
-                {activeTab === 'appointments' && 'Programări examene medicale'}
-                {activeTab === 'alerts' && 'Alerte expirare fișe medicale'}
+                {activeTab === 'records' && t('subtitle.records')}
+                {activeTab === 'appointments' && t('subtitle.appointments')}
+                {activeTab === 'alerts' && t('subtitle.alerts')}
               </p>
             </div>
           </div>
@@ -790,8 +793,8 @@ export default function MedicalClient({
               className="bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              {activeTab === 'records' && 'Adaugă fișă'}
-              {activeTab === 'appointments' && 'Programează'}
+              {activeTab === 'records' && t('btn.addRecord')}
+              {activeTab === 'appointments' && t('btn.schedule')}
             </button>
           )}
         </div>
@@ -809,7 +812,7 @@ export default function MedicalClient({
             }`}
           >
             <FileText className="h-4 w-4 inline mr-1.5" />
-            Fișe medicale
+            {t('tab.records')}
           </button>
           <button
             onClick={() => setActiveTab('appointments')}
@@ -820,7 +823,7 @@ export default function MedicalClient({
             }`}
           >
             <Calendar className="h-4 w-4 inline mr-1.5" />
-            Programări
+            {t('tab.appointments')}
           </button>
           <button
             onClick={() => setActiveTab('alerts')}
@@ -831,7 +834,7 @@ export default function MedicalClient({
             }`}
           >
             <AlertTriangle className="h-4 w-4 inline mr-1.5" />
-            Alerte
+            {t('tab.alerts')}
             {alerts.length > 0 && (
               <span className="ml-1.5 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-500 text-white">
                 {alerts.length}
@@ -846,25 +849,25 @@ export default function MedicalClient({
             <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
               <div className="text-3xl font-black text-gray-900">{recordsStats.total}</div>
               <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
-                Total fișe
+                {t('stats.totalRecords')}
               </div>
             </div>
             <div className="bg-red-50 rounded-xl border border-red-100 p-4 text-center">
               <div className="text-3xl font-black text-red-600">{recordsStats.expired}</div>
               <div className="text-xs font-semibold text-red-500 uppercase tracking-widest mt-1">
-                Expirate
+                {t('stats.expired')}
               </div>
             </div>
             <div className="bg-orange-50 rounded-xl border border-orange-100 p-4 text-center">
               <div className="text-3xl font-black text-orange-500">{recordsStats.expiring}</div>
               <div className="text-xs font-semibold text-orange-500 uppercase tracking-widest mt-1">
-                Expiră &lt;30 zile
+                {t('stats.expiring30')}
               </div>
             </div>
             <div className="bg-green-50 rounded-xl border border-green-100 p-4 text-center">
               <div className="text-3xl font-black text-green-600">{recordsStats.valid}</div>
               <div className="text-xs font-semibold text-green-600 uppercase tracking-widest mt-1">
-                Valide
+                {t('stats.valid')}
               </div>
             </div>
           </div>
@@ -875,25 +878,25 @@ export default function MedicalClient({
             <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
               <div className="text-3xl font-black text-gray-900">{appointmentsStats.total}</div>
               <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
-                Total programări
+                {t('stats.totalAppointments')}
               </div>
             </div>
             <div className="bg-blue-50 rounded-xl border border-blue-100 p-4 text-center">
               <div className="text-3xl font-black text-blue-600">{appointmentsStats.programat}</div>
               <div className="text-xs font-semibold text-blue-500 uppercase tracking-widest mt-1">
-                Programate
+                {t('stats.scheduled')}
               </div>
             </div>
             <div className="bg-green-50 rounded-xl border border-green-100 p-4 text-center">
               <div className="text-3xl font-black text-green-600">{appointmentsStats.confirmat}</div>
               <div className="text-xs font-semibold text-green-600 uppercase tracking-widest mt-1">
-                Confirmate
+                {t('stats.confirmed')}
               </div>
             </div>
             <div className="bg-gray-50 rounded-xl border border-gray-100 p-4 text-center">
               <div className="text-3xl font-black text-gray-600">{appointmentsStats.efectuat}</div>
               <div className="text-xs font-semibold text-gray-500 uppercase tracking-widest mt-1">
-                Efectuate
+                {t('stats.done')}
               </div>
             </div>
           </div>
@@ -907,7 +910,7 @@ export default function MedicalClient({
               onChange={(e) => setFilterOrg(e.target.value)}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
             >
-              <option value="all">Toate organizațiile</option>
+              <option value="all">{t('filter.allOrgs')}</option>
               {organizations.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.name} ({o.cui})
@@ -920,10 +923,10 @@ export default function MedicalClient({
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
               >
-                <option value="all">Toate statusurile</option>
-                <option value="expired">Expirate</option>
-                <option value="expiring">Expiră curând</option>
-                <option value="valid">Valide</option>
+                <option value="all">{t('filter.allStatuses')}</option>
+                <option value="expired">{t('filter.expired')}</option>
+                <option value="expiring">{t('filter.expiringSoon')}</option>
+                <option value="valid">{t('filter.valid')}</option>
               </select>
             )}
           </div>
@@ -935,16 +938,16 @@ export default function MedicalClient({
             {filteredRecords.length === 0 && medicalExams.length === 0 ? (
               <EmptyState
                 icon={Stethoscope}
-                title="Nicio fișă medicală"
-                description="Adaugă prima fișă de aptitudine pentru angajați."
-                actionLabel="+ Adaugă fișă"
+                title={t('empty.noRecords')}
+                description={t('empty.noRecordsDesc')}
+                actionLabel={t('btn.addRecord')}
                 onAction={openAddRecord}
               />
             ) : (
               <DataTable
                 columns={recordsColumns}
                 data={filteredRecords}
-                emptyMessage="Nicio fișă corespunde filtrelor selectate."
+                emptyMessage={t('empty.noRecordsFilter')}
               />
             )}
           </div>
@@ -955,21 +958,21 @@ export default function MedicalClient({
             {appointmentsLoading ? (
               <div className="p-8 text-center text-gray-500">
                 <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
-                Se încarcă programările...
+                {t('loading.appointments')}
               </div>
             ) : appointments.length === 0 ? (
               <EmptyState
                 icon={Calendar}
-                title="Nicio programare"
-                description="Programează prima examinare medicală pentru angajați."
-                actionLabel="+ Programează"
+                title={t('empty.noAppointments')}
+                description={t('empty.noAppointmentsDesc')}
+                actionLabel={t('btn.schedule')}
                 onAction={openAddAppointment}
               />
             ) : (
               <DataTable
                 columns={appointmentsColumns}
                 data={appointments}
-                emptyMessage="Nicio programare."
+                emptyMessage={t('empty.noAppointmentsFilter')}
               />
             )}
           </div>
@@ -980,13 +983,13 @@ export default function MedicalClient({
             {alertsLoading ? (
               <div className="p-8 text-center text-gray-500">
                 <Clock className="h-8 w-8 animate-spin mx-auto mb-2" />
-                Se încarcă alertele...
+                {t('loading.alerts')}
               </div>
             ) : alerts.length === 0 ? (
               <EmptyState
                 icon={AlertTriangle}
-                title="Nicio alertă"
-                description="Nu există fișe care expiră în următoarele 60 de zile."
+                title={t('empty.noAlerts')}
+                description={t('empty.noAlertsDesc')}
               />
             ) : (
               <>
@@ -994,9 +997,9 @@ export default function MedicalClient({
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-red-900">Atenție!</h3>
+                      <h3 className="font-semibold text-red-900">{t('alerts.warning')}</h3>
                       <p className="text-sm text-red-700 mt-0.5">
-                        {alerts.length} fișe medicale expiră sau sunt expirate. Contactează angajații pentru reprogramare.
+                        {t('alerts.warningMessage', { count: alerts.length })}
                       </p>
                     </div>
                   </div>
@@ -1004,7 +1007,7 @@ export default function MedicalClient({
                 <DataTable
                   columns={alertsColumns}
                   data={alerts}
-                  emptyMessage="Nicio alertă."
+                  emptyMessage={t('empty.noAlertsFilter')}
                 />
               </>
             )}
@@ -1014,7 +1017,7 @@ export default function MedicalClient({
 
       {/* ========== RECORDS FORM MODAL ========== */}
       <FormModal
-        title={editingRecordId ? 'Editează fișa medicală' : 'Adaugă fișă medicală'}
+        title={editingRecordId ? t('form.editRecord') : t('form.addRecord')}
         isOpen={showRecordForm}
         onClose={() => {
           setShowRecordForm(false)
@@ -1023,18 +1026,18 @@ export default function MedicalClient({
         }}
         onSubmit={handleRecordSubmit}
         loading={recordFormLoading}
-        submitLabel={editingRecordId ? 'Salvează modificările' : 'Adaugă fișa'}
+        submitLabel={editingRecordId ? t('form.saveChanges') : t('form.addRecordBtn')}
       >
         {/* Organizație */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Organizație *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.organization')}</label>
           <select
             value={recordForm.organization_id}
             onChange={(e) => setRecordForm((f) => ({ ...f, organization_id: e.target.value }))}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
             required
           >
-            <option value="">Selectează organizația</option>
+            <option value="">{t('form.selectOrg')}</option>
             {organizations.map((o) => (
               <option key={o.id} value={o.id}>
                 {o.name} ({o.cui})
@@ -1045,13 +1048,13 @@ export default function MedicalClient({
 
         {/* Angajat */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Angajat</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.employee')}</label>
           <select
             value={recordForm.employee_id}
             onChange={(e) => handleEmployeeSelect(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
           >
-            <option value="">Selectează sau completează manual ↓</option>
+            <option value="">{t('form.selectEmployeeManual')}</option>
             {employees
               .filter((e) => !recordForm.organization_id || e.organization_id === recordForm.organization_id)
               .map((e) => (
@@ -1065,7 +1068,7 @@ export default function MedicalClient({
         {/* Nume angajat + Funcție */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nume angajat *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.employeeName')}</label>
             <input
               type="text"
               value={recordForm.employee_name}
@@ -1076,7 +1079,7 @@ export default function MedicalClient({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Funcție</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.jobTitle')}</label>
             <input
               type="text"
               value={recordForm.job_title}
@@ -1090,7 +1093,7 @@ export default function MedicalClient({
         {/* Tip + Rezultat */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tip examinare *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.examType')}</label>
             <select
               value={recordForm.examination_type}
               onChange={(e) => setRecordForm((f) => ({ ...f, examination_type: e.target.value }))}
@@ -1104,7 +1107,7 @@ export default function MedicalClient({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Rezultat *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.result')}</label>
             <select
               value={recordForm.result}
               onChange={(e) => setRecordForm((f) => ({ ...f, result: e.target.value }))}
@@ -1122,7 +1125,7 @@ export default function MedicalClient({
         {/* Date */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Data examinare *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.examDate')}</label>
             <input
               type="date"
               value={recordForm.examination_date}
@@ -1132,7 +1135,7 @@ export default function MedicalClient({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Data expirare *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.expiryDate')}</label>
             <input
               type="date"
               value={recordForm.expiry_date}
@@ -1146,7 +1149,7 @@ export default function MedicalClient({
         {/* Doctor + Clinică */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Doctor</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.doctor')}</label>
             <input
               type="text"
               value={recordForm.doctor_name}
@@ -1156,7 +1159,7 @@ export default function MedicalClient({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Clinică</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.clinic')}</label>
             <input
               type="text"
               value={recordForm.clinic_name}
@@ -1169,7 +1172,7 @@ export default function MedicalClient({
 
         {/* Restricții */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Restricții</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.restrictions')}</label>
           <input
             type="text"
             value={recordForm.restrictions}
@@ -1181,12 +1184,12 @@ export default function MedicalClient({
 
         {/* M3 NEW FIELDS */}
         <div className="border-t border-gray-200 pt-3">
-          <div className="text-sm font-semibold text-gray-700 mb-2">Detalii suplimentare (M3)</div>
+          <div className="text-sm font-semibold text-gray-700 mb-2">{t('form.extraDetails')}</div>
 
           {/* Factori risc */}
           <div className="mb-3">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Factori de risc (separați prin virgulă)
+              {t('form.riskFactors')}
             </label>
             <input
               type="text"
@@ -1200,7 +1203,7 @@ export default function MedicalClient({
           {/* Document number + Validitate */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nr. document</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.documentNumber')}</label>
               <input
                 type="text"
                 value={recordForm.document_number}
@@ -1210,7 +1213,7 @@ export default function MedicalClient({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Validitate (luni)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.validityMonths')}</label>
               <input
                 type="number"
                 value={recordForm.validity_months}
@@ -1226,7 +1229,7 @@ export default function MedicalClient({
 
         {/* Note */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Observații</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.notes')}</label>
           <textarea
             value={recordForm.notes}
             onChange={(e) => setRecordForm((f) => ({ ...f, notes: e.target.value }))}
@@ -1239,7 +1242,7 @@ export default function MedicalClient({
 
       {/* ========== APPOINTMENTS FORM MODAL ========== */}
       <FormModal
-        title={editingAppointmentId ? 'Editează programarea' : 'Programează examen'}
+        title={editingAppointmentId ? t('form.editAppointment') : t('form.scheduleExam')}
         isOpen={showAppointmentForm}
         onClose={() => {
           setShowAppointmentForm(false)
@@ -1248,18 +1251,18 @@ export default function MedicalClient({
         }}
         onSubmit={handleAppointmentSubmit}
         loading={appointmentFormLoading}
-        submitLabel={editingAppointmentId ? 'Salvează' : 'Programează'}
+        submitLabel={editingAppointmentId ? t('form.save') : t('btn.schedule')}
       >
         {/* Organizație */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Organizație *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.organization')}</label>
           <select
             value={appointmentForm.organization_id}
             onChange={(e) => setAppointmentForm((f) => ({ ...f, organization_id: e.target.value }))}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
             required
           >
-            <option value="">Selectează organizația</option>
+            <option value="">{t('form.selectOrg')}</option>
             {organizations.map((o) => (
               <option key={o.id} value={o.id}>
                 {o.name} ({o.cui})
@@ -1270,14 +1273,14 @@ export default function MedicalClient({
 
         {/* Angajat */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Angajat *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.employee')}</label>
           <select
             value={appointmentForm.employee_id}
             onChange={(e) => setAppointmentForm((f) => ({ ...f, employee_id: e.target.value }))}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-800"
             required
           >
-            <option value="">Selectează angajatul</option>
+            <option value="">{t('form.selectEmployee')}</option>
             {employees
               .filter((e) => !appointmentForm.organization_id || e.organization_id === appointmentForm.organization_id)
               .map((e) => (
@@ -1291,7 +1294,7 @@ export default function MedicalClient({
         {/* Data + Ora */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Data *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.date')}</label>
             <input
               type="date"
               value={appointmentForm.appointment_date}
@@ -1301,7 +1304,7 @@ export default function MedicalClient({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ora</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.time')}</label>
             <input
               type="time"
               value={appointmentForm.appointment_time}
@@ -1314,7 +1317,7 @@ export default function MedicalClient({
         {/* Tip + Status */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tip examinare *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.examType')}</label>
             <select
               value={appointmentForm.examination_type}
               onChange={(e) => setAppointmentForm((f) => ({ ...f, examination_type: e.target.value }))}
@@ -1328,7 +1331,7 @@ export default function MedicalClient({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('col.status')}</label>
             <select
               value={appointmentForm.status}
               onChange={(e) => setAppointmentForm((f) => ({ ...f, status: e.target.value }))}
@@ -1345,7 +1348,7 @@ export default function MedicalClient({
 
         {/* Clinică + Adresă */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Clinică</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.clinic')}</label>
           <input
             type="text"
             value={appointmentForm.clinic_name}
@@ -1355,7 +1358,7 @@ export default function MedicalClient({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Adresă clinică</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.clinicAddress')}</label>
           <input
             type="text"
             value={appointmentForm.clinic_address}
@@ -1367,7 +1370,7 @@ export default function MedicalClient({
 
         {/* Note */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Observații</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('form.notes')}</label>
           <textarea
             value={appointmentForm.notes}
             onChange={(e) => setAppointmentForm((f) => ({ ...f, notes: e.target.value }))}
@@ -1380,9 +1383,9 @@ export default function MedicalClient({
 
       {/* ========== DELETE RECORD CONFIRM ========== */}
       <ConfirmDialog
-        title="Șterge fișa medicală"
-        message={`Sigur vrei să ștergi fișa pentru "${deleteRecordTarget?.employee_name || ''}"? Acțiunea este ireversibilă.`}
-        confirmLabel="Șterge definitiv"
+        title={t('confirm.deleteRecord')}
+        message={t('confirm.deleteRecordMsg', { name: deleteRecordTarget?.employee_name || '' })}
+        confirmLabel={t('confirm.deleteForever')}
         isOpen={deleteRecordTarget !== null}
         onConfirm={handleRecordDelete}
         onCancel={() => setDeleteRecordTarget(null)}
@@ -1392,9 +1395,9 @@ export default function MedicalClient({
 
       {/* ========== DELETE APPOINTMENT CONFIRM ========== */}
       <ConfirmDialog
-        title="Șterge programarea"
-        message="Sigur vrei să ștergi această programare? Acțiunea este ireversibilă."
-        confirmLabel="Șterge"
+        title={t('confirm.deleteAppointment')}
+        message={t('confirm.deleteAppointmentMsg')}
+        confirmLabel={t('confirm.delete')}
         isOpen={deleteAppointmentTarget !== null}
         onConfirm={handleAppointmentDelete}
         onCancel={() => setDeleteAppointmentTarget(null)}

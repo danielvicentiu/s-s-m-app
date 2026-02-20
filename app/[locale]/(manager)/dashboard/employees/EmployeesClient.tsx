@@ -4,6 +4,7 @@
 // Lista angajaților cu search, filtre, sortare și paginare
 
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import {
   Search,
@@ -48,6 +49,7 @@ export default function EmployeesClient({
   initialOrgId,
   organizations,
 }: EmployeesClientProps) {
+  const t = useTranslations('employees')
   const router = useRouter()
   const supabase = createSupabaseBrowser()
 
@@ -177,7 +179,7 @@ export default function EmployeesClient({
   const columns: DataTableColumn<Employee>[] = [
     {
       key: 'full_name',
-      label: 'Nume complet',
+      label: t('colFullName'),
       sortable: true,
       render: (row) => (
         <span className="font-medium text-gray-900">{row.full_name}</span>
@@ -185,7 +187,7 @@ export default function EmployeesClient({
     },
     {
       key: 'job_title',
-      label: 'Funcție',
+      label: t('colJobTitle'),
       sortable: true,
       render: (row) => (
         <span className="text-gray-700">{row.job_title || '—'}</span>
@@ -193,7 +195,7 @@ export default function EmployeesClient({
     },
     {
       key: 'department',
-      label: 'Departament',
+      label: t('colDepartment'),
       sortable: true,
       render: (row) => (
         <span className="text-gray-700">{row.department || '—'}</span>
@@ -202,6 +204,7 @@ export default function EmployeesClient({
     {
       key: 'cor_code',
       label: 'COR',
+      // COR is a technical code, kept as-is
       sortable: true,
       render: (row) => (
         <span className="font-mono text-xs text-gray-600">{row.cor_code || '—'}</span>
@@ -209,7 +212,7 @@ export default function EmployeesClient({
     },
     {
       key: 'hire_date',
-      label: 'Data angajării',
+      label: t('colHireDate'),
       sortable: true,
       render: (row) => (
         <span className="text-gray-700 text-sm">{formatDate(row.hire_date)}</span>
@@ -217,41 +220,42 @@ export default function EmployeesClient({
     },
     {
       key: 'is_active',
-      label: 'Status',
+      label: t('colStatus'),
       sortable: true,
       render: (row) =>
         row.is_active ? (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-            Activ
+            {t('statusActive')}
           </span>
         ) : (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-100 text-red-800 text-xs font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-            Inactiv
+            {t('statusInactive')}
           </span>
         ),
     },
     {
       key: 'cnp_hash',
       label: 'CNP',
+      // CNP is a technical identifier kept as-is
       sortable: false,
       render: (row) =>
         row.cnp_hash ? (
           <span className="inline-flex items-center gap-1 text-green-700 text-xs font-medium">
             <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
-            CNP înregistrat
+            {t('cnpRegistered')}
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 text-amber-700 text-xs font-medium">
             <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
-            Lipsă CNP
+            {t('cnpMissing')}
           </span>
         ),
     },
     {
       key: 'phone',
-      label: 'Telefon',
+      label: t('colPhone'),
       sortable: false,
       render: (row) => (
         <span className="text-gray-700 text-sm">{row.phone || '—'}</span>
@@ -260,6 +264,7 @@ export default function EmployeesClient({
     {
       key: 'email',
       label: 'Email',
+      // Email kept as-is
       sortable: false,
       render: (row) =>
         row.email ? (
@@ -296,7 +301,7 @@ export default function EmployeesClient({
             <div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                 <Users className="h-7 w-7 text-blue-600" />
-                Angajați
+                {t('pageTitle')}
               </h1>
               {selectedOrgName && (
                 <p className="text-sm text-gray-500 mt-1">{selectedOrgName}</p>
@@ -328,7 +333,7 @@ export default function EmployeesClient({
                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-800 text-white text-sm font-medium rounded-lg hover:bg-blue-900 transition-colors"
               >
                 <Upload className="h-4 w-4" />
-                Import angajați
+                {t('importEmployees')}
               </button>
             </div>
           </div>
@@ -342,7 +347,7 @@ export default function EmployeesClient({
             {/* Search */}
             <div className="sm:col-span-1">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Caută angajat
+                {t('searchEmployee')}
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -350,7 +355,7 @@ export default function EmployeesClient({
                   type="text"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Nume, funcție, departament..."
+                  placeholder={t('searchPlaceholder')}
                   className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -359,30 +364,30 @@ export default function EmployeesClient({
             {/* Filtru status */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Status
+                {t('filterStatus')}
               </label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Toți</option>
-                <option value="active">Activi</option>
-                <option value="inactive">Inactivi</option>
+                <option value="all">{t('statusAll')}</option>
+                <option value="active">{t('statusActiveFilter')}</option>
+                <option value="inactive">{t('statusInactiveFilter')}</option>
               </select>
             </div>
 
             {/* Filtru departament */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Departament
+                {t('filterDepartment')}
               </label>
               <select
                 value={departmentFilter}
                 onChange={(e) => setDepartmentFilter(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Toate departamentele</option>
+                <option value="all">{t('allDepartments')}</option>
                 {departments.map((dept) => (
                   <option key={dept} value={dept}>
                     {dept}
@@ -400,8 +405,8 @@ export default function EmployeesClient({
         {!loading && (
           <div className="mb-4 text-sm text-gray-600">
             {totalCount === 0
-              ? 'Niciun angajat găsit'
-              : `${totalCount} ${totalCount === 1 ? 'angajat' : 'angajați'}`}
+              ? t('noEmployeesFound')
+              : `${totalCount} ${totalCount === 1 ? t('employeeSingular') : t('employeePlural')}`}
           </div>
         )}
 
@@ -410,18 +415,17 @@ export default function EmployeesClient({
           <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
             <Users className="h-16 w-16 text-gray-300 mx-auto mb-6" />
             <h3 className="text-xl font-semibold text-gray-900 mb-3">
-              Nu ai angajați încă
+              {t('emptyTitle')}
             </h3>
             <p className="text-gray-600 max-w-md mx-auto mb-6">
-              Importă angajații din REGES sau adaugă-i manual pentru a gestiona
-              documentația SSM/PSI.
+              {t('emptyDesc')}
             </p>
             <button
               onClick={() => router.push('/dashboard/import')}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-800 text-white text-sm font-medium rounded-lg hover:bg-blue-900 transition-colors"
             >
               <Upload className="h-4 w-4" />
-              Importă din REGES
+              {t('importFromReges')}
             </button>
           </div>
         ) : (
@@ -430,8 +434,8 @@ export default function EmployeesClient({
               columns={columns}
               data={employees}
               loading={loading}
-              emptyMessage="Niciun angajat găsit"
-              emptyDescription="Încearcă să modifici filtrele sau termenul de căutare."
+              emptyMessage={t('noEmployeesFound')}
+              emptyDescription={t('tryModifyFilters')}
               pagination={totalPages > 1 ? pagination : undefined}
               sort={sort}
               onSort={handleSort}

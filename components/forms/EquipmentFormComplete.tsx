@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { Package, Calendar, FileText, AlertCircle, CheckCircle2, Plus, Trash2, UserCheck } from 'lucide-react'
 
@@ -51,6 +52,7 @@ export default function EquipmentFormComplete({
   onCancel,
   organizationId,
 }: Props) {
+  const t = useTranslations('forms')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -74,7 +76,7 @@ export default function EquipmentFormComplete({
   // Add equipment item to list
   const handleAddItem = () => {
     if (!selectedEquipmentId) {
-      setError('Selectează un echipament')
+      setError(t('equipment.errorSelectEquipment'))
       return
     }
 
@@ -84,7 +86,7 @@ export default function EquipmentFormComplete({
     // Check if already added
     const exists = items.find((item) => item.equipmentTypeId === selectedEquipmentId)
     if (exists) {
-      setError('Echipamentul este deja adăugat în listă')
+      setError(t('equipment.errorAlreadyAdded'))
       return
     }
 
@@ -126,17 +128,17 @@ export default function EquipmentFormComplete({
 
     // Validation
     if (!employeeId) {
-      setError('Selectează un angajat')
+      setError(t('equipment.errorSelectEmployee'))
       return
     }
 
     if (items.length === 0) {
-      setError('Adaugă cel puțin un echipament')
+      setError(t('equipment.errorAddAtLeastOne'))
       return
     }
 
     if (!assignmentDate) {
-      setError('Introdu data atribuirii')
+      setError(t('equipment.errorEnterDate'))
       return
     }
 
@@ -153,7 +155,7 @@ export default function EquipmentFormComplete({
         .single()
 
       if (employeeError) throw employeeError
-      if (!employee) throw new Error('Angajat negăsit')
+      if (!employee) throw new Error(t('equipment.errorEmployeeNotFound'))
 
       // Prepare records for employee_equipment junction table
       // Note: This assumes the table exists. If it doesn't, we'll create the migration separately
@@ -178,9 +180,7 @@ export default function EquipmentFormComplete({
       if (insertError) {
         // If table doesn't exist, provide helpful error
         if (insertError.code === '42P01') {
-          throw new Error(
-            'Tabela employee_equipment nu există. Rulează migrarea SQL pentru a o crea.'
-          )
+          throw new Error(t('equipment.errorTableMissing'))
         }
         throw insertError
       }
@@ -195,7 +195,7 @@ export default function EquipmentFormComplete({
       }, 1500)
     } catch (err: any) {
       console.error('Error submitting equipment assignment:', err)
-      setError(err.message || 'Eroare la salvare')
+      setError(err.message || t('equipment.errorSave'))
     } finally {
       setIsSubmitting(false)
     }
@@ -211,10 +211,10 @@ export default function EquipmentFormComplete({
         </div>
         <div>
           <h2 className="text-xl font-semibold text-gray-900">
-            Atribuire Echipamente Individuale de Protecție (EIP)
+            {t('equipment.title')}
           </h2>
           <p className="text-sm text-gray-500">
-            Completează datele pentru fișa de dotare EIP
+            {t('equipment.subtitle')}
           </p>
         </div>
       </div>
@@ -224,8 +224,8 @@ export default function EquipmentFormComplete({
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
           <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
           <div>
-            <p className="text-sm font-medium text-green-900">Atribuire salvată cu succes!</p>
-            <p className="text-sm text-green-700">Fișa EIP a fost generată automat.</p>
+            <p className="text-sm font-medium text-green-900">{t('equipment.successTitle')}</p>
+            <p className="text-sm text-green-700">{t('equipment.successDesc')}</p>
           </div>
         </div>
       )}
@@ -243,7 +243,7 @@ export default function EquipmentFormComplete({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <UserCheck className="w-4 h-4 inline mr-1" />
-            Angajat *
+            {t('equipment.labelEmployee')} *
           </label>
           <select
             value={employeeId}
@@ -251,7 +251,7 @@ export default function EquipmentFormComplete({
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
           >
-            <option value="">Selectează angajatul</option>
+            <option value="">{t('equipment.selectEmployee')}</option>
             {employees.map((emp) => (
               <option key={emp.id} value={emp.id}>
                 {emp.full_name} {emp.job_title ? `— ${emp.job_title}` : ''}
@@ -264,7 +264,7 @@ export default function EquipmentFormComplete({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Calendar className="w-4 h-4 inline mr-1" />
-            Data Atribuirii *
+            {t('equipment.labelDate')} *
           </label>
           <input
             type="date"
@@ -279,7 +279,7 @@ export default function EquipmentFormComplete({
         <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
           <label className="block text-sm font-medium text-gray-700 mb-3">
             <Package className="w-4 h-4 inline mr-1" />
-            Echipamente *
+            {t('equipment.labelEquipment')} *
           </label>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
@@ -289,7 +289,7 @@ export default function EquipmentFormComplete({
                 onChange={(e) => setSelectedEquipmentId(e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
               >
-                <option value="">Selectează echipament</option>
+                <option value="">{t('equipment.selectEquipment')}</option>
                 {ppeEquipmentTypes.map((et) => (
                   <option key={et.id} value={et.id}>
                     {et.name} {et.description ? `(${et.description})` : ''}
@@ -304,7 +304,7 @@ export default function EquipmentFormComplete({
                 min="1"
                 value={quantity}
                 onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                placeholder="Cantitate"
+                placeholder={t('equipment.quantityPlaceholder')}
                 className="w-24 px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <button
@@ -313,7 +313,7 @@ export default function EquipmentFormComplete({
                 className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />
-                Adaugă
+                {t('equipment.add')}
               </button>
             </div>
           </div>
@@ -322,7 +322,7 @@ export default function EquipmentFormComplete({
           {items.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-medium text-gray-700 mb-2">
-                Echipamente adăugate ({items.length}):
+                {t('equipment.addedCount', { count: items.length })}
               </p>
               {items.map((item) => (
                 <div
@@ -361,7 +361,7 @@ export default function EquipmentFormComplete({
                       type="button"
                       onClick={() => handleRemoveItem(item.equipmentTypeId)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Șterge"
+                      title={t('equipment.remove')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -374,7 +374,7 @@ export default function EquipmentFormComplete({
           {items.length === 0 && (
             <div className="text-center py-8 text-gray-400 text-sm">
               <Package className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p>Niciun echipament adăugat încă</p>
+              <p>{t('equipment.noEquipmentYet')}</p>
             </div>
           )}
         </div>
@@ -389,9 +389,9 @@ export default function EquipmentFormComplete({
               className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
             />
             <div>
-              <p className="text-sm font-medium text-gray-900">Semnătură digitală</p>
+              <p className="text-sm font-medium text-gray-900">{t('equipment.digitalSignature')}</p>
               <p className="text-xs text-gray-500">
-                Angajatul confirmă primirea echipamentelor (placeholder — integrare viitoare)
+                {t('equipment.digitalSignatureDesc')}
               </p>
             </div>
           </label>
@@ -401,13 +401,13 @@ export default function EquipmentFormComplete({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <FileText className="w-4 h-4 inline mr-1" />
-            Observații
+            {t('equipment.labelNotes')}
           </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
-            placeholder="Observații suplimentare (opțional)"
+            placeholder={t('equipment.notesPlaceholder')}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
           />
         </div>
@@ -421,7 +421,7 @@ export default function EquipmentFormComplete({
               disabled={isSubmitting}
               className="flex-1 px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
             >
-              Anulează
+              {t('equipment.cancel')}
             </button>
           )}
           <button
@@ -432,12 +432,12 @@ export default function EquipmentFormComplete({
             {isSubmitting ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Se salvează...
+                {t('equipment.saving')}
               </>
             ) : (
               <>
                 <CheckCircle2 className="w-5 h-5" />
-                Salvează și Generează Fișă EIP
+                {t('equipment.saveAndGenerate')}
               </>
             )}
           </button>
@@ -447,8 +447,7 @@ export default function EquipmentFormComplete({
       {/* Info Note */}
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-900">
-          <strong>Notă:</strong> După salvare, fișa EIP va fi generată automat în format PDF,
-          conform legislației SSM în vigoare. Documentul va fi disponibil în secțiunea Documente.
+          <strong>{t('equipment.noteLabel')}:</strong> {t('equipment.noteText')}
         </p>
       </div>
     </div>

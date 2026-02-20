@@ -6,6 +6,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import {
   Upload,
@@ -53,24 +54,6 @@ interface ImportRow {
   data: Record<string, any>
   validation: ValidationResult
 }
-
-// Employee field definitions
-const EMPLOYEE_FIELDS = [
-  { field: 'first_name', label: 'Prenume', required: true },
-  { field: 'last_name', label: 'Nume', required: true },
-  { field: 'cnp', label: 'CNP', required: false },
-  { field: 'job_title', label: 'Funcție', required: false },
-  { field: 'department', label: 'Departament', required: false },
-  { field: 'hire_date', label: 'Data angajării', required: false },
-  { field: 'contract_end_date', label: 'Data sfârșit contract', required: false },
-  { field: 'email', label: 'Email', required: false },
-  { field: 'phone', label: 'Telefon', required: false },
-  { field: 'cor_code', label: 'Cod COR', required: false },
-  { field: 'cor_title', label: 'Denumire COR', required: false },
-  { field: 'contract_number', label: 'Nr. contract', required: false },
-  { field: 'contract_type', label: 'Tip contract', required: false },
-  { field: 'status', label: 'Status', required: false },
-]
 
 // REGES Salariați profile (24 columns - employee personal data)
 const REGES_SALARIATI_PROFILE = {
@@ -375,7 +358,26 @@ async function hashCNP(cnp: string): Promise<string> {
 
 export default function ImportWizardClient({ user, organizations, selectedOrgId, locale }: Props) {
   const router = useRouter()
+  const t = useTranslations('importWizard')
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Employee field definitions — inside component to use t()
+  const EMPLOYEE_FIELDS = [
+    { field: 'first_name', label: t('fields.firstName'), required: true },
+    { field: 'last_name', label: t('fields.lastName'), required: true },
+    { field: 'cnp', label: 'CNP', required: false },
+    { field: 'job_title', label: t('fields.jobTitle'), required: false },
+    { field: 'department', label: t('fields.department'), required: false },
+    { field: 'hire_date', label: t('fields.hireDate'), required: false },
+    { field: 'contract_end_date', label: t('fields.contractEndDate'), required: false },
+    { field: 'email', label: 'Email', required: false },
+    { field: 'phone', label: t('fields.phone'), required: false },
+    { field: 'cor_code', label: t('fields.corCode'), required: false },
+    { field: 'cor_title', label: t('fields.corTitle'), required: false },
+    { field: 'contract_number', label: t('fields.contractNumber'), required: false },
+    { field: 'contract_type', label: t('fields.contractType'), required: false },
+    { field: 'status', label: t('fields.status'), required: false },
+  ]
 
   // State
   const [step, setStep] = useState(1)
@@ -451,7 +453,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
     }
 
     return mappings
-  }, [])
+  }, [EMPLOYEE_FIELDS])
 
   // Validate row
   const validateRow = useCallback(
@@ -461,24 +463,24 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
       // Required: first_name
       if (!rowData.first_name || rowData.first_name.toString().trim().length < 2) {
-        errors.push('Prenume obligatoriu (min 2 caractere)')
+        errors.push(t('validation.firstNameRequired'))
       }
 
       // Required: last_name
       if (!rowData.last_name || rowData.last_name.toString().trim().length < 2) {
-        errors.push('Nume obligatoriu (min 2 caractere)')
+        errors.push(t('validation.lastNameRequired'))
       }
 
       // Optional: CNP validation (warning only, cnp_hash can be null)
       if (rowData.cnp) {
         const cnpValidation = validateCNP(rowData.cnp.toString().trim())
         if (!cnpValidation.valid) {
-          warnings.push(cnpValidation.error || 'CNP invalid')
+          warnings.push(cnpValidation.error || t('validation.cnpInvalid'))
         }
 
         // Check for duplicates in this import batch
         if (existingCNPs.has(rowData.cnp.toString().trim())) {
-          warnings.push('CNP duplicat în fișier')
+          warnings.push(t('validation.cnpDuplicate'))
         }
 
         // Check for existing in database by cnp_hash
@@ -493,7 +495,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
             .maybeSingle()
 
           if (existing) {
-            warnings.push('CNP există deja în organizație (va fi actualizat)')
+            warnings.push(t('validation.cnpExistsInOrg'))
           }
         } catch (e) {
           console.error('Error checking cnp_hash in DB:', e)
@@ -502,20 +504,20 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
       // Optional: email validation
       if (rowData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rowData.email)) {
-        warnings.push('Format email invalid')
+        warnings.push(t('validation.emailInvalid'))
       }
 
       // Optional: hire_date parsing
       if (rowData.hire_date) {
         const parsedDate = parseDate(rowData.hire_date)
         if (!parsedDate) {
-          warnings.push('Format dată angajare invalid')
+          warnings.push(t('validation.hireDateInvalid'))
         }
       }
 
       // Optional: COR code format
       if (rowData.cor_code && !/^\d{6}$/.test(rowData.cor_code.toString().trim())) {
-        warnings.push('Cod COR ar trebui să aibă 6 cifre')
+        warnings.push(t('validation.corCodeFormat'))
       }
 
       return {
@@ -524,7 +526,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
         warnings,
       }
     },
-    [selectedOrgId]
+    [selectedOrgId, t]
   )
 
   // Handle file upload via input
@@ -682,7 +684,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       }
 
       if (jsonData.length === 0) {
-        alert('Fișierul este gol sau nu conține date valide')
+        alert(t('errors.emptyFile'))
         return
       }
 
@@ -694,7 +696,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       setStep(2)
     } catch (error) {
       console.error('Error reading file:', error)
-      alert('Eroare la citirea fișierului. Verificați formatul.')
+      alert(t('errors.readError'))
     }
   }
 
@@ -927,9 +929,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       <header className="bg-white dark:bg-gray-800 px-8 py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-black text-gray-900 dark:text-white">Import Angajați</h1>
+            <h1 className="text-2xl font-black text-gray-900 dark:text-white">{t('header.title')}</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {organizations.find((o) => o.id === selectedOrgId)?.name || 'Organizație'}
+              {organizations.find((o) => o.id === selectedOrgId)?.name || t('header.organization')}
             </p>
           </div>
           <button
@@ -937,7 +939,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
             className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Dashboard</span>
+            <span>{t('header.dashboard')}</span>
           </button>
         </div>
       </header>
@@ -966,9 +968,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           {/* STEP 1: Upload */}
           {step === 1 && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Pas 1: Încarcă fișierul</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t('step1.title')}</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                Acceptăm CSV, Excel (XLSX/XLS), ODS, JSON și XML (REVISAL). Auto-detectăm encoding și format.
+                {t('step1.description')}
               </p>
 
               {/* Drag & Drop Zone */}
@@ -985,10 +987,10 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
               >
                 <Upload className="h-16 w-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
                 <p className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  Trage fișierul aici sau selectează
+                  {t('step1.dropZoneTitle')}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  CSV, XLSX, XLS, ODS, JSON, XML (max 10 MB)
+                  {t('step1.dropZoneFormats')}
                 </p>
                 <input
                   ref={fileInputRef}
@@ -1001,7 +1003,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   onClick={() => fileInputRef.current?.click()}
                   className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition"
                 >
-                  Selectează fișier
+                  {t('step1.selectFile')}
                 </button>
               </div>
 
@@ -1011,7 +1013,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{file.name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {(file.size / 1024).toFixed(1)} KB · {rawData.length} rânduri detectate · Header pe rândul {headerRow}
+                      {(file.size / 1024).toFixed(1)} KB · {t('step1.rowsDetected', { count: rawData.length })} · {t('step1.headerOnRow', { row: headerRow })}
                     </p>
                   </div>
                   <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
@@ -1021,7 +1023,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
               {rawData.length > 0 && (
                 <div className="mt-6">
                   <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                    Preview primele 5 rânduri:
+                    {t('step1.previewTitle')}
                   </p>
                   <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
                     <table className="w-full text-sm">
@@ -1059,15 +1061,15 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           {step === 2 && (
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Pas 2: Selectează profilul de import
+                {t('step2.title')}
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                Alege sursa datelor pentru mapare automată, sau creează o mapare personalizată.
+                {t('step2.description')}
               </p>
               <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                <p className="text-sm text-gray-900 dark:text-white">
-                  <strong>REGES Online</strong> este singurul registru oficial din 2025. Exportați din <strong>Utile → Export entitate</strong>.
-                </p>
+                <p className="text-sm text-gray-900 dark:text-white"
+                  dangerouslySetInnerHTML={{ __html: t('step2.regesNote') }}
+                />
               </div>
 
               <div className="space-y-4">
@@ -1086,10 +1088,10 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                        REGES Salariați
+                        {t('step2.regesSalariatiTitle')}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        Export date personale angajați din REGES Online. 24 coloane - date personale, adresă, handicap, autorizații.
+                        {t('step2.regesSalariatiDesc')}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-500">
                         {REGES_SALARIATI_PROFILE.description}
@@ -1113,9 +1115,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       <FileSpreadsheet className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">REGES Contracte</h3>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{t('step2.regesContracteTitle')}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        Export contracte de muncă din REGES Online. 47 coloane - contracte active sau încetate, salarizare, program, COR, L153.
+                        {t('step2.regesContracteDesc')}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-500">
                         {REGES_CONTRACTE_PROFILE.description}
@@ -1139,10 +1141,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       <Sparkles className="h-6 w-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Mapare manuală</h3>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{t('step2.manualTitle')}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Creează o mapare personalizată. Auto-detectăm câmpurile comune, dar poți ajusta manual fiecare
-                        coloană.
+                        {t('step2.manualDesc')}
                       </p>
                     </div>
                     {profile === 'manual' && <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />}
@@ -1156,7 +1157,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  Înapoi
+                  {t('nav.back')}
                 </button>
               </div>
             </div>
@@ -1165,9 +1166,9 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           {/* STEP 3: Column Mapping (Manual only) */}
           {step === 3 && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Pas 3: Mapare coloane</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t('step3.title')}</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                Am detectat automat câteva coloane. Verifică și ajustează dacă e necesar.
+                {t('step3.description')}
               </p>
 
               <div className="space-y-4">
@@ -1191,7 +1192,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                               : 'border-gray-300 dark:border-gray-600'
                           } bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-600`}
                         >
-                          <option value="">— Ignoră —</option>
+                          <option value="">{t('step3.ignoreOption')}</option>
                           {columns.map((col) => (
                             <option key={col} value={col}>
                               {col}
@@ -1206,7 +1207,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
 
               <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
                 <p className="text-sm text-gray-900 dark:text-white">
-                  <strong>Preview mapping:</strong> Primele 3 rânduri din fișier
+                  <strong>{t('step3.previewLabel')}</strong> {t('step3.previewDesc')}
                 </p>
                 <div className="mt-4 space-y-2">
                   {rawData.slice(0, 3).map((row, idx) => (
@@ -1229,14 +1230,14 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  Înapoi
+                  {t('nav.back')}
                 </button>
                 <button
                   onClick={() => handleMappingComplete()}
                   disabled={mappings.filter((m) => m.required && !m.sourceColumn).length > 0}
                   className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center gap-2"
                 >
-                  Validează date
+                  {t('step3.validateButton')}
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -1246,29 +1247,29 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           {/* STEP 4: Validation & Preview */}
           {step === 4 && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Pas 4: Validare & Preview</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{t('step4.title')}</h2>
 
               {/* Summary Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Rânduri detectate</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{t('step4.statsDetected')}</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">{importRows.length}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Header pe rândul {headerRow}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{t('step1.headerOnRow', { row: headerRow })}</p>
                 </div>
                 <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Valide</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{t('step4.statsValid')}</p>
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                     {importRows.filter((r) => r.validation.valid).length}
                   </p>
                 </div>
                 <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Avertizări</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{t('step4.statsWarnings')}</p>
                   <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                     {importRows.filter((r) => r.validation.warnings.length > 0).length}
                   </p>
                 </div>
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Erori</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{t('step4.statsErrors')}</p>
                   <p className="text-2xl font-bold text-red-600 dark:text-red-400">
                     {importRows.filter((r) => !r.validation.valid).length}
                   </p>
@@ -1279,7 +1280,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
               {(profile === 'reges-salariati' || profile === 'reges-contracte') && (
                 <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
                   <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                    Mapare automată
+                    {t('step4.autoMapping')}
                   </p>
                   <div className="flex items-center gap-4">
                     <div className="flex-1">
@@ -1293,7 +1294,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       </div>
                     </div>
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {mappings.filter((m) => m.sourceColumn && m.sourceColumn !== '').length} / {mappings.length} coloane
+                      {t('step4.mappingCount', { mapped: mappings.filter((m) => m.sourceColumn && m.sourceColumn !== '').length, total: mappings.length })}
                     </p>
                   </div>
                 </div>
@@ -1302,7 +1303,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
               {/* Preview First 5 Rows */}
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                  Preview primele 5 rânduri
+                  {t('step4.previewTitle')}
                 </h3>
                 <div className="max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
                   <table className="w-full text-sm">
@@ -1312,19 +1313,19 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                           #
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          Prenume
+                          {t('fields.firstName')}
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          Nume
+                          {t('fields.lastName')}
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
                           CNP
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          Funcție
+                          {t('fields.jobTitle')}
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          Status
+                          {t('fields.status')}
                         </th>
                       </tr>
                     </thead>
@@ -1385,7 +1386,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-                    Lista completă validare ({importRows.length} rânduri)
+                    {t('step4.validationList', { count: importRows.length })}
                   </h3>
                   <button
                     onClick={() => {
@@ -1397,7 +1398,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                     }}
                     className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
-                    {selectedRows.size === importRows.length ? 'Deselectează tot' : 'Selectează tot'}
+                    {selectedRows.size === importRows.length ? t('step4.deselectAll') : t('step4.selectAll')}
                   </button>
                 </div>
                 <div className="max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
@@ -1425,13 +1426,13 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                           #
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          Nume Complet
+                          {t('step4.colFullName')}
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
                           CNP
                         </th>
                         <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          Status
+                          {t('fields.status')}
                         </th>
                       </tr>
                     </thead>
@@ -1513,7 +1514,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                     className="px-6 py-3 rounded-lg text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2"
                   >
                     <ArrowLeft className="h-4 w-4" />
-                    Înapoi
+                    {t('nav.back')}
                   </button>
                   <button
                     onClick={() => {
@@ -1529,7 +1530,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                     className="px-6 py-3 rounded-lg text-sm font-semibold border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition flex items-center gap-2"
                   >
                     <RefreshCw className="h-4 w-4" />
-                    Import nou
+                    {t('nav.newImport')}
                   </button>
                 </div>
                 <button
@@ -1537,7 +1538,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   disabled={selectedRows.size === 0}
                   className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center gap-2"
                 >
-                  Importă {selectedRows.size} angajați
+                  {t('step4.importButton', { count: selectedRows.size })}
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -1548,7 +1549,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
           {step === 5 && (
             <div className="text-center">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                {importing ? 'Import în curs...' : 'Import finalizat'}
+                {importing ? t('step5.importing') : t('step5.done')}
               </h2>
 
               {importing ? (
@@ -1561,7 +1562,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                     />
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {importStats.success} / {importStats.total} importați
+                    {t('step5.progressLabel', { success: importStats.success, total: importStats.total })}
                   </p>
                 </>
               ) : (
@@ -1569,15 +1570,15 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                   <CheckCircle className="h-16 w-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
                   <div className="mb-6">
                     <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                      ✅ {importStats.success} importați cu succes
+                      {t('step5.successCount', { count: importStats.success })}
                     </p>
                     {importStats.failed > 0 && (
                       <p className="text-sm text-red-600 dark:text-red-400">
-                        ❌ {importStats.failed} ignorați (erori)
+                        {t('step5.failedCount', { count: importStats.failed })}
                       </p>
                     )}
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Profil: {profile === 'reges-salariati' ? 'REGES Salariați' : profile === 'reges-contracte' ? 'REGES Contracte' : 'Manual'}
+                      {t('step5.profileUsed')}: {profile === 'reges-salariati' ? t('step2.regesSalariatiTitle') : profile === 'reges-contracte' ? t('step2.regesContracteTitle') : t('step2.manualTitle')}
                     </p>
                   </div>
                   <div className="flex gap-3 justify-center">
@@ -1598,14 +1599,14 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
                       className="px-6 py-3 rounded-lg text-sm font-semibold border border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition flex items-center gap-2"
                     >
                       <RefreshCw className="h-4 w-4" />
-                      Import nou
+                      {t('nav.newImport')}
                     </button>
                     <button
                       onClick={() => router.push(`/${locale}/dashboard/employees?org=${selectedOrgId}`)}
                       className="px-6 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition flex items-center gap-2"
                     >
                       <Users className="h-4 w-4" />
-                      Vezi lista angajați
+                      {t('step5.viewEmployees')}
                     </button>
                   </div>
                 </>

@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 import {
   ArrowLeft,
   Stethoscope,
@@ -47,6 +48,8 @@ interface Props {
 
 type TabType = 'status' | 'history' | 'appointments'
 
+type TFunc = (key: string, values?: Record<string, string | number>) => string
+
 // ============================================================
 // HELPERS
 // ============================================================
@@ -65,7 +68,10 @@ function getDaysUntil(dateStr: string | null | undefined): number | null {
   return Math.ceil((new Date(dateStr).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
 }
 
-function getMedicalStatus(exam: MedicalExamination | null): {
+function getMedicalStatus(
+  exam: MedicalExamination | null,
+  t: TFunc
+): {
   label: string
   color: string
   icon: React.ElementType
@@ -73,10 +79,10 @@ function getMedicalStatus(exam: MedicalExamination | null): {
 } {
   if (!exam) {
     return {
-      label: 'Fără fișă',
+      label: t('status.noRecord'),
       color: 'bg-gray-100 text-gray-600',
       icon: User,
-      description: 'Nu există nicio fișă medicală înregistrată pentru acest angajat.',
+      description: t('status.noRecordDesc'),
     }
   }
   const expiryDate = exam.next_examination_date || exam.expiry_date
@@ -84,42 +90,34 @@ function getMedicalStatus(exam: MedicalExamination | null): {
 
   if (days === null) {
     return {
-      label: 'Nedefinit',
+      label: t('status.undefined'),
       color: 'bg-gray-100 text-gray-600',
       icon: User,
-      description: 'Data de expirare nu este definită.',
+      description: t('status.undefinedDesc'),
     }
   }
   if (days < 0) {
     return {
-      label: `Expirat de ${Math.abs(days)} zile`,
+      label: t('status.expired', { days: Math.abs(days) }),
       color: 'bg-red-100 text-red-700',
       icon: XCircle,
-      description: `Fișa medicală a expirat pe ${fmtDate(expiryDate)}. Este necesară reexaminarea urgentă.`,
+      description: t('status.expiredDesc', { date: fmtDate(expiryDate) }),
     }
   }
   if (days <= 30) {
     return {
-      label: `Expiră în ${days} zile`,
+      label: t('status.expiringSoon', { days }),
       color: 'bg-orange-100 text-orange-700',
       icon: AlertTriangle,
-      description: `Fișa expiră pe ${fmtDate(expiryDate)}. Programați examinarea în curând.`,
+      description: t('status.expiringSoonDesc', { date: fmtDate(expiryDate) }),
     }
   }
   return {
-    label: `Valid — ${days} zile rămase`,
+    label: t('status.valid', { days }),
     color: 'bg-green-100 text-green-700',
     icon: CheckCircle,
-    description: `Fișa medicală este valabilă până pe ${fmtDate(expiryDate)}.`,
+    description: t('status.validDesc', { date: fmtDate(expiryDate) }),
   }
-}
-
-const APPOINTMENT_STATUS_CONFIG: Record<string, { label: string; cls: string }> = {
-  programat: { label: 'Programat', cls: 'bg-blue-50 text-blue-700' },
-  confirmat: { label: 'Confirmat', cls: 'bg-green-50 text-green-700' },
-  efectuat: { label: 'Efectuat', cls: 'bg-gray-50 text-gray-600' },
-  anulat: { label: 'Anulat', cls: 'bg-red-50 text-red-700' },
-  reprogramat: { label: 'Reprogramat', cls: 'bg-yellow-50 text-yellow-700' },
 }
 
 const RESULT_COLORS: Record<string, string> = {
@@ -142,15 +140,25 @@ export default function MedicalEmployeeClient({
   locale: _locale,
 }: Props) {
   const router = useRouter()
+  const t = useTranslations('medical')
   const canCreate = useHasPermission('medical', 'create')
 
   const [activeTab, setActiveTab] = useState<TabType>('status')
   const [showAddRecord, setShowAddRecord] = useState(false)
   const [addRecordLoading, setAddRecordLoading] = useState(false)
 
+  // APPOINTMENT_STATUS_CONFIG must be inside component to use t()
+  const APPOINTMENT_STATUS_CONFIG: Record<string, { label: string; cls: string }> = {
+    programat: { label: t('appointmentStatus.programat'), cls: 'bg-blue-50 text-blue-700' },
+    confirmat: { label: t('appointmentStatus.confirmat'), cls: 'bg-green-50 text-green-700' },
+    efectuat: { label: t('appointmentStatus.efectuat'), cls: 'bg-gray-50 text-gray-600' },
+    anulat: { label: t('appointmentStatus.anulat'), cls: 'bg-red-50 text-red-700' },
+    reprogramat: { label: t('appointmentStatus.reprogramat'), cls: 'bg-yellow-50 text-yellow-700' },
+  }
+
   // Latest exam
   const latestExam = examinations.length > 0 ? examinations[0] : null
-  const medStatus = getMedicalStatus(latestExam)
+  const medStatus = getMedicalStatus(latestExam, t)
   const StatusIcon = medStatus.icon
 
   // Active restrictions (from latest exam)
@@ -206,7 +214,7 @@ export default function MedicalEmployeeClient({
       router.refresh()
     } catch (err) {
       console.error('[MedicalEmployee] Add record error:', err)
-      alert(err instanceof Error ? err.message : 'Eroare la salvare. Încearcă din nou.')
+      alert(err instanceof Error ? err.message : t('errors.saveRecord'))
     } finally {
       setAddRecordLoading(false)
     }
@@ -233,7 +241,7 @@ export default function MedicalEmployeeClient({
                 {employee.full_name}
               </h1>
               <p className="text-sm text-gray-400">
-                {employee.job_title ?? 'Funcție nespecificată'}
+                {employee.job_title ?? t('employee.noJobTitle')}
                 {employee.organizations?.name && (
                   <>
                     {' '}
@@ -250,7 +258,7 @@ export default function MedicalEmployeeClient({
               className="flex items-center gap-2 bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-900 transition"
             >
               <Plus className="h-4 w-4" />
-              Adaugă fișă
+              {t('employee.addRecord')}
             </button>
           )}
         </div>
@@ -261,9 +269,9 @@ export default function MedicalEmployeeClient({
         <div className="flex items-center gap-1 border-b border-gray-200">
           {(
             [
-              { key: 'status', label: 'Status & Restricții', Icon: BadgeCheck },
-              { key: 'history', label: `Istoric (${examinations.length})`, Icon: Stethoscope },
-              { key: 'appointments', label: `Programări (${upcomingAppointments.length})`, Icon: Calendar },
+              { key: 'status', label: t('employee.tabStatus'), Icon: BadgeCheck },
+              { key: 'history', label: t('employee.tabHistory', { count: examinations.length }), Icon: Stethoscope },
+              { key: 'appointments', label: t('employee.tabAppointments', { count: upcomingAppointments.length }), Icon: Calendar },
             ] as const
           ).map(({ key, label, Icon }) => (
             <button
@@ -304,17 +312,17 @@ export default function MedicalEmployeeClient({
             {/* Quick info grid */}
             {latestExam && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <InfoCard label="Ultima examinare" value={fmtDate(latestExam.examination_date)} />
+                <InfoCard label={t('employee.lastExam')} value={fmtDate(latestExam.examination_date)} />
                 <InfoCard
-                  label="Tip examinare"
+                  label={t('employee.examType')}
                   value={EXAM_TYPES[latestExam.examination_type] ?? latestExam.examination_type}
                 />
                 <InfoCard
-                  label="Rezultat"
+                  label={t('employee.result')}
                   value={RESULT_TYPES[latestExam.result] ?? latestExam.result}
                   valueColor={RESULT_COLORS[latestExam.result]}
                 />
-                <InfoCard label="Medic / Clinică" value={latestExam.doctor_name ?? latestExam.clinic_name ?? '—'} />
+                <InfoCard label={t('employee.doctorClinic')} value={latestExam.doctor_name ?? latestExam.clinic_name ?? '—'} />
               </div>
             )}
 
@@ -322,12 +330,12 @@ export default function MedicalEmployeeClient({
             <div className="bg-white rounded-2xl border border-gray-200 p-5">
               <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 flex items-center gap-1.5">
                 <AlertTriangle className="h-4 w-4 text-orange-500" />
-                Restricții medicale active
+                {t('employee.activeRestrictions')}
               </h2>
               <RestrictionBadgeList
                 restrictions={activeRestrictions}
                 size="md"
-                emptyText="Nicio restricție medicală înregistrată."
+                emptyText={t('employee.noRestrictions')}
               />
               {latestExam?.notes && (
                 <p className="mt-3 text-sm text-gray-500 italic">{latestExam.notes}</p>
@@ -338,7 +346,7 @@ export default function MedicalEmployeeClient({
             {latestExam?.risk_factors && latestExam.risk_factors.length > 0 && (
               <div className="bg-white rounded-2xl border border-gray-200 p-5">
                 <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
-                  Factori de risc expunere
+                  {t('employee.riskFactors')}
                 </h2>
                 <div className="flex flex-wrap gap-1.5">
                   {latestExam.risk_factors.map((rf, i) => (
@@ -357,25 +365,25 @@ export default function MedicalEmployeeClient({
             <div className="bg-white rounded-2xl border border-gray-200 p-5">
               <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 flex items-center gap-1.5">
                 <Building2 className="h-4 w-4 text-gray-400" />
-                Informații angajat
+                {t('employee.employeeInfo')}
               </h2>
               <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm">
                 <div>
-                  <span className="text-gray-400">Organizație</span>
+                  <span className="text-gray-400">{t('employee.organization')}</span>
                   <p className="font-medium text-gray-800 mt-0.5">
                     {employee.organizations?.name ?? '—'}
                   </p>
                 </div>
                 <div>
-                  <span className="text-gray-400">Departament</span>
+                  <span className="text-gray-400">{t('employee.department')}</span>
                   <p className="font-medium text-gray-800 mt-0.5">{employee.department ?? '—'}</p>
                 </div>
                 <div>
-                  <span className="text-gray-400">Funcție</span>
+                  <span className="text-gray-400">{t('employee.jobTitle')}</span>
                   <p className="font-medium text-gray-800 mt-0.5">{employee.job_title ?? '—'}</p>
                 </div>
                 <div>
-                  <span className="text-gray-400">Data angajării</span>
+                  <span className="text-gray-400">{t('employee.hireDate')}</span>
                   <p className="font-medium text-gray-800 mt-0.5">{fmtDate(employee.hire_date)}</p>
                 </div>
               </div>
@@ -389,9 +397,9 @@ export default function MedicalEmployeeClient({
             {examinations.length === 0 ? (
               <EmptyState
                 icon={Stethoscope}
-                title="Niciun examen înregistrat"
-                description="Adaugă prima fișă medicală pentru acest angajat."
-                actionLabel={canCreate ? '+ Adaugă fișă' : undefined}
+                title={t('employee.noExams')}
+                description={t('employee.noExamsDesc')}
+                actionLabel={canCreate ? t('employee.addRecordAction') : undefined}
                 onAction={canCreate ? () => setShowAddRecord(true) : undefined}
               />
             ) : (
@@ -422,7 +430,7 @@ export default function MedicalEmployeeClient({
                               </span>
                               {isLatest && (
                                 <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                                  Cel mai recent
+                                  {t('employee.latestBadge')}
                                 </span>
                               )}
                               <span
@@ -435,13 +443,13 @@ export default function MedicalEmployeeClient({
                             </div>
 
                             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 mt-1">
-                              <span>Data: {fmtDate(exam.examination_date)}</span>
+                              <span>{t('employee.historyDate')} {fmtDate(exam.examination_date)}</span>
                               <span
                                 className={expired ? 'text-red-500 font-medium' : ''}
                               >
-                                Expiră: {fmtDate(expiryDate)}
+                                {t('employee.historyExpiry')} {fmtDate(expiryDate)}
                               </span>
-                              {exam.doctor_name && <span>Dr. {exam.doctor_name}</span>}
+                              {exam.doctor_name && <span>{t('employee.historyDr')} {exam.doctor_name}</span>}
                               {exam.clinic_name && <span>{exam.clinic_name}</span>}
                               {exam.document_number && <span>Nr. {exam.document_number}</span>}
                             </div>
@@ -490,8 +498,8 @@ export default function MedicalEmployeeClient({
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                 <EmptyState
                   icon={Calendar}
-                  title="Nicio programare"
-                  description="Nu există programări înregistrate pentru acest angajat."
+                  title={t('employee.noAppointments')}
+                  description={t('employee.noAppointmentsDesc')}
                 />
               </div>
             ) : (
@@ -578,7 +586,7 @@ export default function MedicalEmployeeClient({
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <Stethoscope className="h-5 w-5 text-blue-600" />
-                Adaugă fișă medicală
+                {t('employee.modalTitle')}
               </h2>
               <button
                 onClick={() => setShowAddRecord(false)}
@@ -603,7 +611,7 @@ export default function MedicalEmployeeClient({
                 onSubmit={handleAddRecord}
                 onCancel={() => setShowAddRecord(false)}
                 loading={addRecordLoading}
-                submitLabel="Adaugă fișa"
+                submitLabel={t('employee.modalSubmit')}
                 lockedEmployeeId={employee.id}
               />
             </div>

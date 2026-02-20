@@ -4,6 +4,7 @@
 // M2_PSI: Client component with tabs for equipment, inspections, alerts
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import {
   Flame,
   Plus,
@@ -56,6 +57,7 @@ export default function PSIClient({
   selectedOrgId,
   stats: initialStats
 }: PSIClientProps) {
+  const t = useTranslations('psi')
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [loading, setLoading] = useState(false)
   const [equipment, setEquipment] = useState<PSIEquipment[]>(initialEquipment)
@@ -181,7 +183,7 @@ export default function PSIClient({
 
     if (!response.ok) {
       const error = await response.json()
-      throw new Error(error.message || 'Eroare la salvarea echipamentului')
+      throw new Error(error.message || t('errorSavingEquipment'))
     }
 
     await loadEquipment()
@@ -197,7 +199,7 @@ export default function PSIClient({
 
     if (!response.ok) {
       const error = await response.json()
-      throw new Error(error.message || 'Eroare la salvarea inspecției')
+      throw new Error(error.message || t('errorSavingInspection'))
     }
 
     await loadEquipment() // Refresh equipment (status updated)
@@ -218,7 +220,7 @@ export default function PSIClient({
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.message || 'Eroare la ștergerea echipamentului')
+        throw new Error(error.message || t('errorDeletingEquipment'))
       }
 
       await loadEquipment()
@@ -226,7 +228,7 @@ export default function PSIClient({
       setEquipmentToDelete(null)
     } catch (error) {
       console.error('Error deleting equipment:', error)
-      alert(error instanceof Error ? error.message : 'Eroare la ștergere')
+      alert(error instanceof Error ? error.message : t('errorDeletingEquipment'))
     } finally {
       setDeleteLoading(false)
     }
@@ -285,9 +287,9 @@ export default function PSIClient({
             <div className="flex items-center gap-3">
               <Flame className="h-8 w-8 text-orange-600" />
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Echipamente PSI</h1>
+                <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
                 <p className="mt-1 text-sm text-gray-600">
-                  Gestionare stingătoare, hidranți, detectori și alte echipamente PSI
+                  {t('subtitle')}
                 </p>
               </div>
             </div>
@@ -303,7 +305,7 @@ export default function PSIClient({
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Dashboard
+              {t('tabDashboard')}
             </button>
             <button
               onClick={() => setActiveTab('equipment')}
@@ -313,7 +315,7 @@ export default function PSIClient({
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Echipamente
+              {t('tabEquipment')}
             </button>
             <button
               onClick={() => setActiveTab('inspections')}
@@ -323,7 +325,7 @@ export default function PSIClient({
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Inspecții
+              {t('tabInspections')}
             </button>
             <button
               onClick={() => setActiveTab('alerts')}
@@ -333,7 +335,7 @@ export default function PSIClient({
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              Alerte
+              {t('tabAlerts')}
               {stats.expired > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {stats.expired}
@@ -354,7 +356,7 @@ export default function PSIClient({
               <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total echipamente</p>
+                    <p className="text-sm font-medium text-gray-600">{t('totalEquipment')}</p>
                     <p className="text-3xl font-bold text-gray-900 mt-2">{stats.total}</p>
                   </div>
                   <Flame className="h-12 w-12 text-gray-400" />
@@ -364,7 +366,7 @@ export default function PSIClient({
               <div className="bg-white rounded-xl shadow-sm p-6 border border-green-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-green-700">Operaționale</p>
+                    <p className="text-sm font-medium text-green-700">{t('operational')}</p>
                     <p className="text-3xl font-bold text-green-600 mt-2">{stats.operational}</p>
                   </div>
                   <CheckCircle2 className="h-12 w-12 text-green-400" />
@@ -374,7 +376,7 @@ export default function PSIClient({
               <div className="bg-white rounded-xl shadow-sm p-6 border border-amber-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-amber-700">Necesită inspecție</p>
+                    <p className="text-sm font-medium text-amber-700">{t('needsInspection')}</p>
                     <p className="text-3xl font-bold text-amber-600 mt-2">{stats.needsInspection}</p>
                   </div>
                   <Clock className="h-12 w-12 text-amber-400" />
@@ -384,7 +386,7 @@ export default function PSIClient({
               <div className="bg-white rounded-xl shadow-sm p-6 border border-red-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-red-700">Expirate</p>
+                    <p className="text-sm font-medium text-red-700">{t('expired')}</p>
                     <p className="text-3xl font-bold text-red-600 mt-2">{stats.expired}</p>
                   </div>
                   <AlertTriangle className="h-12 w-12 text-red-400" />
@@ -394,21 +396,21 @@ export default function PSIClient({
 
             {/* Quick Actions */}
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Acțiuni rapide</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('quickActions')}</h2>
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowEquipmentForm(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
                 >
                   <Plus className="h-4 w-4" />
-                  Adaugă echipament
+                  {t('addEquipment')}
                 </button>
                 <button
                   onClick={() => setActiveTab('alerts')}
                   className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium"
                 >
                   <AlertTriangle className="h-4 w-4" />
-                  Vezi alerte ({stats.expired})
+                  {t('viewAlerts')} ({stats.expired})
                 </button>
               </div>
             </div>
@@ -427,7 +429,7 @@ export default function PSIClient({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Caută după identificator, locație, producător..."
+                    placeholder={t('searchPlaceholder')}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
@@ -436,14 +438,14 @@ export default function PSIClient({
                   className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium flex items-center gap-2"
                 >
                   <Filter className="h-4 w-4" />
-                  Aplică filtre
+                  {t('applyFilters')}
                 </button>
                 <button
                   onClick={() => setShowEquipmentForm(true)}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium flex items-center gap-2"
                 >
                   <Plus className="h-4 w-4" />
-                  Adaugă echipament
+                  {t('addEquipment')}
                 </button>
               </div>
               <div className="flex gap-4 mt-4">
@@ -452,7 +454,7 @@ export default function PSIClient({
                   onChange={(e) => setFilterType(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 >
-                  <option value="all">Toate tipurile</option>
+                  <option value="all">{t('allTypes')}</option>
                   {Object.entries(PSI_EQUIPMENT_TYPE_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
                   ))}
@@ -462,7 +464,7 @@ export default function PSIClient({
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                 >
-                  <option value="all">Toate statusurile</option>
+                  <option value="all">{t('allStatuses')}</option>
                   {Object.entries(PSI_EQUIPMENT_STATUS_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
                   ))}
@@ -474,14 +476,14 @@ export default function PSIClient({
             {loading ? (
               <div className="bg-white rounded-xl shadow-sm p-12 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Se încarcă echipamentele...</p>
+                <p className="mt-4 text-gray-600">{t('loadingEquipment')}</p>
               </div>
             ) : filteredEquipment.length === 0 ? (
               <EmptyState
                 icon={Flame}
-                title="Niciun echipament găsit"
-                description="Adaugă primul echipament PSI pentru a începe trackingul"
-                actionLabel="Adaugă echipament"
+                title={t('noEquipmentTitle')}
+                description={t('noEquipmentDesc')}
+                actionLabel={t('addEquipment')}
                 onAction={() => setShowEquipmentForm(true)}
               />
             ) : (
@@ -490,13 +492,13 @@ export default function PSIClient({
                   <table className="w-full">
                     <thead className="bg-gray-50 border-b border-gray-200">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tip</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Identificator</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Locație</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ultimă inspecție</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Următoare inspecție</th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acțiuni</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colType')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colIdentifier')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colLocation')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colStatus')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colLastInspection')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colNextInspection')}</th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">{t('colActions')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -527,21 +529,21 @@ export default function PSIClient({
                             <div className="flex items-center justify-end gap-2">
                               <button
                                 onClick={() => openInspectionForm(equip)}
-                                title="Înregistrează inspecție"
+                                title={t('recordInspection')}
                                 className="p-1 text-blue-600 hover:bg-blue-50 rounded"
                               >
                                 <ClipboardCheck className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => openEditForm(equip)}
-                                title="Editează"
+                                title={t('edit')}
                                 className="p-1 text-gray-600 hover:bg-gray-100 rounded"
                               >
                                 <Edit className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => openDeleteDialog(equip)}
-                                title="Șterge"
+                                title={t('delete')}
                                 className="p-1 text-red-600 hover:bg-red-50 rounded"
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -564,13 +566,13 @@ export default function PSIClient({
             {loading ? (
               <div className="bg-white rounded-xl shadow-sm p-12 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Se încarcă inspecțiile...</p>
+                <p className="mt-4 text-gray-600">{t('loadingInspections')}</p>
               </div>
             ) : inspections.length === 0 ? (
               <EmptyState
                 icon={ClipboardCheck}
-                title="Nicio inspecție înregistrată"
-                description="Înregistrează prima inspecție pentru un echipament PSI"
+                title={t('noInspectionsTitle')}
+                description={t('noInspectionsDesc')}
               />
             ) : (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -578,11 +580,11 @@ export default function PSIClient({
                   <table className="w-full">
                     <thead className="bg-gray-50 border-b border-gray-200">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Echipament</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Inspector</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rezultat</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Următoarea inspecție</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colDate')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colEquipment')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colInspector')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colResult')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('colNextInspection')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -599,8 +601,8 @@ export default function PSIClient({
                               insp.result === 'conform_cu_observatii' ? 'bg-yellow-100 text-yellow-700' :
                               'bg-red-100 text-red-700'
                             }`}>
-                              {insp.result === 'conform' ? 'Conform' :
-                               insp.result === 'conform_cu_observatii' ? 'Conform cu obs.' : 'Neconform'}
+                              {insp.result === 'conform' ? t('resultConform') :
+                               insp.result === 'conform_cu_observatii' ? t('resultConformObs') : t('resultNonConform')}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-600">{insp.next_inspection_date}</td>
@@ -620,7 +622,7 @@ export default function PSIClient({
             {loading ? (
               <div className="bg-white rounded-xl shadow-sm p-12 text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Se încarcă alertele...</p>
+                <p className="mt-4 text-gray-600">{t('loadingAlerts')}</p>
               </div>
             ) : (
               <>
@@ -631,7 +633,7 @@ export default function PSIClient({
                       <div className="flex items-center gap-3">
                         <XCircle className="h-5 w-5 text-red-600" />
                         <h3 className="text-lg font-semibold text-red-900">
-                          Expirate ({alertsByLevel.expired.length})
+                          {t('alertGroupExpired')} ({alertsByLevel.expired.length})
                         </h3>
                       </div>
                       <AlertBadge alertLevel="expired" />
@@ -643,14 +645,14 @@ export default function PSIClient({
                             <div>
                               <p className="font-medium text-gray-900">{alert.identifier}</p>
                               <p className="text-sm text-gray-600">{PSI_EQUIPMENT_TYPE_LABELS[alert.equipment_type]}</p>
-                              <p className="text-xs text-gray-500 mt-1">{alert.location || 'Fără locație'}</p>
+                              <p className="text-xs text-gray-500 mt-1">{alert.location || t('noLocation')}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-sm font-medium text-red-600">
-                                {Math.abs(alert.days_until_due)} zile depășit
+                                {Math.abs(alert.days_until_due)} {t('daysOverdue')}
                               </p>
                               <p className="text-xs text-gray-500 mt-1">
-                                Expirat la: {alert.next_inspection_date}
+                                {t('expiredAt')}: {alert.next_inspection_date}
                               </p>
                             </div>
                           </div>
@@ -667,7 +669,7 @@ export default function PSIClient({
                       <div className="flex items-center gap-3">
                         <AlertTriangle className="h-5 w-5 text-amber-600" />
                         <h3 className="text-lg font-semibold text-amber-900">
-                          Critice - 30 zile ({alertsByLevel.critical.length})
+                          {t('alertGroupCritical')} ({alertsByLevel.critical.length})
                         </h3>
                       </div>
                       <AlertBadge alertLevel="critical" />
@@ -679,14 +681,14 @@ export default function PSIClient({
                             <div>
                               <p className="font-medium text-gray-900">{alert.identifier}</p>
                               <p className="text-sm text-gray-600">{PSI_EQUIPMENT_TYPE_LABELS[alert.equipment_type]}</p>
-                              <p className="text-xs text-gray-500 mt-1">{alert.location || 'Fără locație'}</p>
+                              <p className="text-xs text-gray-500 mt-1">{alert.location || t('noLocation')}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-sm font-medium text-amber-600">
-                                {alert.days_until_due} zile
+                                {alert.days_until_due} {t('days')}
                               </p>
                               <p className="text-xs text-gray-500 mt-1">
-                                Expiră la: {alert.next_inspection_date}
+                                {t('expiresAt')}: {alert.next_inspection_date}
                               </p>
                             </div>
                           </div>
@@ -703,7 +705,7 @@ export default function PSIClient({
                       <div className="flex items-center gap-3">
                         <Clock className="h-5 w-5 text-yellow-600" />
                         <h3 className="text-lg font-semibold text-yellow-900">
-                          Atenție - 60 zile ({alertsByLevel.warning.length})
+                          {t('alertGroupWarning')} ({alertsByLevel.warning.length})
                         </h3>
                       </div>
                       <AlertBadge alertLevel="warning" />
@@ -715,14 +717,14 @@ export default function PSIClient({
                             <div>
                               <p className="font-medium text-gray-900">{alert.identifier}</p>
                               <p className="text-sm text-gray-600">{PSI_EQUIPMENT_TYPE_LABELS[alert.equipment_type]}</p>
-                              <p className="text-xs text-gray-500 mt-1">{alert.location || 'Fără locație'}</p>
+                              <p className="text-xs text-gray-500 mt-1">{alert.location || t('noLocation')}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-sm font-medium text-yellow-600">
-                                {alert.days_until_due} zile
+                                {alert.days_until_due} {t('days')}
                               </p>
                               <p className="text-xs text-gray-500 mt-1">
-                                Expiră la: {alert.next_inspection_date}
+                                {t('expiresAt')}: {alert.next_inspection_date}
                               </p>
                             </div>
                           </div>
@@ -739,7 +741,7 @@ export default function PSIClient({
                       <div className="flex items-center gap-3">
                         <Clock className="h-5 w-5 text-blue-600" />
                         <h3 className="text-lg font-semibold text-blue-900">
-                          Info - 90 zile ({alertsByLevel.info.length})
+                          {t('alertGroupInfo')} ({alertsByLevel.info.length})
                         </h3>
                       </div>
                       <AlertBadge alertLevel="info" />
@@ -751,14 +753,14 @@ export default function PSIClient({
                             <div>
                               <p className="font-medium text-gray-900">{alert.identifier}</p>
                               <p className="text-sm text-gray-600">{PSI_EQUIPMENT_TYPE_LABELS[alert.equipment_type]}</p>
-                              <p className="text-xs text-gray-500 mt-1">{alert.location || 'Fără locație'}</p>
+                              <p className="text-xs text-gray-500 mt-1">{alert.location || t('noLocation')}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-sm font-medium text-blue-600">
-                                {alert.days_until_due} zile
+                                {alert.days_until_due} {t('days')}
                               </p>
                               <p className="text-xs text-gray-500 mt-1">
-                                Expiră la: {alert.next_inspection_date}
+                                {t('expiresAt')}: {alert.next_inspection_date}
                               </p>
                             </div>
                           </div>
@@ -771,8 +773,8 @@ export default function PSIClient({
                 {alerts.length === 0 && (
                   <EmptyState
                     icon={CheckCircle2}
-                    title="Nicio alertă"
-                    description="Toate echipamentele PSI sunt la zi cu inspecțiile"
+                    title={t('noAlertsTitle')}
+                    description={t('noAlertsDesc')}
                   />
                 )}
               </>
@@ -809,10 +811,10 @@ export default function PSIClient({
         isOpen={showDeleteDialog}
         onCancel={() => setShowDeleteDialog(false)}
         onConfirm={handleDeleteEquipment}
-        title="Șterge echipament PSI"
-        message={`Sigur vrei să ștergi echipamentul "${equipmentToDelete?.identifier}"? Toate inspecțiile asociate vor fi șterse. Această acțiune nu poate fi anulată.`}
-        confirmLabel="Șterge"
-        cancelLabel="Anulează"
+        title={t('deleteEquipmentTitle')}
+        message={t('deleteEquipmentMessage', { identifier: equipmentToDelete?.identifier || '' })}
+        confirmLabel={t('delete')}
+        cancelLabel={t('cancel')}
         isDestructive
         loading={deleteLoading}
       />

@@ -4,6 +4,7 @@
 // M9_ISCIR: Equipment detail view – technical info, verification timeline, daily checks
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -99,42 +100,6 @@ interface ISCIRDetailClientProps {
   locale: string
 }
 
-// ─── Label maps ───────────────────────────────────────────────────────────────
-
-const EQUIPMENT_TYPE_LABELS: Record<string, string> = {
-  cazan: 'Cazan',
-  recipient_presiune: 'Recipient sub presiune',
-  lift: 'Lift',
-  macara: 'Macara',
-  stivuitor: 'Stivuitor',
-  instalatie_gpl: 'Instalație GPL',
-  compresor: 'Compresor',
-  autoclave: 'Autoclave',
-  altul: 'Altul',
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  activ: 'Activ',
-  expirat: 'Expirat',
-  in_verificare: 'În verificare',
-  oprit: 'Oprit',
-  casat: 'Casat',
-}
-
-const VERIFICATION_TYPE_LABELS: Record<string, string> = {
-  periodica: 'Periodică',
-  accidentala: 'Accidentală',
-  punere_in_functiune: 'Punere în funcțiune',
-  reparatie: 'Reparație',
-  modernizare: 'Modernizare',
-}
-
-const RESULT_LABELS: Record<string, string> = {
-  admis: 'Admis',
-  respins: 'Respins',
-  admis_conditionat: 'Admis condiționat',
-}
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getDaysUntil(dateStr: string): number {
@@ -153,12 +118,14 @@ function formatDate(dateStr?: string | null): string {
   })
 }
 
-function AlertBadge({ daysUntil }: { daysUntil: number }) {
+type TFunc = (key: string, values?: Record<string, string | number>) => string
+
+function AlertBadge({ daysUntil, t }: { daysUntil: number; t: TFunc }) {
   if (daysUntil < 0) {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-red-100 text-red-800">
         <AlertTriangle className="w-4 h-4" />
-        Expirat ({Math.abs(daysUntil)} zile)
+        {t('alertBadge.expired', { days: Math.abs(daysUntil) })}
       </span>
     )
   }
@@ -166,7 +133,7 @@ function AlertBadge({ daysUntil }: { daysUntil: number }) {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-orange-100 text-orange-800">
         <AlertTriangle className="w-4 h-4" />
-        Urgent – {daysUntil} zile
+        {t('alertBadge.urgent', { days: daysUntil })}
       </span>
     )
   }
@@ -174,25 +141,32 @@ function AlertBadge({ daysUntil }: { daysUntil: number }) {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
         <Clock className="w-4 h-4" />
-        Atenție – {daysUntil} zile
+        {t('alertBadge.warning', { days: daysUntil })}
       </span>
     )
   }
   return (
     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-green-100 text-green-800">
       <CheckCircle2 className="w-4 h-4" />
-      OK – {daysUntil} zile
+      {t('alertBadge.ok', { days: daysUntil })}
     </span>
   )
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, t }: { status: string; t: TFunc }) {
   const colors: Record<string, string> = {
     activ: 'bg-green-100 text-green-800',
     expirat: 'bg-red-100 text-red-800',
     in_verificare: 'bg-blue-100 text-blue-800',
     oprit: 'bg-orange-100 text-orange-800',
     casat: 'bg-gray-100 text-gray-600',
+  }
+  const STATUS_LABELS: Record<string, string> = {
+    activ: t('status.activ'),
+    expirat: t('status.expirat'),
+    in_verificare: t('status.inVerificare'),
+    oprit: t('status.oprit'),
+    casat: t('status.casat'),
   }
   return (
     <span
@@ -203,11 +177,16 @@ function StatusBadge({ status }: { status: string }) {
   )
 }
 
-function ResultBadge({ result }: { result: string }) {
+function ResultBadge({ result, t }: { result: string; t: TFunc }) {
   const colors: Record<string, string> = {
     admis: 'bg-green-100 text-green-800',
     respins: 'bg-red-100 text-red-800',
     admis_conditionat: 'bg-yellow-100 text-yellow-800',
+  }
+  const RESULT_LABELS: Record<string, string> = {
+    admis: t('result.admis'),
+    respins: t('result.respins'),
+    admis_conditionat: t('result.admisConditionat'),
   }
   return (
     <span
@@ -244,6 +223,34 @@ export default function ISCIRDetailClient({
   dailyChecks,
   locale,
 }: ISCIRDetailClientProps) {
+  const t = useTranslations('iscir')
+
+  const EQUIPMENT_TYPE_LABELS: Record<string, string> = {
+    cazan: t('equipmentType.cazan'),
+    recipient_presiune: t('equipmentType.recipientPresiune'),
+    lift: t('equipmentType.lift'),
+    macara: t('equipmentType.macara'),
+    stivuitor: t('equipmentType.stivuitor'),
+    instalatie_gpl: t('equipmentType.instalatieGpl'),
+    compresor: t('equipmentType.compresor'),
+    autoclave: t('equipmentType.autoclave'),
+    altul: t('equipmentType.altul'),
+  }
+
+  const VERIFICATION_TYPE_LABELS: Record<string, string> = {
+    periodica: t('verificationType.periodica'),
+    accidentala: t('verificationType.accidentala'),
+    punere_in_functiune: t('verificationType.punereInFunctiune'),
+    reparatie: t('verificationType.reparatie'),
+    modernizare: t('verificationType.modernizare'),
+  }
+
+  const RESULT_LABELS: Record<string, string> = {
+    admis: t('result.admis'),
+    respins: t('result.respins'),
+    admis_conditionat: t('result.admisConditionat'),
+  }
+
   const [showVerificationForm, setShowVerificationForm] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [qrData, setQrData] = useState<{ qr_image_url: string; target_url: string } | null>(null)
@@ -319,11 +326,11 @@ export default function ISCIRDetailClient({
           deadline_prescriptions: '',
         }))
       } else {
-        alert(data.error || 'Eroare la salvarea verificării')
+        alert(data.error || t('errors.saveVerification'))
       }
     } catch (e) {
       console.error('Save verification error:', e)
-      alert('Eroare la salvarea verificării')
+      alert(t('errors.saveVerification'))
     } finally {
       setFormLoading(false)
     }
@@ -338,7 +345,7 @@ export default function ISCIRDetailClient({
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Înapoi la ISCIR
+          {t('detail.backToIscir')}
         </Link>
       </div>
 
@@ -361,8 +368,8 @@ export default function ISCIRDetailClient({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <StatusBadge status={equipment.status} />
-            <AlertBadge daysUntil={daysUntil} />
+            <StatusBadge status={equipment.status} t={t as TFunc} />
+            <AlertBadge daysUntil={daysUntil} t={t as TFunc} />
           </div>
         </div>
 
@@ -373,7 +380,7 @@ export default function ISCIRDetailClient({
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
           >
             <Plus className="w-4 h-4" />
-            Adaugă verificare ISCIR
+            {t('detail.addVerification')}
           </button>
 
           {equipment.daily_check_required && (
@@ -383,7 +390,7 @@ export default function ISCIRDetailClient({
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
               >
                 <ClipboardCheck className="w-4 h-4" />
-                Verificare zilnică
+                {t('detail.dailyCheck')}
               </Link>
 
               <button
@@ -391,7 +398,7 @@ export default function ISCIRDetailClient({
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
               >
                 <QrCode className="w-4 h-4" />
-                Cod QR operator
+                {t('detail.qrCode')}
               </button>
             </>
           )}
@@ -402,21 +409,21 @@ export default function ISCIRDetailClient({
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Factory className="w-5 h-5 text-gray-400" />
-          Date tehnice
+          {t('detail.technicalData')}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
-          <DetailRow label="Tip echipament" value={EQUIPMENT_TYPE_LABELS[equipment.equipment_type]} />
-          <DetailRow label="Nr. înregistrare ISCIR" value={equipment.registration_number} />
-          <DetailRow label="Producător" value={equipment.manufacturer} />
-          <DetailRow label="Model" value={equipment.model} />
-          <DetailRow label="Serie fabricație" value={equipment.serial_number} />
-          <DetailRow label="An fabricație" value={equipment.manufacture_year?.toString()} />
-          <DetailRow label="Dată instalare" value={formatDate(equipment.installation_date)} />
-          <DetailRow label="Capacitate / Parametri" value={equipment.capacity} />
+          <DetailRow label={t('form.equipmentType')} value={EQUIPMENT_TYPE_LABELS[equipment.equipment_type]} />
+          <DetailRow label={t('form.registrationNumber')} value={equipment.registration_number} />
+          <DetailRow label={t('form.manufacturer')} value={equipment.manufacturer} />
+          <DetailRow label={t('form.model')} value={equipment.model} />
+          <DetailRow label={t('form.serialNumber')} value={equipment.serial_number} />
+          <DetailRow label={t('form.manufactureYear')} value={equipment.manufacture_year?.toString()} />
+          <DetailRow label={t('detail.installDate')} value={formatDate(equipment.installation_date)} />
+          <DetailRow label={t('detail.capacityParams')} value={equipment.capacity} />
           <DetailRow
-            label="Verificare zilnică necesară"
-            value={equipment.daily_check_required ? 'Da' : 'Nu'}
+            label={t('detail.dailyCheckRequired')}
+            value={equipment.daily_check_required ? t('detail.yes') : t('detail.no')}
           />
         </div>
       </div>
@@ -426,11 +433,11 @@ export default function ISCIRDetailClient({
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <MapPin className="w-5 h-5 text-gray-400" />
-            Localizare
+            {t('detail.locationTitle')}
           </h2>
           <div className="space-y-3">
-            <DetailRow label="Locație" value={equipment.location} />
-            <DetailRow label="Organizație" value={equipment.organizations?.name} />
+            <DetailRow label={t('form.location')} value={equipment.location} />
+            <DetailRow label={t('detail.organization')} value={equipment.organizations?.name} />
             <DetailRow label="CUI" value={equipment.organizations?.cui} />
           </div>
         </div>
@@ -438,12 +445,12 @@ export default function ISCIRDetailClient({
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-gray-400" />
-            RSVTI &amp; Autorizare
+            {t('detail.rsvtiTitle')}
           </h2>
           <div className="space-y-3">
-            <DetailRow label="RSVTI responsabil" value={equipment.rsvti_responsible} />
-            <DetailRow label="Nr. autorizație funcționare" value={equipment.authorization_number} />
-            <DetailRow label="Expirare autorizație" value={formatDate(equipment.authorization_expiry)} />
+            <DetailRow label={t('form.rsvtiResponsible')} value={equipment.rsvti_responsible} />
+            <DetailRow label={t('form.authorizationNumber')} value={equipment.authorization_number} />
+            <DetailRow label={t('detail.authorizationExpiry')} value={formatDate(equipment.authorization_expiry)} />
           </div>
         </div>
       </div>
@@ -452,11 +459,11 @@ export default function ISCIRDetailClient({
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Calendar className="w-5 h-5 text-gray-400" />
-          Calendar verificări
+          {t('detail.verifCalendar')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="text-center p-4 bg-gray-50 rounded-xl">
-            <p className="text-xs text-gray-500 uppercase font-medium mb-1">Ultima verificare</p>
+            <p className="text-xs text-gray-500 uppercase font-medium mb-1">{t('detail.lastVerif')}</p>
             <p className="text-lg font-semibold text-gray-900">
               {formatDate(equipment.last_verification_date)}
             </p>
@@ -472,27 +479,27 @@ export default function ISCIRDetailClient({
                 : 'bg-green-50'
             }`}
           >
-            <p className="text-xs text-gray-500 uppercase font-medium mb-1">Următoarea verificare</p>
+            <p className="text-xs text-gray-500 uppercase font-medium mb-1">{t('detail.nextVerif')}</p>
             <p className="text-lg font-semibold text-gray-900">
               {formatDate(equipment.next_verification_date)}
             </p>
             <p className="text-xs mt-1 text-gray-600">
               {daysUntil < 0
-                ? `${Math.abs(daysUntil)} zile depășit`
-                : `${daysUntil} zile rămase`}
+                ? t('detail.daysOverdue', { days: Math.abs(daysUntil) })
+                : t('detail.daysLeft', { days: daysUntil })}
             </p>
           </div>
           <div className="text-center p-4 bg-gray-50 rounded-xl">
-            <p className="text-xs text-gray-500 uppercase font-medium mb-1">Interval verificare</p>
+            <p className="text-xs text-gray-500 uppercase font-medium mb-1">{t('detail.verifInterval')}</p>
             <p className="text-lg font-semibold text-gray-900">
-              {equipment.verification_interval_months} luni
+              {t('detail.months', { count: equipment.verification_interval_months })}
             </p>
           </div>
         </div>
 
         {equipment.notes && (
           <div className="mt-4 p-4 bg-gray-50 rounded-xl">
-            <p className="text-xs text-gray-500 uppercase font-medium mb-1">Observații echipament</p>
+            <p className="text-xs text-gray-500 uppercase font-medium mb-1">{t('form.observations')}</p>
             <p className="text-sm text-gray-700">{equipment.notes}</p>
           </div>
         )}
@@ -503,7 +510,7 @@ export default function ISCIRDetailClient({
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <ClipboardCheck className="w-5 h-5 text-gray-400" />
-            Istoric verificări ISCIR
+            {t('detail.verifHistory')}
             <span className="ml-1 text-sm font-normal text-gray-400">
               ({verificationsList.length})
             </span>
@@ -513,15 +520,15 @@ export default function ISCIRDetailClient({
             className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700"
           >
             <Plus className="w-4 h-4" />
-            Adaugă
+            {t('detail.add')}
           </button>
         </div>
 
         {verificationsList.length === 0 ? (
           <div className="py-12 text-center text-gray-500">
             <ClipboardCheck className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p className="font-medium">Nu există verificări înregistrate</p>
-            <p className="text-sm mt-1">Adaugă prima verificare ISCIR pentru acest echipament.</p>
+            <p className="font-medium">{t('empty.noVerifications')}</p>
+            <p className="text-sm mt-1">{t('detail.addFirstVerif')}</p>
           </div>
         ) : (
           <div className="relative">
@@ -530,7 +537,7 @@ export default function ISCIRDetailClient({
 
             <div className="space-y-4">
               {visibleVerifications.map((ver, idx) => (
-                <VerificationTimelineItem key={ver.id} ver={ver} isFirst={idx === 0} />
+                <VerificationTimelineItem key={ver.id} ver={ver} isFirst={idx === 0} t={t as TFunc} VERIFICATION_TYPE_LABELS={VERIFICATION_TYPE_LABELS} RESULT_LABELS={RESULT_LABELS} />
               ))}
             </div>
 
@@ -541,11 +548,11 @@ export default function ISCIRDetailClient({
               >
                 {showAllVerifications ? (
                   <>
-                    <ChevronUp className="w-4 h-4" /> Afișează mai puțin
+                    <ChevronUp className="w-4 h-4" /> {t('detail.showLess')}
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-4 h-4" /> Afișează toate ({verificationsList.length})
+                    <ChevronDown className="w-4 h-4" /> {t('detail.showAll', { count: verificationsList.length })}
                   </>
                 )}
               </button>
@@ -560,26 +567,26 @@ export default function ISCIRDetailClient({
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <Wrench className="w-5 h-5 text-gray-400" />
-              Verificări zilnice operator – ultimele 30 zile
+              {t('detail.dailyChecksTitle')}
             </h2>
             <Link
               href={`/${locale}/dashboard/iscir/daily?equipment=${equipment.id}`}
               className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700"
             >
               <ExternalLink className="w-4 h-4" />
-              Pagina operator
+              {t('detail.operatorPage')}
             </Link>
           </div>
 
           {dailyChecks.length === 0 ? (
             <div className="py-8 text-center text-gray-500">
               <Wrench className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-              <p className="text-sm">Nu există verificări zilnice în ultimele 30 zile.</p>
+              <p className="text-sm">{t('detail.noDailyChecks')}</p>
             </div>
           ) : (
             <div className="space-y-3">
               {(dailyChecks as ISCIRDailyCheck[]).map((check) => (
-                <DailyCheckRow key={check.id} check={check} />
+                <DailyCheckRow key={check.id} check={check} t={t as TFunc} />
               ))}
             </div>
           )}
@@ -591,15 +598,15 @@ export default function ISCIRDetailClient({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Înregistrare verificare ISCIR</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('verifForm.title')}</h2>
               <p className="text-sm text-gray-500 mt-1">
-                Echipament: <span className="font-medium">{equipment.identifier}</span>
+                {t('verifForm.equipment')}: <span className="font-medium">{equipment.identifier}</span>
               </p>
             </div>
 
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField label="Data verificare *">
+                <FormField label={t('verifForm.verifDate')}>
                   <input
                     type="date"
                     value={verForm.verification_date}
@@ -608,7 +615,7 @@ export default function ISCIRDetailClient({
                   />
                 </FormField>
 
-                <FormField label="Tip verificare *">
+                <FormField label={t('verifForm.verifType')}>
                   <select
                     value={verForm.verification_type}
                     onChange={(e) => setVerForm({ ...verForm, verification_type: e.target.value })}
@@ -620,7 +627,7 @@ export default function ISCIRDetailClient({
                   </select>
                 </FormField>
 
-                <FormField label="Nume inspector *">
+                <FormField label={t('verifForm.inspectorName')}>
                   <input
                     type="text"
                     value={verForm.inspector_name}
@@ -630,7 +637,7 @@ export default function ISCIRDetailClient({
                   />
                 </FormField>
 
-                <FormField label="Nr. legitimație inspector">
+                <FormField label={t('verifForm.inspectorId')}>
                   <input
                     type="text"
                     value={verForm.inspector_legitimation}
@@ -641,7 +648,7 @@ export default function ISCIRDetailClient({
                   />
                 </FormField>
 
-                <FormField label="Rezultat *">
+                <FormField label={t('verifForm.result')}>
                   <select
                     value={verForm.result}
                     onChange={(e) => setVerForm({ ...verForm, result: e.target.value })}
@@ -653,7 +660,7 @@ export default function ISCIRDetailClient({
                   </select>
                 </FormField>
 
-                <FormField label="Nr. buletin verificare *">
+                <FormField label={t('verifForm.bulletinNumber')}>
                   <input
                     type="text"
                     value={verForm.bulletin_number}
@@ -662,7 +669,7 @@ export default function ISCIRDetailClient({
                   />
                 </FormField>
 
-                <FormField label="Data următoare verificare">
+                <FormField label={t('verifForm.nextVerifDate')}>
                   <input
                     type="date"
                     value={verForm.next_verification_date}
@@ -673,7 +680,7 @@ export default function ISCIRDetailClient({
                   />
                 </FormField>
 
-                <FormField label="Termen remediere prescripții">
+                <FormField label={t('verifForm.prescriptionsDeadline')}>
                   <input
                     type="date"
                     value={verForm.deadline_prescriptions}
@@ -685,7 +692,7 @@ export default function ISCIRDetailClient({
                 </FormField>
               </div>
 
-              <FormField label="Observații">
+              <FormField label={t('form.observations')}>
                 <textarea
                   value={verForm.observations}
                   onChange={(e) => setVerForm({ ...verForm, observations: e.target.value })}
@@ -694,7 +701,7 @@ export default function ISCIRDetailClient({
                 />
               </FormField>
 
-              <FormField label="Prescripții / Măsuri impuse">
+              <FormField label={t('verifForm.prescriptions')}>
                 <textarea
                   value={verForm.prescriptions}
                   onChange={(e) => setVerForm({ ...verForm, prescriptions: e.target.value })}
@@ -709,7 +716,7 @@ export default function ISCIRDetailClient({
                 onClick={() => setShowVerificationForm(false)}
                 className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Anulează
+                {t('form.cancel')}
               </button>
               <button
                 onClick={handleSaveVerification}
@@ -721,7 +728,7 @@ export default function ISCIRDetailClient({
                 }
                 className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {formLoading ? 'Se salvează...' : 'Salvează verificare'}
+                {formLoading ? t('form.saving') : t('verifForm.saveVerification')}
               </button>
             </div>
           </div>
@@ -739,9 +746,9 @@ export default function ISCIRDetailClient({
             onClick={(e) => e.stopPropagation()}
           >
             <QrCode className="w-8 h-8 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Cod QR operator</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('detail.qrCode')}</h3>
             <p className="text-sm text-gray-500 mb-4">
-              {equipment.identifier} – scanează pentru verificare zilnică
+              {equipment.identifier} – {t('detail.qrScanInstruction')}
             </p>
 
             {qrLoading ? (
@@ -758,14 +765,14 @@ export default function ISCIRDetailClient({
                 <p className="text-xs text-gray-400 mt-3 break-all">{qrData.target_url}</p>
               </>
             ) : (
-              <p className="text-sm text-red-500">Eroare la generarea codului QR.</p>
+              <p className="text-sm text-red-500">{t('detail.qrError')}</p>
             )}
 
             <button
               onClick={() => setShowQR(false)}
               className="mt-6 w-full px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Închide
+              {t('detail.close')}
             </button>
           </div>
         </div>
@@ -797,25 +804,17 @@ function FormField({ label, children }: { label: string; children: React.ReactNo
 function VerificationTimelineItem({
   ver,
   isFirst,
+  t,
+  VERIFICATION_TYPE_LABELS,
+  RESULT_LABELS,
 }: {
   ver: ISCIRVerification
   isFirst: boolean
+  t: TFunc
+  VERIFICATION_TYPE_LABELS: Record<string, string>
+  RESULT_LABELS: Record<string, string>
 }) {
   const [expanded, setExpanded] = useState(isFirst)
-
-  const VERIFICATION_TYPE_LABELS: Record<string, string> = {
-    periodica: 'Periodică',
-    accidentala: 'Accidentală',
-    punere_in_functiune: 'Punere în funcțiune',
-    reparatie: 'Reparație',
-    modernizare: 'Modernizare',
-  }
-
-  const RESULT_LABELS: Record<string, string> = {
-    admis: 'Admis',
-    respins: 'Respins',
-    admis_conditionat: 'Admis condiționat',
-  }
 
   return (
     <div className="relative pl-10">
@@ -846,7 +845,7 @@ function VerificationTimelineItem({
             <span className="text-xs text-gray-500">
               {VERIFICATION_TYPE_LABELS[ver.verification_type] || ver.verification_type}
             </span>
-            <ResultBadge result={ver.result} />
+            <ResultBadge result={ver.result} t={t} />
           </div>
           <ChevronDown
             className={`w-4 h-4 text-gray-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
@@ -856,19 +855,19 @@ function VerificationTimelineItem({
         {expanded && (
           <div className="mt-3 pt-3 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
             <div>
-              <span className="text-gray-500">Inspector:</span>{' '}
+              <span className="text-gray-500">{t('timeline.inspector')}:</span>{' '}
               <span className="text-gray-900">{ver.inspector_name}</span>
               {ver.inspector_legitimation && (
                 <span className="text-gray-400"> ({ver.inspector_legitimation})</span>
               )}
             </div>
             <div>
-              <span className="text-gray-500">Buletin:</span>{' '}
+              <span className="text-gray-500">{t('timeline.bulletin')}:</span>{' '}
               <span className="text-gray-900">{ver.bulletin_number}</span>
             </div>
             {ver.next_verification_date && (
               <div>
-                <span className="text-gray-500">Următoarea verificare:</span>{' '}
+                <span className="text-gray-500">{t('timeline.nextVerif')}:</span>{' '}
                 <span className="text-gray-900">
                   {new Date(ver.next_verification_date).toLocaleDateString('ro-RO')}
                 </span>
@@ -876,7 +875,7 @@ function VerificationTimelineItem({
             )}
             {ver.deadline_prescriptions && (
               <div>
-                <span className="text-gray-500">Termen prescripții:</span>{' '}
+                <span className="text-gray-500">{t('timeline.prescriptionsDeadline')}:</span>{' '}
                 <span className="text-gray-900">
                   {new Date(ver.deadline_prescriptions).toLocaleDateString('ro-RO')}
                 </span>
@@ -884,13 +883,13 @@ function VerificationTimelineItem({
             )}
             {ver.observations && (
               <div className="sm:col-span-2">
-                <span className="text-gray-500">Observații:</span>{' '}
+                <span className="text-gray-500">{t('form.observations')}:</span>{' '}
                 <span className="text-gray-700">{ver.observations}</span>
               </div>
             )}
             {ver.prescriptions && (
               <div className="sm:col-span-2">
-                <span className="text-gray-500">Prescripții:</span>{' '}
+                <span className="text-gray-500">{t('timeline.prescriptions')}:</span>{' '}
                 <span className="text-gray-700">{ver.prescriptions}</span>
               </div>
             )}
@@ -901,7 +900,7 @@ function VerificationTimelineItem({
   )
 }
 
-function DailyCheckRow({ check }: { check: ISCIRDailyCheck }) {
+function DailyCheckRow({ check, t }: { check: ISCIRDailyCheck; t: TFunc }) {
   const [expanded, setExpanded] = useState(false)
   const items = check.check_items || {}
   const totalItems = Object.keys(items).length
@@ -941,10 +940,10 @@ function DailyCheckRow({ check }: { check: ISCIRDailyCheck }) {
               })}
             </span>
             <span className="ml-3 text-xs text-gray-500">
-              Operator: {check.operator_name} · {passedItems}/{totalItems} puncte OK
+              {t('dailyRow.operator')}: {check.operator_name} · {passedItems}/{totalItems} {t('dailyRow.pointsOk')}
             </span>
             {check.signed && (
-              <span className="ml-2 text-xs text-blue-600">✓ Semnat</span>
+              <span className="ml-2 text-xs text-blue-600">✓ {t('dailyRow.signed')}</span>
             )}
           </div>
         </div>
@@ -970,7 +969,7 @@ function DailyCheckRow({ check }: { check: ISCIRDailyCheck }) {
 
           {check.issues_found && (
             <div className="mt-2 p-3 bg-orange-100 rounded-lg text-sm text-orange-800">
-              <span className="font-medium">Probleme semnalate:</span> {check.issues_found}
+              <span className="font-medium">{t('dailyRow.issuesFound')}:</span> {check.issues_found}
             </div>
           )}
         </div>

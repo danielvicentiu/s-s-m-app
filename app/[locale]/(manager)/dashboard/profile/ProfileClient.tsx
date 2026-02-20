@@ -5,6 +5,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export default function ProfileClient({ user, profile, preferences }: Props) {
+  const t = useTranslations('profile')
   const supabase = createSupabaseBrowser()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -47,13 +49,13 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
 
     // Validare tip fișier
     if (!file.type.startsWith('image/')) {
-      setMessage({ type: 'error', text: 'Vă rugăm să selectați un fișier imagine.' })
+      setMessage({ type: 'error', text: t('selectImageFile') })
       return
     }
 
     // Validare dimensiune max 2MB
     if (file.size > 2 * 1024 * 1024) {
-      setMessage({ type: 'error', text: 'Imaginea nu poate depăși 2MB.' })
+      setMessage({ type: 'error', text: t('imageTooLarge') })
       return
     }
 
@@ -86,10 +88,10 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
       if (updateError) throw updateError
 
       setAvatarUrl(publicUrl)
-      setMessage({ type: 'success', text: 'Avatar actualizat cu succes!' })
+      setMessage({ type: 'success', text: t('avatarUpdated') })
     } catch (error: any) {
       console.error('Error uploading avatar:', error)
-      setMessage({ type: 'error', text: 'Eroare la încărcare avatar: ' + error.message })
+      setMessage({ type: 'error', text: t('avatarError') + ': ' + error.message })
     } finally {
       setUploading(false)
     }
@@ -132,13 +134,13 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         )
       }
 
-      setMessage({ type: 'success', text: 'Profil actualizat cu succes!' })
+      setMessage({ type: 'success', text: t('profileUpdated') })
 
       // Reload după 1.5s pentru a aplica preferințele noi
       setTimeout(() => window.location.reload(), 1500)
     } catch (error: any) {
       console.error('Error saving profile:', error)
-      setMessage({ type: 'error', text: 'Eroare la salvare: ' + error.message })
+      setMessage({ type: 'error', text: t('saveError') + ': ' + error.message })
     } finally {
       setSaving(false)
     }
@@ -147,12 +149,12 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
   // Change password
   async function handleChangePassword() {
     if (newPassword !== confirmPassword) {
-      setMessage({ type: 'error', text: 'Parolele nu coincid.' })
+      setMessage({ type: 'error', text: t('passwordsMismatch') })
       return
     }
 
     if (newPassword.length < 8) {
-      setMessage({ type: 'error', text: 'Parola trebuie să aibă minim 8 caractere.' })
+      setMessage({ type: 'error', text: t('passwordTooShort') })
       return
     }
 
@@ -166,13 +168,13 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
 
       if (error) throw error
 
-      setMessage({ type: 'success', text: 'Parola a fost schimbată cu succes!' })
+      setMessage({ type: 'success', text: t('passwordChanged') })
       setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
     } catch (error: any) {
       console.error('Error changing password:', error)
-      setMessage({ type: 'error', text: 'Eroare la schimbare parolă: ' + error.message })
+      setMessage({ type: 'error', text: t('changePasswordError') + ': ' + error.message })
     } finally {
       setChangingPassword(false)
     }
@@ -190,7 +192,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             <ArrowLeft className="h-5 w-5 text-gray-600" />
           </Link>
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Profil utilizator</h1>
+            <h1 className="text-2xl font-black text-gray-900">{t('title')}</h1>
             <p className="text-sm text-gray-500">{user.email}</p>
           </div>
         </div>
@@ -214,7 +216,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
             <Camera className="h-5 w-5" />
-            Fotografie profil
+            {t('profilePhoto')}
           </h2>
           <div className="flex items-center gap-6">
             {/* Avatar display */}
@@ -252,7 +254,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Upload className="h-4 w-4" />
-                {uploading ? 'Se încarcă...' : 'Încarcă imagine'}
+                {uploading ? t('uploading') : t('uploadImage')}
               </button>
               <p className="text-xs text-gray-400 mt-2">
                 Imagini JPG, PNG sau GIF. Max 2MB.
@@ -265,13 +267,13 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
             <UserIcon className="h-5 w-5" />
-            Informații personale
+            {t('personalInfo')}
           </h2>
           <div className="space-y-4">
             {/* Full name */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Nume complet
+                {t('fullName')}
               </label>
               <input
                 type="text"
@@ -286,7 +288,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                Email (nu se poate modifica)
+                {t('emailReadOnly')}
               </label>
               <input
                 type="email"
@@ -300,7 +302,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                Telefon
+                {t('phone')}
               </label>
               <input
                 type="tel"
@@ -317,13 +319,13 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
             <Globe className="h-5 w-5" />
-            Preferințe
+            {t('preferences')}
           </h2>
           <div className="space-y-4">
             {/* Language */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Limba preferată
+                {t('preferredLanguage')}
               </label>
               <select
                 value={locale}
@@ -342,18 +344,18 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                Fus orar
+                {t('timezone')}
               </label>
               <select
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
               >
-                <option value="Europe/Bucharest">București (GMT+2)</option>
-                <option value="Europe/Sofia">Sofia (GMT+2)</option>
-                <option value="Europe/Budapest">Budapesta (GMT+1)</option>
-                <option value="Europe/Berlin">Berlin (GMT+1)</option>
-                <option value="Europe/Warsaw">Varșovia (GMT+1)</option>
+                <option value="Europe/Bucharest">{t('tzBucharest')}</option>
+                <option value="Europe/Sofia">{t('tzSofia')}</option>
+                <option value="Europe/Budapest">{t('tzBudapest')}</option>
+                <option value="Europe/Berlin">{t('tzBerlin')}</option>
+                <option value="Europe/Warsaw">{t('tzWarsaw')}</option>
               </select>
             </div>
           </div>
@@ -363,15 +365,15 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
             <Bell className="h-5 w-5" />
-            Notificări
+            {t('notifications')}
           </h2>
           <div className="space-y-4">
             {/* Email notifications */}
             <label className="flex items-center justify-between p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition">
               <div>
-                <div className="font-semibold text-gray-900">Notificări email</div>
+                <div className="font-semibold text-gray-900">{t('emailNotifications')}</div>
                 <div className="text-sm text-gray-500">
-                  Primește alerte și rapoarte pe email
+                  {t('emailNotificationsDesc')}
                 </div>
               </div>
               <button
@@ -391,9 +393,9 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             {/* Push notifications */}
             <label className="flex items-center justify-between p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition">
               <div>
-                <div className="font-semibold text-gray-900">Notificări push</div>
+                <div className="font-semibold text-gray-900">{t('pushNotifications')}</div>
                 <div className="text-sm text-gray-500">
-                  Primește notificări în browser și mobil
+                  {t('pushNotificationsDesc')}
                 </div>
               </div>
               <button
@@ -420,7 +422,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             className="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="h-5 w-5" />
-            {saving ? 'Se salvează...' : 'Salvează modificările'}
+            {saving ? t('saving') : t('saveChanges')}
           </button>
         </div>
 
@@ -428,13 +430,13 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
         <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
             <Lock className="h-5 w-5" />
-            Schimbă parola
+            {t('changePassword')}
           </h2>
           <div className="space-y-4">
             {/* Current password - optional, some auth systems don't require it */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Parola curentă (opțional)
+                {t('currentPassword')}
               </label>
               <input
                 type="password"
@@ -448,7 +450,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             {/* New password */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Parolă nouă
+                {t('newPassword')}
               </label>
               <input
                 type="password"
@@ -462,7 +464,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
             {/* Confirm password */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Confirmă parola nouă
+                {t('confirmNewPassword')}
               </label>
               <input
                 type="password"
@@ -478,7 +480,7 @@ export default function ProfileClient({ user, profile, preferences }: Props) {
               disabled={changingPassword || !newPassword || !confirmPassword}
               className="px-6 py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {changingPassword ? 'Se schimbă...' : 'Schimbă parola'}
+              {changingPassword ? t('changingPassword') : t('changePassword')}
             </button>
           </div>
         </div>

@@ -6,6 +6,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { Upload, Calendar, Stethoscope, FileText, AlertCircle, CheckCircle2 } from 'lucide-react'
 
@@ -62,6 +63,7 @@ export default function MedicalExamFormComplete({
   editingId,
   initialData,
 }: Props) {
+  const t = useTranslations('forms')
   const supabase = createSupabaseBrowser()
 
   // ========== STATE ==========
@@ -144,12 +146,12 @@ export default function MedicalExamFormComplete({
     if (file) {
       // Validate file type (PDF only)
       if (file.type !== 'application/pdf') {
-        setError('Doar fișiere PDF sunt permise pentru fișa de aptitudine')
+        setError(t('medicalExam.errorPdfOnly'))
         return
       }
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setError('Fișierul nu poate depăși 5MB')
+        setError(t('medicalExam.errorFileSize'))
         return
       }
       setFormData((prev) => ({ ...prev, file }))
@@ -166,16 +168,16 @@ export default function MedicalExamFormComplete({
     try {
       // Validation
       if (!formData.employee_id) {
-        throw new Error('Selectează un angajat')
+        throw new Error(t('medicalExam.errorSelectEmployee'))
       }
       if (!formData.examination_date) {
-        throw new Error('Introdu data examinării')
+        throw new Error(t('medicalExam.errorEnterDate'))
       }
       if (!formData.doctor_name) {
-        throw new Error('Introdu numele medicului')
+        throw new Error(t('medicalExam.errorEnterDoctor'))
       }
       if (!formData.clinic_name) {
-        throw new Error('Introdu numele clinicii')
+        throw new Error(t('medicalExam.errorEnterClinic'))
       }
 
       // Upload file if present
@@ -192,7 +194,7 @@ export default function MedicalExamFormComplete({
           })
 
         if (uploadError) {
-          throw new Error(`Eroare la încărcare fișier: ${uploadError.message}`)
+          throw new Error(`${t('medicalExam.errorUpload')}: ${uploadError.message}`)
         }
 
         // Get public URL
@@ -207,7 +209,7 @@ export default function MedicalExamFormComplete({
       // Get employee details
       const employee = employees.find((e) => e.id === formData.employee_id)
       if (!employee) {
-        throw new Error('Angajat invalid')
+        throw new Error(t('medicalExam.errorInvalidEmployee'))
       }
 
       // Prepare payload
@@ -267,7 +269,7 @@ export default function MedicalExamFormComplete({
       }, 2000)
     } catch (err: any) {
       console.error('[MEDICAL FORM] Error:', err)
-      setError(err.message || 'Eroare la salvare. Încearcă din nou.')
+      setError(err.message || t('medicalExam.errorSave'))
     } finally {
       setLoading(false)
       setUploadingFile(false)
@@ -289,9 +291,9 @@ export default function MedicalExamFormComplete({
         <div className="rounded-xl bg-green-50 border border-green-200 p-4 flex items-start gap-3">
           <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
           <div>
-            <h4 className="font-semibold text-green-900">Salvat cu succes!</h4>
+            <h4 className="font-semibold text-green-900">{t('medicalExam.successTitle')}</h4>
             <p className="text-sm text-green-700 mt-1">
-              {editingId ? 'Examenul medical a fost actualizat.' : 'Examenul medical a fost adăugat.'}
+              {editingId ? t('medicalExam.successUpdated') : t('medicalExam.successAdded')}
             </p>
           </div>
         </div>
@@ -302,7 +304,7 @@ export default function MedicalExamFormComplete({
         <div className="rounded-xl bg-red-50 border border-red-200 p-4 flex items-start gap-3">
           <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
           <div>
-            <h4 className="font-semibold text-red-900">Eroare</h4>
+            <h4 className="font-semibold text-red-900">{t('medicalExam.errorTitle')}</h4>
             <p className="text-sm text-red-700 mt-1">{error}</p>
           </div>
         </div>
@@ -311,7 +313,7 @@ export default function MedicalExamFormComplete({
       {/* Organizație */}
       <div>
         <label htmlFor="organization_id" className="block text-sm font-medium text-gray-700 mb-2">
-          Organizație *
+          {t('medicalExam.labelOrg')} *
         </label>
         <select
           id="organization_id"
@@ -321,7 +323,7 @@ export default function MedicalExamFormComplete({
           required
           className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
-          <option value="">Selectează organizația</option>
+          <option value="">{t('medicalExam.selectOrg')}</option>
           {organizations.map((org) => (
             <option key={org.id} value={org.id}>
               {org.name} {org.cui ? `(${org.cui})` : ''}
@@ -333,7 +335,7 @@ export default function MedicalExamFormComplete({
       {/* Angajat */}
       <div>
         <label htmlFor="employee_id" className="block text-sm font-medium text-gray-700 mb-2">
-          Angajat *
+          {t('medicalExam.labelEmployee')} *
         </label>
         <select
           id="employee_id"
@@ -346,8 +348,8 @@ export default function MedicalExamFormComplete({
         >
           <option value="">
             {formData.organization_id
-              ? 'Selectează angajatul'
-              : 'Selectează mai întâi organizația'}
+              ? t('medicalExam.selectEmployee')
+              : t('medicalExam.selectOrgFirst')}
           </option>
           {filteredEmployees.map((emp) => (
             <option key={emp.id} value={emp.id}>
@@ -356,7 +358,7 @@ export default function MedicalExamFormComplete({
           ))}
         </select>
         <p className="text-xs text-gray-500 mt-1">
-          {filteredEmployees.length} angajat(i) disponibil(i)
+          {t('medicalExam.employeesAvailable', { count: filteredEmployees.length })}
         </p>
       </div>
 
@@ -364,7 +366,7 @@ export default function MedicalExamFormComplete({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="examination_type" className="block text-sm font-medium text-gray-700 mb-2">
-            Tip examen *
+            {t('medicalExam.labelExamType')} *
           </label>
           <select
             id="examination_type"
@@ -384,7 +386,7 @@ export default function MedicalExamFormComplete({
 
         <div>
           <label htmlFor="examination_date" className="block text-sm font-medium text-gray-700 mb-2">
-            Data examinare *
+            {t('medicalExam.labelExamDate')} *
           </label>
           <div className="relative">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -405,7 +407,7 @@ export default function MedicalExamFormComplete({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="doctor_name" className="block text-sm font-medium text-gray-700 mb-2">
-            Medic medicina muncii *
+            {t('medicalExam.labelDoctor')} *
           </label>
           <div className="relative">
             <Stethoscope className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -424,7 +426,7 @@ export default function MedicalExamFormComplete({
 
         <div>
           <label htmlFor="clinic_name" className="block text-sm font-medium text-gray-700 mb-2">
-            Clinică / Cabinet *
+            {t('medicalExam.labelClinic')} *
           </label>
           <input
             type="text"
@@ -442,7 +444,7 @@ export default function MedicalExamFormComplete({
       {/* Rezultat */}
       <div>
         <label htmlFor="result" className="block text-sm font-medium text-gray-700 mb-2">
-          Rezultat examen *
+          {t('medicalExam.labelResult')} *
         </label>
         <select
           id="result"
@@ -464,8 +466,8 @@ export default function MedicalExamFormComplete({
       {(formData.result === 'apt_conditionat' || formData.result === 'inapt_temporar' || formData.result === 'amanat') && (
         <div>
           <label htmlFor="restrictions" className="block text-sm font-medium text-gray-700 mb-2">
-            Restricții / Recomandări
-            {formData.result === 'amanat' && ' / Motiv amânare'}
+            {t('medicalExam.labelRestrictions')}
+            {formData.result === 'amanat' && ` / ${t('medicalExam.postponeReason')}`}
           </label>
           <textarea
             id="restrictions"
@@ -475,8 +477,8 @@ export default function MedicalExamFormComplete({
             rows={3}
             placeholder={
               formData.result === 'amanat'
-                ? 'Exemplu: Amânat din cauza lipsei de acte medicale, reprogramare peste 7 zile...'
-                : 'Exemplu: Interdicție port greutăți peste 10 kg, pauze suplimentare...'
+                ? t('medicalExam.postponePlaceholder')
+                : t('medicalExam.restrictionsPlaceholder')
             }
             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           />
@@ -486,7 +488,7 @@ export default function MedicalExamFormComplete({
       {/* Data urmatorul examen (auto-calculated) */}
       <div>
         <label htmlFor="expiry_date" className="block text-sm font-medium text-gray-700 mb-2">
-          Data următorului examen (auto-calculat)
+          {t('medicalExam.labelNextExam')}
         </label>
         <div className="relative">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -500,14 +502,14 @@ export default function MedicalExamFormComplete({
           />
         </div>
         <p className="text-xs text-gray-500 mt-1">
-          Calculat automat în funcție de tipul examenului (periodic: 12 luni, special: 6 luni)
+          {t('medicalExam.nextExamNote')}
         </p>
       </div>
 
       {/* Upload fișă aptitudine */}
       <div>
         <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-2">
-          Fișă de aptitudine (PDF)
+          {t('medicalExam.labelFile')}
         </label>
         <div className="relative">
           <input
@@ -526,21 +528,21 @@ export default function MedicalExamFormComplete({
               {formData.file
                 ? formData.file.name
                 : formData.file_url
-                ? 'Schimbă fișierul'
-                : 'Alege fișier PDF (max 5MB)'}
+                ? t('medicalExam.changeFile')
+                : t('medicalExam.chooseFile')}
             </span>
           </label>
           {formData.file && (
             <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
               <FileText className="h-3 w-3" />
-              Fișier selectat: {formData.file.name} ({(formData.file.size / 1024).toFixed(0)} KB)
+              {t('medicalExam.fileSelected')}: {formData.file.name} ({(formData.file.size / 1024).toFixed(0)} KB)
             </p>
           )}
           {formData.file_url && !formData.file && (
             <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
               <FileText className="h-3 w-3" />
               <a href={formData.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                Vizualizează fișierul existent
+                {t('medicalExam.viewExistingFile')}
               </a>
             </p>
           )}
@@ -556,7 +558,7 @@ export default function MedicalExamFormComplete({
             disabled={loading || uploadingFile}
             className="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Anulează
+            {t('medicalExam.cancel')}
           </button>
         )}
         <button
@@ -567,12 +569,12 @@ export default function MedicalExamFormComplete({
           {loading || uploadingFile ? (
             <>
               <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              {uploadingFile ? 'Se încarcă...' : 'Se salvează...'}
+              {uploadingFile ? t('medicalExam.uploading') : t('medicalExam.saving')}
             </>
           ) : (
             <>
               <Stethoscope className="h-4 w-4" />
-              {editingId ? 'Actualizează' : 'Salvează examen'}
+              {editingId ? t('medicalExam.update') : t('medicalExam.save')}
             </>
           )}
         </button>
