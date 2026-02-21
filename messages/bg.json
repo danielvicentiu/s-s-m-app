@@ -2486,5 +2486,218 @@
     "sectorDigitalServices": "Доставчици на цифрови услуги",
     "sectorResearch": "Изследвания",
     "sectorUnspecified": "Неуточнен"
+  },
+  "dataImport": {
+    "title": "Импорт на данни",
+    "subtitle": "Импортирайте служители, обучения, медицински прегледи и оборудване",
+    "steps": {
+      "upload": "Качване",
+      "mapping": "Съпоставяне",
+      "preview": "Преглед",
+      "import": "Импорт"
+    },
+    "types": {
+      "employees": "Служители",
+      "trainings": "Обучения",
+      "medical": "Медицински прегледи",
+      "equipment": "Оборудване"
+    },
+    "fields": {
+      "fullName": "Пълно име",
+      "jobTitle": "Длъжност",
+      "department": "Отдел",
+      "hireDate": "Дата на назначаване",
+      "corCode": "COR код",
+      "phone": "Телефон",
+      "employeeName": "Име на служител",
+      "trainingType": "Вид обучение",
+      "trainingDate": "Дата на обучение",
+      "expiryDate": "Дата на изтичане",
+      "instructor": "Инструктор",
+      "notes": "Бележки",
+      "examinationType": "Вид преглед",
+      "examinationDate": "Дата на преглед",
+      "result": "Резултат",
+      "doctor": "Лекар",
+      "clinic": "Клиника",
+      "restrictions": "Ограничения",
+      "equipmentType": "Вид оборудване",
+      "serialNumber": "Сериен номер",
+      "location": "Местоположение",
+      "lastInspection": "Последна инспекция",
+      "nextInspection": "Следваща инспекция",
+      "description": "Описание"
+    },
+    "step1": {
+      "importTypeLabel": "Вид импорт",
+      "organizationLabel": "Организация",
+      "uploadLabel": "Файл (CSV/XLSX)",
+      "selectFile": "Избери файл",
+      "downloadTemplate": "Изтегли шаблон",
+      "downloadTemplateFile": "Изтегли",
+      "downloadTemplateHint": "Използвайте шаблона за правилен формат"
+    },
+    "step2": {
+      "mappingTitle": "Съпоставяне на колони",
+      "autoDetect": "Автоматично разпознаване",
+      "notSet": "Не е зададено"
+    },
+    "step3": {
+      "row": "Ред",
+      "status": "Статус",
+      "data": "Данни",
+      "valid": "Валидно",
+      "errors": "Грешки",
+      "warnings": "Предупреждения",
+      "issues": "Проблеми"
+    },
+    "step4": {
+      "readyTitle": "Готово за импорт",
+      "confirmImport": "Потвърди импорт",
+      "importing": "Импортиране...",
+      "doneTitle": "Импортът е завършен",
+      "backToDashboard": "Обратно към таблото"
+    },
+    "nav": {
+      "back": "Назад",
+      "continue": "Продължи"
+    },
+    "errors": {
+      "selectOrg": "Изберете организация",
+      "emptyFile": "Файлът е празен",
+      "readError": "Грешка при четене на файл"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Import Wizard",
+      "organization": "Организация",
+      "dashboard": "Табло"
+    },
+    "fields": {
+      "firstName": "Собствено име",
+      "lastName": "Фамилно име",
+      "jobTitle": "Длъжност",
+      "department": "Отдел",
+      "hireDate": "Дата на назначаване",
+      "contractEndDate": "Дата на прекратяване на договора",
+      "phone": "Телефон",
+      "corCode": "COR код",
+      "corTitle": "COR наименование",
+      "contractNumber": "№ на договор",
+      "contractType": "Вид договор",
+      "status": "Статус"
+    },
+    "step1": {
+      "title": "Качи файл",
+      "description": "Изберете CSV или XLSX файл за импорт",
+      "selectFile": "Избери файл",
+      "dropZoneTitle": "Плъзнете файл тук или кликнете за избор",
+      "dropZoneFormats": "Приети формати: CSV, XLSX, XLS",
+      "previewTitle": "Преглед",
+      "rowsDetected": "открити реда",
+      "headerOnRow": "Заглавие на ред"
+    },
+    "step2": {
+      "title": "Избери профил",
+      "description": "Изберете подходящия профил за импорт",
+      "manualTitle": "Ръчно",
+      "manualDesc": "Ръчно съпоставяне на колони",
+      "regesSalariatiTitle": "REGES Служители",
+      "regesSalariatiDesc": "Експорт на лични данни на служители от REGES Online",
+      "regesContracteTitle": "REGES Договори",
+      "regesContracteDesc": "Експорт на трудови договори от REGES Online",
+      "regesNote": "Профилът REGES автоматично разпознава стандартните колони"
+    },
+    "step3": {
+      "title": "Съпоставяне на колони",
+      "description": "Свържете колоните от файла с полетата в системата",
+      "ignoreOption": "— Игнорирай —",
+      "validateButton": "Валидирай",
+      "previewLabel": "Преглед на съпоставянето",
+      "previewDesc": "Проверете дали съпоставянето е правилно"
+    },
+    "step4": {
+      "title": "Валидиране и импорт",
+      "importButton": "Импортирай",
+      "selectAll": "Избери всички",
+      "deselectAll": "Отмени избора на всички",
+      "autoMapping": "Автоматично съпоставяне",
+      "previewTitle": "Преглед на данните",
+      "mappingCount": "съпоставени колони",
+      "colFullName": "Пълно име",
+      "statsDetected": "Открити",
+      "statsValid": "Валидни",
+      "statsErrors": "Грешки",
+      "statsWarnings": "Предупреждения",
+      "validationList": "Списък за валидиране"
+    },
+    "step5": {
+      "importing": "Импортиране...",
+      "done": "Импортът е завършен!",
+      "progressLabel": "Напредък",
+      "successCount": "Успешно импортирани",
+      "failedCount": "Неуспешни",
+      "profileUsed": "Използван профил",
+      "viewEmployees": "Виж служителите"
+    },
+    "nav": {
+      "back": "Назад",
+      "newImport": "Нов импорт"
+    },
+    "validation": {
+      "firstNameRequired": "Собственото име е задължително",
+      "lastNameRequired": "Фамилното име е задължително",
+      "cnpInvalid": "Невалиден CNP",
+      "cnpDuplicate": "Дублиран CNP във файла",
+      "cnpExistsInOrg": "CNP вече съществува в организацията",
+      "emailInvalid": "Невалиден имейл",
+      "hireDateInvalid": "Невалидна дата на назначаване",
+      "corCodeFormat": "Невалиден формат на COR код"
+    },
+    "errors": {
+      "emptyFile": "Файлът е празен",
+      "readError": "Грешка при четене на файл"
+    }
+  },
+  "modules": {
+    "title": "Модули",
+    "subtitle": "Налични OP-LEGO модули за вашата организация",
+    "breadcrumb": "Модули",
+    "section": {
+      "core": "Основни модули",
+      "standalone": "Стандартни модули",
+      "premium": "Премиум модули"
+    },
+    "status": {
+      "active": "Активен",
+      "trial": "Trial",
+      "suspended": "Спрян",
+      "inactive": "Неактивен"
+    },
+    "category": {
+      "core": "Включен",
+      "standalone": "Стандартен",
+      "premium": "Премиум"
+    },
+    "stats": {
+      "active": "Активни",
+      "trial": "Trial",
+      "available": "Налични"
+    },
+    "card": {
+      "activeSince": "Активен от",
+      "trialExpires": "Trial изтича",
+      "contactAdmin": "Свържете се с администратора"
+    },
+    "info": {
+      "title": "OP-LEGO модули",
+      "message": "Активирайте необходимите модули. Всеки модул добавя специфични функционалности."
+    },
+    "footer": {
+      "title": "Нуждаете се от повече модули?",
+      "message": "Свържете се с нас за персонализиран план.",
+      "contactButton": "Свържете се с нас"
+    }
   }
 }

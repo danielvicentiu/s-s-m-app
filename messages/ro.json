@@ -2486,5 +2486,218 @@
     "sectorDigitalServices": "Furnizori servicii digitale",
     "sectorResearch": "Cercetare",
     "sectorUnspecified": "Nespecificat"
+  },
+  "dataImport": {
+    "title": "Import Date",
+    "subtitle": "Importă angajați, instruiri, examene medicale și echipamente",
+    "steps": {
+      "upload": "Încărcare",
+      "mapping": "Mapare",
+      "preview": "Previzualizare",
+      "import": "Import"
+    },
+    "types": {
+      "employees": "Angajați",
+      "trainings": "Instruiri",
+      "medical": "Examene medicale",
+      "equipment": "Echipamente"
+    },
+    "fields": {
+      "fullName": "Nume complet",
+      "jobTitle": "Funcție",
+      "department": "Departament",
+      "hireDate": "Data angajare",
+      "corCode": "Cod COR",
+      "phone": "Telefon",
+      "employeeName": "Nume angajat",
+      "trainingType": "Tip instruire",
+      "trainingDate": "Data instruire",
+      "expiryDate": "Data expirare",
+      "instructor": "Instructor",
+      "notes": "Observații",
+      "examinationType": "Tip examen",
+      "examinationDate": "Data examen",
+      "result": "Rezultat",
+      "doctor": "Medic",
+      "clinic": "Clinică",
+      "restrictions": "Restricții",
+      "equipmentType": "Tip echipament",
+      "serialNumber": "Număr serie",
+      "location": "Locație",
+      "lastInspection": "Ultima inspecție",
+      "nextInspection": "Următoarea inspecție",
+      "description": "Descriere"
+    },
+    "step1": {
+      "importTypeLabel": "Tip import",
+      "organizationLabel": "Organizație",
+      "uploadLabel": "Fișier (CSV/XLSX)",
+      "selectFile": "Selectează fișier",
+      "downloadTemplate": "Descarcă template",
+      "downloadTemplateFile": "Descarcă",
+      "downloadTemplateHint": "Folosește template-ul pentru format corect"
+    },
+    "step2": {
+      "mappingTitle": "Mapare coloane",
+      "autoDetect": "Detectare automată",
+      "notSet": "Nu este setat"
+    },
+    "step3": {
+      "row": "Rând",
+      "status": "Status",
+      "data": "Date",
+      "valid": "Valid",
+      "errors": "Erori",
+      "warnings": "Avertizări",
+      "issues": "Probleme"
+    },
+    "step4": {
+      "readyTitle": "Gata de import",
+      "confirmImport": "Confirmă import",
+      "importing": "Se importă...",
+      "doneTitle": "Import finalizat",
+      "backToDashboard": "Înapoi la dashboard"
+    },
+    "nav": {
+      "back": "Înapoi",
+      "continue": "Continuă"
+    },
+    "errors": {
+      "selectOrg": "Selectează o organizație",
+      "emptyFile": "Fișierul este gol",
+      "readError": "Eroare la citire fișier"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Import Wizard",
+      "organization": "Organizație",
+      "dashboard": "Dashboard"
+    },
+    "fields": {
+      "firstName": "Prenume",
+      "lastName": "Nume",
+      "jobTitle": "Funcție",
+      "department": "Departament",
+      "hireDate": "Data angajării",
+      "contractEndDate": "Data sfârșit contract",
+      "phone": "Telefon",
+      "corCode": "Cod COR",
+      "corTitle": "Denumire COR",
+      "contractNumber": "Nr. contract",
+      "contractType": "Tip contract",
+      "status": "Status"
+    },
+    "step1": {
+      "title": "Încarcă fișier",
+      "description": "Selectează fișierul CSV sau XLSX pentru import",
+      "selectFile": "Selectează fișier",
+      "dropZoneTitle": "Trage fișierul aici sau click pentru selectare",
+      "dropZoneFormats": "Formate acceptate: CSV, XLSX, XLS",
+      "previewTitle": "Previzualizare",
+      "rowsDetected": "rânduri detectate",
+      "headerOnRow": "Header pe rândul"
+    },
+    "step2": {
+      "title": "Selectează profil",
+      "description": "Alege profilul de import potrivit",
+      "manualTitle": "Manual",
+      "manualDesc": "Mapare manuală a coloanelor",
+      "regesSalariatiTitle": "REGES Salariați",
+      "regesSalariatiDesc": "Export date personale angajați din REGES Online",
+      "regesContracteTitle": "REGES Contracte",
+      "regesContracteDesc": "Export contracte de muncă din REGES Online",
+      "regesNote": "Profilul REGES detectează automat coloanele standard"
+    },
+    "step3": {
+      "title": "Mapare coloane",
+      "description": "Asociază coloanele din fișier cu câmpurile din sistem",
+      "ignoreOption": "— Ignoră —",
+      "validateButton": "Validează",
+      "previewLabel": "Previzualizare mapare",
+      "previewDesc": "Verifică dacă maparea este corectă"
+    },
+    "step4": {
+      "title": "Validare și import",
+      "importButton": "Importă",
+      "selectAll": "Selectează tot",
+      "deselectAll": "Deselectează tot",
+      "autoMapping": "Mapare automată",
+      "previewTitle": "Previzualizare date",
+      "mappingCount": "coloane mapate",
+      "colFullName": "Nume complet",
+      "statsDetected": "Detectate",
+      "statsValid": "Valide",
+      "statsErrors": "Erori",
+      "statsWarnings": "Avertizări",
+      "validationList": "Lista validări"
+    },
+    "step5": {
+      "importing": "Se importă...",
+      "done": "Import finalizat!",
+      "progressLabel": "Progres",
+      "successCount": "Importate cu succes",
+      "failedCount": "Eșuate",
+      "profileUsed": "Profil folosit",
+      "viewEmployees": "Vezi angajații"
+    },
+    "nav": {
+      "back": "Înapoi",
+      "newImport": "Import nou"
+    },
+    "validation": {
+      "firstNameRequired": "Prenumele este obligatoriu",
+      "lastNameRequired": "Numele este obligatoriu",
+      "cnpInvalid": "CNP invalid",
+      "cnpDuplicate": "CNP duplicat în fișier",
+      "cnpExistsInOrg": "CNP există deja în organizație",
+      "emailInvalid": "Email invalid",
+      "hireDateInvalid": "Data angajării invalidă",
+      "corCodeFormat": "Format cod COR invalid"
+    },
+    "errors": {
+      "emptyFile": "Fișierul este gol",
+      "readError": "Eroare la citire fișier"
+    }
+  },
+  "modules": {
+    "title": "Module",
+    "subtitle": "Module OP-LEGO disponibile pentru organizația ta",
+    "breadcrumb": "Module",
+    "section": {
+      "core": "Module de bază",
+      "standalone": "Module standard",
+      "premium": "Module premium"
+    },
+    "status": {
+      "active": "Activ",
+      "trial": "Trial",
+      "suspended": "Suspendat",
+      "inactive": "Inactiv"
+    },
+    "category": {
+      "core": "Inclus",
+      "standalone": "Standard",
+      "premium": "Premium"
+    },
+    "stats": {
+      "active": "Active",
+      "trial": "Trial",
+      "available": "Disponibile"
+    },
+    "card": {
+      "activeSince": "Activ din",
+      "trialExpires": "Trial expiră",
+      "contactAdmin": "Contactează administratorul"
+    },
+    "info": {
+      "title": "Module OP-LEGO",
+      "message": "Activează modulele de care ai nevoie. Fiecare modul adaugă funcționalități specifice."
+    },
+    "footer": {
+      "title": "Ai nevoie de mai multe module?",
+      "message": "Contactează-ne pentru un plan personalizat.",
+      "contactButton": "Contactează-ne"
+    }
   }
 }

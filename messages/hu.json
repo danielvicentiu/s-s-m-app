@@ -2486,5 +2486,218 @@
     "sectorDigitalServices": "Digitális szolgáltatók",
     "sectorResearch": "Kutatás",
     "sectorUnspecified": "Nem meghatározott"
+  },
+  "dataImport": {
+    "title": "Adatimport",
+    "subtitle": "Munkavállalók, képzések, orvosi vizsgálatok és berendezések importálása",
+    "steps": {
+      "upload": "Feltöltés",
+      "mapping": "Megfeleltetés",
+      "preview": "Előnézet",
+      "import": "Import"
+    },
+    "types": {
+      "employees": "Munkavállalók",
+      "trainings": "Képzések",
+      "medical": "Orvosi vizsgálatok",
+      "equipment": "Berendezések"
+    },
+    "fields": {
+      "fullName": "Teljes név",
+      "jobTitle": "Beosztás",
+      "department": "Részleg",
+      "hireDate": "Felvétel dátuma",
+      "corCode": "COR kód",
+      "phone": "Telefon",
+      "employeeName": "Munkavállaló neve",
+      "trainingType": "Képzés típusa",
+      "trainingDate": "Képzés dátuma",
+      "expiryDate": "Lejárat dátuma",
+      "instructor": "Oktató",
+      "notes": "Megjegyzések",
+      "examinationType": "Vizsgálat típusa",
+      "examinationDate": "Vizsgálat dátuma",
+      "result": "Eredmény",
+      "doctor": "Orvos",
+      "clinic": "Klinika",
+      "restrictions": "Korlátozások",
+      "equipmentType": "Berendezés típusa",
+      "serialNumber": "Sorozatszám",
+      "location": "Helyszín",
+      "lastInspection": "Utolsó ellenőrzés",
+      "nextInspection": "Következő ellenőrzés",
+      "description": "Leírás"
+    },
+    "step1": {
+      "importTypeLabel": "Import típusa",
+      "organizationLabel": "Szervezet",
+      "uploadLabel": "Fájl (CSV/XLSX)",
+      "selectFile": "Fájl kiválasztása",
+      "downloadTemplate": "Sablon letöltése",
+      "downloadTemplateFile": "Letöltés",
+      "downloadTemplateHint": "Használja a sablont a helyes formátumhoz"
+    },
+    "step2": {
+      "mappingTitle": "Oszlopmegfeleltetés",
+      "autoDetect": "Automatikus felismerés",
+      "notSet": "Nincs beállítva"
+    },
+    "step3": {
+      "row": "Sor",
+      "status": "Státusz",
+      "data": "Adatok",
+      "valid": "Érvényes",
+      "errors": "Hibák",
+      "warnings": "Figyelmeztetések",
+      "issues": "Problémák"
+    },
+    "step4": {
+      "readyTitle": "Importálásra kész",
+      "confirmImport": "Import megerősítése",
+      "importing": "Importálás...",
+      "doneTitle": "Import kész",
+      "backToDashboard": "Vissza az irányítópultra"
+    },
+    "nav": {
+      "back": "Vissza",
+      "continue": "Folytatás"
+    },
+    "errors": {
+      "selectOrg": "Válasszon szervezetet",
+      "emptyFile": "A fájl üres",
+      "readError": "Hiba a fájl olvasásakor"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Import Wizard",
+      "organization": "Szervezet",
+      "dashboard": "Irányítópult"
+    },
+    "fields": {
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "jobTitle": "Beosztás",
+      "department": "Részleg",
+      "hireDate": "Felvétel dátuma",
+      "contractEndDate": "Szerződés vége",
+      "phone": "Telefon",
+      "corCode": "COR kód",
+      "corTitle": "COR megnevezés",
+      "contractNumber": "Szerződés száma",
+      "contractType": "Szerződés típusa",
+      "status": "Státusz"
+    },
+    "step1": {
+      "title": "Fájl feltöltése",
+      "description": "Válasszon CSV vagy XLSX fájlt az importáláshoz",
+      "selectFile": "Fájl kiválasztása",
+      "dropZoneTitle": "Húzza ide a fájlt, vagy kattintson a kiválasztáshoz",
+      "dropZoneFormats": "Elfogadott formátumok: CSV, XLSX, XLS",
+      "previewTitle": "Előnézet",
+      "rowsDetected": "sor érzékelve",
+      "headerOnRow": "Fejléc a soron"
+    },
+    "step2": {
+      "title": "Profil kiválasztása",
+      "description": "Válassza ki a megfelelő importálási profilt",
+      "manualTitle": "Manuális",
+      "manualDesc": "Manuális oszlopmegfeleltetés",
+      "regesSalariatiTitle": "REGES Munkavállalók",
+      "regesSalariatiDesc": "Munkavállalói személyes adatok exportálása a REGES Online-ból",
+      "regesContracteTitle": "REGES Szerződések",
+      "regesContracteDesc": "Munkaszerződések exportálása a REGES Online-ból",
+      "regesNote": "A REGES profil automatikusan felismeri a standard oszlopokat"
+    },
+    "step3": {
+      "title": "Oszlopmegfeleltetés",
+      "description": "Fájloszlopok hozzárendelése a rendszer mezőihez",
+      "ignoreOption": "— Figyelmen kívül hagy —",
+      "validateButton": "Érvényesítés",
+      "previewLabel": "Megfeleltetés előnézete",
+      "previewDesc": "Ellenőrizze, hogy a megfeleltetés helyes-e"
+    },
+    "step4": {
+      "title": "Érvényesítés és importálás",
+      "importButton": "Importálás",
+      "selectAll": "Összes kiválasztása",
+      "deselectAll": "Kijelölés megszüntetése",
+      "autoMapping": "Automatikus megfeleltetés",
+      "previewTitle": "Adatok előnézete",
+      "mappingCount": "oszlop hozzárendelve",
+      "colFullName": "Teljes név",
+      "statsDetected": "Érzékelt",
+      "statsValid": "Érvényes",
+      "statsErrors": "Hibák",
+      "statsWarnings": "Figyelmeztetések",
+      "validationList": "Érvényesítési lista"
+    },
+    "step5": {
+      "importing": "Importálás...",
+      "done": "Import kész!",
+      "progressLabel": "Haladás",
+      "successCount": "Sikeresen importálva",
+      "failedCount": "Sikertelen",
+      "profileUsed": "Használt profil",
+      "viewEmployees": "Munkavállalók megtekintése"
+    },
+    "nav": {
+      "back": "Vissza",
+      "newImport": "Új import"
+    },
+    "validation": {
+      "firstNameRequired": "A keresztnév kötelező",
+      "lastNameRequired": "A vezetéknév kötelező",
+      "cnpInvalid": "Érvénytelen CNP",
+      "cnpDuplicate": "Duplikált CNP a fájlban",
+      "cnpExistsInOrg": "A CNP már létezik a szervezetben",
+      "emailInvalid": "Érvénytelen e-mail",
+      "hireDateInvalid": "Érvénytelen felvételi dátum",
+      "corCodeFormat": "Érvénytelen COR kódformátum"
+    },
+    "errors": {
+      "emptyFile": "A fájl üres",
+      "readError": "Hiba a fájl olvasásakor"
+    }
+  },
+  "modules": {
+    "title": "Modulok",
+    "subtitle": "Az OP-LEGO modulok elérhetők az Ön szervezete számára",
+    "breadcrumb": "Modulok",
+    "section": {
+      "core": "Alap modulok",
+      "standalone": "Standard modulok",
+      "premium": "Prémium modulok"
+    },
+    "status": {
+      "active": "Aktív",
+      "trial": "Trial",
+      "suspended": "Felfüggesztett",
+      "inactive": "Inaktív"
+    },
+    "category": {
+      "core": "Belefoglalt",
+      "standalone": "Standard",
+      "premium": "Prémium"
+    },
+    "stats": {
+      "active": "Aktív",
+      "trial": "Trial",
+      "available": "Elérhető"
+    },
+    "card": {
+      "activeSince": "Aktív óta",
+      "trialExpires": "Trial lejár",
+      "contactAdmin": "Kapcsolatfelvétel az adminisztrátorral"
+    },
+    "info": {
+      "title": "OP-LEGO modulok",
+      "message": "Aktiválja a szükséges modulokat. Minden modul specifikus funkcionalitást ad hozzá."
+    },
+    "footer": {
+      "title": "Több modulra van szüksége?",
+      "message": "Vegye fel velünk a kapcsolatot egy személyre szabott tervért.",
+      "contactButton": "Kapcsolatfelvétel"
+    }
   }
 }

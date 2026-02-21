@@ -2486,5 +2486,218 @@
     "sectorDigitalServices": "Dostawcy usług cyfrowych",
     "sectorResearch": "Badania",
     "sectorUnspecified": "Niespecyfikowany"
+  },
+  "dataImport": {
+    "title": "Import danych",
+    "subtitle": "Importuj pracowników, szkolenia, badania lekarskie i sprzęt",
+    "steps": {
+      "upload": "Przesyłanie",
+      "mapping": "Mapowanie",
+      "preview": "Podgląd",
+      "import": "Import"
+    },
+    "types": {
+      "employees": "Pracownicy",
+      "trainings": "Szkolenia",
+      "medical": "Badania lekarskie",
+      "equipment": "Sprzęt"
+    },
+    "fields": {
+      "fullName": "Imię i nazwisko",
+      "jobTitle": "Stanowisko",
+      "department": "Dział",
+      "hireDate": "Data zatrudnienia",
+      "corCode": "Kod COR",
+      "phone": "Telefon",
+      "employeeName": "Imię i nazwisko pracownika",
+      "trainingType": "Typ szkolenia",
+      "trainingDate": "Data szkolenia",
+      "expiryDate": "Data wygaśnięcia",
+      "instructor": "Instruktor",
+      "notes": "Uwagi",
+      "examinationType": "Typ badania",
+      "examinationDate": "Data badania",
+      "result": "Wynik",
+      "doctor": "Lekarz",
+      "clinic": "Klinika",
+      "restrictions": "Ograniczenia",
+      "equipmentType": "Typ sprzętu",
+      "serialNumber": "Numer seryjny",
+      "location": "Lokalizacja",
+      "lastInspection": "Ostatnia inspekcja",
+      "nextInspection": "Następna inspekcja",
+      "description": "Opis"
+    },
+    "step1": {
+      "importTypeLabel": "Typ importu",
+      "organizationLabel": "Organizacja",
+      "uploadLabel": "Plik (CSV/XLSX)",
+      "selectFile": "Wybierz plik",
+      "downloadTemplate": "Pobierz szablon",
+      "downloadTemplateFile": "Pobierz",
+      "downloadTemplateHint": "Użyj szablonu dla poprawnego formatu"
+    },
+    "step2": {
+      "mappingTitle": "Mapowanie kolumn",
+      "autoDetect": "Automatyczne wykrywanie",
+      "notSet": "Nie ustawiono"
+    },
+    "step3": {
+      "row": "Wiersz",
+      "status": "Status",
+      "data": "Dane",
+      "valid": "Prawidłowe",
+      "errors": "Błędy",
+      "warnings": "Ostrzeżenia",
+      "issues": "Problemy"
+    },
+    "step4": {
+      "readyTitle": "Gotowe do importu",
+      "confirmImport": "Potwierdź import",
+      "importing": "Importowanie...",
+      "doneTitle": "Import zakończony",
+      "backToDashboard": "Powrót do pulpitu"
+    },
+    "nav": {
+      "back": "Wstecz",
+      "continue": "Dalej"
+    },
+    "errors": {
+      "selectOrg": "Wybierz organizację",
+      "emptyFile": "Plik jest pusty",
+      "readError": "Błąd podczas odczytu pliku"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Import Wizard",
+      "organization": "Organizacja",
+      "dashboard": "Pulpit"
+    },
+    "fields": {
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "jobTitle": "Stanowisko",
+      "department": "Dział",
+      "hireDate": "Data zatrudnienia",
+      "contractEndDate": "Data zakończenia umowy",
+      "phone": "Telefon",
+      "corCode": "Kod COR",
+      "corTitle": "Nazwa COR",
+      "contractNumber": "Nr umowy",
+      "contractType": "Typ umowy",
+      "status": "Status"
+    },
+    "step1": {
+      "title": "Prześlij plik",
+      "description": "Wybierz plik CSV lub XLSX do importu",
+      "selectFile": "Wybierz plik",
+      "dropZoneTitle": "Przeciągnij plik tutaj lub kliknij, aby wybrać",
+      "dropZoneFormats": "Akceptowane formaty: CSV, XLSX, XLS",
+      "previewTitle": "Podgląd",
+      "rowsDetected": "wykrytych wierszy",
+      "headerOnRow": "Nagłówek w wierszu"
+    },
+    "step2": {
+      "title": "Wybierz profil",
+      "description": "Wybierz odpowiedni profil importu",
+      "manualTitle": "Ręcznie",
+      "manualDesc": "Ręczne mapowanie kolumn",
+      "regesSalariatiTitle": "REGES Pracownicy",
+      "regesSalariatiDesc": "Eksport danych osobowych pracowników z REGES Online",
+      "regesContracteTitle": "REGES Umowy",
+      "regesContracteDesc": "Eksport umów o pracę z REGES Online",
+      "regesNote": "Profil REGES automatycznie wykrywa standardowe kolumny"
+    },
+    "step3": {
+      "title": "Mapowanie kolumn",
+      "description": "Przypisz kolumny pliku do pól systemu",
+      "ignoreOption": "— Ignoruj —",
+      "validateButton": "Waliduj",
+      "previewLabel": "Podgląd mapowania",
+      "previewDesc": "Sprawdź, czy mapowanie jest poprawne"
+    },
+    "step4": {
+      "title": "Walidacja i import",
+      "importButton": "Importuj",
+      "selectAll": "Zaznacz wszystko",
+      "deselectAll": "Odznacz wszystko",
+      "autoMapping": "Automatyczne mapowanie",
+      "previewTitle": "Podgląd danych",
+      "mappingCount": "zmapowanych kolumn",
+      "colFullName": "Imię i nazwisko",
+      "statsDetected": "Wykryte",
+      "statsValid": "Prawidłowe",
+      "statsErrors": "Błędy",
+      "statsWarnings": "Ostrzeżenia",
+      "validationList": "Lista walidacji"
+    },
+    "step5": {
+      "importing": "Importowanie...",
+      "done": "Import zakończony!",
+      "progressLabel": "Postęp",
+      "successCount": "Zaimportowano pomyślnie",
+      "failedCount": "Nieudane",
+      "profileUsed": "Użyty profil",
+      "viewEmployees": "Zobacz pracowników"
+    },
+    "nav": {
+      "back": "Wstecz",
+      "newImport": "Nowy import"
+    },
+    "validation": {
+      "firstNameRequired": "Imię jest wymagane",
+      "lastNameRequired": "Nazwisko jest wymagane",
+      "cnpInvalid": "Nieprawidłowy CNP",
+      "cnpDuplicate": "Zduplikowany CNP w pliku",
+      "cnpExistsInOrg": "CNP już istnieje w organizacji",
+      "emailInvalid": "Nieprawidłowy e-mail",
+      "hireDateInvalid": "Nieprawidłowa data zatrudnienia",
+      "corCodeFormat": "Nieprawidłowy format kodu COR"
+    },
+    "errors": {
+      "emptyFile": "Plik jest pusty",
+      "readError": "Błąd podczas odczytu pliku"
+    }
+  },
+  "modules": {
+    "title": "Moduły",
+    "subtitle": "Moduły OP-LEGO dostępne dla Twojej organizacji",
+    "breadcrumb": "Moduły",
+    "section": {
+      "core": "Moduły podstawowe",
+      "standalone": "Moduły standardowe",
+      "premium": "Moduły premium"
+    },
+    "status": {
+      "active": "Aktywny",
+      "trial": "Trial",
+      "suspended": "Zawieszony",
+      "inactive": "Nieaktywny"
+    },
+    "category": {
+      "core": "W zestawie",
+      "standalone": "Standardowy",
+      "premium": "Premium"
+    },
+    "stats": {
+      "active": "Aktywne",
+      "trial": "Trial",
+      "available": "Dostępne"
+    },
+    "card": {
+      "activeSince": "Aktywny od",
+      "trialExpires": "Trial wygasa",
+      "contactAdmin": "Skontaktuj się z administratorem"
+    },
+    "info": {
+      "title": "Moduły OP-LEGO",
+      "message": "Aktywuj potrzebne moduły. Każdy moduł dodaje określone funkcjonalności."
+    },
+    "footer": {
+      "title": "Potrzebujesz więcej modułów?",
+      "message": "Skontaktuj się z nami w sprawie spersonalizowanego planu.",
+      "contactButton": "Skontaktuj się"
+    }
   }
 }

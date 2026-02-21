@@ -2486,5 +2486,218 @@
     "sectorDigitalServices": "Digital service providers",
     "sectorResearch": "Research",
     "sectorUnspecified": "Unspecified"
+  },
+  "dataImport": {
+    "title": "Data Import",
+    "subtitle": "Import employees, trainings, medical exams and equipment",
+    "steps": {
+      "upload": "Upload",
+      "mapping": "Mapping",
+      "preview": "Preview",
+      "import": "Import"
+    },
+    "types": {
+      "employees": "Employees",
+      "trainings": "Trainings",
+      "medical": "Medical exams",
+      "equipment": "Equipment"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "jobTitle": "Job title",
+      "department": "Department",
+      "hireDate": "Hire date",
+      "corCode": "COR code",
+      "phone": "Phone",
+      "employeeName": "Employee name",
+      "trainingType": "Training type",
+      "trainingDate": "Training date",
+      "expiryDate": "Expiry date",
+      "instructor": "Instructor",
+      "notes": "Notes",
+      "examinationType": "Exam type",
+      "examinationDate": "Exam date",
+      "result": "Result",
+      "doctor": "Doctor",
+      "clinic": "Clinic",
+      "restrictions": "Restrictions",
+      "equipmentType": "Equipment type",
+      "serialNumber": "Serial number",
+      "location": "Location",
+      "lastInspection": "Last inspection",
+      "nextInspection": "Next inspection",
+      "description": "Description"
+    },
+    "step1": {
+      "importTypeLabel": "Import type",
+      "organizationLabel": "Organization",
+      "uploadLabel": "File (CSV/XLSX)",
+      "selectFile": "Select file",
+      "downloadTemplate": "Download template",
+      "downloadTemplateFile": "Download",
+      "downloadTemplateHint": "Use the template for correct format"
+    },
+    "step2": {
+      "mappingTitle": "Column mapping",
+      "autoDetect": "Auto-detect",
+      "notSet": "Not set"
+    },
+    "step3": {
+      "row": "Row",
+      "status": "Status",
+      "data": "Data",
+      "valid": "Valid",
+      "errors": "Errors",
+      "warnings": "Warnings",
+      "issues": "Issues"
+    },
+    "step4": {
+      "readyTitle": "Ready to import",
+      "confirmImport": "Confirm import",
+      "importing": "Importing...",
+      "doneTitle": "Import complete",
+      "backToDashboard": "Back to dashboard"
+    },
+    "nav": {
+      "back": "Back",
+      "continue": "Continue"
+    },
+    "errors": {
+      "selectOrg": "Select an organization",
+      "emptyFile": "File is empty",
+      "readError": "Error reading file"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Import Wizard",
+      "organization": "Organization",
+      "dashboard": "Dashboard"
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "jobTitle": "Job title",
+      "department": "Department",
+      "hireDate": "Hire date",
+      "contractEndDate": "Contract end date",
+      "phone": "Phone",
+      "corCode": "COR code",
+      "corTitle": "COR title",
+      "contractNumber": "Contract no.",
+      "contractType": "Contract type",
+      "status": "Status"
+    },
+    "step1": {
+      "title": "Upload file",
+      "description": "Select CSV or XLSX file for import",
+      "selectFile": "Select file",
+      "dropZoneTitle": "Drag file here or click to select",
+      "dropZoneFormats": "Accepted formats: CSV, XLSX, XLS",
+      "previewTitle": "Preview",
+      "rowsDetected": "rows detected",
+      "headerOnRow": "Header on row"
+    },
+    "step2": {
+      "title": "Select profile",
+      "description": "Choose the appropriate import profile",
+      "manualTitle": "Manual",
+      "manualDesc": "Manual column mapping",
+      "regesSalariatiTitle": "REGES Employees",
+      "regesSalariatiDesc": "Employee personal data export from REGES Online",
+      "regesContracteTitle": "REGES Contracts",
+      "regesContracteDesc": "Employment contracts export from REGES Online",
+      "regesNote": "REGES profile auto-detects standard columns"
+    },
+    "step3": {
+      "title": "Column mapping",
+      "description": "Map file columns to system fields",
+      "ignoreOption": "— Ignore —",
+      "validateButton": "Validate",
+      "previewLabel": "Mapping preview",
+      "previewDesc": "Verify mapping is correct"
+    },
+    "step4": {
+      "title": "Validation and import",
+      "importButton": "Import",
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all",
+      "autoMapping": "Auto mapping",
+      "previewTitle": "Data preview",
+      "mappingCount": "columns mapped",
+      "colFullName": "Full name",
+      "statsDetected": "Detected",
+      "statsValid": "Valid",
+      "statsErrors": "Errors",
+      "statsWarnings": "Warnings",
+      "validationList": "Validation list"
+    },
+    "step5": {
+      "importing": "Importing...",
+      "done": "Import complete!",
+      "progressLabel": "Progress",
+      "successCount": "Successfully imported",
+      "failedCount": "Failed",
+      "profileUsed": "Profile used",
+      "viewEmployees": "View employees"
+    },
+    "nav": {
+      "back": "Back",
+      "newImport": "New import"
+    },
+    "validation": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "cnpInvalid": "Invalid CNP",
+      "cnpDuplicate": "Duplicate CNP in file",
+      "cnpExistsInOrg": "CNP already exists in organization",
+      "emailInvalid": "Invalid email",
+      "hireDateInvalid": "Invalid hire date",
+      "corCodeFormat": "Invalid COR code format"
+    },
+    "errors": {
+      "emptyFile": "File is empty",
+      "readError": "Error reading file"
+    }
+  },
+  "modules": {
+    "title": "Modules",
+    "subtitle": "OP-LEGO modules available for your organization",
+    "breadcrumb": "Modules",
+    "section": {
+      "core": "Core modules",
+      "standalone": "Standard modules",
+      "premium": "Premium modules"
+    },
+    "status": {
+      "active": "Active",
+      "trial": "Trial",
+      "suspended": "Suspended",
+      "inactive": "Inactive"
+    },
+    "category": {
+      "core": "Included",
+      "standalone": "Standard",
+      "premium": "Premium"
+    },
+    "stats": {
+      "active": "Active",
+      "trial": "Trial",
+      "available": "Available"
+    },
+    "card": {
+      "activeSince": "Active since",
+      "trialExpires": "Trial expires",
+      "contactAdmin": "Contact administrator"
+    },
+    "info": {
+      "title": "OP-LEGO Modules",
+      "message": "Activate the modules you need. Each module adds specific functionality."
+    },
+    "footer": {
+      "title": "Need more modules?",
+      "message": "Contact us for a customized plan.",
+      "contactButton": "Contact us"
+    }
   }
 }

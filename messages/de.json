@@ -2486,5 +2486,218 @@
     "sectorDigitalServices": "Anbieter digitaler Dienste",
     "sectorResearch": "Forschung",
     "sectorUnspecified": "Nicht angegeben"
+  },
+  "dataImport": {
+    "title": "Datenimport",
+    "subtitle": "Mitarbeiter, Schulungen, Arbeitsmedizin und Geräte importieren",
+    "steps": {
+      "upload": "Hochladen",
+      "mapping": "Zuordnung",
+      "preview": "Vorschau",
+      "import": "Import"
+    },
+    "types": {
+      "employees": "Mitarbeiter",
+      "trainings": "Schulungen",
+      "medical": "Arbeitsmedizinische Untersuchungen",
+      "equipment": "Geräte"
+    },
+    "fields": {
+      "fullName": "Vollständiger Name",
+      "jobTitle": "Berufsbezeichnung",
+      "department": "Abteilung",
+      "hireDate": "Einstellungsdatum",
+      "corCode": "COR-Code",
+      "phone": "Telefon",
+      "employeeName": "Mitarbeitername",
+      "trainingType": "Schulungsart",
+      "trainingDate": "Schulungsdatum",
+      "expiryDate": "Ablaufdatum",
+      "instructor": "Ausbilder",
+      "notes": "Anmerkungen",
+      "examinationType": "Untersuchungsart",
+      "examinationDate": "Untersuchungsdatum",
+      "result": "Ergebnis",
+      "doctor": "Arzt",
+      "clinic": "Klinik",
+      "restrictions": "Einschränkungen",
+      "equipmentType": "Gerätetyp",
+      "serialNumber": "Seriennummer",
+      "location": "Standort",
+      "lastInspection": "Letzte Inspektion",
+      "nextInspection": "Nächste Inspektion",
+      "description": "Beschreibung"
+    },
+    "step1": {
+      "importTypeLabel": "Importart",
+      "organizationLabel": "Organisation",
+      "uploadLabel": "Datei (CSV/XLSX)",
+      "selectFile": "Datei auswählen",
+      "downloadTemplate": "Vorlage herunterladen",
+      "downloadTemplateFile": "Herunterladen",
+      "downloadTemplateHint": "Verwenden Sie die Vorlage für das richtige Format"
+    },
+    "step2": {
+      "mappingTitle": "Spaltenzuordnung",
+      "autoDetect": "Automatische Erkennung",
+      "notSet": "Nicht festgelegt"
+    },
+    "step3": {
+      "row": "Zeile",
+      "status": "Status",
+      "data": "Daten",
+      "valid": "Gültig",
+      "errors": "Fehler",
+      "warnings": "Warnungen",
+      "issues": "Probleme"
+    },
+    "step4": {
+      "readyTitle": "Bereit zum Import",
+      "confirmImport": "Import bestätigen",
+      "importing": "Importieren...",
+      "doneTitle": "Import abgeschlossen",
+      "backToDashboard": "Zurück zum Dashboard"
+    },
+    "nav": {
+      "back": "Zurück",
+      "continue": "Weiter"
+    },
+    "errors": {
+      "selectOrg": "Organisation auswählen",
+      "emptyFile": "Datei ist leer",
+      "readError": "Fehler beim Lesen der Datei"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Import Wizard",
+      "organization": "Organisation",
+      "dashboard": "Dashboard"
+    },
+    "fields": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "jobTitle": "Berufsbezeichnung",
+      "department": "Abteilung",
+      "hireDate": "Einstellungsdatum",
+      "contractEndDate": "Vertragsende",
+      "phone": "Telefon",
+      "corCode": "COR-Code",
+      "corTitle": "COR-Bezeichnung",
+      "contractNumber": "Vertragsnummer",
+      "contractType": "Vertragsart",
+      "status": "Status"
+    },
+    "step1": {
+      "title": "Datei hochladen",
+      "description": "CSV- oder XLSX-Datei für den Import auswählen",
+      "selectFile": "Datei auswählen",
+      "dropZoneTitle": "Datei hierher ziehen oder klicken zum Auswählen",
+      "dropZoneFormats": "Akzeptierte Formate: CSV, XLSX, XLS",
+      "previewTitle": "Vorschau",
+      "rowsDetected": "Zeilen erkannt",
+      "headerOnRow": "Kopfzeile in Zeile"
+    },
+    "step2": {
+      "title": "Profil auswählen",
+      "description": "Geeignetes Importprofil auswählen",
+      "manualTitle": "Manuell",
+      "manualDesc": "Manuelle Spaltenzuordnung",
+      "regesSalariatiTitle": "REGES Mitarbeiter",
+      "regesSalariatiDesc": "Export von Mitarbeiterpersonaldaten aus REGES Online",
+      "regesContracteTitle": "REGES Verträge",
+      "regesContracteDesc": "Export von Arbeitsverträgen aus REGES Online",
+      "regesNote": "Das REGES-Profil erkennt Standardspalten automatisch"
+    },
+    "step3": {
+      "title": "Spaltenzuordnung",
+      "description": "Dateispalten den Systemfeldern zuordnen",
+      "ignoreOption": "— Ignorieren —",
+      "validateButton": "Validieren",
+      "previewLabel": "Zuordnungsvorschau",
+      "previewDesc": "Überprüfen Sie die Zuordnung"
+    },
+    "step4": {
+      "title": "Validierung und Import",
+      "importButton": "Importieren",
+      "selectAll": "Alle auswählen",
+      "deselectAll": "Auswahl aufheben",
+      "autoMapping": "Automatische Zuordnung",
+      "previewTitle": "Datenvorschau",
+      "mappingCount": "Spalten zugeordnet",
+      "colFullName": "Vollständiger Name",
+      "statsDetected": "Erkannt",
+      "statsValid": "Gültig",
+      "statsErrors": "Fehler",
+      "statsWarnings": "Warnungen",
+      "validationList": "Validierungsliste"
+    },
+    "step5": {
+      "importing": "Importieren...",
+      "done": "Import abgeschlossen!",
+      "progressLabel": "Fortschritt",
+      "successCount": "Erfolgreich importiert",
+      "failedCount": "Fehlgeschlagen",
+      "profileUsed": "Verwendetes Profil",
+      "viewEmployees": "Mitarbeiter anzeigen"
+    },
+    "nav": {
+      "back": "Zurück",
+      "newImport": "Neuer Import"
+    },
+    "validation": {
+      "firstNameRequired": "Vorname ist erforderlich",
+      "lastNameRequired": "Nachname ist erforderlich",
+      "cnpInvalid": "Ungültige CNP",
+      "cnpDuplicate": "Doppelte CNP in der Datei",
+      "cnpExistsInOrg": "CNP existiert bereits in der Organisation",
+      "emailInvalid": "Ungültige E-Mail",
+      "hireDateInvalid": "Ungültiges Einstellungsdatum",
+      "corCodeFormat": "Ungültiges COR-Codeformat"
+    },
+    "errors": {
+      "emptyFile": "Datei ist leer",
+      "readError": "Fehler beim Lesen der Datei"
+    }
+  },
+  "modules": {
+    "title": "Module",
+    "subtitle": "Für Ihre Organisation verfügbare OP-LEGO-Module",
+    "breadcrumb": "Module",
+    "section": {
+      "core": "Kernmodule",
+      "standalone": "Standardmodule",
+      "premium": "Premium-Module"
+    },
+    "status": {
+      "active": "Aktiv",
+      "trial": "Trial",
+      "suspended": "Gesperrt",
+      "inactive": "Inaktiv"
+    },
+    "category": {
+      "core": "Enthalten",
+      "standalone": "Standard",
+      "premium": "Premium"
+    },
+    "stats": {
+      "active": "Aktiv",
+      "trial": "Trial",
+      "available": "Verfügbar"
+    },
+    "card": {
+      "activeSince": "Aktiv seit",
+      "trialExpires": "Trial läuft ab",
+      "contactAdmin": "Administrator kontaktieren"
+    },
+    "info": {
+      "title": "OP-LEGO-Module",
+      "message": "Aktivieren Sie die benötigten Module. Jedes Modul fügt spezifische Funktionen hinzu."
+    },
+    "footer": {
+      "title": "Benötigen Sie mehr Module?",
+      "message": "Kontaktieren Sie uns für einen individuellen Plan.",
+      "contactButton": "Kontakt aufnehmen"
+    }
   }
 }
