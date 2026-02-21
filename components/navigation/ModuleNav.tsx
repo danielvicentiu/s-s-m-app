@@ -153,7 +153,7 @@ export default function ModuleNav({
             </span>
             {section.is_trial && (
               <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
-                Trial
+                {locale === 'ro' ? 'Probă' : locale === 'bg' ? 'Пробен' : locale === 'hu' ? 'Próba' : locale === 'de' ? 'Test' : locale === 'pl' ? 'Próbny' : 'Trial'}
               </span>
             )}
           </div>
@@ -173,7 +173,7 @@ export default function ModuleNav({
                     onNavigate(item.href)
                   }
                 }}
-                className={`block rounded-md px-3 py-2 text-sm transition-colors ${
+                className={`block rounded-md px-3 py-3 text-sm transition-colors ${
                   isActive
                     ? 'bg-blue-50 font-medium text-blue-700'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
