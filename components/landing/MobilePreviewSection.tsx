@@ -53,9 +53,9 @@ export default function MobilePreviewSection() {
           {/* Left side - Phone mockup with dashboard */}
           <div className="relative flex justify-center lg:justify-end">
             {/* Floating notifications */}
-            {notifications.map((notification, index) => (
+            {notifications.map((notification) => (
               <div
-                key={index}
+                key={notification.position}
                 className={`absolute z-10 ${
                   notification.position === 'top-left'
                     ? 'top-8 left-4 sm:left-12'
@@ -175,9 +175,9 @@ export default function MobilePreviewSection() {
 
               {/* Features list */}
               <div className="space-y-6">
-                {features.map((feature, index) => (
+                {features.map((feature) => (
                   <div
-                    key={index}
+                    key={feature.title}
                     className="flex items-start gap-4"
                   >
                     <div className="bg-blue-100 p-3 rounded-xl flex-shrink-0">

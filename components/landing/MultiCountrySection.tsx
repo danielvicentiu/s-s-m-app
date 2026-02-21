@@ -395,9 +395,9 @@ export default function MultiCountrySection() {
                     📋 Legislație Acoperită
                   </h4>
                   <div className="space-y-3">
-                    {selectedCountry.legislation.map((law, index) => (
+                    {selectedCountry.legislation.map((law) => (
                       <div
-                        key={index}
+                        key={law}
                         className="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-colors"
                       >
                         <p className="text-sm text-gray-700 leading-relaxed">{law}</p>
@@ -412,8 +412,8 @@ export default function MultiCountrySection() {
                     ✨ Funcționalități Specifice
                   </h4>
                   <div className="space-y-3">
-                    {selectedCountry.features.map((feature, index) => (
-                      <div key={index} className="flex items-start gap-3">
+                    {selectedCountry.features.map((feature) => (
+                      <div key={feature} className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mt-0.5">
                           <Check className="w-4 h-4" />
                         </div>

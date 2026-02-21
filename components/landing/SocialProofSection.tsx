@@ -127,7 +127,7 @@ export default function SocialProofSection() {
             <div className="flex animate-scroll-infinite">
               {[...companies, ...companies].map((company, index) => (
                 <div
-                  key={index}
+                  key={`company-scroll-${index}`}
                   className="flex-shrink-0 mx-8 px-6 py-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-3">
@@ -177,9 +177,9 @@ export default function SocialProofSection() {
 
         {/* Mini testimonials highlighted */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial) => (
             <div
-              key={index}
+              key={testimonial.author}
               className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all"
             >
               <div className="flex items-start justify-between mb-4">
@@ -187,7 +187,7 @@ export default function SocialProofSection() {
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star
-                      key={i}
+                      key={`star-${testimonial.author}-${i}`}
                       className="w-4 h-4 text-yellow-400 fill-yellow-400"
                     />
                   ))}
@@ -207,11 +207,11 @@ export default function SocialProofSection() {
 
         {/* Trust badges */}
         <div className="grid md:grid-cols-3 gap-8">
-          {badges.map((badge, index) => {
+          {badges.map((badge) => {
             const Icon = badge.icon;
             return (
               <div
-                key={index}
+                key={badge.label}
                 className="flex items-center gap-4 p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:scale-105 transition-all"
               >
                 <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">

@@ -67,9 +67,9 @@ export default function AIFeaturesSection() {
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-          {aiFeatures.map((feature, index) => (
+          {aiFeatures.map((feature) => (
             <div
-              key={index}
+              key={feature.title}
               className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200"
             >
               {/* Icon with gradient background */}
