@@ -506,7 +506,9 @@
     "scanDocuments": "Сканиране документи",
     "uploadProcess": "Качи и обработи",
     "employees": "Служители",
-    "addNewEmployee": "Добави нов служител"
+    "addNewEmployee": "Добави нов служител",
+    "searchPlaceholder": "Търсете служители, документи, модули...",
+    "userRole": "Потребител"
   },
   "widgets": {
     "expirySummary": {
@@ -531,7 +533,8 @@
     },
     "recentActivity": {
       "title": "Последна активност",
-      "noActivity": "Няма последна активност"
+      "noActivity": "Няма последна активност",
+      "viewAll": "Виж всичко"
     },
     "bulkActions": {
       "selected": "избрани",
@@ -543,7 +546,27 @@
       "medicalExam": "Планирай медицински преглед",
       "assignOrg": "Назначи в организация",
       "deactivate": "Деактивирай"
-    }
+    },
+    "activeEmployees": "Активни служители",
+    "plannedTrainings": "Планирани обучения",
+    "expiredDocuments": "Изтекли документи",
+    "complianceScore": "Резултат за съответствие",
+    "veryGood": "Много добро",
+    "plus12ThisMonth": "+12 този месец",
+    "fiveRemaining": "5 оставащи",
+    "needsAttention": "Изисква внимание",
+    "plus3VsLastMonth": "+3% спрямо миналия месец",
+    "complianceLast12Months": "Съответствие последните 12 месеца",
+    "complianceEvolution": "Еволюция на общия резултат за съответствие",
+    "compliance": "Съответствие",
+    "activeModules": "Активни модули",
+    "statusActive": "Активен",
+    "statusInactive": "Неактивен",
+    "statusPending": "В изчакване",
+    "urgentActions": "Спешни действия",
+    "priorityUrgent": "Спешно",
+    "priorityWarning": "Внимание",
+    "priorityNormal": "Нормален"
   },
   "dashboardClient": {
     "selectOrgReport": "Изберете организация преди да генерирате отчета",

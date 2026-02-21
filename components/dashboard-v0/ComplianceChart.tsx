@@ -3,6 +3,7 @@
 // components/dashboard-v0/ComplianceChart.tsx
 // v0 compliance area chart
 
+import { useTranslations } from 'next-intl'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 
 const data = [
@@ -13,12 +14,13 @@ const data = [
 ]
 
 export function ComplianceChart() {
+  const t = useTranslations('widgets')
   return (
     <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">Conformitate Ultimele 12 Luni</h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">Evoluția scorului general de conformitate</p>
+          <h3 className="text-sm font-semibold text-foreground">{t('complianceLast12Months')}</h3>
+          <p className="mt-0.5 text-xs text-muted-foreground">{t('complianceEvolution')}</p>
         </div>
         <span className="rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-green-700">+19% YoY</span>
       </div>
@@ -36,7 +38,7 @@ export function ComplianceChart() {
             <YAxis domain={[60, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
             <Tooltip
               contentStyle={{ borderRadius: 8, border: '1px solid hsl(var(--border))', fontSize: 12, background: 'hsl(var(--card))' }}
-              formatter={(value: number) => [`${value}%`, 'Conformitate']}
+              formatter={(value: number) => [`${value}%`, t('compliance')]}
             />
             <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={2.5} fill="url(#fillBlue)" dot={false} activeDot={{ r: 4, strokeWidth: 0, fill: '#3b82f6' }} />
           </AreaChart>

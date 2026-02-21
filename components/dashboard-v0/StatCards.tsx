@@ -1,6 +1,9 @@
+'use client'
+
 // components/dashboard-v0/StatCards.tsx
 // v0 stat cards - static demo widget
 
+import { useTranslations } from 'next-intl'
 import { Users, CalendarClock, FileWarning } from 'lucide-react'
 
 function ConformityRing({ value }: { value: number }) {
@@ -23,13 +26,15 @@ function ConformityRing({ value }: { value: number }) {
   )
 }
 
-const cards = [
-  { label: 'Angajați Activi', value: '245', sub: '+12 luna aceasta', subColor: 'text-green-600', bgAccent: 'bg-green-50', icon: Users, iconColor: 'text-green-600' },
-  { label: 'Instruiri Planificate', value: '18', sub: '5 restante', subColor: 'text-amber-600', bgAccent: 'bg-amber-50', icon: CalendarClock, iconColor: 'text-amber-600' },
-  { label: 'Documente Expirate', value: '3', sub: 'Necesită atenție', subColor: 'text-red-600', bgAccent: 'bg-red-50', icon: FileWarning, iconColor: 'text-red-600' },
-]
-
 export function StatCards() {
+  const t = useTranslations('widgets')
+
+  const cards = [
+    { label: t('activeEmployees'), value: '245', sub: t('plus12ThisMonth'), subColor: 'text-green-600', bgAccent: 'bg-green-50', icon: Users, iconColor: 'text-green-600' },
+    { label: t('plannedTrainings'), value: '18', sub: t('fiveRemaining'), subColor: 'text-amber-600', bgAccent: 'bg-amber-50', icon: CalendarClock, iconColor: 'text-amber-600' },
+    { label: t('expiredDocuments'), value: '3', sub: t('needsAttention'), subColor: 'text-red-600', bgAccent: 'bg-red-50', icon: FileWarning, iconColor: 'text-red-600' },
+  ]
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => (
@@ -47,9 +52,9 @@ export function StatCards() {
       <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
         <ConformityRing value={87} />
         <div>
-          <p className="text-xs font-medium text-muted-foreground">Scor Conformitate</p>
-          <p className="mt-0.5 text-sm font-medium text-foreground">Foarte bun</p>
-          <p className="text-xs text-muted-foreground">+3% față de luna trecută</p>
+          <p className="text-xs font-medium text-muted-foreground">{t('complianceScore')}</p>
+          <p className="mt-0.5 text-sm font-medium text-foreground">{t('veryGood')}</p>
+          <p className="text-xs text-muted-foreground">{t('plus3VsLastMonth')}</p>
         </div>
       </div>
     </div>

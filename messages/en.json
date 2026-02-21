@@ -506,7 +506,9 @@
     "scanDocuments": "Scan Documents",
     "uploadProcess": "Upload & processing",
     "employees": "Employees",
-    "addNewEmployee": "Add new employee"
+    "addNewEmployee": "Add new employee",
+    "searchPlaceholder": "Search employees, documents, modules...",
+    "userRole": "User"
   },
   "widgets": {
     "expirySummary": {
@@ -531,7 +533,8 @@
     },
     "recentActivity": {
       "title": "Recent Activity",
-      "noActivity": "No recent activity"
+      "noActivity": "No recent activity",
+      "viewAll": "View all"
     },
     "bulkActions": {
       "selected": "selected",
@@ -543,7 +546,27 @@
       "medicalExam": "Schedule medical exam",
       "assignOrg": "Assign to organization",
       "deactivate": "Deactivate"
-    }
+    },
+    "activeEmployees": "Active Employees",
+    "plannedTrainings": "Planned Trainings",
+    "expiredDocuments": "Expired Documents",
+    "complianceScore": "Compliance Score",
+    "veryGood": "Very good",
+    "plus12ThisMonth": "+12 this month",
+    "fiveRemaining": "5 remaining",
+    "needsAttention": "Needs attention",
+    "plus3VsLastMonth": "+3% vs last month",
+    "complianceLast12Months": "Compliance Last 12 Months",
+    "complianceEvolution": "Evolution of the overall compliance score",
+    "compliance": "Compliance",
+    "activeModules": "Active Modules",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "statusPending": "Pending",
+    "urgentActions": "Urgent Actions",
+    "priorityUrgent": "Urgent",
+    "priorityWarning": "Warning",
+    "priorityNormal": "Normal"
   },
   "dashboardClient": {
     "selectOrgReport": "Please select an organization before generating the report",

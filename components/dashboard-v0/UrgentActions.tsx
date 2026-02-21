@@ -1,6 +1,9 @@
+'use client'
+
 // components/dashboard-v0/UrgentActions.tsx
 // v0 urgent actions widget
 
+import { useTranslations } from 'next-intl'
 import { AlertCircle, Clock, ChevronRight } from 'lucide-react'
 
 const actions = [
@@ -17,13 +20,19 @@ const priorityStyles = {
   green: 'bg-green-50 text-green-700 border-green-200',
 }
 
-const priorityLabels = { red: 'Urgent', yellow: 'Atenție', green: 'Normal' }
-
 export function UrgentActions() {
+  const t = useTranslations('widgets')
+
+  const priorityLabels = {
+    red: t('priorityUrgent'),
+    yellow: t('priorityWarning'),
+    green: t('priorityNormal'),
+  }
+
   return (
     <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground">Acțiuni Urgente</h3>
+        <h3 className="text-sm font-semibold text-foreground">{t('urgentActions')}</h3>
         <span className="text-xs text-muted-foreground">5 acțiuni</span>
       </div>
       <ul className="flex flex-1 flex-col gap-2.5">

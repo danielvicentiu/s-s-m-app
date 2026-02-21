@@ -506,7 +506,9 @@
     "scanDocuments": "Dokumente scannen",
     "uploadProcess": "Hochladen & Verarbeiten",
     "employees": "Mitarbeiter",
-    "addNewEmployee": "Neuen Mitarbeiter hinzufügen"
+    "addNewEmployee": "Neuen Mitarbeiter hinzufügen",
+    "searchPlaceholder": "Mitarbeiter, Dokumente, Module suchen...",
+    "userRole": "Benutzer"
   },
   "widgets": {
     "expirySummary": {
@@ -531,7 +533,8 @@
     },
     "recentActivity": {
       "title": "Neueste Aktivität",
-      "noActivity": "Keine neueste Aktivität"
+      "noActivity": "Keine neueste Aktivität",
+      "viewAll": "Alle anzeigen"
     },
     "bulkActions": {
       "selected": "ausgewählt",
@@ -543,7 +546,27 @@
       "medicalExam": "Medizinische Untersuchung planen",
       "assignOrg": "Organisation zuweisen",
       "deactivate": "Deaktivieren"
-    }
+    },
+    "activeEmployees": "Aktive Mitarbeiter",
+    "plannedTrainings": "Geplante Schulungen",
+    "expiredDocuments": "Abgelaufene Dokumente",
+    "complianceScore": "Compliance-Score",
+    "veryGood": "Sehr gut",
+    "plus12ThisMonth": "+12 diesen Monat",
+    "fiveRemaining": "5 ausstehend",
+    "needsAttention": "Benötigt Aufmerksamkeit",
+    "plus3VsLastMonth": "+3% gegenüber dem Vormonat",
+    "complianceLast12Months": "Compliance letzte 12 Monate",
+    "complianceEvolution": "Entwicklung des allgemeinen Compliance-Scores",
+    "compliance": "Compliance",
+    "activeModules": "Aktive Module",
+    "statusActive": "Aktiv",
+    "statusInactive": "Inaktiv",
+    "statusPending": "Ausstehend",
+    "urgentActions": "Dringende Maßnahmen",
+    "priorityUrgent": "Dringend",
+    "priorityWarning": "Achtung",
+    "priorityNormal": "Normal"
   },
   "dashboardClient": {
     "selectOrgReport": "Bitte wählen Sie eine Organisation aus, bevor Sie den Bericht erstellen",

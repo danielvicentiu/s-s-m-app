@@ -506,7 +506,9 @@
     "scanDocuments": "Scan Documente",
     "uploadProcess": "Upload & procesare",
     "employees": "Angajați",
-    "addNewEmployee": "Adaugă angajat nou"
+    "addNewEmployee": "Adaugă angajat nou",
+    "searchPlaceholder": "Caută angajați, documente, module...",
+    "userRole": "Utilizator"
   },
   "widgets": {
     "expirySummary": {
@@ -531,7 +533,8 @@
     },
     "recentActivity": {
       "title": "Activitate Recentă",
-      "noActivity": "Nicio activitate recentă"
+      "noActivity": "Nicio activitate recentă",
+      "viewAll": "Vezi tot"
     },
     "bulkActions": {
       "selected": "selectate",
@@ -543,7 +546,27 @@
       "medicalExam": "Programare examen medical",
       "assignOrg": "Atribuie la organizație",
       "deactivate": "Dezactivează"
-    }
+    },
+    "activeEmployees": "Angajați Activi",
+    "plannedTrainings": "Instruiri Planificate",
+    "expiredDocuments": "Documente Expirate",
+    "complianceScore": "Scor Conformitate",
+    "veryGood": "Foarte bun",
+    "plus12ThisMonth": "+12 luna aceasta",
+    "fiveRemaining": "5 restante",
+    "needsAttention": "Necesită atenție",
+    "plus3VsLastMonth": "+3% față de luna trecută",
+    "complianceLast12Months": "Conformitate Ultimele 12 Luni",
+    "complianceEvolution": "Evoluția scorului general de conformitate",
+    "compliance": "Conformitate",
+    "activeModules": "Module Active",
+    "statusActive": "Activ",
+    "statusInactive": "Inactiv",
+    "statusPending": "În așteptare",
+    "urgentActions": "Acțiuni Urgente",
+    "priorityUrgent": "Urgent",
+    "priorityWarning": "Atenție",
+    "priorityNormal": "Normal"
   },
   "dashboardClient": {
     "selectOrgReport": "Selectați o organizație înainte de a genera raportul",

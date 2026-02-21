@@ -4,6 +4,7 @@
 // v0 topbar - search, notifications, user menu
 
 import { useState, useRef, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -17,6 +18,7 @@ interface TopbarProps {
 }
 
 export default function Topbar({ userEmail, userId, onMobileMenuOpen }: TopbarProps) {
+  const t = useTranslations('dashboardOverview')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -57,7 +59,7 @@ export default function Topbar({ userEmail, userId, onMobileMenuOpen }: TopbarPr
         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Caută angajați, documente, module..."
+          placeholder={t('searchPlaceholder')}
           className="h-9 w-full rounded-lg border border-border bg-background pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
         />
       </div>
@@ -82,7 +84,7 @@ export default function Topbar({ userEmail, userId, onMobileMenuOpen }: TopbarPr
               <p className="text-sm font-medium leading-tight text-foreground max-w-[150px] truncate">
                 {userEmail}
               </p>
-              <p className="text-xs leading-tight text-muted-foreground">Utilizator</p>
+              <p className="text-xs leading-tight text-muted-foreground">{t('userRole')}</p>
             </div>
             <ChevronDown className="hidden h-3.5 w-3.5 text-muted-foreground md:block" />
           </button>

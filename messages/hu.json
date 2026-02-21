@@ -506,7 +506,9 @@
     "scanDocuments": "Dokumentum szkennelés",
     "uploadProcess": "Feltöltés és feldolgozás",
     "employees": "Alkalmazottak",
-    "addNewEmployee": "Új alkalmazott hozzáadása"
+    "addNewEmployee": "Új alkalmazott hozzáadása",
+    "searchPlaceholder": "Alkalmazottak, dokumentumok, modulok keresése...",
+    "userRole": "Felhasználó"
   },
   "widgets": {
     "expirySummary": {
@@ -531,7 +533,8 @@
     },
     "recentActivity": {
       "title": "Legutóbbi tevékenység",
-      "noActivity": "Nincs legutóbbi tevékenység"
+      "noActivity": "Nincs legutóbbi tevékenység",
+      "viewAll": "Összes megtekintése"
     },
     "bulkActions": {
       "selected": "kiválasztva",
@@ -543,7 +546,27 @@
       "medicalExam": "Orvosi vizsgálat ütemezése",
       "assignOrg": "Szervezethez rendelés",
       "deactivate": "Deaktiválás"
-    }
+    },
+    "activeEmployees": "Aktív alkalmazottak",
+    "plannedTrainings": "Tervezett képzések",
+    "expiredDocuments": "Lejárt dokumentumok",
+    "complianceScore": "Megfelelési pontszám",
+    "veryGood": "Nagyon jó",
+    "plus12ThisMonth": "+12 ebben a hónapban",
+    "fiveRemaining": "5 hátralévő",
+    "needsAttention": "Figyelmet igényel",
+    "plus3VsLastMonth": "+3% az előző hónaphoz képest",
+    "complianceLast12Months": "Megfelelőség az elmúlt 12 hónapban",
+    "complianceEvolution": "Az általános megfelelési pontszám alakulása",
+    "compliance": "Megfelelőség",
+    "activeModules": "Aktív modulok",
+    "statusActive": "Aktív",
+    "statusInactive": "Inaktív",
+    "statusPending": "Függőben",
+    "urgentActions": "Sürgős teendők",
+    "priorityUrgent": "Sürgős",
+    "priorityWarning": "Figyelem",
+    "priorityNormal": "Normal"
   },
   "dashboardClient": {
     "selectOrgReport": "Kérjük, válasszon szervezetet a jelentés generálása előtt",

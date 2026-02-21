@@ -1,6 +1,9 @@
+'use client'
+
 // components/dashboard-v0/ActivityTimeline.tsx
 // v0 activity timeline widget
 
+import { useTranslations } from 'next-intl'
 import { FileText, UserPlus, CheckCircle, AlertTriangle, Upload } from 'lucide-react'
 
 const activities = [
@@ -13,11 +16,12 @@ const activities = [
 ]
 
 export function ActivityTimeline() {
+  const t = useTranslations('widgets')
   return (
     <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground">Activitate Recentă</h3>
-        <a href="#" className="text-xs font-medium text-primary hover:underline">Vezi tot</a>
+        <h3 className="text-sm font-semibold text-foreground">{t('recentActivity.title')}</h3>
+        <a href="#" className="text-xs font-medium text-primary hover:underline">{t('recentActivity.viewAll')}</a>
       </div>
       <ul className="flex flex-1 flex-col gap-0">
         {activities.map((act, i) => (

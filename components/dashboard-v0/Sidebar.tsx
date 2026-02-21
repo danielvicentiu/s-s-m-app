@@ -4,6 +4,7 @@
 // v0 collapsible sidebar - design refreshed with all existing links
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
@@ -37,70 +38,6 @@ interface SidebarProps {
   mobileOpen: boolean
   onMobileClose: () => void
 }
-
-const navGroups: NavGroup[] = [
-  {
-    title: 'Principal',
-    links: [
-      { href: '/dashboard', label: 'Dashboard', moduleKey: null, icon: LayoutDashboard },
-      { href: '/dashboard/ai-assistant', label: 'VA-AI Assistant', moduleKey: null, icon: BrainCircuit },
-      { href: '/dashboard/ai-kb', label: 'Baza de Cunoștințe AI', moduleKey: null, icon: Brain },
-      { href: '/dashboard/employees', label: 'Angajați', moduleKey: 'ssm', icon: Users },
-    ],
-  },
-  {
-    title: 'SSM - Securitate Muncă',
-    links: [
-      { href: '/dashboard/training', label: 'Instruiri SSM', moduleKey: 'ssm', icon: BookOpen },
-      { href: '/dashboard/near-miss', label: 'Incidente Near-miss', moduleKey: 'near_miss', icon: AlertTriangle },
-      { href: '/dashboard/training/calendar', label: 'Calendar Instruiri', moduleKey: null, icon: CalendarDays },
-      { href: '/dashboard/obligations', label: 'Obligații Legale', moduleKey: 'legislatie', icon: ClipboardList },
-    ],
-  },
-  {
-    title: 'PSI & ISCIR',
-    links: [
-      { href: '/dashboard/psi', label: 'Echipamente PSI', moduleKey: 'psi', icon: Flame },
-      { href: '/dashboard/iscir', label: 'ISCIR', moduleKey: 'echipamente', icon: Cog },
-      { href: '/dashboard/iscir/daily', label: 'Verificări Zilnice', moduleKey: 'echipamente', icon: CheckSquare },
-      { href: '/dashboard/equipment', label: 'Echipamente', moduleKey: 'echipamente', icon: Wrench },
-    ],
-  },
-  {
-    title: 'Medicină Muncă',
-    links: [
-      { href: '/dashboard/medical', label: 'Medicina Muncii', moduleKey: 'ssm', icon: HeartPulse },
-    ],
-  },
-  {
-    title: 'Gestiune',
-    links: [
-      { href: '/dashboard/reports', label: 'Rapoarte PDF', moduleKey: 'reports', icon: FileBarChart2 },
-      { href: '/dashboard/contabilitate', label: 'Contabilitate', moduleKey: null, icon: Coins },
-      { href: '/dashboard/gdpr', label: 'GDPR', moduleKey: 'gdpr', icon: Lock },
-      { href: '/dashboard/nis2', label: 'NIS2 Cybersecurity', moduleKey: 'nis2', icon: Network },
-      { href: '/dashboard/scan', label: 'Scanare Documente', moduleKey: 'documents', icon: ScanLine },
-      { href: '/dashboard/import', label: 'Import Date', moduleKey: null, icon: Upload },
-    ],
-  },
-  {
-    title: 'Alerte',
-    links: [
-      { href: '/dashboard/alerts', label: 'Alerte & Notificări', moduleKey: null, icon: Bell },
-    ],
-  },
-  {
-    title: 'Administrare',
-    links: [
-      { href: '/dashboard/reges', label: 'REGES', moduleKey: null, icon: Database },
-      { href: '/dashboard/profile', label: 'Profil', moduleKey: null, icon: UserCircle },
-      { href: '/dashboard/settings/notifications', label: 'Notificări', moduleKey: null, icon: Bell },
-      { href: '/dashboard/settings/roles', label: 'Roluri', moduleKey: null, icon: Shield },
-      { href: '/dashboard/settings/api-keys', label: 'API Keys', moduleKey: null, icon: KeyRound },
-      { href: '/dashboard/batch', label: 'Batch Jobs', moduleKey: null, icon: Layers },
-    ],
-  },
-]
 
 function SidebarNav({
   expanded,
@@ -169,11 +106,76 @@ function SidebarNav({
 }
 
 export default function Sidebar({ user, expanded, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
+  const t = useTranslations('sidebar')
   const pathname = usePathname()
   const { currentOrg } = useOrg()
   const { hasModule, getModuleAccess, isLoading } = useModuleGate(
     currentOrg !== 'all' ? currentOrg : null
   )
+
+  const navGroups: NavGroup[] = [
+    {
+      title: t('groups.main'),
+      links: [
+        { href: '/dashboard', label: t('links.dashboard'), moduleKey: null, icon: LayoutDashboard },
+        { href: '/dashboard/ai-assistant', label: t('links.aiAssistant'), moduleKey: null, icon: BrainCircuit },
+        { href: '/dashboard/ai-kb', label: t('links.aiKnowledgeBase'), moduleKey: null, icon: Brain },
+        { href: '/dashboard/employees', label: t('links.employees'), moduleKey: 'ssm', icon: Users },
+      ],
+    },
+    {
+      title: t('groups.ssm'),
+      links: [
+        { href: '/dashboard/training', label: t('links.ssmTraining'), moduleKey: 'ssm', icon: BookOpen },
+        { href: '/dashboard/near-miss', label: t('links.nearMiss'), moduleKey: 'near_miss', icon: AlertTriangle },
+        { href: '/dashboard/training/calendar', label: t('links.trainingCalendar'), moduleKey: null, icon: CalendarDays },
+        { href: '/dashboard/obligations', label: t('links.obligations'), moduleKey: 'legislatie', icon: ClipboardList },
+      ],
+    },
+    {
+      title: t('groups.psi'),
+      links: [
+        { href: '/dashboard/psi', label: t('links.psiEquipment'), moduleKey: 'psi', icon: Flame },
+        { href: '/dashboard/iscir', label: t('links.iscir'), moduleKey: 'echipamente', icon: Cog },
+        { href: '/dashboard/iscir/daily', label: t('links.dailyChecks'), moduleKey: 'echipamente', icon: CheckSquare },
+        { href: '/dashboard/equipment', label: t('links.equipment'), moduleKey: 'echipamente', icon: Wrench },
+      ],
+    },
+    {
+      title: t('groups.medical'),
+      links: [
+        { href: '/dashboard/medical', label: t('links.occupationalMedicine'), moduleKey: 'ssm', icon: HeartPulse },
+      ],
+    },
+    {
+      title: t('groups.management'),
+      links: [
+        { href: '/dashboard/reports', label: t('links.pdfReports'), moduleKey: 'reports', icon: FileBarChart2 },
+        { href: '/dashboard/contabilitate', label: t('links.accounting'), moduleKey: null, icon: Coins },
+        { href: '/dashboard/gdpr', label: t('links.gdpr'), moduleKey: 'gdpr', icon: Lock },
+        { href: '/dashboard/nis2', label: t('links.nis2'), moduleKey: 'nis2', icon: Network },
+        { href: '/dashboard/scan', label: t('links.documentScan'), moduleKey: 'documents', icon: ScanLine },
+        { href: '/dashboard/import', label: t('links.dataImport'), moduleKey: null, icon: Upload },
+      ],
+    },
+    {
+      title: t('groups.alerts'),
+      links: [
+        { href: '/dashboard/alerts', label: t('links.alertsNotifications'), moduleKey: null, icon: Bell },
+      ],
+    },
+    {
+      title: t('groups.admin'),
+      links: [
+        { href: '/dashboard/reges', label: t('links.reges'), moduleKey: null, icon: Database },
+        { href: '/dashboard/profile', label: t('links.profile'), moduleKey: null, icon: UserCircle },
+        { href: '/dashboard/settings/notifications', label: t('links.notifications'), moduleKey: null, icon: Bell },
+        { href: '/dashboard/settings/roles', label: t('links.roles'), moduleKey: null, icon: Shield },
+        { href: '/dashboard/settings/api-keys', label: t('links.apiKeys'), moduleKey: null, icon: KeyRound },
+        { href: '/dashboard/batch', label: t('links.batchJobs'), moduleKey: null, icon: Layers },
+      ],
+    },
+  ]
 
   const filteredGroups = navGroups
     .map(group => ({
@@ -226,7 +228,7 @@ export default function Sidebar({ user, expanded, onToggle, mobileOpen, onMobile
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium text-foreground">{user.email}</p>
-              <p className="text-[10px] text-muted-foreground">Utilizator</p>
+              <p className="text-[10px] text-muted-foreground">{t('user')}</p>
             </div>
             <NotificationBell userId={user.id} />
           </div>
