@@ -177,9 +177,9 @@ export default function VideoDemoSection() {
 
             {/* Dots Navigation */}
             <div className="flex justify-center gap-2 mt-6">
-              {screenshots.map((_, index) => (
+              {screenshots.map((screenshot, index) => (
                 <button
-                  key={index}
+                  key={screenshot.src}
                   onClick={() => setCurrentSlide(index)}
                   className={`w-2 h-2 rounded-full transition-all ${
                     index === currentSlide

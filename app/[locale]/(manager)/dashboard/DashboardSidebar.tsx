@@ -393,8 +393,8 @@ export default function DashboardSidebar({ user }: { user: User }) {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-6 overflow-y-auto">
-        {navGroups.map((group, groupIdx) => (
-          <div key={groupIdx} className="mb-6">
+        {navGroups.map((group) => (
+          <div key={group.title} className="mb-6">
             <h3 className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
               {group.title}
             </h3>
