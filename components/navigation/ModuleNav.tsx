@@ -21,27 +21,23 @@ interface NavItem {
 const MODULE_NAV_ITEMS: Record<ModuleKey, NavItem[]> = {
   alerte: [
     { label: { ro: 'Alerte', en: 'Alerts', bg: 'Известия', hu: 'Riasztások', de: 'Warnungen', pl: 'Alerty' }, href: '/dashboard/alerts' },
-    { label: { ro: 'Notificări', en: 'Notifications', bg: 'Нотификации', hu: 'Értesítések', de: 'Benachrichtigungen', pl: 'Powiadomienia' }, href: '/dashboard/notifications' },
+    { label: { ro: 'Notificări', en: 'Notifications', bg: 'Нотификации', hu: 'Értesítések', de: 'Benachrichtigungen', pl: 'Powiadomienia' }, href: '/dashboard/settings/notifications' },
   ],
   legislatie: [
-    { label: { ro: 'Legislație', en: 'Legislation', bg: 'Законодателство', hu: 'Jogszabályok', de: 'Gesetzgebung', pl: 'Legislacja' }, href: '/dashboard/legislation' },
+    { label: { ro: 'Obligații', en: 'Obligations', bg: 'Задължения', hu: 'Kötelezettségek', de: 'Pflichten', pl: 'Obowiązki' }, href: '/dashboard/obligations' },
   ],
   ssm: [
     { label: { ro: 'Instruire', en: 'Training', bg: 'Обучение', hu: 'Képzés', de: 'Schulung', pl: 'Szkolenie' }, href: '/dashboard/training' },
     { label: { ro: 'Angajați', en: 'Employees', bg: 'Служители', hu: 'Munkavállalók', de: 'Mitarbeiter', pl: 'Pracownicy' }, href: '/dashboard/employees' },
-    { label: { ro: 'Evaluare risc', en: 'Risk Assessment', bg: 'Оценка на риска', hu: 'Kockázatértékelés', de: 'Gefährdungsbeurteilung', pl: 'Ocena ryzyka' }, href: '/dashboard/risk-assessment' },
   ],
   psi: [
-    { label: { ro: 'PSI / SU', en: 'Fire Safety', bg: 'Пожарна безопасност', hu: 'Tűzvédelem', de: 'Brandschutz', pl: 'PPOŻ' }, href: '/dashboard/fire-safety' },
-    { label: { ro: 'Plan evacuare', en: 'Evacuation Plan', bg: 'План за евакуация', hu: 'Evakuációs terv', de: 'Fluchtplan', pl: 'Plan ewakuacji' }, href: '/dashboard/evacuation' },
+    { label: { ro: 'PSI / SU', en: 'Fire Safety', bg: 'Пожарна безопасност', hu: 'Tűzvédelem', de: 'Brandschutz', pl: 'PPOŻ' }, href: '/dashboard/psi' },
   ],
   gdpr: [
     { label: { ro: 'GDPR', en: 'GDPR', bg: 'GDPR', hu: 'GDPR', de: 'DSGVO', pl: 'RODO' }, href: '/dashboard/gdpr' },
-    { label: { ro: 'DPO', en: 'DPO', bg: 'DPO', hu: 'DPO', de: 'DSB', pl: 'IOD' }, href: '/dashboard/dpo' },
   ],
   nis2: [
     { label: { ro: 'NIS2', en: 'NIS2', bg: 'NIS2', hu: 'NIS2', de: 'NIS2', pl: 'NIS2' }, href: '/dashboard/nis2' },
-    { label: { ro: 'Risc Cyber', en: 'Cyber Risk', bg: 'Кибер риск', hu: 'Kiberkockázat', de: 'Cyberrisiko', pl: 'Ryzyko cyber' }, href: '/dashboard/cyber-risk' },
   ],
   echipamente: [
     { label: { ro: 'Echipamente', en: 'Equipment', bg: 'Оборудване', hu: 'Felszerelések', de: 'Ausrüstung', pl: 'Wyposażenie' }, href: '/dashboard/equipment' },
