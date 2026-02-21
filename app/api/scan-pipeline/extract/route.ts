@@ -1,31 +1,17 @@
 /**
  * API Route: /api/scan-pipeline/extract
- * POST: Extrage date din imagine folosind AI (Anthropic Claude Vision)
+ * POST: Extrage date din imagine folosind AI (VA-AI Vision)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { createSupabaseServer } from '@/lib/supabase/server';
 import { ScanService } from '@/lib/scan-pipeline';
 import type { CreateScanRequest, CreateScanResponse, ScanTemplate } from '@/lib/scan-pipeline';
 
 export async function POST(request: NextRequest) {
   try {
     // 1. Verifică autentificarea
-    const cookieStore = await cookies();
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: false,
-      },
-      global: {
-        headers: {
-          cookie: cookieStore.toString(),
-        },
-      },
-    });
+    const supabase = await createSupabaseServer();
 
     const {
       data: { user },

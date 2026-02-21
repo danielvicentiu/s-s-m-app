@@ -4,27 +4,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { createSupabaseServer } from '@/lib/supabase/server';
 import type { ScanTemplate } from '@/lib/scan-pipeline';
 
 export async function GET(request: NextRequest) {
   try {
     // 1. Verifică autentificarea
-    const cookieStore = await cookies();
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: false,
-      },
-      global: {
-        headers: {
-          cookie: cookieStore.toString(),
-        },
-      },
-    });
+    const supabase = await createSupabaseServer();
 
     const {
       data: { user },
