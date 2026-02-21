@@ -178,6 +178,9 @@ export default function ModulesClient({
 }: ModulesClientProps) {
   const t = useTranslations('modules')
 
+  // Defensive: if orgId is missing during re-render, show nothing
+  if (!orgId) return null
+
   // Construiește un map rapid module_key → status
   const activeMap = new Map(activeModules.map(m => [m.module_key, m]))
 

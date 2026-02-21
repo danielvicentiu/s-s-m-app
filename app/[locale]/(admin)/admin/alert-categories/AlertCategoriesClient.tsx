@@ -224,17 +224,17 @@ export default function AlertCategoriesClient({ alertCategories, stats, canDelet
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        {category.notify_channels.includes('email') && (
+                        {(category.notify_channels || []).includes('email') && (
                           <span title="Email">
                             <Mail className="h-4 w-4 text-blue-600" />
                           </span>
                         )}
-                        {category.notify_channels.includes('whatsapp') && (
+                        {(category.notify_channels || []).includes('whatsapp') && (
                           <span title="WhatsApp">
                             <MessageCircle className="h-4 w-4 text-green-600" />
                           </span>
                         )}
-                        {category.notify_channels.includes('sms') && (
+                        {(category.notify_channels || []).includes('sms') && (
                           <span title="SMS">
                             <Smartphone className="h-4 w-4 text-purple-600" />
                           </span>
