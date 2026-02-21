@@ -1667,5 +1667,552 @@
       "saveAssessment": "Zapisz ocenę",
       "cancel": "Anuluj"
     }
+  },
+  "gdpr": {
+    "title": "RODO - Ochrona danych",
+    "subtitle": "Rejestr przetwarzania, zgody i DPO",
+    "tabs": {
+      "processingRegistry": "Rejestr przetwarzania",
+      "consents": "Zgody"
+    },
+    "stats": {
+      "processingActivities": "Czynności przetwarzania",
+      "activeConsents": "Aktywne zgody",
+      "dpoConfigured": "DPO skonfigurowany",
+      "dpoNotConfigured": "DPO nieskonfigurowany",
+      "dpiaRequired": "DPIA wymagana"
+    },
+    "legalBasis": {
+      "consent": "Zgoda",
+      "contract": "Umowa",
+      "legalObligation": "Obowiązek prawny",
+      "vitalInterest": "Żywotny interes",
+      "publicInterest": "Interes publiczny",
+      "legitimateInterest": "Prawnie uzasadniony interes"
+    },
+    "consentType": {
+      "processing": "Przetwarzanie danych",
+      "marketing": "Marketing",
+      "profiling": "Profilowanie",
+      "transfer": "Przekazywanie danych",
+      "specialCategories": "Szczególne kategorie",
+      "other": "Inne"
+    },
+    "status": {
+      "active": "Aktywny",
+      "inactive": "Nieaktywny",
+      "underReview": "W przeglądzie",
+      "archived": "Zarchiwizowany"
+    },
+    "filter": {
+      "all": "Wszystkie",
+      "active": "Aktywne",
+      "withdrawn": "Wycofane",
+      "allStatuses": "Wszystkie statusy",
+      "allLegalBases": "Wszystkie podstawy prawne"
+    },
+    "processing": {
+      "addActivity": "Dodaj czynność",
+      "newTitle": "Nowa czynność",
+      "editTitle": "Edytuj czynność",
+      "emptyTitle": "Brak czynności",
+      "emptyMessage": "Dodaj pierwszą czynność przetwarzania.",
+      "searchPlaceholder": "Szukaj czynności...",
+      "activityNameLabel": "Nazwa czynności",
+      "activityNamePlaceholder": "np.: Przetwarzanie danych pracowników",
+      "purposeLabel": "Cel",
+      "purposePlaceholder": "np.: Zarządzanie zasobami ludzkimi",
+      "legalBasisLabel": "Podstawa prawna",
+      "statusLabel": "Status",
+      "dataSubjectsLabel": "Osoby, których dane dotyczą",
+      "dataSubjectsPlaceholder": "np.: Pracownicy, kandydaci",
+      "dataCategoriesLabel": "Kategorie danych",
+      "dataCategoriesPlaceholder": "np.: Dane identyfikacyjne, kontaktowe",
+      "retentionPeriodLabel": "Okres przechowywania",
+      "retentionPeriodPlaceholder": "np.: 5 lat",
+      "crossBorderTransfer": "Przekazywanie transgraniczne",
+      "dpiaRequired": "DPIA wymagana",
+      "dpiaCompleted": "DPIA ukończona",
+      "dpiaDateLabel": "Data DPIA"
+    },
+    "consent": {
+      "addConsent": "Dodaj zgodę",
+      "newTitle": "Nowa zgoda",
+      "editTitle": "Edytuj zgodę",
+      "emptyTitle": "Brak zgód",
+      "emptyMessage": "Dodaj pierwszą zgodę.",
+      "searchPlaceholder": "Szukaj zgód...",
+      "personNameLabel": "Imię i nazwisko",
+      "personNamePlaceholder": "np.: Jan Kowalski",
+      "emailLabel": "E-mail",
+      "typeLabel": "Typ zgody",
+      "purposeLabel": "Cel",
+      "purposePlaceholder": "np.: Newsletter marketingowy",
+      "givenAtLabel": "Data udzielenia",
+      "notesLabel": "Uwagi",
+      "notesPlaceholder": "Dodatkowe uwagi...",
+      "withdraw": "Wycofaj",
+      "withdrawTitle": "Wycofaj zgodę",
+      "active": "Aktywna",
+      "withdrawn": "Wycofana"
+    },
+    "dpo": {
+      "title": "Inspektor Ochrony Danych (DPO)",
+      "subtitle": "Konfiguracja wewnętrznego lub zewnętrznego DPO",
+      "typeLabel": "Typ DPO",
+      "internal": "Wewnętrzny",
+      "external": "Zewnętrzny",
+      "nameLabel": "Imię i nazwisko DPO",
+      "namePlaceholder": "np.: Anna Kowalska",
+      "emailLabel": "E-mail",
+      "phoneLabel": "Telefon",
+      "companyLabel": "Firma (jeśli zewnętrzny)",
+      "companyPlaceholder": "np.: DPO Consulting Sp. z o.o.",
+      "appointmentDateLabel": "Data powołania",
+      "contractExpiryLabel": "Wygaśnięcie umowy",
+      "anspdcpNotified": "ANSPDCP powiadomiony",
+      "anspdcpNotificationDateLabel": "Data powiadomienia",
+      "notesLabel": "Uwagi",
+      "notesPlaceholder": "Dodatkowe informacje...",
+      "save": "Zapisz",
+      "saving": "Zapisywanie...",
+      "savedSuccess": "DPO zapisany pomyślnie!"
+    },
+    "table": {
+      "activity": "Czynność",
+      "legalBasis": "Podstawa prawna",
+      "status": "Status",
+      "actions": "Akcje",
+      "person": "Osoba",
+      "type": "Typ",
+      "purpose": "Cel",
+      "givenAt": "Data udzielenia"
+    },
+    "actions": {
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "cancel": "Anuluj",
+      "create": "Utwórz",
+      "update": "Zaktualizuj"
+    },
+    "confirm": {
+      "deleteTitle": "Potwierdzasz usunięcie?",
+      "deleteProcessingMessage": "Czynność przetwarzania zostanie trwale usunięta.",
+      "deleteConsentMessage": "Zgoda zostanie trwale usunięta."
+    },
+    "errors": {
+      "createError": "Błąd podczas tworzenia",
+      "updateError": "Błąd podczas aktualizacji",
+      "deleteError": "Błąd podczas usuwania",
+      "saveError": "Błąd podczas zapisywania",
+      "withdrawError": "Błąd podczas wycofywania zgody"
+    }
+  },
+  "medical": {
+    "title": "Medycyna Pracy",
+    "examType": {
+      "periodic": "Okresowy",
+      "angajare": "Wstępny",
+      "reluare": "Powrotny",
+      "laCerere": "Na żądanie",
+      "controlPeriodic": "Kontrola okresowa",
+      "controlAngajare": "Kontrola wstępna",
+      "fisaAptitudine": "Zaświadczenie o zdolności",
+      "fisaPsihologica": "Zaświadczenie psychologiczne",
+      "supraveghere": "Nadzór"
+    },
+    "result": {
+      "apt": "Zdolny",
+      "aptConditionat": "Warunkowo zdolny",
+      "inaptTemporar": "Czasowo niezdolny",
+      "inapt": "Niezdolny",
+      "inAsteptare": "Oczekujący"
+    },
+    "appointmentStatus": {
+      "programat": "Zaplanowane",
+      "confirmat": "Potwierdzone",
+      "efectuat": "Wykonane",
+      "anulat": "Anulowane",
+      "reprogramat": "Przeplanowane"
+    },
+    "status": {
+      "expired": "Wygasłe",
+      "expiredDesc": "Orzeczenie lekarskie wygasło",
+      "expiringSoon": "Wkrótce wygasa",
+      "expiringSoonDesc": "Orzeczenie lekarskie wkrótce wygaśnie",
+      "valid": "Ważne",
+      "validDesc": "Orzeczenie lekarskie jest ważne",
+      "noRecord": "Brak orzeczenia",
+      "noRecordDesc": "Brak orzeczenia lekarskiego",
+      "undefined": "Nieokreślone",
+      "undefinedDesc": "Data wygaśnięcia nieokreślona"
+    },
+    "alertLevel": {
+      "expirat": "Wygasłe",
+      "urgent": "Pilne",
+      "atentie": "Uwaga",
+      "ok": "OK",
+      "nedefinit": "Nieokreślone"
+    },
+    "tab": {
+      "records": "Orzeczenia lekarskie",
+      "appointments": "Wizyty",
+      "alerts": "Alerty"
+    },
+    "subtitle": {
+      "records": "Zarejestrowane orzeczenia lekarskie",
+      "appointments": "Zaplanowane badania lekarskie",
+      "alerts": "Wygasłe i pilne alerty"
+    },
+    "stats": {
+      "totalRecords": "Łączna liczba orzeczeń",
+      "valid": "Ważne",
+      "expired": "Wygasłe",
+      "expiring30": "Wygasają w ciągu 30 dni",
+      "totalAppointments": "Łączna liczba wizyt",
+      "scheduled": "Zaplanowane",
+      "confirmed": "Potwierdzone",
+      "done": "Wykonane"
+    },
+    "col": {
+      "employee": "Pracownik",
+      "jobTitle": "Stanowisko",
+      "type": "Typ",
+      "date": "Data",
+      "examDate": "Data badania",
+      "expiryDate": "Data wygaśnięcia",
+      "expires": "Wygasa",
+      "daysLeft": "Pozostałe dni",
+      "result": "Wynik",
+      "status": "Status",
+      "clinic": "Klinika",
+      "priority": "Priorytet"
+    },
+    "form": {
+      "addRecord": "Dodaj orzeczenie",
+      "addRecordBtn": "Dodaj",
+      "editRecord": "Edytuj orzeczenie",
+      "examType": "Typ badania",
+      "examDate": "Data badania",
+      "expiryDate": "Data wygaśnięcia",
+      "result": "Wynik",
+      "doctor": "Lekarz",
+      "clinic": "Klinika",
+      "clinicAddress": "Adres kliniki",
+      "documentNumber": "Nr dokumentu",
+      "restrictions": "Ograniczenia",
+      "riskFactors": "Czynniki ryzyka",
+      "notes": "Uwagi",
+      "extraDetails": "Dodatkowe szczegóły",
+      "validityMonths": "Ważność (miesiące)",
+      "employee": "Pracownik",
+      "employeeName": "Imię i nazwisko pracownika",
+      "selectEmployee": "Wybierz pracownika",
+      "selectEmployeeManual": "Wybierz ręcznie",
+      "organization": "Organizacja",
+      "selectOrg": "Wybierz organizację",
+      "jobTitle": "Stanowisko",
+      "save": "Zapisz",
+      "saveChanges": "Zapisz zmiany",
+      "scheduleExam": "Zaplanuj badanie",
+      "editAppointment": "Edytuj wizytę",
+      "date": "Data",
+      "time": "Godzina"
+    },
+    "btn": {
+      "addRecord": "Dodaj orzeczenie",
+      "schedule": "Zaplanuj"
+    },
+    "filter": {
+      "allOrgs": "Wszystkie organizacje",
+      "allTypes": "Wszystkie typy",
+      "allResults": "Wszystkie wyniki",
+      "allStatuses": "Wszystkie statusy",
+      "expired": "Wygasłe",
+      "expiringSoon": "Wkrótce wygasające",
+      "valid": "Ważne"
+    },
+    "empty": {
+      "noRecords": "Brak orzeczeń lekarskich",
+      "noRecordsDesc": "Dodaj pierwsze orzeczenie lekarskie.",
+      "noRecordsFilter": "Brak wyników dla wybranych filtrów.",
+      "noAppointments": "Brak wizyt",
+      "noAppointmentsDesc": "Zaplanuj pierwsze badanie lekarskie.",
+      "noAppointmentsFilter": "Brak wizyt dla wybranych filtrów.",
+      "noAlerts": "Brak alertów",
+      "noAlertsDesc": "Wszystkie orzeczenia są ważne.",
+      "noAlertsFilter": "Brak alertów dla wybranych filtrów."
+    },
+    "confirm": {
+      "delete": "Potwierdzasz usunięcie?",
+      "deleteRecord": "Usuń orzeczenie lekarskie",
+      "deleteRecordMsg": "Orzeczenie zostanie trwale usunięte.",
+      "deleteAppointment": "Usuń wizytę",
+      "deleteAppointmentMsg": "Wizyta zostanie trwale anulowana.",
+      "deleteForever": "Usuń trwale"
+    },
+    "errors": {
+      "saveRecord": "Błąd podczas zapisywania orzeczenia",
+      "deleteRecord": "Błąd podczas usuwania orzeczenia",
+      "saveAppointment": "Błąd podczas zapisywania wizyty",
+      "deleteAppointment": "Błąd podczas usuwania wizyty"
+    },
+    "loading": {
+      "data": "Ładowanie danych...",
+      "appointments": "Ładowanie wizyt...",
+      "alerts": "Ładowanie alertów..."
+    },
+    "alerts": {
+      "warning": "Uwaga",
+      "warningMessage": "Istnieją wygasłe lub wkrótce wygasające orzeczenia."
+    },
+    "daysText": {
+      "expired": "Wygasłe {days} dni temu",
+      "expiredShort": "Wygasłe",
+      "expiring": "Wygasa za {days} dni",
+      "valid": "Ważne — {days} dni pozostało"
+    },
+    "employee": {
+      "employeeInfo": "Informacje o pracowniku",
+      "jobTitle": "Stanowisko",
+      "department": "Dział",
+      "organization": "Organizacja",
+      "hireDate": "Data zatrudnienia",
+      "lastExam": "Ostatnie badanie",
+      "latestBadge": "Bieżący status",
+      "noJobTitle": "Brak stanowiska",
+      "noExams": "Brak badań",
+      "noExamsDesc": "Dodaj pierwsze badanie lekarskie.",
+      "addRecord": "Dodaj orzeczenie",
+      "addRecordAction": "Dodaj orzeczenie lekarskie",
+      "tabStatus": "Status",
+      "tabHistory": "Historia",
+      "tabAppointments": "Wizyty",
+      "historyDate": "Data",
+      "historyExpiry": "Wygaśnięcie",
+      "historyDr": "Lekarz",
+      "examType": "Typ badania",
+      "result": "Wynik",
+      "doctorClinic": "Lekarz / Klinika",
+      "riskFactors": "Czynniki ryzyka",
+      "activeRestrictions": "Aktywne ograniczenia",
+      "noRestrictions": "Brak ograniczeń",
+      "noAppointments": "Brak wizyt",
+      "noAppointmentsDesc": "Brak wizyt dla tego pracownika.",
+      "modalTitle": "Dodaj orzeczenie lekarskie",
+      "modalSubmit": "Zapisz"
+    },
+    "page": {
+      "title": "Badania lekarskie",
+      "searchPlaceholder": "Szukaj pracownika, lekarza...",
+      "total": "Łącznie",
+      "totalExams": "zarejestrowanych badań",
+      "count": "{count} badań",
+      "show": "Pokaż",
+      "pagination": "Strona {page} z {total}",
+      "noExams": "Brak badań",
+      "noExamsDesc": "Dodaj pierwsze badanie lekarskie, aby rozpocząć.",
+      "noResults": "Brak wyników",
+      "noResultsDesc": "Brak badań odpowiadających wyszukiwaniu.",
+      "colExamType": "Typ badania",
+      "colDoctor": "Lekarz",
+      "colNextExam": "Następne badanie"
+    },
+    "examination_type": "Typ badania",
+    "examination_date": "Data badania",
+    "next_exam": "Następne badanie",
+    "doctor_name": "Lekarz",
+    "employee_name": "Pracownik"
+  },
+  "iscir": {
+    "title": "ISCIR - Urządzenia ciśnieniowe",
+    "subtitle": "Zarządzanie urządzeniami ISCIR, kontrole i zezwolenia",
+    "addEquipment": "Dodaj urządzenie",
+    "recentEquipment": "Ostatnie urządzenia",
+    "equipmentType": {
+      "cazan": "Kocioł",
+      "recipientPresiune": "Zbiornik ciśnieniowy",
+      "lift": "Winda",
+      "macara": "Dźwig",
+      "stivuitor": "Wózek widłowy",
+      "instalatieGpl": "Instalacja LPG",
+      "compresor": "Kompresor",
+      "autoclave": "Autoklaw",
+      "altul": "Inne"
+    },
+    "status": {
+      "activ": "Aktywny",
+      "expirat": "Wygasły",
+      "inVerificare": "W trakcie kontroli",
+      "oprit": "Zatrzymany",
+      "casat": "Wycofany z eksploatacji"
+    },
+    "verificationType": {
+      "periodica": "Okresowa",
+      "accidentala": "Awaryjna",
+      "punereInFunctiune": "Uruchomienie",
+      "reparatie": "Naprawa",
+      "modernizare": "Modernizacja"
+    },
+    "result": {
+      "admis": "Zatwierdzony",
+      "admisConditionat": "Warunkowo zatwierdzony",
+      "respins": "Odrzucony"
+    },
+    "alert": {
+      "expired": "Wygasły",
+      "urgent": "Pilny",
+      "warning": "Ostrzeżenie",
+      "ok": "OK"
+    },
+    "alertBadge": {
+      "expired": "Wygasły",
+      "urgent": "Pilny",
+      "warning": "Ostrzeżenie",
+      "ok": "OK"
+    },
+    "tabs": {
+      "dashboard": "Pulpit",
+      "equipment": "Urządzenia",
+      "verifications": "Kontrole",
+      "alerts": "Alerty"
+    },
+    "stats": {
+      "total": "Łączna liczba urządzeń",
+      "active": "Aktywne",
+      "expired": "Wygasłe",
+      "stopped": "Zatrzymane"
+    },
+    "table": {
+      "type": "Typ",
+      "identifier": "Identyfikator",
+      "iscirNr": "Nr ISCIR",
+      "location": "Lokalizacja",
+      "status": "Status",
+      "verification": "Kontrola",
+      "actions": "Akcje"
+    },
+    "filter": {
+      "allOrgs": "Wszystkie organizacje",
+      "allTypes": "Wszystkie typy",
+      "allStatuses": "Wszystkie statusy",
+      "searchPlaceholder": "Szukaj urządzenia..."
+    },
+    "form": {
+      "titleAdd": "Dodaj urządzenie ISCIR",
+      "titleEdit": "Edytuj urządzenie",
+      "equipmentType": "Typ urządzenia",
+      "identifier": "Identyfikator",
+      "serialNumber": "Numer seryjny",
+      "registrationNumber": "Numer rejestracyjny",
+      "manufacturer": "Producent",
+      "model": "Model",
+      "manufactureYear": "Rok produkcji",
+      "capacity": "Pojemność / Parametry",
+      "location": "Lokalizacja",
+      "status": "Status",
+      "authorizationNumber": "Nr zezwolenia",
+      "authorizationExpiry": "Wygaśnięcie zezwolenia",
+      "verifInterval": "Interwał kontroli (miesiące)",
+      "nextVerifDate": "Data następnej kontroli",
+      "rsvtiResponsible": "Odpowiedzialny RSVTI",
+      "observations": "Obserwacje",
+      "save": "Zapisz",
+      "saving": "Zapisywanie...",
+      "cancel": "Anuluj"
+    },
+    "verifForm": {
+      "title": "Zarejestruj kontrolę",
+      "equipment": "Urządzenie",
+      "verifDate": "Data kontroli",
+      "verifType": "Typ kontroli",
+      "result": "Wynik",
+      "inspectorName": "Imię i nazwisko inspektora",
+      "inspectorId": "ID inspektora",
+      "bulletinNumber": "Nr protokołu",
+      "nextVerifDate": "Data następnej kontroli",
+      "prescriptions": "Zalecenia",
+      "prescriptionsDeadline": "Termin zaleceń",
+      "saveVerification": "Zapisz kontrolę"
+    },
+    "verifications": {
+      "title": "Historia kontroli",
+      "colDate": "Data",
+      "colType": "Typ",
+      "colEquipment": "Urządzenie",
+      "colResult": "Wynik",
+      "colInspector": "Inspektor",
+      "colBulletin": "Nr protokołu"
+    },
+    "alertsTab": {
+      "title": "Alerty kontroli",
+      "colAlertLevel": "Poziom",
+      "colDaysLeft": "Pozostałe dni",
+      "colVerifDate": "Data kontroli",
+      "verify": "Sprawdź"
+    },
+    "timeline": {
+      "bulletin": "Protokół",
+      "inspector": "Inspektor",
+      "nextVerif": "Następna kontrola",
+      "prescriptions": "Zalecenia",
+      "prescriptionsDeadline": "Termin zaleceń"
+    },
+    "detail": {
+      "backToIscir": "Powrót do ISCIR",
+      "technicalData": "Dane techniczne",
+      "capacityParams": "Pojemność / Parametry",
+      "installDate": "Data instalacji",
+      "lastVerif": "Ostatnia kontrola",
+      "nextVerif": "Następna kontrola",
+      "verifInterval": "Interwał kontroli",
+      "months": "miesięcy",
+      "daysLeft": "dni pozostało",
+      "daysOverdue": "dni przeterminowania",
+      "authorizationExpiry": "Wygaśnięcie zezwolenia",
+      "organization": "Organizacja",
+      "locationTitle": "Lokalizacja",
+      "rsvtiTitle": "Odpowiedzialny RSVTI",
+      "verifHistory": "Historia kontroli",
+      "verifCalendar": "Kalendarz kontroli",
+      "dailyChecksTitle": "Codzienne kontrole",
+      "dailyCheck": "Codzienna kontrola",
+      "dailyCheckRequired": "Wymaga codziennej kontroli",
+      "noDailyChecks": "Brak codziennych kontroli",
+      "showAll": "Pokaż wszystkie",
+      "showLess": "Pokaż mniej",
+      "qrCode": "Kod QR",
+      "qrError": "Błąd generowania QR",
+      "qrScanInstruction": "Skanuj do szybkiej weryfikacji",
+      "operatorPage": "Strona operatora",
+      "addVerification": "Dodaj kontrolę",
+      "addFirstVerif": "Dodaj pierwszą kontrolę",
+      "add": "Dodaj",
+      "close": "Zamknij",
+      "yes": "Tak",
+      "no": "Nie"
+    },
+    "deleteDialog": {
+      "title": "Potwierdzasz usunięcie?",
+      "message": "Urządzenie zostanie trwale usunięte.",
+      "delete": "Usuń",
+      "deleting": "Usuwanie..."
+    },
+    "empty": {
+      "noEquipment": "Brak urządzeń",
+      "noVerifications": "Brak kontroli",
+      "noAlerts": "Brak alertów"
+    },
+    "errors": {
+      "saveEquipment": "Błąd podczas zapisywania urządzenia",
+      "deleteEquipment": "Błąd podczas usuwania urządzenia",
+      "saveVerification": "Błąd podczas zapisywania kontroli"
+    },
+    "dailyRow": {
+      "operator": "Operator",
+      "pointsOk": "Punkty OK",
+      "issuesFound": "Problemy",
+      "signed": "Podpisane"
+    }
   }
 }

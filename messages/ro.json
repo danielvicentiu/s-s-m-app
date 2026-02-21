@@ -1667,5 +1667,552 @@
       "saveAssessment": "Salvează evaluare",
       "cancel": "Anulează"
     }
+  },
+  "gdpr": {
+    "title": "GDPR - Protecția Datelor",
+    "subtitle": "Registru prelucrări, consimțăminte și DPO",
+    "tabs": {
+      "processingRegistry": "Registru Prelucrări",
+      "consents": "Consimțăminte"
+    },
+    "stats": {
+      "processingActivities": "Activități prelucrare",
+      "activeConsents": "Consimțăminte active",
+      "dpoConfigured": "DPO configurat",
+      "dpoNotConfigured": "DPO neconfigurat",
+      "dpiaRequired": "DPIA necesară"
+    },
+    "legalBasis": {
+      "consent": "Consimțământ",
+      "contract": "Contract",
+      "legalObligation": "Obligație legală",
+      "vitalInterest": "Interes vital",
+      "publicInterest": "Interes public",
+      "legitimateInterest": "Interes legitim"
+    },
+    "consentType": {
+      "processing": "Prelucrare date",
+      "marketing": "Marketing",
+      "profiling": "Profilare",
+      "transfer": "Transfer date",
+      "specialCategories": "Categorii speciale",
+      "other": "Altele"
+    },
+    "status": {
+      "active": "Activ",
+      "inactive": "Inactiv",
+      "underReview": "În revizuire",
+      "archived": "Arhivat"
+    },
+    "filter": {
+      "all": "Toate",
+      "active": "Active",
+      "withdrawn": "Retrase",
+      "allStatuses": "Toate statusurile",
+      "allLegalBases": "Toate bazele legale"
+    },
+    "processing": {
+      "addActivity": "Adaugă activitate",
+      "newTitle": "Activitate nouă",
+      "editTitle": "Editează activitate",
+      "emptyTitle": "Nicio activitate",
+      "emptyMessage": "Adaugă prima activitate de prelucrare.",
+      "searchPlaceholder": "Caută activități...",
+      "activityNameLabel": "Denumire activitate",
+      "activityNamePlaceholder": "ex: Prelucrare date angajați",
+      "purposeLabel": "Scop",
+      "purposePlaceholder": "ex: Gestiune resurse umane",
+      "legalBasisLabel": "Bază legală",
+      "statusLabel": "Status",
+      "dataSubjectsLabel": "Subiecți date",
+      "dataSubjectsPlaceholder": "ex: Angajați, candidați",
+      "dataCategoriesLabel": "Categorii date",
+      "dataCategoriesPlaceholder": "ex: Date identificare, contact",
+      "retentionPeriodLabel": "Perioadă retenție",
+      "retentionPeriodPlaceholder": "ex: 5 ani",
+      "crossBorderTransfer": "Transfer transfrontalier",
+      "dpiaRequired": "DPIA necesară",
+      "dpiaCompleted": "DPIA finalizată",
+      "dpiaDateLabel": "Data DPIA"
+    },
+    "consent": {
+      "addConsent": "Adaugă consimțământ",
+      "newTitle": "Consimțământ nou",
+      "editTitle": "Editează consimțământ",
+      "emptyTitle": "Niciun consimțământ",
+      "emptyMessage": "Adaugă primul consimțământ.",
+      "searchPlaceholder": "Caută consimțăminte...",
+      "personNameLabel": "Nume persoană",
+      "personNamePlaceholder": "ex: Ion Popescu",
+      "emailLabel": "Email",
+      "typeLabel": "Tip consimțământ",
+      "purposeLabel": "Scop",
+      "purposePlaceholder": "ex: Newsletter marketing",
+      "givenAtLabel": "Data acordare",
+      "notesLabel": "Observații",
+      "notesPlaceholder": "Observații suplimentare...",
+      "withdraw": "Retrage",
+      "withdrawTitle": "Retrage consimțământ",
+      "active": "Activ",
+      "withdrawn": "Retras"
+    },
+    "dpo": {
+      "title": "Responsabil Protecția Datelor (DPO)",
+      "subtitle": "Configurare DPO intern sau extern",
+      "typeLabel": "Tip DPO",
+      "internal": "Intern",
+      "external": "Extern",
+      "nameLabel": "Nume DPO",
+      "namePlaceholder": "ex: Maria Ionescu",
+      "emailLabel": "Email",
+      "phoneLabel": "Telefon",
+      "companyLabel": "Companie (dacă extern)",
+      "companyPlaceholder": "ex: DPO Consulting SRL",
+      "appointmentDateLabel": "Data numirii",
+      "contractExpiryLabel": "Expirare contract",
+      "anspdcpNotified": "ANSPDCP notificat",
+      "anspdcpNotificationDateLabel": "Data notificării",
+      "notesLabel": "Observații",
+      "notesPlaceholder": "Informații suplimentare...",
+      "save": "Salvează",
+      "saving": "Se salvează...",
+      "savedSuccess": "DPO salvat cu succes!"
+    },
+    "table": {
+      "activity": "Activitate",
+      "legalBasis": "Bază legală",
+      "status": "Status",
+      "actions": "Acțiuni",
+      "person": "Persoană",
+      "type": "Tip",
+      "purpose": "Scop",
+      "givenAt": "Data acordare"
+    },
+    "actions": {
+      "edit": "Editează",
+      "delete": "Șterge",
+      "cancel": "Anulează",
+      "create": "Creează",
+      "update": "Actualizează"
+    },
+    "confirm": {
+      "deleteTitle": "Confirmi ștergerea?",
+      "deleteProcessingMessage": "Activitatea de prelucrare va fi ștearsă definitiv.",
+      "deleteConsentMessage": "Consimțământul va fi șters definitiv."
+    },
+    "errors": {
+      "createError": "Eroare la creare",
+      "updateError": "Eroare la actualizare",
+      "deleteError": "Eroare la ștergere",
+      "saveError": "Eroare la salvare",
+      "withdrawError": "Eroare la retragere consimțământ"
+    }
+  },
+  "medical": {
+    "title": "Medicina Muncii",
+    "examType": {
+      "periodic": "Periodic",
+      "angajare": "Angajare",
+      "reluare": "Reluare",
+      "laCerere": "La cerere",
+      "controlPeriodic": "Control periodic",
+      "controlAngajare": "Control angajare",
+      "fisaAptitudine": "Fișă aptitudine",
+      "fisaPsihologica": "Fișă psihologică",
+      "supraveghere": "Supraveghere"
+    },
+    "result": {
+      "apt": "Apt",
+      "aptConditionat": "Apt condiționat",
+      "inaptTemporar": "Inapt temporar",
+      "inapt": "Inapt",
+      "inAsteptare": "În așteptare"
+    },
+    "appointmentStatus": {
+      "programat": "Programat",
+      "confirmat": "Confirmat",
+      "efectuat": "Efectuat",
+      "anulat": "Anulat",
+      "reprogramat": "Reprogramat"
+    },
+    "status": {
+      "expired": "Expirat",
+      "expiredDesc": "Fișa medicală a expirat",
+      "expiringSoon": "Expiră curând",
+      "expiringSoonDesc": "Fișa medicală expiră în curând",
+      "valid": "Valid",
+      "validDesc": "Fișa medicală este validă",
+      "noRecord": "Fără fișă",
+      "noRecordDesc": "Nu există fișă medicală",
+      "undefined": "Nedefinit",
+      "undefinedDesc": "Data expirare nedefinită"
+    },
+    "alertLevel": {
+      "expirat": "Expirat",
+      "urgent": "Urgent",
+      "atentie": "Atenție",
+      "ok": "OK",
+      "nedefinit": "Nedefinit"
+    },
+    "tab": {
+      "records": "Fișe medicale",
+      "appointments": "Programări",
+      "alerts": "Alerte"
+    },
+    "subtitle": {
+      "records": "Fișe medicale înregistrate",
+      "appointments": "Programări examene medicale",
+      "alerts": "Alerte expirate și urgente"
+    },
+    "stats": {
+      "totalRecords": "Total fișe",
+      "valid": "Valide",
+      "expired": "Expirate",
+      "expiring30": "Expiră în 30 zile",
+      "totalAppointments": "Total programări",
+      "scheduled": "Programate",
+      "confirmed": "Confirmate",
+      "done": "Efectuate"
+    },
+    "col": {
+      "employee": "Angajat",
+      "jobTitle": "Funcție",
+      "type": "Tip",
+      "date": "Data",
+      "examDate": "Data examen",
+      "expiryDate": "Data expirare",
+      "expires": "Expiră",
+      "daysLeft": "Zile rămase",
+      "result": "Rezultat",
+      "status": "Status",
+      "clinic": "Clinică",
+      "priority": "Prioritate"
+    },
+    "form": {
+      "addRecord": "Adaugă fișă",
+      "addRecordBtn": "Adaugă",
+      "editRecord": "Editează fișă",
+      "examType": "Tip examen",
+      "examDate": "Data examen",
+      "expiryDate": "Data expirare",
+      "result": "Rezultat",
+      "doctor": "Medic",
+      "clinic": "Clinică",
+      "clinicAddress": "Adresă clinică",
+      "documentNumber": "Nr. document",
+      "restrictions": "Restricții",
+      "riskFactors": "Factori de risc",
+      "notes": "Observații",
+      "extraDetails": "Detalii suplimentare",
+      "validityMonths": "Valabilitate (luni)",
+      "employee": "Angajat",
+      "employeeName": "Nume angajat",
+      "selectEmployee": "Selectează angajat",
+      "selectEmployeeManual": "Selectează manual",
+      "organization": "Organizație",
+      "selectOrg": "Selectează organizație",
+      "jobTitle": "Funcție",
+      "save": "Salvează",
+      "saveChanges": "Salvează modificări",
+      "scheduleExam": "Programează examen",
+      "editAppointment": "Editează programare",
+      "date": "Data",
+      "time": "Ora"
+    },
+    "btn": {
+      "addRecord": "Adaugă fișă",
+      "schedule": "Programează"
+    },
+    "filter": {
+      "allOrgs": "Toate organizațiile",
+      "allTypes": "Toate tipurile",
+      "allResults": "Toate rezultatele",
+      "allStatuses": "Toate statusurile",
+      "expired": "Expirate",
+      "expiringSoon": "Expiră curând",
+      "valid": "Valide"
+    },
+    "empty": {
+      "noRecords": "Nicio fișă medicală",
+      "noRecordsDesc": "Adaugă prima fișă medicală.",
+      "noRecordsFilter": "Niciun rezultat pentru filtrele selectate.",
+      "noAppointments": "Nicio programare",
+      "noAppointmentsDesc": "Programează primul examen medical.",
+      "noAppointmentsFilter": "Nicio programare pentru filtrele selectate.",
+      "noAlerts": "Nicio alertă",
+      "noAlertsDesc": "Toate fișele sunt valide.",
+      "noAlertsFilter": "Nicio alertă pentru filtrele selectate."
+    },
+    "confirm": {
+      "delete": "Confirmi ștergerea?",
+      "deleteRecord": "Șterge fișa medicală",
+      "deleteRecordMsg": "Fișa va fi ștearsă definitiv.",
+      "deleteAppointment": "Șterge programarea",
+      "deleteAppointmentMsg": "Programarea va fi anulată definitiv.",
+      "deleteForever": "Șterge definitiv"
+    },
+    "errors": {
+      "saveRecord": "Eroare la salvare fișă",
+      "deleteRecord": "Eroare la ștergere fișă",
+      "saveAppointment": "Eroare la salvare programare",
+      "deleteAppointment": "Eroare la ștergere programare"
+    },
+    "loading": {
+      "data": "Se încarcă datele...",
+      "appointments": "Se încarcă programările...",
+      "alerts": "Se încarcă alertele..."
+    },
+    "alerts": {
+      "warning": "Atenție",
+      "warningMessage": "Există fișe expirate sau aproape de expirare."
+    },
+    "daysText": {
+      "expired": "Expirat de {days} zile",
+      "expiredShort": "Expirat",
+      "expiring": "Expiră în {days} zile",
+      "valid": "Valid — {days} zile rămase"
+    },
+    "employee": {
+      "employeeInfo": "Informații angajat",
+      "jobTitle": "Funcție",
+      "department": "Departament",
+      "organization": "Organizație",
+      "hireDate": "Data angajării",
+      "lastExam": "Ultimul examen",
+      "latestBadge": "Status curent",
+      "noJobTitle": "Fără funcție",
+      "noExams": "Niciun examen",
+      "noExamsDesc": "Adaugă primul examen medical.",
+      "addRecord": "Adaugă fișă",
+      "addRecordAction": "Adaugă fișă medicală",
+      "tabStatus": "Status",
+      "tabHistory": "Istoric",
+      "tabAppointments": "Programări",
+      "historyDate": "Data",
+      "historyExpiry": "Expirare",
+      "historyDr": "Medic",
+      "examType": "Tip examen",
+      "result": "Rezultat",
+      "doctorClinic": "Medic / Clinică",
+      "riskFactors": "Factori de risc",
+      "activeRestrictions": "Restricții active",
+      "noRestrictions": "Fără restricții",
+      "noAppointments": "Nicio programare",
+      "noAppointmentsDesc": "Nu există programări pentru acest angajat.",
+      "modalTitle": "Adaugă fișă medicală",
+      "modalSubmit": "Salvează"
+    },
+    "page": {
+      "title": "Examene Medicale",
+      "searchPlaceholder": "Caută angajat, medic...",
+      "total": "Total",
+      "totalExams": "examene înregistrate",
+      "count": "{count} examene",
+      "show": "Afișează",
+      "pagination": "Pagina {page} din {total}",
+      "noExams": "Niciun examen",
+      "noExamsDesc": "Adaugă primul examen medical pentru a începe.",
+      "noResults": "Niciun rezultat",
+      "noResultsDesc": "Nu există examene care să corespundă căutării.",
+      "colExamType": "Tip examen",
+      "colDoctor": "Medic",
+      "colNextExam": "Următorul examen"
+    },
+    "examination_type": "Tip examen",
+    "examination_date": "Data examen",
+    "next_exam": "Următorul examen",
+    "doctor_name": "Medic",
+    "employee_name": "Angajat"
+  },
+  "iscir": {
+    "title": "ISCIR - Echipamente sub Presiune",
+    "subtitle": "Gestiune echipamente ISCIR, verificări și autorizații",
+    "addEquipment": "Adaugă echipament",
+    "recentEquipment": "Echipamente recente",
+    "equipmentType": {
+      "cazan": "Cazan",
+      "recipientPresiune": "Recipient sub presiune",
+      "lift": "Lift",
+      "macara": "Macara",
+      "stivuitor": "Stivuitor",
+      "instalatieGpl": "Instalație GPL",
+      "compresor": "Compresor",
+      "autoclave": "Autoclave",
+      "altul": "Altul"
+    },
+    "status": {
+      "activ": "Activ",
+      "expirat": "Expirat",
+      "inVerificare": "În verificare",
+      "oprit": "Oprit",
+      "casat": "Casat"
+    },
+    "verificationType": {
+      "periodica": "Periodică",
+      "accidentala": "Accidentală",
+      "punereInFunctiune": "Punere în funcțiune",
+      "reparatie": "Reparație",
+      "modernizare": "Modernizare"
+    },
+    "result": {
+      "admis": "Admis",
+      "admisConditionat": "Admis condiționat",
+      "respins": "Respins"
+    },
+    "alert": {
+      "expired": "Expirat",
+      "urgent": "Urgent",
+      "warning": "Atenție",
+      "ok": "OK"
+    },
+    "alertBadge": {
+      "expired": "Expirat",
+      "urgent": "Urgent",
+      "warning": "Atenție",
+      "ok": "OK"
+    },
+    "tabs": {
+      "dashboard": "Panou",
+      "equipment": "Echipamente",
+      "verifications": "Verificări",
+      "alerts": "Alerte"
+    },
+    "stats": {
+      "total": "Total echipamente",
+      "active": "Active",
+      "expired": "Expirate",
+      "stopped": "Oprite"
+    },
+    "table": {
+      "type": "Tip",
+      "identifier": "Identificator",
+      "iscirNr": "Nr. ISCIR",
+      "location": "Locație",
+      "status": "Status",
+      "verification": "Verificare",
+      "actions": "Acțiuni"
+    },
+    "filter": {
+      "allOrgs": "Toate organizațiile",
+      "allTypes": "Toate tipurile",
+      "allStatuses": "Toate statusurile",
+      "searchPlaceholder": "Caută echipament..."
+    },
+    "form": {
+      "titleAdd": "Adaugă echipament ISCIR",
+      "titleEdit": "Editează echipament",
+      "equipmentType": "Tip echipament",
+      "identifier": "Identificator",
+      "serialNumber": "Număr serie",
+      "registrationNumber": "Număr înregistrare",
+      "manufacturer": "Producător",
+      "model": "Model",
+      "manufactureYear": "Anul fabricației",
+      "capacity": "Capacitate / Parametri",
+      "location": "Locație",
+      "status": "Status",
+      "authorizationNumber": "Nr. autorizație",
+      "authorizationExpiry": "Expirare autorizație",
+      "verifInterval": "Interval verificare (luni)",
+      "nextVerifDate": "Data următoarei verificări",
+      "rsvtiResponsible": "Responsabil RSVTI",
+      "observations": "Observații",
+      "save": "Salvează",
+      "saving": "Se salvează...",
+      "cancel": "Anulează"
+    },
+    "verifForm": {
+      "title": "Înregistrează verificare",
+      "equipment": "Echipament",
+      "verifDate": "Data verificare",
+      "verifType": "Tip verificare",
+      "result": "Rezultat",
+      "inspectorName": "Nume inspector",
+      "inspectorId": "ID inspector",
+      "bulletinNumber": "Nr. buletin",
+      "nextVerifDate": "Data următoarei verificări",
+      "prescriptions": "Prescripții",
+      "prescriptionsDeadline": "Termen prescripții",
+      "saveVerification": "Salvează verificare"
+    },
+    "verifications": {
+      "title": "Istoric verificări",
+      "colDate": "Data",
+      "colType": "Tip",
+      "colEquipment": "Echipament",
+      "colResult": "Rezultat",
+      "colInspector": "Inspector",
+      "colBulletin": "Nr. buletin"
+    },
+    "alertsTab": {
+      "title": "Alerte verificări",
+      "colAlertLevel": "Nivel",
+      "colDaysLeft": "Zile rămase",
+      "colVerifDate": "Data verificare",
+      "verify": "Verifică"
+    },
+    "timeline": {
+      "bulletin": "Buletin",
+      "inspector": "Inspector",
+      "nextVerif": "Următoarea verificare",
+      "prescriptions": "Prescripții",
+      "prescriptionsDeadline": "Termen prescripții"
+    },
+    "detail": {
+      "backToIscir": "Înapoi la ISCIR",
+      "technicalData": "Date tehnice",
+      "capacityParams": "Capacitate / Parametri",
+      "installDate": "Data instalare",
+      "lastVerif": "Ultima verificare",
+      "nextVerif": "Următoarea verificare",
+      "verifInterval": "Interval verificare",
+      "months": "luni",
+      "daysLeft": "zile rămase",
+      "daysOverdue": "zile depășire",
+      "authorizationExpiry": "Expirare autorizație",
+      "organization": "Organizație",
+      "locationTitle": "Locație",
+      "rsvtiTitle": "Responsabil RSVTI",
+      "verifHistory": "Istoric verificări",
+      "verifCalendar": "Calendar verificări",
+      "dailyChecksTitle": "Verificări zilnice",
+      "dailyCheck": "Verificare zilnică",
+      "dailyCheckRequired": "Necesită verificare zilnică",
+      "noDailyChecks": "Nicio verificare zilnică",
+      "showAll": "Afișează toate",
+      "showLess": "Afișează mai puțin",
+      "qrCode": "Cod QR",
+      "qrError": "Eroare generare QR",
+      "qrScanInstruction": "Scanează pentru verificare rapidă",
+      "operatorPage": "Pagina operator",
+      "addVerification": "Adaugă verificare",
+      "addFirstVerif": "Adaugă prima verificare",
+      "add": "Adaugă",
+      "close": "Închide",
+      "yes": "Da",
+      "no": "Nu"
+    },
+    "deleteDialog": {
+      "title": "Confirmi ștergerea?",
+      "message": "Echipamentul va fi șters definitiv.",
+      "delete": "Șterge",
+      "deleting": "Se șterge..."
+    },
+    "empty": {
+      "noEquipment": "Niciun echipament",
+      "noVerifications": "Nicio verificare",
+      "noAlerts": "Nicio alertă"
+    },
+    "errors": {
+      "saveEquipment": "Eroare la salvare echipament",
+      "deleteEquipment": "Eroare la ștergere echipament",
+      "saveVerification": "Eroare la salvare verificare"
+    },
+    "dailyRow": {
+      "operator": "Operator",
+      "pointsOk": "Puncte OK",
+      "issuesFound": "Probleme",
+      "signed": "Semnat"
+    }
   }
 }

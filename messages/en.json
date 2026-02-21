@@ -1667,5 +1667,552 @@
       "saveAssessment": "Save assessment",
       "cancel": "Cancel"
     }
+  },
+  "gdpr": {
+    "title": "GDPR - Data Protection",
+    "subtitle": "Processing registry, consents and DPO",
+    "tabs": {
+      "processingRegistry": "Processing Registry",
+      "consents": "Consents"
+    },
+    "stats": {
+      "processingActivities": "Processing activities",
+      "activeConsents": "Active consents",
+      "dpoConfigured": "DPO configured",
+      "dpoNotConfigured": "DPO not configured",
+      "dpiaRequired": "DPIA required"
+    },
+    "legalBasis": {
+      "consent": "Consent",
+      "contract": "Contract",
+      "legalObligation": "Legal obligation",
+      "vitalInterest": "Vital interest",
+      "publicInterest": "Public interest",
+      "legitimateInterest": "Legitimate interest"
+    },
+    "consentType": {
+      "processing": "Data processing",
+      "marketing": "Marketing",
+      "profiling": "Profiling",
+      "transfer": "Data transfer",
+      "specialCategories": "Special categories",
+      "other": "Other"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "underReview": "Under review",
+      "archived": "Archived"
+    },
+    "filter": {
+      "all": "All",
+      "active": "Active",
+      "withdrawn": "Withdrawn",
+      "allStatuses": "All statuses",
+      "allLegalBases": "All legal bases"
+    },
+    "processing": {
+      "addActivity": "Add activity",
+      "newTitle": "New activity",
+      "editTitle": "Edit activity",
+      "emptyTitle": "No activities",
+      "emptyMessage": "Add the first processing activity.",
+      "searchPlaceholder": "Search activities...",
+      "activityNameLabel": "Activity name",
+      "activityNamePlaceholder": "e.g.: Employee data processing",
+      "purposeLabel": "Purpose",
+      "purposePlaceholder": "e.g.: Human resources management",
+      "legalBasisLabel": "Legal basis",
+      "statusLabel": "Status",
+      "dataSubjectsLabel": "Data subjects",
+      "dataSubjectsPlaceholder": "e.g.: Employees, candidates",
+      "dataCategoriesLabel": "Data categories",
+      "dataCategoriesPlaceholder": "e.g.: Identification data, contact",
+      "retentionPeriodLabel": "Retention period",
+      "retentionPeriodPlaceholder": "e.g.: 5 years",
+      "crossBorderTransfer": "Cross-border transfer",
+      "dpiaRequired": "DPIA required",
+      "dpiaCompleted": "DPIA completed",
+      "dpiaDateLabel": "DPIA date"
+    },
+    "consent": {
+      "addConsent": "Add consent",
+      "newTitle": "New consent",
+      "editTitle": "Edit consent",
+      "emptyTitle": "No consents",
+      "emptyMessage": "Add the first consent.",
+      "searchPlaceholder": "Search consents...",
+      "personNameLabel": "Person name",
+      "personNamePlaceholder": "e.g.: John Smith",
+      "emailLabel": "Email",
+      "typeLabel": "Consent type",
+      "purposeLabel": "Purpose",
+      "purposePlaceholder": "e.g.: Marketing newsletter",
+      "givenAtLabel": "Given at",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "Additional notes...",
+      "withdraw": "Withdraw",
+      "withdrawTitle": "Withdraw consent",
+      "active": "Active",
+      "withdrawn": "Withdrawn"
+    },
+    "dpo": {
+      "title": "Data Protection Officer (DPO)",
+      "subtitle": "Internal or external DPO configuration",
+      "typeLabel": "DPO type",
+      "internal": "Internal",
+      "external": "External",
+      "nameLabel": "DPO name",
+      "namePlaceholder": "e.g.: John Smith",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "companyLabel": "Company (if external)",
+      "companyPlaceholder": "e.g.: DPO Consulting Ltd",
+      "appointmentDateLabel": "Appointment date",
+      "contractExpiryLabel": "Contract expiry",
+      "anspdcpNotified": "ANSPDCP notified",
+      "anspdcpNotificationDateLabel": "Notification date",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "Additional information...",
+      "save": "Save",
+      "saving": "Saving...",
+      "savedSuccess": "DPO saved successfully!"
+    },
+    "table": {
+      "activity": "Activity",
+      "legalBasis": "Legal basis",
+      "status": "Status",
+      "actions": "Actions",
+      "person": "Person",
+      "type": "Type",
+      "purpose": "Purpose",
+      "givenAt": "Given at"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "create": "Create",
+      "update": "Update"
+    },
+    "confirm": {
+      "deleteTitle": "Confirm deletion?",
+      "deleteProcessingMessage": "The processing activity will be permanently deleted.",
+      "deleteConsentMessage": "The consent will be permanently deleted."
+    },
+    "errors": {
+      "createError": "Error creating",
+      "updateError": "Error updating",
+      "deleteError": "Error deleting",
+      "saveError": "Error saving",
+      "withdrawError": "Error withdrawing consent"
+    }
+  },
+  "medical": {
+    "title": "Occupational Medicine",
+    "examType": {
+      "periodic": "Periodic",
+      "angajare": "Employment",
+      "reluare": "Return",
+      "laCerere": "On request",
+      "controlPeriodic": "Periodic check",
+      "controlAngajare": "Employment check",
+      "fisaAptitudine": "Fitness certificate",
+      "fisaPsihologica": "Psychological certificate",
+      "supraveghere": "Surveillance"
+    },
+    "result": {
+      "apt": "Fit",
+      "aptConditionat": "Conditionally fit",
+      "inaptTemporar": "Temporarily unfit",
+      "inapt": "Unfit",
+      "inAsteptare": "Pending"
+    },
+    "appointmentStatus": {
+      "programat": "Scheduled",
+      "confirmat": "Confirmed",
+      "efectuat": "Completed",
+      "anulat": "Cancelled",
+      "reprogramat": "Rescheduled"
+    },
+    "status": {
+      "expired": "Expired",
+      "expiredDesc": "Medical record has expired",
+      "expiringSoon": "Expiring soon",
+      "expiringSoonDesc": "Medical record is expiring soon",
+      "valid": "Valid",
+      "validDesc": "Medical record is valid",
+      "noRecord": "No record",
+      "noRecordDesc": "No medical record exists",
+      "undefined": "Undefined",
+      "undefinedDesc": "Expiry date undefined"
+    },
+    "alertLevel": {
+      "expirat": "Expired",
+      "urgent": "Urgent",
+      "atentie": "Warning",
+      "ok": "OK",
+      "nedefinit": "Undefined"
+    },
+    "tab": {
+      "records": "Medical records",
+      "appointments": "Appointments",
+      "alerts": "Alerts"
+    },
+    "subtitle": {
+      "records": "Registered medical records",
+      "appointments": "Medical examination appointments",
+      "alerts": "Expired and urgent alerts"
+    },
+    "stats": {
+      "totalRecords": "Total records",
+      "valid": "Valid",
+      "expired": "Expired",
+      "expiring30": "Expiring in 30 days",
+      "totalAppointments": "Total appointments",
+      "scheduled": "Scheduled",
+      "confirmed": "Confirmed",
+      "done": "Completed"
+    },
+    "col": {
+      "employee": "Employee",
+      "jobTitle": "Job title",
+      "type": "Type",
+      "date": "Date",
+      "examDate": "Exam date",
+      "expiryDate": "Expiry date",
+      "expires": "Expires",
+      "daysLeft": "Days left",
+      "result": "Result",
+      "status": "Status",
+      "clinic": "Clinic",
+      "priority": "Priority"
+    },
+    "form": {
+      "addRecord": "Add record",
+      "addRecordBtn": "Add",
+      "editRecord": "Edit record",
+      "examType": "Exam type",
+      "examDate": "Exam date",
+      "expiryDate": "Expiry date",
+      "result": "Result",
+      "doctor": "Doctor",
+      "clinic": "Clinic",
+      "clinicAddress": "Clinic address",
+      "documentNumber": "Document no.",
+      "restrictions": "Restrictions",
+      "riskFactors": "Risk factors",
+      "notes": "Notes",
+      "extraDetails": "Additional details",
+      "validityMonths": "Validity (months)",
+      "employee": "Employee",
+      "employeeName": "Employee name",
+      "selectEmployee": "Select employee",
+      "selectEmployeeManual": "Select manually",
+      "organization": "Organization",
+      "selectOrg": "Select organization",
+      "jobTitle": "Job title",
+      "save": "Save",
+      "saveChanges": "Save changes",
+      "scheduleExam": "Schedule exam",
+      "editAppointment": "Edit appointment",
+      "date": "Date",
+      "time": "Time"
+    },
+    "btn": {
+      "addRecord": "Add record",
+      "schedule": "Schedule"
+    },
+    "filter": {
+      "allOrgs": "All organizations",
+      "allTypes": "All types",
+      "allResults": "All results",
+      "allStatuses": "All statuses",
+      "expired": "Expired",
+      "expiringSoon": "Expiring soon",
+      "valid": "Valid"
+    },
+    "empty": {
+      "noRecords": "No medical records",
+      "noRecordsDesc": "Add the first medical record.",
+      "noRecordsFilter": "No results for the selected filters.",
+      "noAppointments": "No appointments",
+      "noAppointmentsDesc": "Schedule the first medical exam.",
+      "noAppointmentsFilter": "No appointments for the selected filters.",
+      "noAlerts": "No alerts",
+      "noAlertsDesc": "All records are valid.",
+      "noAlertsFilter": "No alerts for the selected filters."
+    },
+    "confirm": {
+      "delete": "Confirm deletion?",
+      "deleteRecord": "Delete medical record",
+      "deleteRecordMsg": "The record will be permanently deleted.",
+      "deleteAppointment": "Delete appointment",
+      "deleteAppointmentMsg": "The appointment will be permanently cancelled.",
+      "deleteForever": "Delete permanently"
+    },
+    "errors": {
+      "saveRecord": "Error saving record",
+      "deleteRecord": "Error deleting record",
+      "saveAppointment": "Error saving appointment",
+      "deleteAppointment": "Error deleting appointment"
+    },
+    "loading": {
+      "data": "Loading data...",
+      "appointments": "Loading appointments...",
+      "alerts": "Loading alerts..."
+    },
+    "alerts": {
+      "warning": "Warning",
+      "warningMessage": "There are expired or nearly expired records."
+    },
+    "daysText": {
+      "expired": "Expired {days} days ago",
+      "expiredShort": "Expired",
+      "expiring": "Expires in {days} days",
+      "valid": "Valid — {days} days remaining"
+    },
+    "employee": {
+      "employeeInfo": "Employee information",
+      "jobTitle": "Job title",
+      "department": "Department",
+      "organization": "Organization",
+      "hireDate": "Hire date",
+      "lastExam": "Last exam",
+      "latestBadge": "Current status",
+      "noJobTitle": "No job title",
+      "noExams": "No exams",
+      "noExamsDesc": "Add the first medical exam.",
+      "addRecord": "Add record",
+      "addRecordAction": "Add medical record",
+      "tabStatus": "Status",
+      "tabHistory": "History",
+      "tabAppointments": "Appointments",
+      "historyDate": "Date",
+      "historyExpiry": "Expiry",
+      "historyDr": "Doctor",
+      "examType": "Exam type",
+      "result": "Result",
+      "doctorClinic": "Doctor / Clinic",
+      "riskFactors": "Risk factors",
+      "activeRestrictions": "Active restrictions",
+      "noRestrictions": "No restrictions",
+      "noAppointments": "No appointments",
+      "noAppointmentsDesc": "No appointments for this employee.",
+      "modalTitle": "Add medical record",
+      "modalSubmit": "Save"
+    },
+    "page": {
+      "title": "Medical Examinations",
+      "searchPlaceholder": "Search employee, doctor...",
+      "total": "Total",
+      "totalExams": "registered exams",
+      "count": "{count} exams",
+      "show": "Show",
+      "pagination": "Page {page} of {total}",
+      "noExams": "No exams",
+      "noExamsDesc": "Add the first medical exam to get started.",
+      "noResults": "No results",
+      "noResultsDesc": "No exams matching the search.",
+      "colExamType": "Exam type",
+      "colDoctor": "Doctor",
+      "colNextExam": "Next exam"
+    },
+    "examination_type": "Exam type",
+    "examination_date": "Exam date",
+    "next_exam": "Next exam",
+    "doctor_name": "Doctor",
+    "employee_name": "Employee"
+  },
+  "iscir": {
+    "title": "ISCIR - Pressure Equipment",
+    "subtitle": "ISCIR equipment management, verifications and authorizations",
+    "addEquipment": "Add equipment",
+    "recentEquipment": "Recent equipment",
+    "equipmentType": {
+      "cazan": "Boiler",
+      "recipientPresiune": "Pressure vessel",
+      "lift": "Lift",
+      "macara": "Crane",
+      "stivuitor": "Forklift",
+      "instalatieGpl": "LPG installation",
+      "compresor": "Compressor",
+      "autoclave": "Autoclave",
+      "altul": "Other"
+    },
+    "status": {
+      "activ": "Active",
+      "expirat": "Expired",
+      "inVerificare": "Under verification",
+      "oprit": "Stopped",
+      "casat": "Decommissioned"
+    },
+    "verificationType": {
+      "periodica": "Periodic",
+      "accidentala": "Accidental",
+      "punereInFunctiune": "Commissioning",
+      "reparatie": "Repair",
+      "modernizare": "Modernization"
+    },
+    "result": {
+      "admis": "Approved",
+      "admisConditionat": "Conditionally approved",
+      "respins": "Rejected"
+    },
+    "alert": {
+      "expired": "Expired",
+      "urgent": "Urgent",
+      "warning": "Warning",
+      "ok": "OK"
+    },
+    "alertBadge": {
+      "expired": "Expired",
+      "urgent": "Urgent",
+      "warning": "Warning",
+      "ok": "OK"
+    },
+    "tabs": {
+      "dashboard": "Dashboard",
+      "equipment": "Equipment",
+      "verifications": "Verifications",
+      "alerts": "Alerts"
+    },
+    "stats": {
+      "total": "Total equipment",
+      "active": "Active",
+      "expired": "Expired",
+      "stopped": "Stopped"
+    },
+    "table": {
+      "type": "Type",
+      "identifier": "Identifier",
+      "iscirNr": "ISCIR No.",
+      "location": "Location",
+      "status": "Status",
+      "verification": "Verification",
+      "actions": "Actions"
+    },
+    "filter": {
+      "allOrgs": "All organizations",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "searchPlaceholder": "Search equipment..."
+    },
+    "form": {
+      "titleAdd": "Add ISCIR equipment",
+      "titleEdit": "Edit equipment",
+      "equipmentType": "Equipment type",
+      "identifier": "Identifier",
+      "serialNumber": "Serial number",
+      "registrationNumber": "Registration number",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "manufactureYear": "Year of manufacture",
+      "capacity": "Capacity / Parameters",
+      "location": "Location",
+      "status": "Status",
+      "authorizationNumber": "Authorization no.",
+      "authorizationExpiry": "Authorization expiry",
+      "verifInterval": "Verification interval (months)",
+      "nextVerifDate": "Next verification date",
+      "rsvtiResponsible": "RSVTI responsible",
+      "observations": "Observations",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    },
+    "verifForm": {
+      "title": "Record verification",
+      "equipment": "Equipment",
+      "verifDate": "Verification date",
+      "verifType": "Verification type",
+      "result": "Result",
+      "inspectorName": "Inspector name",
+      "inspectorId": "Inspector ID",
+      "bulletinNumber": "Bulletin no.",
+      "nextVerifDate": "Next verification date",
+      "prescriptions": "Prescriptions",
+      "prescriptionsDeadline": "Prescriptions deadline",
+      "saveVerification": "Save verification"
+    },
+    "verifications": {
+      "title": "Verification history",
+      "colDate": "Date",
+      "colType": "Type",
+      "colEquipment": "Equipment",
+      "colResult": "Result",
+      "colInspector": "Inspector",
+      "colBulletin": "Bulletin no."
+    },
+    "alertsTab": {
+      "title": "Verification alerts",
+      "colAlertLevel": "Level",
+      "colDaysLeft": "Days left",
+      "colVerifDate": "Verification date",
+      "verify": "Verify"
+    },
+    "timeline": {
+      "bulletin": "Bulletin",
+      "inspector": "Inspector",
+      "nextVerif": "Next verification",
+      "prescriptions": "Prescriptions",
+      "prescriptionsDeadline": "Prescriptions deadline"
+    },
+    "detail": {
+      "backToIscir": "Back to ISCIR",
+      "technicalData": "Technical data",
+      "capacityParams": "Capacity / Parameters",
+      "installDate": "Installation date",
+      "lastVerif": "Last verification",
+      "nextVerif": "Next verification",
+      "verifInterval": "Verification interval",
+      "months": "months",
+      "daysLeft": "days left",
+      "daysOverdue": "days overdue",
+      "authorizationExpiry": "Authorization expiry",
+      "organization": "Organization",
+      "locationTitle": "Location",
+      "rsvtiTitle": "RSVTI responsible",
+      "verifHistory": "Verification history",
+      "verifCalendar": "Verification calendar",
+      "dailyChecksTitle": "Daily checks",
+      "dailyCheck": "Daily check",
+      "dailyCheckRequired": "Requires daily check",
+      "noDailyChecks": "No daily checks",
+      "showAll": "Show all",
+      "showLess": "Show less",
+      "qrCode": "QR Code",
+      "qrError": "QR generation error",
+      "qrScanInstruction": "Scan for quick verification",
+      "operatorPage": "Operator page",
+      "addVerification": "Add verification",
+      "addFirstVerif": "Add first verification",
+      "add": "Add",
+      "close": "Close",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "deleteDialog": {
+      "title": "Confirm deletion?",
+      "message": "The equipment will be permanently deleted.",
+      "delete": "Delete",
+      "deleting": "Deleting..."
+    },
+    "empty": {
+      "noEquipment": "No equipment",
+      "noVerifications": "No verifications",
+      "noAlerts": "No alerts"
+    },
+    "errors": {
+      "saveEquipment": "Error saving equipment",
+      "deleteEquipment": "Error deleting equipment",
+      "saveVerification": "Error saving verification"
+    },
+    "dailyRow": {
+      "operator": "Operator",
+      "pointsOk": "Points OK",
+      "issuesFound": "Issues",
+      "signed": "Signed"
+    }
   }
 }

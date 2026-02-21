@@ -1667,5 +1667,552 @@
       "saveAssessment": "Bewertung speichern",
       "cancel": "Abbrechen"
     }
+  },
+  "gdpr": {
+    "title": "DSGVO - Datenschutz",
+    "subtitle": "Verarbeitungsregister, Einwilligungen und DPO",
+    "tabs": {
+      "processingRegistry": "Verarbeitungsregister",
+      "consents": "Einwilligungen"
+    },
+    "stats": {
+      "processingActivities": "Verarbeitungstätigkeiten",
+      "activeConsents": "Aktive Einwilligungen",
+      "dpoConfigured": "DPO konfiguriert",
+      "dpoNotConfigured": "DPO nicht konfiguriert",
+      "dpiaRequired": "DPIA erforderlich"
+    },
+    "legalBasis": {
+      "consent": "Einwilligung",
+      "contract": "Vertrag",
+      "legalObligation": "Rechtliche Verpflichtung",
+      "vitalInterest": "Lebenswichtiges Interesse",
+      "publicInterest": "Öffentliches Interesse",
+      "legitimateInterest": "Berechtigtes Interesse"
+    },
+    "consentType": {
+      "processing": "Datenverarbeitung",
+      "marketing": "Marketing",
+      "profiling": "Profiling",
+      "transfer": "Datenübermittlung",
+      "specialCategories": "Besondere Kategorien",
+      "other": "Sonstige"
+    },
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "underReview": "In Prüfung",
+      "archived": "Archiviert"
+    },
+    "filter": {
+      "all": "Alle",
+      "active": "Aktiv",
+      "withdrawn": "Widerrufen",
+      "allStatuses": "Alle Status",
+      "allLegalBases": "Alle Rechtsgrundlagen"
+    },
+    "processing": {
+      "addActivity": "Tätigkeit hinzufügen",
+      "newTitle": "Neue Tätigkeit",
+      "editTitle": "Tätigkeit bearbeiten",
+      "emptyTitle": "Keine Tätigkeiten",
+      "emptyMessage": "Fügen Sie die erste Verarbeitungstätigkeit hinzu.",
+      "searchPlaceholder": "Tätigkeiten suchen...",
+      "activityNameLabel": "Tätigkeitsname",
+      "activityNamePlaceholder": "z.B.: Verarbeitung von Mitarbeiterdaten",
+      "purposeLabel": "Zweck",
+      "purposePlaceholder": "z.B.: Personalverwaltung",
+      "legalBasisLabel": "Rechtsgrundlage",
+      "statusLabel": "Status",
+      "dataSubjectsLabel": "Betroffene Personen",
+      "dataSubjectsPlaceholder": "z.B.: Mitarbeiter, Bewerber",
+      "dataCategoriesLabel": "Datenkategorien",
+      "dataCategoriesPlaceholder": "z.B.: Identifikationsdaten, Kontakt",
+      "retentionPeriodLabel": "Aufbewahrungsfrist",
+      "retentionPeriodPlaceholder": "z.B.: 5 Jahre",
+      "crossBorderTransfer": "Grenzüberschreitende Übermittlung",
+      "dpiaRequired": "DPIA erforderlich",
+      "dpiaCompleted": "DPIA abgeschlossen",
+      "dpiaDateLabel": "DPIA-Datum"
+    },
+    "consent": {
+      "addConsent": "Einwilligung hinzufügen",
+      "newTitle": "Neue Einwilligung",
+      "editTitle": "Einwilligung bearbeiten",
+      "emptyTitle": "Keine Einwilligungen",
+      "emptyMessage": "Fügen Sie die erste Einwilligung hinzu.",
+      "searchPlaceholder": "Einwilligungen suchen...",
+      "personNameLabel": "Personenname",
+      "personNamePlaceholder": "z.B.: Max Mustermann",
+      "emailLabel": "E-Mail",
+      "typeLabel": "Einwilligungstyp",
+      "purposeLabel": "Zweck",
+      "purposePlaceholder": "z.B.: Marketing-Newsletter",
+      "givenAtLabel": "Erteilt am",
+      "notesLabel": "Anmerkungen",
+      "notesPlaceholder": "Weitere Anmerkungen...",
+      "withdraw": "Widerrufen",
+      "withdrawTitle": "Einwilligung widerrufen",
+      "active": "Aktiv",
+      "withdrawn": "Widerrufen"
+    },
+    "dpo": {
+      "title": "Datenschutzbeauftragter (DPO)",
+      "subtitle": "Konfiguration des internen oder externen DPO",
+      "typeLabel": "DPO-Typ",
+      "internal": "Intern",
+      "external": "Extern",
+      "nameLabel": "DPO-Name",
+      "namePlaceholder": "z.B.: Maria Müller",
+      "emailLabel": "E-Mail",
+      "phoneLabel": "Telefon",
+      "companyLabel": "Unternehmen (wenn extern)",
+      "companyPlaceholder": "z.B.: DPO Consulting GmbH",
+      "appointmentDateLabel": "Bestellungsdatum",
+      "contractExpiryLabel": "Vertragsablauf",
+      "anspdcpNotified": "ANSPDCP benachrichtigt",
+      "anspdcpNotificationDateLabel": "Benachrichtigungsdatum",
+      "notesLabel": "Anmerkungen",
+      "notesPlaceholder": "Weitere Informationen...",
+      "save": "Speichern",
+      "saving": "Speichern...",
+      "savedSuccess": "DPO erfolgreich gespeichert!"
+    },
+    "table": {
+      "activity": "Tätigkeit",
+      "legalBasis": "Rechtsgrundlage",
+      "status": "Status",
+      "actions": "Aktionen",
+      "person": "Person",
+      "type": "Typ",
+      "purpose": "Zweck",
+      "givenAt": "Erteilt am"
+    },
+    "actions": {
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "cancel": "Abbrechen",
+      "create": "Erstellen",
+      "update": "Aktualisieren"
+    },
+    "confirm": {
+      "deleteTitle": "Löschung bestätigen?",
+      "deleteProcessingMessage": "Die Verarbeitungstätigkeit wird endgültig gelöscht.",
+      "deleteConsentMessage": "Die Einwilligung wird endgültig gelöscht."
+    },
+    "errors": {
+      "createError": "Fehler beim Erstellen",
+      "updateError": "Fehler beim Aktualisieren",
+      "deleteError": "Fehler beim Löschen",
+      "saveError": "Fehler beim Speichern",
+      "withdrawError": "Fehler beim Widerrufen der Einwilligung"
+    }
+  },
+  "medical": {
+    "title": "Arbeitsmedizin",
+    "examType": {
+      "periodic": "Periodisch",
+      "angajare": "Einstellung",
+      "reluare": "Wiedereingliederung",
+      "laCerere": "Auf Anfrage",
+      "controlPeriodic": "Periodische Kontrolle",
+      "controlAngajare": "Einstellungsuntersuchung",
+      "fisaAptitudine": "Eignungsbescheinigung",
+      "fisaPsihologica": "Psychologische Bescheinigung",
+      "supraveghere": "Überwachung"
+    },
+    "result": {
+      "apt": "Geeignet",
+      "aptConditionat": "Bedingt geeignet",
+      "inaptTemporar": "Vorübergehend nicht geeignet",
+      "inapt": "Nicht geeignet",
+      "inAsteptare": "Ausstehend"
+    },
+    "appointmentStatus": {
+      "programat": "Geplant",
+      "confirmat": "Bestätigt",
+      "efectuat": "Durchgeführt",
+      "anulat": "Abgesagt",
+      "reprogramat": "Umgeplant"
+    },
+    "status": {
+      "expired": "Abgelaufen",
+      "expiredDesc": "Der Gesundheitsnachweis ist abgelaufen",
+      "expiringSoon": "Läuft bald ab",
+      "expiringSoonDesc": "Der Gesundheitsnachweis läuft bald ab",
+      "valid": "Gültig",
+      "validDesc": "Der Gesundheitsnachweis ist gültig",
+      "noRecord": "Kein Nachweis",
+      "noRecordDesc": "Es existiert kein Gesundheitsnachweis",
+      "undefined": "Undefiniert",
+      "undefinedDesc": "Ablaufdatum nicht definiert"
+    },
+    "alertLevel": {
+      "expirat": "Abgelaufen",
+      "urgent": "Dringend",
+      "atentie": "Warnung",
+      "ok": "OK",
+      "nedefinit": "Undefiniert"
+    },
+    "tab": {
+      "records": "Gesundheitsnachweise",
+      "appointments": "Termine",
+      "alerts": "Warnungen"
+    },
+    "subtitle": {
+      "records": "Registrierte Gesundheitsnachweise",
+      "appointments": "Termine für arbeitsmedizinische Untersuchungen",
+      "alerts": "Abgelaufene und dringende Warnungen"
+    },
+    "stats": {
+      "totalRecords": "Nachweise gesamt",
+      "valid": "Gültig",
+      "expired": "Abgelaufen",
+      "expiring30": "Läuft in 30 Tagen ab",
+      "totalAppointments": "Termine gesamt",
+      "scheduled": "Geplant",
+      "confirmed": "Bestätigt",
+      "done": "Durchgeführt"
+    },
+    "col": {
+      "employee": "Mitarbeiter",
+      "jobTitle": "Berufsbezeichnung",
+      "type": "Typ",
+      "date": "Datum",
+      "examDate": "Untersuchungsdatum",
+      "expiryDate": "Ablaufdatum",
+      "expires": "Läuft ab",
+      "daysLeft": "Verbleibende Tage",
+      "result": "Ergebnis",
+      "status": "Status",
+      "clinic": "Klinik",
+      "priority": "Priorität"
+    },
+    "form": {
+      "addRecord": "Nachweis hinzufügen",
+      "addRecordBtn": "Hinzufügen",
+      "editRecord": "Nachweis bearbeiten",
+      "examType": "Untersuchungstyp",
+      "examDate": "Untersuchungsdatum",
+      "expiryDate": "Ablaufdatum",
+      "result": "Ergebnis",
+      "doctor": "Arzt",
+      "clinic": "Klinik",
+      "clinicAddress": "Klinikadresse",
+      "documentNumber": "Dokument-Nr.",
+      "restrictions": "Einschränkungen",
+      "riskFactors": "Risikofaktoren",
+      "notes": "Anmerkungen",
+      "extraDetails": "Weitere Details",
+      "validityMonths": "Gültigkeit (Monate)",
+      "employee": "Mitarbeiter",
+      "employeeName": "Mitarbeitername",
+      "selectEmployee": "Mitarbeiter auswählen",
+      "selectEmployeeManual": "Manuell auswählen",
+      "organization": "Organisation",
+      "selectOrg": "Organisation auswählen",
+      "jobTitle": "Berufsbezeichnung",
+      "save": "Speichern",
+      "saveChanges": "Änderungen speichern",
+      "scheduleExam": "Untersuchung planen",
+      "editAppointment": "Termin bearbeiten",
+      "date": "Datum",
+      "time": "Uhrzeit"
+    },
+    "btn": {
+      "addRecord": "Nachweis hinzufügen",
+      "schedule": "Planen"
+    },
+    "filter": {
+      "allOrgs": "Alle Organisationen",
+      "allTypes": "Alle Typen",
+      "allResults": "Alle Ergebnisse",
+      "allStatuses": "Alle Status",
+      "expired": "Abgelaufen",
+      "expiringSoon": "Läuft bald ab",
+      "valid": "Gültig"
+    },
+    "empty": {
+      "noRecords": "Keine Gesundheitsnachweise",
+      "noRecordsDesc": "Fügen Sie den ersten Gesundheitsnachweis hinzu.",
+      "noRecordsFilter": "Keine Ergebnisse für die ausgewählten Filter.",
+      "noAppointments": "Keine Termine",
+      "noAppointmentsDesc": "Planen Sie die erste arbeitsmedizinische Untersuchung.",
+      "noAppointmentsFilter": "Keine Termine für die ausgewählten Filter.",
+      "noAlerts": "Keine Warnungen",
+      "noAlertsDesc": "Alle Nachweise sind gültig.",
+      "noAlertsFilter": "Keine Warnungen für die ausgewählten Filter."
+    },
+    "confirm": {
+      "delete": "Löschen bestätigen?",
+      "deleteRecord": "Gesundheitsnachweis löschen",
+      "deleteRecordMsg": "Der Nachweis wird endgültig gelöscht.",
+      "deleteAppointment": "Termin löschen",
+      "deleteAppointmentMsg": "Der Termin wird endgültig abgesagt.",
+      "deleteForever": "Endgültig löschen"
+    },
+    "errors": {
+      "saveRecord": "Fehler beim Speichern des Nachweises",
+      "deleteRecord": "Fehler beim Löschen des Nachweises",
+      "saveAppointment": "Fehler beim Speichern des Termins",
+      "deleteAppointment": "Fehler beim Löschen des Termins"
+    },
+    "loading": {
+      "data": "Daten werden geladen...",
+      "appointments": "Termine werden geladen...",
+      "alerts": "Warnungen werden geladen..."
+    },
+    "alerts": {
+      "warning": "Warnung",
+      "warningMessage": "Es gibt abgelaufene oder bald ablaufende Nachweise."
+    },
+    "daysText": {
+      "expired": "Vor {days} Tagen abgelaufen",
+      "expiredShort": "Abgelaufen",
+      "expiring": "Läuft in {days} Tagen ab",
+      "valid": "Gültig — {days} Tage verbleibend"
+    },
+    "employee": {
+      "employeeInfo": "Mitarbeiterinformationen",
+      "jobTitle": "Berufsbezeichnung",
+      "department": "Abteilung",
+      "organization": "Organisation",
+      "hireDate": "Einstellungsdatum",
+      "lastExam": "Letzte Untersuchung",
+      "latestBadge": "Aktueller Status",
+      "noJobTitle": "Keine Berufsbezeichnung",
+      "noExams": "Keine Untersuchungen",
+      "noExamsDesc": "Fügen Sie die erste arbeitsmedizinische Untersuchung hinzu.",
+      "addRecord": "Nachweis hinzufügen",
+      "addRecordAction": "Gesundheitsnachweis hinzufügen",
+      "tabStatus": "Status",
+      "tabHistory": "Verlauf",
+      "tabAppointments": "Termine",
+      "historyDate": "Datum",
+      "historyExpiry": "Ablauf",
+      "historyDr": "Arzt",
+      "examType": "Untersuchungstyp",
+      "result": "Ergebnis",
+      "doctorClinic": "Arzt / Klinik",
+      "riskFactors": "Risikofaktoren",
+      "activeRestrictions": "Aktive Einschränkungen",
+      "noRestrictions": "Keine Einschränkungen",
+      "noAppointments": "Keine Termine",
+      "noAppointmentsDesc": "Keine Termine für diesen Mitarbeiter.",
+      "modalTitle": "Gesundheitsnachweis hinzufügen",
+      "modalSubmit": "Speichern"
+    },
+    "page": {
+      "title": "Arbeitsmedizinische Untersuchungen",
+      "searchPlaceholder": "Mitarbeiter, Arzt suchen...",
+      "total": "Gesamt",
+      "totalExams": "registrierte Untersuchungen",
+      "count": "{count} Untersuchungen",
+      "show": "Anzeigen",
+      "pagination": "Seite {page} von {total}",
+      "noExams": "Keine Untersuchungen",
+      "noExamsDesc": "Fügen Sie die erste arbeitsmedizinische Untersuchung hinzu, um zu beginnen.",
+      "noResults": "Keine Ergebnisse",
+      "noResultsDesc": "Keine der Suche entsprechenden Untersuchungen.",
+      "colExamType": "Untersuchungstyp",
+      "colDoctor": "Arzt",
+      "colNextExam": "Nächste Untersuchung"
+    },
+    "examination_type": "Untersuchungstyp",
+    "examination_date": "Untersuchungsdatum",
+    "next_exam": "Nächste Untersuchung",
+    "doctor_name": "Arzt",
+    "employee_name": "Mitarbeiter"
+  },
+  "iscir": {
+    "title": "ISCIR - Druckgeräte",
+    "subtitle": "ISCIR-Geräteverwaltung, Prüfungen und Genehmigungen",
+    "addEquipment": "Gerät hinzufügen",
+    "recentEquipment": "Neueste Geräte",
+    "equipmentType": {
+      "cazan": "Kessel",
+      "recipientPresiune": "Druckbehälter",
+      "lift": "Aufzug",
+      "macara": "Kran",
+      "stivuitor": "Gabelstapler",
+      "instalatieGpl": "LPG-Anlage",
+      "compresor": "Kompressor",
+      "autoclave": "Autoklav",
+      "altul": "Sonstige"
+    },
+    "status": {
+      "activ": "Aktiv",
+      "expirat": "Abgelaufen",
+      "inVerificare": "In Prüfung",
+      "oprit": "Gestoppt",
+      "casat": "Außer Betrieb"
+    },
+    "verificationType": {
+      "periodica": "Periodisch",
+      "accidentala": "Außerordentlich",
+      "punereInFunctiune": "Inbetriebnahme",
+      "reparatie": "Reparatur",
+      "modernizare": "Modernisierung"
+    },
+    "result": {
+      "admis": "Zugelassen",
+      "admisConditionat": "Bedingt zugelassen",
+      "respins": "Abgelehnt"
+    },
+    "alert": {
+      "expired": "Abgelaufen",
+      "urgent": "Dringend",
+      "warning": "Warnung",
+      "ok": "OK"
+    },
+    "alertBadge": {
+      "expired": "Abgelaufen",
+      "urgent": "Dringend",
+      "warning": "Warnung",
+      "ok": "OK"
+    },
+    "tabs": {
+      "dashboard": "Dashboard",
+      "equipment": "Geräte",
+      "verifications": "Prüfungen",
+      "alerts": "Warnungen"
+    },
+    "stats": {
+      "total": "Geräte gesamt",
+      "active": "Aktiv",
+      "expired": "Abgelaufen",
+      "stopped": "Gestoppt"
+    },
+    "table": {
+      "type": "Typ",
+      "identifier": "Kennung",
+      "iscirNr": "ISCIR-Nr.",
+      "location": "Standort",
+      "status": "Status",
+      "verification": "Prüfung",
+      "actions": "Aktionen"
+    },
+    "filter": {
+      "allOrgs": "Alle Organisationen",
+      "allTypes": "Alle Typen",
+      "allStatuses": "Alle Status",
+      "searchPlaceholder": "Gerät suchen..."
+    },
+    "form": {
+      "titleAdd": "ISCIR-Gerät hinzufügen",
+      "titleEdit": "Gerät bearbeiten",
+      "equipmentType": "Gerätetyp",
+      "identifier": "Kennung",
+      "serialNumber": "Seriennummer",
+      "registrationNumber": "Registrierungsnummer",
+      "manufacturer": "Hersteller",
+      "model": "Modell",
+      "manufactureYear": "Herstellungsjahr",
+      "capacity": "Kapazität / Parameter",
+      "location": "Standort",
+      "status": "Status",
+      "authorizationNumber": "Genehmigungsnummer",
+      "authorizationExpiry": "Genehmigungsablauf",
+      "verifInterval": "Prüfintervall (Monate)",
+      "nextVerifDate": "Datum der nächsten Prüfung",
+      "rsvtiResponsible": "RSVTI-Verantwortlicher",
+      "observations": "Beobachtungen",
+      "save": "Speichern",
+      "saving": "Speichern...",
+      "cancel": "Abbrechen"
+    },
+    "verifForm": {
+      "title": "Prüfung erfassen",
+      "equipment": "Gerät",
+      "verifDate": "Prüfdatum",
+      "verifType": "Prüfungsart",
+      "result": "Ergebnis",
+      "inspectorName": "Name des Prüfers",
+      "inspectorId": "ID des Prüfers",
+      "bulletinNumber": "Protokollnummer",
+      "nextVerifDate": "Datum der nächsten Prüfung",
+      "prescriptions": "Auflagen",
+      "prescriptionsDeadline": "Auflagenfrist",
+      "saveVerification": "Prüfung speichern"
+    },
+    "verifications": {
+      "title": "Prüfungshistorie",
+      "colDate": "Datum",
+      "colType": "Typ",
+      "colEquipment": "Gerät",
+      "colResult": "Ergebnis",
+      "colInspector": "Prüfer",
+      "colBulletin": "Protokollnummer"
+    },
+    "alertsTab": {
+      "title": "Prüfungswarnungen",
+      "colAlertLevel": "Stufe",
+      "colDaysLeft": "Verbleibende Tage",
+      "colVerifDate": "Prüfdatum",
+      "verify": "Prüfen"
+    },
+    "timeline": {
+      "bulletin": "Protokoll",
+      "inspector": "Prüfer",
+      "nextVerif": "Nächste Prüfung",
+      "prescriptions": "Auflagen",
+      "prescriptionsDeadline": "Auflagenfrist"
+    },
+    "detail": {
+      "backToIscir": "Zurück zu ISCIR",
+      "technicalData": "Technische Daten",
+      "capacityParams": "Kapazität / Parameter",
+      "installDate": "Installationsdatum",
+      "lastVerif": "Letzte Prüfung",
+      "nextVerif": "Nächste Prüfung",
+      "verifInterval": "Prüfintervall",
+      "months": "Monate",
+      "daysLeft": "Tage verbleibend",
+      "daysOverdue": "Tage überfällig",
+      "authorizationExpiry": "Genehmigungsablauf",
+      "organization": "Organisation",
+      "locationTitle": "Standort",
+      "rsvtiTitle": "RSVTI-Verantwortlicher",
+      "verifHistory": "Prüfungshistorie",
+      "verifCalendar": "Prüfungskalender",
+      "dailyChecksTitle": "Tägliche Prüfungen",
+      "dailyCheck": "Tägliche Prüfung",
+      "dailyCheckRequired": "Tägliche Prüfung erforderlich",
+      "noDailyChecks": "Keine täglichen Prüfungen",
+      "showAll": "Alle anzeigen",
+      "showLess": "Weniger anzeigen",
+      "qrCode": "QR-Code",
+      "qrError": "QR-Generierungsfehler",
+      "qrScanInstruction": "Scannen für schnelle Prüfung",
+      "operatorPage": "Bedienerseite",
+      "addVerification": "Prüfung hinzufügen",
+      "addFirstVerif": "Erste Prüfung hinzufügen",
+      "add": "Hinzufügen",
+      "close": "Schließen",
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "deleteDialog": {
+      "title": "Löschung bestätigen?",
+      "message": "Das Gerät wird endgültig gelöscht.",
+      "delete": "Löschen",
+      "deleting": "Löschen..."
+    },
+    "empty": {
+      "noEquipment": "Keine Geräte",
+      "noVerifications": "Keine Prüfungen",
+      "noAlerts": "Keine Warnungen"
+    },
+    "errors": {
+      "saveEquipment": "Fehler beim Speichern des Geräts",
+      "deleteEquipment": "Fehler beim Löschen des Geräts",
+      "saveVerification": "Fehler beim Speichern der Prüfung"
+    },
+    "dailyRow": {
+      "operator": "Bediener",
+      "pointsOk": "Punkte OK",
+      "issuesFound": "Probleme",
+      "signed": "Unterzeichnet"
+    }
   }
 }

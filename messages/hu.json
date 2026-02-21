@@ -1667,5 +1667,552 @@
       "saveAssessment": "Értékelés mentése",
       "cancel": "Mégse"
     }
+  },
+  "gdpr": {
+    "title": "GDPR - Adatvédelem",
+    "subtitle": "Adatkezelési nyilvántartás, hozzájárulások és DPO",
+    "tabs": {
+      "processingRegistry": "Adatkezelési nyilvántartás",
+      "consents": "Hozzájárulások"
+    },
+    "stats": {
+      "processingActivities": "Adatkezelési tevékenységek",
+      "activeConsents": "Aktív hozzájárulások",
+      "dpoConfigured": "DPO konfigurálva",
+      "dpoNotConfigured": "DPO nincs konfigurálva",
+      "dpiaRequired": "DPIA szükséges"
+    },
+    "legalBasis": {
+      "consent": "Hozzájárulás",
+      "contract": "Szerződés",
+      "legalObligation": "Jogi kötelezettség",
+      "vitalInterest": "Létfontosságú érdek",
+      "publicInterest": "Közérdek",
+      "legitimateInterest": "Jogos érdek"
+    },
+    "consentType": {
+      "processing": "Adatkezelés",
+      "marketing": "Marketing",
+      "profiling": "Profilalkotás",
+      "transfer": "Adattovábbítás",
+      "specialCategories": "Különleges kategóriák",
+      "other": "Egyéb"
+    },
+    "status": {
+      "active": "Aktív",
+      "inactive": "Inaktív",
+      "underReview": "Felülvizsgálat alatt",
+      "archived": "Archivált"
+    },
+    "filter": {
+      "all": "Összes",
+      "active": "Aktív",
+      "withdrawn": "Visszavont",
+      "allStatuses": "Összes státusz",
+      "allLegalBases": "Összes jogalap"
+    },
+    "processing": {
+      "addActivity": "Tevékenység hozzáadása",
+      "newTitle": "Új tevékenység",
+      "editTitle": "Tevékenység szerkesztése",
+      "emptyTitle": "Nincs tevékenység",
+      "emptyMessage": "Adja hozzá az első adatkezelési tevékenységet.",
+      "searchPlaceholder": "Tevékenységek keresése...",
+      "activityNameLabel": "Tevékenység neve",
+      "activityNamePlaceholder": "pl.: Munkavállalói adatok kezelése",
+      "purposeLabel": "Cél",
+      "purposePlaceholder": "pl.: Emberi erőforrások kezelése",
+      "legalBasisLabel": "Jogalap",
+      "statusLabel": "Státusz",
+      "dataSubjectsLabel": "Érintettek",
+      "dataSubjectsPlaceholder": "pl.: Munkavállalók, jelöltek",
+      "dataCategoriesLabel": "Adatkategóriák",
+      "dataCategoriesPlaceholder": "pl.: Azonosítási adatok, kapcsolattartás",
+      "retentionPeriodLabel": "Megőrzési idő",
+      "retentionPeriodPlaceholder": "pl.: 5 év",
+      "crossBorderTransfer": "Határokon átnyúló adattovábbítás",
+      "dpiaRequired": "DPIA szükséges",
+      "dpiaCompleted": "DPIA elvégezve",
+      "dpiaDateLabel": "DPIA dátuma"
+    },
+    "consent": {
+      "addConsent": "Hozzájárulás hozzáadása",
+      "newTitle": "Új hozzájárulás",
+      "editTitle": "Hozzájárulás szerkesztése",
+      "emptyTitle": "Nincs hozzájárulás",
+      "emptyMessage": "Adja hozzá az első hozzájárulást.",
+      "searchPlaceholder": "Hozzájárulások keresése...",
+      "personNameLabel": "Személy neve",
+      "personNamePlaceholder": "pl.: Kovács János",
+      "emailLabel": "E-mail",
+      "typeLabel": "Hozzájárulás típusa",
+      "purposeLabel": "Cél",
+      "purposePlaceholder": "pl.: Marketing hírlevél",
+      "givenAtLabel": "Megadás dátuma",
+      "notesLabel": "Megjegyzések",
+      "notesPlaceholder": "További megjegyzések...",
+      "withdraw": "Visszavon",
+      "withdrawTitle": "Hozzájárulás visszavonása",
+      "active": "Aktív",
+      "withdrawn": "Visszavont"
+    },
+    "dpo": {
+      "title": "Adatvédelmi tisztviselő (DPO)",
+      "subtitle": "Belső vagy külső DPO konfigurálása",
+      "typeLabel": "DPO típusa",
+      "internal": "Belső",
+      "external": "Külső",
+      "nameLabel": "DPO neve",
+      "namePlaceholder": "pl.: Kovács Mária",
+      "emailLabel": "E-mail",
+      "phoneLabel": "Telefon",
+      "companyLabel": "Cég (ha külső)",
+      "companyPlaceholder": "pl.: DPO Consulting Kft.",
+      "appointmentDateLabel": "Kinevezés dátuma",
+      "contractExpiryLabel": "Szerződés lejárata",
+      "anspdcpNotified": "ANSPDCP értesítve",
+      "anspdcpNotificationDateLabel": "Értesítés dátuma",
+      "notesLabel": "Megjegyzések",
+      "notesPlaceholder": "További információk...",
+      "save": "Mentés",
+      "saving": "Mentés...",
+      "savedSuccess": "DPO sikeresen mentve!"
+    },
+    "table": {
+      "activity": "Tevékenység",
+      "legalBasis": "Jogalap",
+      "status": "Státusz",
+      "actions": "Műveletek",
+      "person": "Személy",
+      "type": "Típus",
+      "purpose": "Cél",
+      "givenAt": "Megadás dátuma"
+    },
+    "actions": {
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "cancel": "Mégse",
+      "create": "Létrehozás",
+      "update": "Frissítés"
+    },
+    "confirm": {
+      "deleteTitle": "Megerősíti a törlést?",
+      "deleteProcessingMessage": "Az adatkezelési tevékenység véglegesen törlődik.",
+      "deleteConsentMessage": "A hozzájárulás véglegesen törlődik."
+    },
+    "errors": {
+      "createError": "Hiba a létrehozáskor",
+      "updateError": "Hiba a frissítéskor",
+      "deleteError": "Hiba a törlésnél",
+      "saveError": "Hiba a mentésnél",
+      "withdrawError": "Hiba a hozzájárulás visszavonásakor"
+    }
+  },
+  "medical": {
+    "title": "Foglalkozás-egészségügy",
+    "examType": {
+      "periodic": "Időszakos",
+      "angajare": "Felvételkor",
+      "reluare": "Visszatéréskor",
+      "laCerere": "Kérésre",
+      "controlPeriodic": "Időszakos ellenőrzés",
+      "controlAngajare": "Felvételi ellenőrzés",
+      "fisaAptitudine": "Alkalmassági igazolás",
+      "fisaPsihologica": "Pszichológiai igazolás",
+      "supraveghere": "Megfigyelés"
+    },
+    "result": {
+      "apt": "Alkalmas",
+      "aptConditionat": "Feltételesen alkalmas",
+      "inaptTemporar": "Ideiglenesen alkalmatlan",
+      "inapt": "Alkalmatlan",
+      "inAsteptare": "Függőben"
+    },
+    "appointmentStatus": {
+      "programat": "Ütemezett",
+      "confirmat": "Megerősített",
+      "efectuat": "Elvégzett",
+      "anulat": "Lemondott",
+      "reprogramat": "Átütemezett"
+    },
+    "status": {
+      "expired": "Lejárt",
+      "expiredDesc": "Az egészségügyi lap lejárt",
+      "expiringSoon": "Hamarosan lejár",
+      "expiringSoonDesc": "Az egészségügyi lap hamarosan lejár",
+      "valid": "Érvényes",
+      "validDesc": "Az egészségügyi lap érvényes",
+      "noRecord": "Nincs lap",
+      "noRecordDesc": "Nem létezik egészségügyi lap",
+      "undefined": "Meghatározatlan",
+      "undefinedDesc": "A lejárati dátum nincs meghatározva"
+    },
+    "alertLevel": {
+      "expirat": "Lejárt",
+      "urgent": "Sürgős",
+      "atentie": "Figyelmeztetés",
+      "ok": "OK",
+      "nedefinit": "Meghatározatlan"
+    },
+    "tab": {
+      "records": "Egészségügyi lapok",
+      "appointments": "Időpontok",
+      "alerts": "Riasztások"
+    },
+    "subtitle": {
+      "records": "Regisztrált egészségügyi lapok",
+      "appointments": "Foglalkozás-egészségügyi vizsgálatok időpontjai",
+      "alerts": "Lejárt és sürgős riasztások"
+    },
+    "stats": {
+      "totalRecords": "Összes lap",
+      "valid": "Érvényes",
+      "expired": "Lejárt",
+      "expiring30": "30 napon belül lejár",
+      "totalAppointments": "Összes időpont",
+      "scheduled": "Ütemezett",
+      "confirmed": "Megerősített",
+      "done": "Elvégzett"
+    },
+    "col": {
+      "employee": "Munkavállaló",
+      "jobTitle": "Beosztás",
+      "type": "Típus",
+      "date": "Dátum",
+      "examDate": "Vizsgálat dátuma",
+      "expiryDate": "Lejárat dátuma",
+      "expires": "Lejár",
+      "daysLeft": "Hátralévő napok",
+      "result": "Eredmény",
+      "status": "Státusz",
+      "clinic": "Klinika",
+      "priority": "Prioritás"
+    },
+    "form": {
+      "addRecord": "Lap hozzáadása",
+      "addRecordBtn": "Hozzáadás",
+      "editRecord": "Lap szerkesztése",
+      "examType": "Vizsgálat típusa",
+      "examDate": "Vizsgálat dátuma",
+      "expiryDate": "Lejárat dátuma",
+      "result": "Eredmény",
+      "doctor": "Orvos",
+      "clinic": "Klinika",
+      "clinicAddress": "Klinika címe",
+      "documentNumber": "Dokumentum száma",
+      "restrictions": "Korlátozások",
+      "riskFactors": "Kockázati tényezők",
+      "notes": "Megjegyzések",
+      "extraDetails": "További részletek",
+      "validityMonths": "Érvényesség (hónap)",
+      "employee": "Munkavállaló",
+      "employeeName": "Munkavállaló neve",
+      "selectEmployee": "Munkavállaló kiválasztása",
+      "selectEmployeeManual": "Manuális kiválasztás",
+      "organization": "Szervezet",
+      "selectOrg": "Szervezet kiválasztása",
+      "jobTitle": "Beosztás",
+      "save": "Mentés",
+      "saveChanges": "Változtatások mentése",
+      "scheduleExam": "Vizsgálat ütemezése",
+      "editAppointment": "Időpont szerkesztése",
+      "date": "Dátum",
+      "time": "Idő"
+    },
+    "btn": {
+      "addRecord": "Lap hozzáadása",
+      "schedule": "Ütemezés"
+    },
+    "filter": {
+      "allOrgs": "Összes szervezet",
+      "allTypes": "Összes típus",
+      "allResults": "Összes eredmény",
+      "allStatuses": "Összes státusz",
+      "expired": "Lejárt",
+      "expiringSoon": "Hamarosan lejár",
+      "valid": "Érvényes"
+    },
+    "empty": {
+      "noRecords": "Nincsenek egészségügyi lapok",
+      "noRecordsDesc": "Adja hozzá az első egészségügyi lapot.",
+      "noRecordsFilter": "Nincs eredmény a kiválasztott szűrőkhöz.",
+      "noAppointments": "Nincsenek időpontok",
+      "noAppointmentsDesc": "Ütemezze az első orvosi vizsgálatot.",
+      "noAppointmentsFilter": "Nincs időpont a kiválasztott szűrőkhöz.",
+      "noAlerts": "Nincsenek riasztások",
+      "noAlertsDesc": "Minden lap érvényes.",
+      "noAlertsFilter": "Nincs riasztás a kiválasztott szűrőkhöz."
+    },
+    "confirm": {
+      "delete": "Megerősíti a törlést?",
+      "deleteRecord": "Egészségügyi lap törlése",
+      "deleteRecordMsg": "A lap véglegesen törlődik.",
+      "deleteAppointment": "Időpont törlése",
+      "deleteAppointmentMsg": "Az időpont véglegesen lemondásra kerül.",
+      "deleteForever": "Végleges törlés"
+    },
+    "errors": {
+      "saveRecord": "Hiba a lap mentésekor",
+      "deleteRecord": "Hiba a lap törlésekor",
+      "saveAppointment": "Hiba az időpont mentésekor",
+      "deleteAppointment": "Hiba az időpont törlésekor"
+    },
+    "loading": {
+      "data": "Adatok betöltése...",
+      "appointments": "Időpontok betöltése...",
+      "alerts": "Riasztások betöltése..."
+    },
+    "alerts": {
+      "warning": "Figyelmeztetés",
+      "warningMessage": "Vannak lejárt vagy hamarosan lejáró lapok."
+    },
+    "daysText": {
+      "expired": "{days} napja lejárt",
+      "expiredShort": "Lejárt",
+      "expiring": "{days} nap múlva lejár",
+      "valid": "Érvényes — {days} nap maradt"
+    },
+    "employee": {
+      "employeeInfo": "Munkavállaló adatai",
+      "jobTitle": "Beosztás",
+      "department": "Részleg",
+      "organization": "Szervezet",
+      "hireDate": "Felvétel dátuma",
+      "lastExam": "Utolsó vizsgálat",
+      "latestBadge": "Jelenlegi státusz",
+      "noJobTitle": "Nincs beosztás",
+      "noExams": "Nincs vizsgálat",
+      "noExamsDesc": "Adja hozzá az első orvosi vizsgálatot.",
+      "addRecord": "Lap hozzáadása",
+      "addRecordAction": "Egészségügyi lap hozzáadása",
+      "tabStatus": "Státusz",
+      "tabHistory": "Előzmények",
+      "tabAppointments": "Időpontok",
+      "historyDate": "Dátum",
+      "historyExpiry": "Lejárat",
+      "historyDr": "Orvos",
+      "examType": "Vizsgálat típusa",
+      "result": "Eredmény",
+      "doctorClinic": "Orvos / Klinika",
+      "riskFactors": "Kockázati tényezők",
+      "activeRestrictions": "Aktív korlátozások",
+      "noRestrictions": "Nincsenek korlátozások",
+      "noAppointments": "Nincsenek időpontok",
+      "noAppointmentsDesc": "Nincsenek időpontok ehhez a munkavállalóhoz.",
+      "modalTitle": "Egészségügyi lap hozzáadása",
+      "modalSubmit": "Mentés"
+    },
+    "page": {
+      "title": "Orvosi vizsgálatok",
+      "searchPlaceholder": "Munkavállaló, orvos keresése...",
+      "total": "Összesen",
+      "totalExams": "regisztrált vizsgálat",
+      "count": "{count} vizsgálat",
+      "show": "Megjelenítés",
+      "pagination": "{page}. oldal / {total}",
+      "noExams": "Nincsenek vizsgálatok",
+      "noExamsDesc": "Adja hozzá az első orvosi vizsgálatot a kezdéshez.",
+      "noResults": "Nincs eredmény",
+      "noResultsDesc": "Nincs a keresésnek megfelelő vizsgálat.",
+      "colExamType": "Vizsgálat típusa",
+      "colDoctor": "Orvos",
+      "colNextExam": "Következő vizsgálat"
+    },
+    "examination_type": "Vizsgálat típusa",
+    "examination_date": "Vizsgálat dátuma",
+    "next_exam": "Következő vizsgálat",
+    "doctor_name": "Orvos",
+    "employee_name": "Munkavállaló"
+  },
+  "iscir": {
+    "title": "ISCIR - Nyomástartó berendezések",
+    "subtitle": "ISCIR berendezések kezelése, ellenőrzések és engedélyek",
+    "addEquipment": "Berendezés hozzáadása",
+    "recentEquipment": "Legutóbbi berendezések",
+    "equipmentType": {
+      "cazan": "Kazán",
+      "recipientPresiune": "Nyomástartó edény",
+      "lift": "Lift",
+      "macara": "Daru",
+      "stivuitor": "Targonca",
+      "instalatieGpl": "LPG berendezés",
+      "compresor": "Kompresszor",
+      "autoclave": "Autokláv",
+      "altul": "Egyéb"
+    },
+    "status": {
+      "activ": "Aktív",
+      "expirat": "Lejárt",
+      "inVerificare": "Ellenőrzés alatt",
+      "oprit": "Leállított",
+      "casat": "Selejtezett"
+    },
+    "verificationType": {
+      "periodica": "Időszakos",
+      "accidentala": "Rendkívüli",
+      "punereInFunctiune": "Üzembe helyezés",
+      "reparatie": "Javítás",
+      "modernizare": "Korszerűsítés"
+    },
+    "result": {
+      "admis": "Jóváhagyott",
+      "admisConditionat": "Feltételesen jóváhagyott",
+      "respins": "Elutasított"
+    },
+    "alert": {
+      "expired": "Lejárt",
+      "urgent": "Sürgős",
+      "warning": "Figyelmeztetés",
+      "ok": "OK"
+    },
+    "alertBadge": {
+      "expired": "Lejárt",
+      "urgent": "Sürgős",
+      "warning": "Figyelmeztetés",
+      "ok": "OK"
+    },
+    "tabs": {
+      "dashboard": "Irányítópult",
+      "equipment": "Berendezések",
+      "verifications": "Ellenőrzések",
+      "alerts": "Riasztások"
+    },
+    "stats": {
+      "total": "Összes berendezés",
+      "active": "Aktív",
+      "expired": "Lejárt",
+      "stopped": "Leállított"
+    },
+    "table": {
+      "type": "Típus",
+      "identifier": "Azonosító",
+      "iscirNr": "ISCIR szám",
+      "location": "Helyszín",
+      "status": "Státusz",
+      "verification": "Ellenőrzés",
+      "actions": "Műveletek"
+    },
+    "filter": {
+      "allOrgs": "Összes szervezet",
+      "allTypes": "Összes típus",
+      "allStatuses": "Összes státusz",
+      "searchPlaceholder": "Berendezés keresése..."
+    },
+    "form": {
+      "titleAdd": "ISCIR berendezés hozzáadása",
+      "titleEdit": "Berendezés szerkesztése",
+      "equipmentType": "Berendezés típusa",
+      "identifier": "Azonosító",
+      "serialNumber": "Sorozatszám",
+      "registrationNumber": "Regisztrációs szám",
+      "manufacturer": "Gyártó",
+      "model": "Modell",
+      "manufactureYear": "Gyártási év",
+      "capacity": "Kapacitás / Paraméterek",
+      "location": "Helyszín",
+      "status": "Státusz",
+      "authorizationNumber": "Engedély száma",
+      "authorizationExpiry": "Engedély lejárata",
+      "verifInterval": "Ellenőrzési időköz (hónap)",
+      "nextVerifDate": "Következő ellenőrzés dátuma",
+      "rsvtiResponsible": "RSVTI felelős",
+      "observations": "Megjegyzések",
+      "save": "Mentés",
+      "saving": "Mentés...",
+      "cancel": "Mégse"
+    },
+    "verifForm": {
+      "title": "Ellenőrzés rögzítése",
+      "equipment": "Berendezés",
+      "verifDate": "Ellenőrzés dátuma",
+      "verifType": "Ellenőrzés típusa",
+      "result": "Eredmény",
+      "inspectorName": "Ellenőr neve",
+      "inspectorId": "Ellenőr azonosítója",
+      "bulletinNumber": "Bülletin száma",
+      "nextVerifDate": "Következő ellenőrzés dátuma",
+      "prescriptions": "Előírások",
+      "prescriptionsDeadline": "Előírások határideje",
+      "saveVerification": "Ellenőrzés mentése"
+    },
+    "verifications": {
+      "title": "Ellenőrzési előzmények",
+      "colDate": "Dátum",
+      "colType": "Típus",
+      "colEquipment": "Berendezés",
+      "colResult": "Eredmény",
+      "colInspector": "Ellenőr",
+      "colBulletin": "Bülletin száma"
+    },
+    "alertsTab": {
+      "title": "Ellenőrzési riasztások",
+      "colAlertLevel": "Szint",
+      "colDaysLeft": "Hátralévő napok",
+      "colVerifDate": "Ellenőrzés dátuma",
+      "verify": "Ellenőrzés"
+    },
+    "timeline": {
+      "bulletin": "Bülletin",
+      "inspector": "Ellenőr",
+      "nextVerif": "Következő ellenőrzés",
+      "prescriptions": "Előírások",
+      "prescriptionsDeadline": "Előírások határideje"
+    },
+    "detail": {
+      "backToIscir": "Vissza az ISCIR-hez",
+      "technicalData": "Műszaki adatok",
+      "capacityParams": "Kapacitás / Paraméterek",
+      "installDate": "Telepítés dátuma",
+      "lastVerif": "Utolsó ellenőrzés",
+      "nextVerif": "Következő ellenőrzés",
+      "verifInterval": "Ellenőrzési időköz",
+      "months": "hónap",
+      "daysLeft": "nap van hátra",
+      "daysOverdue": "nap késedelemben",
+      "authorizationExpiry": "Engedély lejárata",
+      "organization": "Szervezet",
+      "locationTitle": "Helyszín",
+      "rsvtiTitle": "RSVTI felelős",
+      "verifHistory": "Ellenőrzési előzmények",
+      "verifCalendar": "Ellenőrzési naptár",
+      "dailyChecksTitle": "Napi ellenőrzések",
+      "dailyCheck": "Napi ellenőrzés",
+      "dailyCheckRequired": "Napi ellenőrzés szükséges",
+      "noDailyChecks": "Nincs napi ellenőrzés",
+      "showAll": "Összes megjelenítése",
+      "showLess": "Kevesebb megjelenítése",
+      "qrCode": "QR kód",
+      "qrError": "QR generálási hiba",
+      "qrScanInstruction": "Szkenneld a gyors ellenőrzéshez",
+      "operatorPage": "Kezelői oldal",
+      "addVerification": "Ellenőrzés hozzáadása",
+      "addFirstVerif": "Első ellenőrzés hozzáadása",
+      "add": "Hozzáadás",
+      "close": "Bezárás",
+      "yes": "Igen",
+      "no": "Nem"
+    },
+    "deleteDialog": {
+      "title": "Megerősíti a törlést?",
+      "message": "A berendezés véglegesen törlődik.",
+      "delete": "Törlés",
+      "deleting": "Törlés..."
+    },
+    "empty": {
+      "noEquipment": "Nincs berendezés",
+      "noVerifications": "Nincs ellenőrzés",
+      "noAlerts": "Nincs riasztás"
+    },
+    "errors": {
+      "saveEquipment": "Hiba a berendezés mentésekor",
+      "deleteEquipment": "Hiba a berendezés törlésekor",
+      "saveVerification": "Hiba az ellenőrzés mentésekor"
+    },
+    "dailyRow": {
+      "operator": "Kezelő",
+      "pointsOk": "Pontok OK",
+      "issuesFound": "Problémák",
+      "signed": "Aláírva"
+    }
   }
 }

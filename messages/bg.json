@@ -1667,5 +1667,552 @@
       "saveAssessment": "Запази оценката",
       "cancel": "Отказ"
     }
+  },
+  "gdpr": {
+    "title": "GDPR - Защита на данните",
+    "subtitle": "Регистър за обработване, съгласия и DPO",
+    "tabs": {
+      "processingRegistry": "Регистър за обработване",
+      "consents": "Съгласия"
+    },
+    "stats": {
+      "processingActivities": "Дейности по обработване",
+      "activeConsents": "Активни съгласия",
+      "dpoConfigured": "DPO конфигуриран",
+      "dpoNotConfigured": "DPO не е конфигуриран",
+      "dpiaRequired": "DPIA задължителна"
+    },
+    "legalBasis": {
+      "consent": "Съгласие",
+      "contract": "Договор",
+      "legalObligation": "Правно задължение",
+      "vitalInterest": "Жизненоважен интерес",
+      "publicInterest": "Обществен интерес",
+      "legitimateInterest": "Легитимен интерес"
+    },
+    "consentType": {
+      "processing": "Обработване на данни",
+      "marketing": "Маркетинг",
+      "profiling": "Профилиране",
+      "transfer": "Прехвърляне на данни",
+      "specialCategories": "Специални категории",
+      "other": "Друго"
+    },
+    "status": {
+      "active": "Активен",
+      "inactive": "Неактивен",
+      "underReview": "В преглед",
+      "archived": "Архивиран"
+    },
+    "filter": {
+      "all": "Всички",
+      "active": "Активни",
+      "withdrawn": "Оттеглени",
+      "allStatuses": "Всички статуси",
+      "allLegalBases": "Всички правни основания"
+    },
+    "processing": {
+      "addActivity": "Добави дейност",
+      "newTitle": "Нова дейност",
+      "editTitle": "Редактирай дейност",
+      "emptyTitle": "Няма дейности",
+      "emptyMessage": "Добавете първата дейност по обработване.",
+      "searchPlaceholder": "Търси дейности...",
+      "activityNameLabel": "Наименование на дейността",
+      "activityNamePlaceholder": "напр.: Обработване на данни на служители",
+      "purposeLabel": "Цел",
+      "purposePlaceholder": "напр.: Управление на човешки ресурси",
+      "legalBasisLabel": "Правно основание",
+      "statusLabel": "Статус",
+      "dataSubjectsLabel": "Субекти на данни",
+      "dataSubjectsPlaceholder": "напр.: Служители, кандидати",
+      "dataCategoriesLabel": "Категории данни",
+      "dataCategoriesPlaceholder": "напр.: Данни за идентификация, контакт",
+      "retentionPeriodLabel": "Период на съхранение",
+      "retentionPeriodPlaceholder": "напр.: 5 години",
+      "crossBorderTransfer": "Трансгранично предаване",
+      "dpiaRequired": "DPIA задължителна",
+      "dpiaCompleted": "DPIA завършена",
+      "dpiaDateLabel": "Дата на DPIA"
+    },
+    "consent": {
+      "addConsent": "Добави съгласие",
+      "newTitle": "Ново съгласие",
+      "editTitle": "Редактирай съгласие",
+      "emptyTitle": "Няма съгласия",
+      "emptyMessage": "Добавете първото съгласие.",
+      "searchPlaceholder": "Търси съгласия...",
+      "personNameLabel": "Име на лицето",
+      "personNamePlaceholder": "напр.: Иван Петров",
+      "emailLabel": "Имейл",
+      "typeLabel": "Вид съгласие",
+      "purposeLabel": "Цел",
+      "purposePlaceholder": "напр.: Маркетингов бюлетин",
+      "givenAtLabel": "Дата на предоставяне",
+      "notesLabel": "Бележки",
+      "notesPlaceholder": "Допълнителни бележки...",
+      "withdraw": "Оттегли",
+      "withdrawTitle": "Оттегли съгласие",
+      "active": "Активно",
+      "withdrawn": "Оттеглено"
+    },
+    "dpo": {
+      "title": "Длъжностно лице по защита на данните (DPO)",
+      "subtitle": "Конфигурация на вътрешен или външен DPO",
+      "typeLabel": "Вид DPO",
+      "internal": "Вътрешен",
+      "external": "Външен",
+      "nameLabel": "Име на DPO",
+      "namePlaceholder": "напр.: Мария Иванова",
+      "emailLabel": "Имейл",
+      "phoneLabel": "Телефон",
+      "companyLabel": "Компания (ако е външен)",
+      "companyPlaceholder": "напр.: DPO Consulting ЕООД",
+      "appointmentDateLabel": "Дата на назначаване",
+      "contractExpiryLabel": "Изтичане на договора",
+      "anspdcpNotified": "ANSPDCP уведомен",
+      "anspdcpNotificationDateLabel": "Дата на уведомяване",
+      "notesLabel": "Бележки",
+      "notesPlaceholder": "Допълнителна информация...",
+      "save": "Запази",
+      "saving": "Запазване...",
+      "savedSuccess": "DPO е запазен успешно!"
+    },
+    "table": {
+      "activity": "Дейност",
+      "legalBasis": "Правно основание",
+      "status": "Статус",
+      "actions": "Действия",
+      "person": "Лице",
+      "type": "Вид",
+      "purpose": "Цел",
+      "givenAt": "Дата на предоставяне"
+    },
+    "actions": {
+      "edit": "Редактирай",
+      "delete": "Изтрий",
+      "cancel": "Откажи",
+      "create": "Създай",
+      "update": "Актуализирай"
+    },
+    "confirm": {
+      "deleteTitle": "Потвърждавате изтриването?",
+      "deleteProcessingMessage": "Дейността по обработване ще бъде изтрита окончателно.",
+      "deleteConsentMessage": "Съгласието ще бъде изтрито окончателно."
+    },
+    "errors": {
+      "createError": "Грешка при създаване",
+      "updateError": "Грешка при актуализиране",
+      "deleteError": "Грешка при изтриване",
+      "saveError": "Грешка при запазване",
+      "withdrawError": "Грешка при оттегляне на съгласие"
+    }
+  },
+  "medical": {
+    "title": "Трудова медицина",
+    "examType": {
+      "periodic": "Периодичен",
+      "angajare": "Постъпване на работа",
+      "reluare": "Завръщане",
+      "laCerere": "По искане",
+      "controlPeriodic": "Периодична проверка",
+      "controlAngajare": "Проверка при постъпване",
+      "fisaAptitudine": "Удостоверение за годност",
+      "fisaPsihologica": "Психологическо удостоверение",
+      "supraveghere": "Наблюдение"
+    },
+    "result": {
+      "apt": "Годен",
+      "aptConditionat": "Условно годен",
+      "inaptTemporar": "Временно негоден",
+      "inapt": "Негоден",
+      "inAsteptare": "Изчакващ"
+    },
+    "appointmentStatus": {
+      "programat": "Насрочен",
+      "confirmat": "Потвърден",
+      "efectuat": "Извършен",
+      "anulat": "Отменен",
+      "reprogramat": "Препланиран"
+    },
+    "status": {
+      "expired": "Изтекъл",
+      "expiredDesc": "Медицинското досие е изтекло",
+      "expiringSoon": "Скоро изтича",
+      "expiringSoonDesc": "Медицинското досие скоро ще изтече",
+      "valid": "Валидно",
+      "validDesc": "Медицинското досие е валидно",
+      "noRecord": "Без досие",
+      "noRecordDesc": "Няма медицинско досие",
+      "undefined": "Неопределен",
+      "undefinedDesc": "Датата на изтичане не е определена"
+    },
+    "alertLevel": {
+      "expirat": "Изтекъл",
+      "urgent": "Спешен",
+      "atentie": "Внимание",
+      "ok": "OK",
+      "nedefinit": "Неопределен"
+    },
+    "tab": {
+      "records": "Медицински досиета",
+      "appointments": "Прегледи",
+      "alerts": "Сигнали"
+    },
+    "subtitle": {
+      "records": "Регистрирани медицински досиета",
+      "appointments": "Насрочени медицински прегледи",
+      "alerts": "Изтекли и спешни сигнали"
+    },
+    "stats": {
+      "totalRecords": "Общо досиета",
+      "valid": "Валидни",
+      "expired": "Изтекли",
+      "expiring30": "Изтичат до 30 дни",
+      "totalAppointments": "Общо прегледи",
+      "scheduled": "Насрочени",
+      "confirmed": "Потвърдени",
+      "done": "Извършени"
+    },
+    "col": {
+      "employee": "Служител",
+      "jobTitle": "Длъжност",
+      "type": "Вид",
+      "date": "Дата",
+      "examDate": "Дата на преглед",
+      "expiryDate": "Дата на изтичане",
+      "expires": "Изтича",
+      "daysLeft": "Остават дни",
+      "result": "Резултат",
+      "status": "Статус",
+      "clinic": "Клиника",
+      "priority": "Приоритет"
+    },
+    "form": {
+      "addRecord": "Добави досие",
+      "addRecordBtn": "Добави",
+      "editRecord": "Редактирай досие",
+      "examType": "Вид преглед",
+      "examDate": "Дата на преглед",
+      "expiryDate": "Дата на изтичане",
+      "result": "Резултат",
+      "doctor": "Лекар",
+      "clinic": "Клиника",
+      "clinicAddress": "Адрес на клиника",
+      "documentNumber": "№ на документ",
+      "restrictions": "Ограничения",
+      "riskFactors": "Рискови фактори",
+      "notes": "Бележки",
+      "extraDetails": "Допълнителни данни",
+      "validityMonths": "Валидност (месеци)",
+      "employee": "Служител",
+      "employeeName": "Име на служител",
+      "selectEmployee": "Избери служител",
+      "selectEmployeeManual": "Избери ръчно",
+      "organization": "Организация",
+      "selectOrg": "Избери организация",
+      "jobTitle": "Длъжност",
+      "save": "Запази",
+      "saveChanges": "Запази промените",
+      "scheduleExam": "Насрочи преглед",
+      "editAppointment": "Редактирай преглед",
+      "date": "Дата",
+      "time": "Час"
+    },
+    "btn": {
+      "addRecord": "Добави досие",
+      "schedule": "Насрочи"
+    },
+    "filter": {
+      "allOrgs": "Всички организации",
+      "allTypes": "Всички видове",
+      "allResults": "Всички резултати",
+      "allStatuses": "Всички статуси",
+      "expired": "Изтекли",
+      "expiringSoon": "Скоро изтичащи",
+      "valid": "Валидни"
+    },
+    "empty": {
+      "noRecords": "Няма медицински досиета",
+      "noRecordsDesc": "Добавете първото медицинско досие.",
+      "noRecordsFilter": "Няма резултати за избраните филтри.",
+      "noAppointments": "Няма прегледи",
+      "noAppointmentsDesc": "Насрочете първия медицински преглед.",
+      "noAppointmentsFilter": "Няма прегледи за избраните филтри.",
+      "noAlerts": "Няма сигнали",
+      "noAlertsDesc": "Всички досиета са валидни.",
+      "noAlertsFilter": "Няма сигнали за избраните филтри."
+    },
+    "confirm": {
+      "delete": "Потвърждавате изтриването?",
+      "deleteRecord": "Изтрий медицинско досие",
+      "deleteRecordMsg": "Досието ще бъде изтрито окончателно.",
+      "deleteAppointment": "Изтрий преглед",
+      "deleteAppointmentMsg": "Прегледът ще бъде отменен окончателно.",
+      "deleteForever": "Изтрий окончателно"
+    },
+    "errors": {
+      "saveRecord": "Грешка при запазване на досие",
+      "deleteRecord": "Грешка при изтриване на досие",
+      "saveAppointment": "Грешка при запазване на преглед",
+      "deleteAppointment": "Грешка при изтриване на преглед"
+    },
+    "loading": {
+      "data": "Зареждане на данни...",
+      "appointments": "Зареждане на прегледи...",
+      "alerts": "Зареждане на сигнали..."
+    },
+    "alerts": {
+      "warning": "Внимание",
+      "warningMessage": "Има изтекли или почти изтекли досиета."
+    },
+    "daysText": {
+      "expired": "Изтекъл преди {days} дни",
+      "expiredShort": "Изтекъл",
+      "expiring": "Изтича след {days} дни",
+      "valid": "Валидно — {days} дни остават"
+    },
+    "employee": {
+      "employeeInfo": "Информация за служителя",
+      "jobTitle": "Длъжност",
+      "department": "Отдел",
+      "organization": "Организация",
+      "hireDate": "Дата на назначаване",
+      "lastExam": "Последен преглед",
+      "latestBadge": "Текущ статус",
+      "noJobTitle": "Без длъжност",
+      "noExams": "Няма прегледи",
+      "noExamsDesc": "Добавете първия медицински преглед.",
+      "addRecord": "Добави досие",
+      "addRecordAction": "Добави медицинско досие",
+      "tabStatus": "Статус",
+      "tabHistory": "История",
+      "tabAppointments": "Прегледи",
+      "historyDate": "Дата",
+      "historyExpiry": "Изтичане",
+      "historyDr": "Лекар",
+      "examType": "Вид преглед",
+      "result": "Резултат",
+      "doctorClinic": "Лекар / Клиника",
+      "riskFactors": "Рискови фактори",
+      "activeRestrictions": "Активни ограничения",
+      "noRestrictions": "Без ограничения",
+      "noAppointments": "Няма прегледи",
+      "noAppointmentsDesc": "Няма прегледи за този служител.",
+      "modalTitle": "Добави медицинско досие",
+      "modalSubmit": "Запази"
+    },
+    "page": {
+      "title": "Медицински прегледи",
+      "searchPlaceholder": "Търси служител, лекар...",
+      "total": "Общо",
+      "totalExams": "регистрирани прегледи",
+      "count": "{count} прегледа",
+      "show": "Покажи",
+      "pagination": "Страница {page} от {total}",
+      "noExams": "Няма прегледи",
+      "noExamsDesc": "Добавете първия медицински преглед, за да започнете.",
+      "noResults": "Няма резултати",
+      "noResultsDesc": "Няма прегледи, отговарящи на търсенето.",
+      "colExamType": "Вид преглед",
+      "colDoctor": "Лекар",
+      "colNextExam": "Следващ преглед"
+    },
+    "examination_type": "Вид преглед",
+    "examination_date": "Дата на преглед",
+    "next_exam": "Следващ преглед",
+    "doctor_name": "Лекар",
+    "employee_name": "Служител"
+  },
+  "iscir": {
+    "title": "ISCIR - Съоръжения под налягане",
+    "subtitle": "Управление на ISCIR съоръжения, проверки и разрешения",
+    "addEquipment": "Добави съоръжение",
+    "recentEquipment": "Последни съоръжения",
+    "equipmentType": {
+      "cazan": "Котел",
+      "recipientPresiune": "Съд под налягане",
+      "lift": "Асансьор",
+      "macara": "Кран",
+      "stivuitor": "Мотокар",
+      "instalatieGpl": "LPG инсталация",
+      "compresor": "Компресор",
+      "autoclave": "Автоклав",
+      "altul": "Друго"
+    },
+    "status": {
+      "activ": "Активен",
+      "expirat": "Изтекъл",
+      "inVerificare": "В проверка",
+      "oprit": "Спрян",
+      "casat": "Бракуван"
+    },
+    "verificationType": {
+      "periodica": "Периодична",
+      "accidentala": "Аварийна",
+      "punereInFunctiune": "Въвеждане в експлоатация",
+      "reparatie": "Ремонт",
+      "modernizare": "Модернизация"
+    },
+    "result": {
+      "admis": "Одобрен",
+      "admisConditionat": "Условно одобрен",
+      "respins": "Отхвърлен"
+    },
+    "alert": {
+      "expired": "Изтекъл",
+      "urgent": "Спешен",
+      "warning": "Внимание",
+      "ok": "OK"
+    },
+    "alertBadge": {
+      "expired": "Изтекъл",
+      "urgent": "Спешен",
+      "warning": "Внимание",
+      "ok": "OK"
+    },
+    "tabs": {
+      "dashboard": "Табло",
+      "equipment": "Съоръжения",
+      "verifications": "Проверки",
+      "alerts": "Сигнали"
+    },
+    "stats": {
+      "total": "Общо съоръжения",
+      "active": "Активни",
+      "expired": "Изтекли",
+      "stopped": "Спрени"
+    },
+    "table": {
+      "type": "Вид",
+      "identifier": "Идентификатор",
+      "iscirNr": "ISCIR №",
+      "location": "Местоположение",
+      "status": "Статус",
+      "verification": "Проверка",
+      "actions": "Действия"
+    },
+    "filter": {
+      "allOrgs": "Всички организации",
+      "allTypes": "Всички видове",
+      "allStatuses": "Всички статуси",
+      "searchPlaceholder": "Търси съоръжение..."
+    },
+    "form": {
+      "titleAdd": "Добави ISCIR съоръжение",
+      "titleEdit": "Редактирай съоръжение",
+      "equipmentType": "Вид съоръжение",
+      "identifier": "Идентификатор",
+      "serialNumber": "Сериен номер",
+      "registrationNumber": "Регистрационен номер",
+      "manufacturer": "Производител",
+      "model": "Модел",
+      "manufactureYear": "Година на производство",
+      "capacity": "Капацитет / Параметри",
+      "location": "Местоположение",
+      "status": "Статус",
+      "authorizationNumber": "№ на разрешение",
+      "authorizationExpiry": "Изтичане на разрешението",
+      "verifInterval": "Интервал на проверка (месеци)",
+      "nextVerifDate": "Дата на следваща проверка",
+      "rsvtiResponsible": "Отговорник RSVTI",
+      "observations": "Забележки",
+      "save": "Запази",
+      "saving": "Запазване...",
+      "cancel": "Откажи"
+    },
+    "verifForm": {
+      "title": "Регистрирай проверка",
+      "equipment": "Съоръжение",
+      "verifDate": "Дата на проверка",
+      "verifType": "Вид проверка",
+      "result": "Резултат",
+      "inspectorName": "Име на инспектора",
+      "inspectorId": "ID на инспектора",
+      "bulletinNumber": "№ на бюлетин",
+      "nextVerifDate": "Дата на следваща проверка",
+      "prescriptions": "Предписания",
+      "prescriptionsDeadline": "Срок за предписания",
+      "saveVerification": "Запази проверка"
+    },
+    "verifications": {
+      "title": "История на проверките",
+      "colDate": "Дата",
+      "colType": "Вид",
+      "colEquipment": "Съоръжение",
+      "colResult": "Резултат",
+      "colInspector": "Инспектор",
+      "colBulletin": "№ на бюлетин"
+    },
+    "alertsTab": {
+      "title": "Сигнали за проверки",
+      "colAlertLevel": "Ниво",
+      "colDaysLeft": "Остават дни",
+      "colVerifDate": "Дата на проверка",
+      "verify": "Провери"
+    },
+    "timeline": {
+      "bulletin": "Бюлетин",
+      "inspector": "Инспектор",
+      "nextVerif": "Следваща проверка",
+      "prescriptions": "Предписания",
+      "prescriptionsDeadline": "Срок за предписания"
+    },
+    "detail": {
+      "backToIscir": "Обратно към ISCIR",
+      "technicalData": "Технически данни",
+      "capacityParams": "Капацитет / Параметри",
+      "installDate": "Дата на монтаж",
+      "lastVerif": "Последна проверка",
+      "nextVerif": "Следваща проверка",
+      "verifInterval": "Интервал на проверка",
+      "months": "месеца",
+      "daysLeft": "дни остават",
+      "daysOverdue": "дни закъснение",
+      "authorizationExpiry": "Изтичане на разрешението",
+      "organization": "Организация",
+      "locationTitle": "Местоположение",
+      "rsvtiTitle": "Отговорник RSVTI",
+      "verifHistory": "История на проверките",
+      "verifCalendar": "Календар на проверките",
+      "dailyChecksTitle": "Ежедневни проверки",
+      "dailyCheck": "Ежедневна проверка",
+      "dailyCheckRequired": "Изисква ежедневна проверка",
+      "noDailyChecks": "Няма ежедневни проверки",
+      "showAll": "Покажи всички",
+      "showLess": "Покажи по-малко",
+      "qrCode": "QR код",
+      "qrError": "Грешка при генериране на QR",
+      "qrScanInstruction": "Сканирай за бърза проверка",
+      "operatorPage": "Страница на оператора",
+      "addVerification": "Добави проверка",
+      "addFirstVerif": "Добави първа проверка",
+      "add": "Добави",
+      "close": "Затвори",
+      "yes": "Да",
+      "no": "Не"
+    },
+    "deleteDialog": {
+      "title": "Потвърждавате изтриването?",
+      "message": "Съоръжението ще бъде изтрито окончателно.",
+      "delete": "Изтрий",
+      "deleting": "Изтриване..."
+    },
+    "empty": {
+      "noEquipment": "Няма съоръжения",
+      "noVerifications": "Няма проверки",
+      "noAlerts": "Няма сигнали"
+    },
+    "errors": {
+      "saveEquipment": "Грешка при запазване на съоръжение",
+      "deleteEquipment": "Грешка при изтриване на съоръжение",
+      "saveVerification": "Грешка при запазване на проверка"
+    },
+    "dailyRow": {
+      "operator": "Оператор",
+      "pointsOk": "Точки OK",
+      "issuesFound": "Проблеми",
+      "signed": "Подписано"
+    }
   }
 }
