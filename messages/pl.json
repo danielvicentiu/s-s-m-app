@@ -488,7 +488,8 @@
       "bulkLegalImport": "Masowy import przepisów"
     },
     "moduleInactive": "Moduł nieaktywny - aktywuj w Ustawieniach",
-    "user": "Użytkownik"
+    "user": "Użytkownik",
+    "trial": "Próbny"
   },
   "dashboardOverview": {
     "totalEmployees": "Łącznie pracowników",

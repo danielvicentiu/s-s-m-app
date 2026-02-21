@@ -416,7 +416,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
                     <div
                       key={link.href}
                       title={t('moduleInactive')}
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed select-none"
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-gray-400 cursor-not-allowed select-none"
                     >
                       <span className="opacity-50">{link.icon}</span>
                       <span className="flex-1">{link.label}</span>
@@ -430,7 +430,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
                       active
                         ? 'bg-blue-50 text-blue-700'
                         : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
@@ -445,7 +445,7 @@ export default function DashboardSidebar({ user }: { user: User }) {
                     )}
                     {isTrial && (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
-                        Trial
+                        {t('trial')}
                       </span>
                     )}
                   </Link>

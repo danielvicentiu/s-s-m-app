@@ -488,7 +488,8 @@
       "bulkLegalImport": "Bulk Legal Import"
     },
     "moduleInactive": "Module inactive - enable in Settings",
-    "user": "User"
+    "user": "User",
+    "trial": "Trial"
   },
   "dashboardOverview": {
     "totalEmployees": "Total Employees",

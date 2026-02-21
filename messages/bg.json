@@ -488,7 +488,8 @@
       "bulkLegalImport": "Масов импорт законодателство"
     },
     "moduleInactive": "Модулът е неактивен - активирайте от Настройки",
-    "user": "Потребител"
+    "user": "Потребител",
+    "trial": "Пробен"
   },
   "dashboardOverview": {
     "totalEmployees": "Общо служители",

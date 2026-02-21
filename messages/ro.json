@@ -488,7 +488,8 @@
       "bulkLegalImport": "Import Bulk Legislație"
     },
     "moduleInactive": "Modul inactiv - activați din Setări",
-    "user": "Utilizator"
+    "user": "Utilizator",
+    "trial": "Probă"
   },
   "dashboardOverview": {
     "totalEmployees": "Total Angajați",

@@ -109,7 +109,7 @@ export default function ActiveModulesCard({ orgId, locale }: ActiveModulesCardPr
                       <div className={`font-bold ${colors.text}`}>{mod.name_localized}</div>
                       {mod.is_trial && (
                         <span className="text-[10px] font-medium text-amber-600 bg-amber-100 rounded-full px-1.5 py-0.5">
-                          Trial
+                          {locale === 'ro' ? 'Probă' : locale === 'bg' ? 'Пробен' : locale === 'hu' ? 'Próba' : locale === 'de' ? 'Test' : locale === 'pl' ? 'Próbny' : 'Trial'}
                         </span>
                       )}
                     </div>

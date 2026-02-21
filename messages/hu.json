@@ -488,7 +488,8 @@
       "bulkLegalImport": "Jogszabályok tömeges importja"
     },
     "moduleInactive": "Modul inaktív - aktiválja a Beállításokban",
-    "user": "Felhasználó"
+    "user": "Felhasználó",
+    "trial": "Próba"
   },
   "dashboardOverview": {
     "totalEmployees": "Összes alkalmazott",

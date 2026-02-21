@@ -488,7 +488,8 @@
       "bulkLegalImport": "Massenimport Rechtsvorschriften"
     },
     "moduleInactive": "Modul inaktiv - in Einstellungen aktivieren",
-    "user": "Benutzer"
+    "user": "Benutzer",
+    "trial": "Test"
   },
   "dashboardOverview": {
     "totalEmployees": "Mitarbeiter gesamt",
