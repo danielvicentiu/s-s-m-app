@@ -642,7 +642,7 @@ export default function ImportWizardClient({ user, organizations, selectedOrgId,
       } else {
         // Parse Excel/ODS (SheetJS) - with smart header detection
         const data = await uploadedFile.arrayBuffer()
-        const workbook = XLSX.read(data, { type: 'array', header: 1 })
+        const workbook = XLSX.read(data, { type: 'array' })
         const worksheet = workbook.Sheets[workbook.SheetNames[0]]
         const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }) as any[][]
 

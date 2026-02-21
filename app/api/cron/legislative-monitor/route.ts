@@ -188,7 +188,7 @@ export async function GET(request: NextRequest) {
 // ─── Log helper ───────────────────────────────────────────────
 
 async function logCronRun(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   data: {
     acts_checked: number
     acts_updated: number
@@ -206,7 +206,7 @@ async function logCronRun(
     errors: data.errors,
     duration_ms: data.duration_ms,
     triggered_by: data.triggered_by,
-  })
+  } as any)
 
   if (error) {
     // Table may not exist yet — log warning but don't throw

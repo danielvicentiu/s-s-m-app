@@ -91,7 +91,7 @@ export default async function UploadPortalPage({ params }: Props) {
     )
   }
 
-  const org = link.organization as { id: string; name: string } | null
+  const org = link.organization as unknown as { id: string; name: string } | null
 
   return (
     <UploadPortalClient

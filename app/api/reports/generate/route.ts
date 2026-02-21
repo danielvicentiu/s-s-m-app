@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
 
     // Helper: safe table query — returns empty array if table doesn't exist
     async function safeQuery<T>(
-      queryFn: () => Promise<{ data: T[] | null; error: any }>
+      queryFn: () => PromiseLike<{ data: T[] | null; error: any }>
     ): Promise<T[]> {
       try {
         const result = await queryFn()

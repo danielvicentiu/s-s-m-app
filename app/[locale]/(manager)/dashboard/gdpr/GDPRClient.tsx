@@ -460,15 +460,15 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       key: 'status',
       label: t('table.status'),
       render: (row) => {
-        const variant =
+        const badgeStatus: 'valid' | 'expiring' | 'expired' | 'incomplete' =
           row.status === 'active'
-            ? 'success'
+            ? 'valid'
             : row.status === 'inactive'
-            ? 'danger'
+            ? 'expired'
             : row.status === 'under_review'
-            ? 'warning'
-            : 'default'
-        return <StatusBadge status={statusLabels[row.status]} variant={variant} />
+            ? 'expiring'
+            : 'incomplete'
+        return <StatusBadge status={badgeStatus} label={statusLabels[row.status]} />
       },
     },
     {
@@ -491,7 +491,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
           <button
             onClick={() => {
               setEditingProcessing(row.id)
-              setProcessingForm(row)
+              setProcessingForm({ ...emptyProcessingForm, ...row, retention_period: row.retention_period || '', notes: row.notes || '' })
               setProcessingModal(true)
             }}
             className="p-1 text-blue-600 hover:bg-blue-50 rounded dark:hover:bg-blue-900/20"
@@ -558,11 +558,11 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       label: t('table.status'),
       render: (row) => {
         if (row.is_active) {
-          return <StatusBadge status={t('consent.active')} variant="success" />
+          return <StatusBadge status="valid" label={t('consent.active')} />
         }
         return (
           <div className="flex flex-col">
-            <StatusBadge status={t('consent.withdrawn')} variant="danger" />
+            <StatusBadge status="expired" label={t('consent.withdrawn')} />
             {row.withdrawn_at && (
               <span className="text-xs text-gray-500 mt-1">
                 {new Date(row.withdrawn_at).toLocaleDateString('ro-RO')}
@@ -794,7 +794,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 <EmptyState
                   icon={FileCheck}
                   title={t('processing.emptyTitle')}
-                  message={t('processing.emptyMessage')}
+                  description={t('processing.emptyMessage')}
                 />
               ) : (
                 <DataTable
@@ -851,7 +851,7 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
                 <EmptyState
                   icon={UserCheck}
                   title={t('consent.emptyTitle')}
-                  message={t('consent.emptyMessage')}
+                  description={t('consent.emptyMessage')}
                 />
               ) : (
                 <DataTable data={consents} columns={consentColumns} />
@@ -1443,13 +1443,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       {deleteProcessingId && (
         <ConfirmDialog
           isOpen={!!deleteProcessingId}
-          onClose={() => setDeleteProcessingId(null)}
+          onCancel={() => setDeleteProcessingId(null)}
           onConfirm={handleDeleteProcessing}
           title={t('confirm.deleteTitle')}
           message={t('confirm.deleteProcessingMessage')}
           confirmLabel={t('actions.delete')}
           cancelLabel={t('actions.cancel')}
-          variant="danger"
+          isDestructive
         />
       )}
 
@@ -1457,13 +1457,13 @@ export default function GDPRClient({ user, organizations, selectedOrgId }: Props
       {deleteConsentId && (
         <ConfirmDialog
           isOpen={!!deleteConsentId}
-          onClose={() => setDeleteConsentId(null)}
+          onCancel={() => setDeleteConsentId(null)}
           onConfirm={handleDeleteConsent}
           title={t('confirm.deleteTitle')}
           message={t('confirm.deleteConsentMessage')}
           confirmLabel={t('actions.delete')}
           cancelLabel={t('actions.cancel')}
-          variant="danger"
+          isDestructive
         />
       )}
     </div>

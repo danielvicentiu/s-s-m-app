@@ -61,7 +61,7 @@ export default async function MedicalEmployeePage({ params }: PageProps) {
   return (
     <ModuleGate orgId={orgId} moduleKey="ssm" locale={locale}>
       <MedicalEmployeeClient
-        employee={employee as EmployeeWithOrg}
+        employee={employee as unknown as EmployeeWithOrg}
         examinations={examinations || []}
         appointments={appointments || []}
         organizations={organizations || []}

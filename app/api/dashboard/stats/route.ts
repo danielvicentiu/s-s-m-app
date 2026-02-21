@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     let trainingsQuery = supabase
       .from('training_sessions')
-      .select('id, status, scheduled_date')
+      .select('id, status, scheduled_date, created_at')
 
     let psiEquipmentQuery = supabase
       .from('safety_equipment')

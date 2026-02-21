@@ -229,7 +229,7 @@ function DashboardTab({ stats, t }: { stats: AccountingDashboardStats | null; t:
             </svg>
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats.activeContracts}</p>
-          <p className="text-sm text-gray-500 mt-1">{t('ofTotal', { total: stats.totalContracts })}</p>
+          <p className="text-sm text-gray-500 mt-1">{(t as any)('ofTotal', { total: stats.totalContracts })}</p>
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-200 p-6">

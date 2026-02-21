@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
 // ─── Log helper ───────────────────────────────────────────────
 
 async function logImport(
-  supabaseAdmin: ReturnType<typeof createClient>,
+  supabaseAdmin: any,
   reference: string,
   status: string,
   contentHash: string | null,
@@ -223,5 +223,5 @@ async function logImport(
     duration_ms: durationMs,
     metadata: { adapter: 'bulk-import', version: '1.0' },
     created_at: new Date().toISOString(),
-  });
+  } as any);
 }

@@ -59,7 +59,7 @@ export async function GET(
       )
     }
 
-    const org = link.organization as { id: string; name: string } | null
+    const org = link.organization as unknown as { id: string; name: string } | null
 
     return NextResponse.json({
       valid: true,

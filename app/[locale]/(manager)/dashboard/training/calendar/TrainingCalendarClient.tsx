@@ -116,7 +116,7 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
       // Extract unique instructors from calendar data
       const uniqueInstructors = Array.from(
         new Set(calendarItems.map((item: TrainingCalendarItem) => item.instructor).filter(Boolean))
-      ).sort()
+      ).filter((x): x is string => typeof x === 'string').sort()
       setInstructors(uniqueInstructors)
     } catch (err) {
       setError(err instanceof Error ? err.message : t('unknownError'))
@@ -527,12 +527,12 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                   </div>
                   {day.trainings.length > 0 && (
                     <div className="space-y-1">
-                      {day.trainings.slice(0, 2).map((t) => (
+                      {day.trainings.slice(0, 2).map((training) => (
                         <div
-                          key={t.id}
-                          className={`text-xs px-2 py-1 rounded ${getStatusColor(t.status)}`}
+                          key={training.id}
+                          className={`text-xs px-2 py-1 rounded ${getStatusColor(training.status)}`}
                         >
-                          {t.employee_name.split(' ')[0]}
+                          {training.employee_name.split(' ')[0]}
                         </div>
                       ))}
                       {day.trainings.length > 2 && (
@@ -573,38 +573,38 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                     </td>
                   </tr>
                 ) : (
-                  upcomingTrainings.map((t) => (
-                    <tr key={t.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                  upcomingTrainings.map((training) => (
+                    <tr key={training.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                       <td className="px-6 py-3">
                         <div className="font-medium text-white">
-                          {new Date(t.scheduled_date).toLocaleDateString('ro-RO')}
+                          {new Date(training.scheduled_date).toLocaleDateString('ro-RO')}
                         </div>
-                        <div className={`text-xs ${getDaysUntilColor(t.days_until_scheduled)}`}>
-                          {t.days_until_scheduled === 0
+                        <div className={`text-xs ${getDaysUntilColor(training.days_until_scheduled)}`}>
+                          {training.days_until_scheduled === 0
                             ? t('today')
-                            : t.days_until_scheduled === 1
+                            : training.days_until_scheduled === 1
                             ? t('tomorrow')
-                            : t('inDays', { count: t.days_until_scheduled })}
+                            : t('inDays', { count: training.days_until_scheduled })}
                         </div>
                       </td>
                       <td className="px-6 py-3">
-                        <div className="font-medium text-white">{t.employee_name}</div>
-                        <div className="text-xs text-slate-500">{t.job_title || '—'}</div>
+                        <div className="font-medium text-white">{training.employee_name}</div>
+                        <div className="text-xs text-slate-500">{training.job_title || '—'}</div>
                       </td>
                       <td className="px-6 py-3">
-                        <span className={`text-xs px-2 py-1 rounded ${getTrainingTypeColor(t.training_type)}`}>
-                          {TRAINING_TYPE_LABELS[t.training_type]}
+                        <span className={`text-xs px-2 py-1 rounded ${getTrainingTypeColor(training.training_type)}`}>
+                          {TRAINING_TYPE_LABELS[training.training_type]}
                         </span>
                       </td>
                       <td className="px-6 py-3 text-slate-400">
-                        {t.organization_name}
+                        {training.organization_name}
                       </td>
                       <td className="px-6 py-3">
-                        <span className={`text-xs px-2 py-1 rounded ${getStatusColor(t.status)}`}>
-                          {TRAINING_SESSION_STATUS_LABELS[t.status]}
+                        <span className={`text-xs px-2 py-1 rounded ${getStatusColor(training.status)}`}>
+                          {TRAINING_SESSION_STATUS_LABELS[training.status]}
                         </span>
                       </td>
-                      <td className="px-6 py-3 text-slate-400">{t.instructor}</td>
+                      <td className="px-6 py-3 text-slate-400">{training.instructor}</td>
                     </tr>
                   ))
                 )}
@@ -818,39 +818,39 @@ export default function TrainingCalendarClient({ user, organizations, initialSel
                 </h2>
 
                 <div className="space-y-3">
-                  {selectedDayTrainings.map((t) => (
+                  {selectedDayTrainings.map((training) => (
                     <div
-                      key={t.id}
+                      key={training.id}
                       className="bg-slate-800 rounded-lg p-4 border border-slate-700"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <div className="font-medium text-white">{t.employee_name}</div>
-                          <div className="text-xs text-slate-500">{t.job_title || '—'}</div>
+                          <div className="font-medium text-white">{training.employee_name}</div>
+                          <div className="text-xs text-slate-500">{training.job_title || '—'}</div>
                         </div>
-                        <span className={`text-xs px-2 py-1 rounded ${getStatusColor(t.status)}`}>
-                          {TRAINING_SESSION_STATUS_LABELS[t.status]}
+                        <span className={`text-xs px-2 py-1 rounded ${getStatusColor(training.status)}`}>
+                          {TRAINING_SESSION_STATUS_LABELS[training.status]}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
                           <span className="text-slate-500">{t('detailType')}:</span>{' '}
-                          <span className={`text-xs px-1.5 py-0.5 rounded ${getTrainingTypeColor(t.training_type)}`}>
-                            {TRAINING_TYPE_LABELS[t.training_type]}
+                          <span className={`text-xs px-1.5 py-0.5 rounded ${getTrainingTypeColor(training.training_type)}`}>
+                            {TRAINING_TYPE_LABELS[training.training_type]}
                           </span>
                         </div>
                         <div>
                           <span className="text-slate-500">{t('detailInstructor')}:</span>{' '}
-                          <span className="text-white">{t.instructor}</span>
+                          <span className="text-white">{training.instructor}</span>
                         </div>
                         <div>
                           <span className="text-slate-500">{t('detailDuration')}:</span>{' '}
-                          <span className="text-white">{t.duration_hours}h</span>
+                          <span className="text-white">{training.duration_hours}h</span>
                         </div>
-                        {t.topics && (
+                        {training.topics && (
                           <div className="col-span-2">
                             <span className="text-slate-500">{t('detailTopics')}:</span>{' '}
-                            <span className="text-white">{t.topics}</span>
+                            <span className="text-white">{training.topics}</span>
                           </div>
                         )}
                       </div>
