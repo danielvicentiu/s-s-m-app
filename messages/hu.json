@@ -1667,5 +1667,518 @@
       "saveAssessment": "Értékelés mentése",
       "cancel": "Mégse"
     }
+  },
+  "profile": {
+    "title": "Profil",
+    "selectImageFile": "Válasszon képfájlt",
+    "imageTooLarge": "A kép túl nagy. Maximális méret: 2MB",
+    "avatarUpdated": "Avatar sikeresen frissítve",
+    "avatarError": "Hiba az avatar frissítésekor",
+    "profilePhoto": "Profilkép",
+    "uploading": "Feltöltés...",
+    "uploadImage": "Kép feltöltése",
+    "personalInfo": "Személyes adatok",
+    "fullName": "Teljes név",
+    "emailReadOnly": "E-mail (csak olvasható)",
+    "phone": "Telefon",
+    "preferences": "Beállítások",
+    "preferredLanguage": "Preferált nyelv",
+    "timezone": "Időzóna",
+    "tzBucharest": "Bukarest (EET)",
+    "tzSofia": "Szófia (EET)",
+    "tzBudapest": "Budapest (CET)",
+    "tzBerlin": "Berlin (CET)",
+    "tzWarsaw": "Varsó (CET)",
+    "notifications": "Értesítések",
+    "emailNotifications": "E-mail értesítések",
+    "emailNotificationsDesc": "E-mail értesítések fogadása",
+    "pushNotifications": "Push értesítések",
+    "pushNotificationsDesc": "Push értesítések fogadása a böngészőben",
+    "saving": "Mentés...",
+    "saveChanges": "Változások mentése",
+    "profileUpdated": "Profil sikeresen frissítve",
+    "saveError": "Hiba a profil mentésekor",
+    "passwordsMismatch": "A jelszavak nem egyeznek",
+    "passwordTooShort": "A jelszónak legalább 6 karakter hosszúnak kell lennie",
+    "passwordChanged": "Jelszó sikeresen megváltoztatva",
+    "changePasswordError": "Hiba a jelszó megváltoztatásakor",
+    "changePassword": "Jelszó megváltoztatása",
+    "currentPassword": "Jelenlegi jelszó",
+    "newPassword": "Új jelszó",
+    "confirmNewPassword": "Új jelszó megerősítése",
+    "changingPassword": "Jelszó megváltoztatása..."
+  },
+  "modules": {
+    "status": {
+      "active": "Aktív",
+      "trial": "Próba",
+      "suspended": "Felfüggesztett",
+      "inactive": "Inaktív"
+    },
+    "category": {
+      "core": "Alap",
+      "standalone": "Önálló",
+      "premium": "Prémium"
+    },
+    "breadcrumb": "Modulok",
+    "title": "Szervezeti modulok",
+    "subtitle": "Elérhető modulok: {orgName}",
+    "stats": {
+      "active": "Aktív",
+      "trial": "Próba",
+      "available": "Elérhető"
+    },
+    "info": {
+      "title": "Modul információk",
+      "message": "A modulokat az adminisztrátor aktiválhatja vagy deaktiválhatja."
+    },
+    "section": {
+      "core": "Alap modulok",
+      "standalone": "Önálló modulok",
+      "premium": "Prémium modulok"
+    },
+    "card": {
+      "trialExpires": "Próbaidő lejár",
+      "activeSince": "Aktív ettől",
+      "contactAdmin": "Kapcsolat az adminisztrátorral"
+    },
+    "footer": {
+      "title": "Több modulra van szüksége?",
+      "message": "Lépjen kapcsolatba csapatunkkal további modulok aktiválásához.",
+      "contactButton": "Kapcsolat"
+    }
+  },
+  "obligations": {
+    "yourOrganization": "Az Ön szervezete",
+    "severityCritical": "Kritikus",
+    "severityMajor": "Jelentős",
+    "severityMinor": "Kisebb",
+    "statusPending": "Függőben",
+    "statusAcknowledged": "Tudomásul véve",
+    "statusCompliant": "Megfelelő",
+    "statusNonCompliant": "Nem megfelelő",
+    "noObligationsTitle": "Nem találhatók kötelezettségek",
+    "noObligationsDesc": "A kiválasztott szűrőknek nem felel meg kötelezettség.",
+    "title": "Jogi kötelezettségek",
+    "totalObligations": "Összes kötelezettség",
+    "criticalSeverity": "Kritikus súlyosság",
+    "newLastMonth": "Új az elmúlt hónapban",
+    "domain": "Terület",
+    "severity": "Súlyosság",
+    "all": "Összes",
+    "fiscal": "Pénzügyi",
+    "others": "Egyéb",
+    "searchLabel": "Keresés",
+    "searchPlaceholder": "Kötelezettségek keresése...",
+    "loading": "Betöltés...",
+    "noResultsTitle": "Nincs találat",
+    "noResultsDesc": "Nincs a keresési feltételeknek megfelelő kötelezettség.",
+    "legalReference": "Jogi hivatkozás",
+    "frequency": "Gyakoriság",
+    "deadline": "Határidő",
+    "published": "Közzétéve",
+    "obligationDetails": "Kötelezettség részletei",
+    "fullText": "Teljes szöveg",
+    "exactArticle": "Pontos cikk",
+    "responsible": "Felelős",
+    "frequencyAndDeadline": "Gyakoriság és határidő",
+    "associatedPenalties": "Kapcsolódó szankciók",
+    "requiredEvidence": "Szükséges bizonyítékok",
+    "notes": "Megjegyzések",
+    "assignedAt": "Hozzárendelve",
+    "acknowledgedAt": "Tudomásul véve",
+    "compliantAt": "Megfelelő dátum"
+  },
+  "dataImport": {
+    "title": "Adatimportálás",
+    "subtitle": "Alkalmazottak, képzések, orvosi nyilvántartások vagy felszerelések importálása CSV/Excel fájlokból",
+    "fields": {
+      "fullName": "Teljes név",
+      "phone": "Telefon",
+      "jobTitle": "Beosztás",
+      "department": "Részleg",
+      "hireDate": "Felvétel dátuma",
+      "corCode": "COR kód",
+      "employeeName": "Alkalmazott neve",
+      "trainingType": "Képzés típusa",
+      "trainingDate": "Képzés dátuma",
+      "expiryDate": "Lejárat dátuma",
+      "instructor": "Oktató",
+      "notes": "Megjegyzések",
+      "examinationType": "Vizsgálat típusa",
+      "examinationDate": "Vizsgálat dátuma",
+      "result": "Eredmény",
+      "doctor": "Orvos",
+      "clinic": "Klinika",
+      "restrictions": "Korlátozások",
+      "equipmentType": "Felszerelés típusa",
+      "description": "Leírás",
+      "location": "Helyszín",
+      "serialNumber": "Sorozatszám",
+      "lastInspection": "Utolsó ellenőrzés",
+      "nextInspection": "Következő ellenőrzés",
+      "inspector": "Felügyelő"
+    },
+    "errors": {
+      "emptyFile": "A fájl üres",
+      "readError": "Hiba a fájl olvasásakor",
+      "selectOrg": "Válasszon szervezetet"
+    },
+    "step1": {
+      "organizationLabel": "Szervezet",
+      "importTypeLabel": "Import típusa",
+      "uploadLabel": "Fájl feltöltése",
+      "selectFile": "Fájl kiválasztása",
+      "downloadTemplate": "Sablon letöltése",
+      "downloadTemplateHint": "Töltse le a CSV sablont a helyes formátum megtekintéséhez",
+      "downloadTemplateFile": "{importType} sablon"
+    },
+    "types": {
+      "employees": "Alkalmazottak",
+      "trainings": "Képzések",
+      "medical": "Orvosi nyilvántartások",
+      "equipment": "Felszerelések"
+    },
+    "step2": {
+      "mappingTitle": "Oszlopok hozzárendelése",
+      "autoDetect": "Automatikus felismerés",
+      "notSet": "Nincs beállítva"
+    },
+    "step3": {
+      "valid": "Érvényes",
+      "warnings": "Figyelmeztetések",
+      "errors": "Hibák",
+      "row": "Sor",
+      "status": "Állapot",
+      "data": "Adatok",
+      "issues": "Problémák"
+    },
+    "step4": {
+      "readyTitle": "Importálásra kész",
+      "importing": "Importálás...",
+      "confirmImport": "Import megerősítése",
+      "doneTitle": "Importálás befejezve",
+      "backToDashboard": "Vissza a vezérlőpultra"
+    },
+    "steps": {
+      "upload": "Feltöltés",
+      "mapping": "Hozzárendelés",
+      "preview": "Előnézet",
+      "import": "Importálás"
+    },
+    "nav": {
+      "back": "Vissza",
+      "continue": "Tovább"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Alkalmazott importáló varázsló",
+      "organization": "Szervezet",
+      "dashboard": "Vezérlőpult"
+    },
+    "fields": {
+      "firstName": "Keresztnév",
+      "lastName": "Vezetéknév",
+      "jobTitle": "Beosztás",
+      "department": "Részleg",
+      "hireDate": "Felvétel dátuma",
+      "contractEndDate": "Szerződés vége",
+      "phone": "Telefon",
+      "corCode": "COR kód",
+      "corTitle": "COR cím",
+      "contractNumber": "Szerződésszám",
+      "contractType": "Szerződés típusa",
+      "status": "Állapot"
+    },
+    "validation": {
+      "firstNameRequired": "A keresztnév kötelező",
+      "lastNameRequired": "A vezetéknév kötelező",
+      "cnpInvalid": "Érvénytelen CNP",
+      "cnpDuplicate": "Duplikált CNP a fájlban",
+      "cnpExistsInOrg": "CNP már létezik a szervezetben",
+      "emailInvalid": "Érvénytelen e-mail",
+      "hireDateInvalid": "Érvénytelen felvételi dátum",
+      "corCodeFormat": "Érvénytelen COR kód formátum"
+    },
+    "errors": {
+      "emptyFile": "A fájl üres",
+      "readError": "Hiba a fájl olvasásakor"
+    },
+    "step1": {
+      "title": "Fájl feltöltése",
+      "description": "Töltsön fel egy CSV vagy Excel fájlt",
+      "dropZoneTitle": "Húzza ide a fájlt",
+      "dropZoneFormats": "Elfogadott formátumok: CSV, XLSX, XLS",
+      "selectFile": "Fájl kiválasztása",
+      "rowsDetected": "{count} sor észlelve",
+      "headerOnRow": "Fejléc a(z) {row}. sorban",
+      "previewTitle": "Adatok előnézete"
+    },
+    "step2": {
+      "title": "Profil kiválasztása",
+      "description": "Válasszon import profilt vagy hozzon létre újat",
+      "regesNote": "Importálhat REGES-ből",
+      "regesSalariatiTitle": "REGES — Munkavállalói nyilvántartás",
+      "regesSalariatiDesc": "Import standard jelentésből",
+      "regesContracteTitle": "REGES — Szerződés nyilvántartás",
+      "regesContracteDesc": "Import szerződés jelentésből",
+      "manualTitle": "Kézi hozzárendelés",
+      "manualDesc": "Kézi oszlop-hozzárendelés kiválasztása"
+    },
+    "step3": {
+      "title": "Oszlop hozzárendelés",
+      "description": "Ellenőrizze és módosítsa",
+      "ignoreOption": "Oszlop figyelmen kívül hagyása",
+      "previewLabel": "Előnézet",
+      "previewDesc": "Ellenőrizze az adatokat import előtt",
+      "validateButton": "Érvényesítés"
+    },
+    "step4": {
+      "title": "Érvényesítés és import",
+      "statsDetected": "Észlelt",
+      "statsValid": "Érvényes",
+      "statsWarnings": "Figyelmeztetések",
+      "statsErrors": "Hibák",
+      "autoMapping": "Automatikus",
+      "mappingCount": "{mapped}/{total} oszlop",
+      "previewTitle": "Előnézet",
+      "validationList": "{count} probléma",
+      "deselectAll": "Összes törlése",
+      "selectAll": "Összes kijelölése",
+      "colFullName": "Teljes név",
+      "importButton": "{count} alkalmazott importálása"
+    },
+    "step5": {
+      "importing": "Importálás...",
+      "done": "Import befejezve!",
+      "progressLabel": "{success}/{total} importálva",
+      "successCount": "{count} sikeresen importálva",
+      "failedCount": "{count} sikertelen",
+      "profileUsed": "Használt profil",
+      "viewEmployees": "Alkalmazottak megtekintése"
+    },
+    "nav": {
+      "back": "Vissza",
+      "newImport": "Új import"
+    }
+  },
+  "iscir": {
+    "equipmentType": {
+      "cazan": "Kazán",
+      "recipientPresiune": "Nyomástartó edény",
+      "lift": "Felvonó",
+      "macara": "Daru",
+      "stivuitor": "Targonca",
+      "instalatieGpl": "LPG berendezés",
+      "compresor": "Kompresszor",
+      "autoclave": "Autokláv",
+      "altul": "Egyéb"
+    },
+    "status": {
+      "activ": "Aktív",
+      "expirat": "Lejárt",
+      "inVerificare": "Ellenőrzés alatt",
+      "oprit": "Leállított",
+      "casat": "Selejtezett"
+    },
+    "verificationType": {
+      "periodica": "Időszakos",
+      "accidentala": "Baleseti",
+      "punereInFunctiune": "Üzembe helyezés",
+      "reparatie": "Javítás",
+      "modernizare": "Korszerűsítés"
+    },
+    "result": {
+      "admis": "Megfelelt",
+      "respins": "Nem felelt meg",
+      "admisConditionat": "Feltételesen megfelelt"
+    },
+    "title": "ISCIR — Felügyelt berendezések",
+    "subtitle": "ISCIR berendezések kezelése, időszakos ellenőrzések és riasztások",
+    "filter": {
+      "allOrgs": "Összes szervezet",
+      "searchPlaceholder": "Berendezés keresése...",
+      "allTypes": "Összes típus",
+      "allStatuses": "Összes állapot"
+    },
+    "tabs": {
+      "dashboard": "Vezérlőpult",
+      "equipment": "Berendezések",
+      "verifications": "Ellenőrzések",
+      "alerts": "Riasztások"
+    },
+    "stats": {
+      "total": "Összes berendezés",
+      "active": "Aktív",
+      "expired": "Lejárt",
+      "stopped": "Leállított"
+    },
+    "recentEquipment": "Legutóbbi berendezések",
+    "addEquipment": "Berendezés hozzáadása",
+    "table": {
+      "type": "Típus",
+      "identifier": "Azonosító",
+      "iscirNr": "ISCIR szám",
+      "location": "Helyszín",
+      "verification": "Ellenőrzés",
+      "status": "Állapot",
+      "actions": "Műveletek"
+    },
+    "alert": {
+      "expired": "Lejárt",
+      "urgent": "Sürgős",
+      "warning": "Figyelmeztetés",
+      "ok": "OK"
+    },
+    "empty": {
+      "noEquipment": "Nincs berendezés",
+      "noVerifications": "Nincs ellenőrzés",
+      "noAlerts": "Nincs riasztás"
+    },
+    "verifications": {
+      "title": "Ellenőrzési előzmények",
+      "colDate": "Dátum",
+      "colEquipment": "Berendezés",
+      "colType": "Típus",
+      "colInspector": "Felügyelő",
+      "colResult": "Eredmény",
+      "colBulletin": "Jegyzőkönyv"
+    },
+    "alertsTab": {
+      "title": "Berendezés riasztások",
+      "colVerifDate": "Ellenőrzés dátuma",
+      "colDaysLeft": "Hátralévő napok",
+      "colAlertLevel": "Szint",
+      "verify": "Ellenőrzés"
+    },
+    "form": {
+      "titleEdit": "Berendezés szerkesztése",
+      "titleAdd": "Berendezés hozzáadása",
+      "equipmentType": "Típus",
+      "identifier": "Azonosító",
+      "registrationNumber": "Nyilvántartási szám",
+      "manufacturer": "Gyártó",
+      "model": "Modell",
+      "serialNumber": "Sorozatszám",
+      "manufactureYear": "Gyártási év",
+      "location": "Helyszín",
+      "capacity": "Kapacitás",
+      "rsvtiResponsible": "RSVTI felelős",
+      "nextVerifDate": "Következő ellenőrzés",
+      "verifInterval": "Ellenőrzési intervallum (hónap)",
+      "authorizationNumber": "Engedélyszám",
+      "authorizationExpiry": "Engedély lejárata",
+      "status": "Állapot",
+      "observations": "Megjegyzések",
+      "cancel": "Mégse",
+      "saving": "Mentés...",
+      "save": "Mentés"
+    },
+    "verifForm": {
+      "title": "Ellenőrzés rögzítése",
+      "equipment": "Berendezés",
+      "verifDate": "Dátum",
+      "verifType": "Típus",
+      "inspectorName": "Felügyelő neve",
+      "inspectorId": "Felügyelő ID",
+      "result": "Eredmény",
+      "bulletinNumber": "Jegyzőkönyv szám",
+      "nextVerifDate": "Következő ellenőrzés",
+      "prescriptionsDeadline": "Előírások határideje",
+      "prescriptions": "Előírások",
+      "saveVerification": "Ellenőrzés mentése"
+    },
+    "deleteDialog": {
+      "title": "Törlés megerősítése",
+      "message": "Biztosan törölni szeretné a(z) {identifier} berendezést?",
+      "deleting": "Törlés...",
+      "delete": "Törlés"
+    },
+    "errors": {
+      "saveEquipment": "Hiba a berendezés mentésekor",
+      "deleteEquipment": "Hiba a törléskor",
+      "saveVerification": "Hiba az ellenőrzés mentésekor"
+    },
+    "detail": {
+      "backToIscir": "Vissza az ISCIR-hez",
+      "qrCode": "QR kód",
+      "qrError": "QR hiba",
+      "close": "Bezárás"
+    }
+  },
+  "iscirDaily": {
+    "checkItems": {
+      "macara": {
+        "cabluTractiune": "Vonókötél",
+        "franeFunctionale": "Működő fékek",
+        "dispozitiveSiguranta": "Biztonsági eszközök",
+        "sistemUngere": "Kenőrendszer",
+        "carligPrindere": "Horog",
+        "limitatoareCursa": "Úthatárolók",
+        "avertizareSonora": "Hangjelzés",
+        "structuraVizual": "Szerkezet - szemrevételezés"
+      },
+      "stivuitor": {
+        "franaServiciu": "Üzemi fék",
+        "franaMana": "Kézifék",
+        "hidraulicFaraScurgeri": "Hidraulika - szivárgásmentes",
+        "furciOk": "Villák - jó állapotban",
+        "pneuriRoti": "Abroncsok/kerekek",
+        "iluminat": "Világítás",
+        "avertizareSonora": "Hangjelzés",
+        "centuraSiguranta": "Biztonsági öv",
+        "dispozitiveSiguranta": "Biztonsági eszközök",
+        "nivelCombustibil": "Üzemanyag szint/akkumulátor töltöttség"
+      },
+      "lift": {
+        "usiSiguranta": "Biztonsági ajtók",
+        "limitatoareViteza": "Sebességkorlátozók",
+        "iluminat": "Világítás",
+        "avertizareSonora": "Hangjelzés",
+        "cabluTractiune": "Vonókötél",
+        "frane": "Fékek"
+      },
+      "default": {
+        "echipamentFunctional": "Berendezés működik",
+        "faraScurgeri": "Nincs szivárgás",
+        "dispozitiveSiguranta": "Biztonsági eszközök",
+        "zonaLibera": "Szabad terület"
+      }
+    },
+    "title": "ISCIR napi ellenőrzések",
+    "stats": {
+      "total": "Összes berendezés",
+      "checkedToday": "Ma ellenőrizve",
+      "unchecked": "Ellenőrizetlen"
+    },
+    "progressLabel": "Napi ellenőrzés haladása",
+    "allCompleted": "Minden berendezés ellenőrizve ma!",
+    "empty": {
+      "title": "Nincs berendezés napi ellenőrzéshez",
+      "description": "Nincs ISCIR berendezés napi ellenőrzéshez.",
+      "hint": "Adjon hozzá darut, targoncát vagy felvonót a napi ellenőrzések aktiválásához."
+    },
+    "checkedBy": "Ellenőrizte",
+    "issuesReported": "Jelentett problémák",
+    "update": "Frissítés",
+    "verify": "Ellenőrzés",
+    "modal": {
+      "title": "Napi ellenőrzés",
+      "operatorName": "Kezelő neve",
+      "checkPoints": "Ellenőrzési pontok",
+      "checkAllOk": "Minden OK",
+      "issuesOptional": "Problémák (opcionális)",
+      "issuesPlaceholder": "Írja le a talált problémákat...",
+      "signatureTitle": "Aláírás",
+      "signatureConfirm": "Megerősítem, hogy ellenőriztem a berendezést",
+      "confirm": "Ellenőrzés megerősítése"
+    },
+    "qr": {
+      "scanInstruction": "QR kód beolvasása gyors ellenőrzéshez"
+    },
+    "errors": {
+      "saveDailyCheck": "Hiba a napi ellenőrzés mentésekor"
+    }
   }
 }

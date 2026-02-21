@@ -1667,5 +1667,518 @@
       "saveAssessment": "Запази оценката",
       "cancel": "Отказ"
     }
+  },
+  "profile": {
+    "title": "Профил",
+    "selectImageFile": "Изберете файл с изображение",
+    "imageTooLarge": "Изображението е твърде голямо. Максимален размер: 2MB",
+    "avatarUpdated": "Аватарът е актуализиран успешно",
+    "avatarError": "Грешка при актуализиране на аватара",
+    "profilePhoto": "Профилна снимка",
+    "uploading": "Качване...",
+    "uploadImage": "Качи изображение",
+    "personalInfo": "Лична информация",
+    "fullName": "Пълно име",
+    "emailReadOnly": "Имейл (само за четене)",
+    "phone": "Телефон",
+    "preferences": "Предпочитания",
+    "preferredLanguage": "Предпочитан език",
+    "timezone": "Часова зона",
+    "tzBucharest": "Букурещ (EET)",
+    "tzSofia": "София (EET)",
+    "tzBudapest": "Будапеща (CET)",
+    "tzBerlin": "Берлин (CET)",
+    "tzWarsaw": "Варшава (CET)",
+    "notifications": "Известия",
+    "emailNotifications": "Имейл известия",
+    "emailNotificationsDesc": "Получавайте известия по имейл",
+    "pushNotifications": "Push известия",
+    "pushNotificationsDesc": "Получавайте push известия в браузъра",
+    "saving": "Запазване...",
+    "saveChanges": "Запази промените",
+    "profileUpdated": "Профилът е актуализиран успешно",
+    "saveError": "Грешка при запазване на профила",
+    "passwordsMismatch": "Паролите не съвпадат",
+    "passwordTooShort": "Паролата трябва да е поне 6 символа",
+    "passwordChanged": "Паролата е сменена успешно",
+    "changePasswordError": "Грешка при смяна на паролата",
+    "changePassword": "Смяна на парола",
+    "currentPassword": "Текуща парола",
+    "newPassword": "Нова парола",
+    "confirmNewPassword": "Потвърдете новата парола",
+    "changingPassword": "Смяна на парола..."
+  },
+  "modules": {
+    "status": {
+      "active": "Активен",
+      "trial": "Пробен",
+      "suspended": "Спрян",
+      "inactive": "Неактивен"
+    },
+    "category": {
+      "core": "Основни",
+      "standalone": "Самостоятелни",
+      "premium": "Премиум"
+    },
+    "breadcrumb": "Модули",
+    "title": "Модули на организацията",
+    "subtitle": "Налични модули за {orgName}",
+    "stats": {
+      "active": "Активни",
+      "trial": "Пробни",
+      "available": "Налични"
+    },
+    "info": {
+      "title": "Информация за модулите",
+      "message": "Модулите могат да бъдат активирани или деактивирани от администратора."
+    },
+    "section": {
+      "core": "Основни модули",
+      "standalone": "Самостоятелни модули",
+      "premium": "Премиум модули"
+    },
+    "card": {
+      "trialExpires": "Пробният период изтича",
+      "activeSince": "Активен от",
+      "contactAdmin": "Свържете се с администратора"
+    },
+    "footer": {
+      "title": "Нуждаете се от повече модули?",
+      "message": "Свържете се с нашия екип за активиране на допълнителни модули.",
+      "contactButton": "Свържете се с нас"
+    }
+  },
+  "obligations": {
+    "yourOrganization": "Вашата организация",
+    "severityCritical": "Критична",
+    "severityMajor": "Основна",
+    "severityMinor": "Незначителна",
+    "statusPending": "Изчакващ",
+    "statusAcknowledged": "Потвърден",
+    "statusCompliant": "Съответстващ",
+    "statusNonCompliant": "Несъответстващ",
+    "noObligationsTitle": "Няма намерени задължения",
+    "noObligationsDesc": "Няма задължения за избраните филтри.",
+    "title": "Законови задължения",
+    "totalObligations": "Общо задължения",
+    "criticalSeverity": "Критична тежест",
+    "newLastMonth": "Нови през миналия месец",
+    "domain": "Област",
+    "severity": "Тежест",
+    "all": "Всички",
+    "fiscal": "Фискални",
+    "others": "Други",
+    "searchLabel": "Търсене",
+    "searchPlaceholder": "Търсене на задължения...",
+    "loading": "Зареждане...",
+    "noResultsTitle": "Няма резултати",
+    "noResultsDesc": "Няма задължения, съответстващи на критериите за търсене.",
+    "legalReference": "Правна справка",
+    "frequency": "Честота",
+    "deadline": "Краен срок",
+    "published": "Публикувано",
+    "obligationDetails": "Детайли за задължението",
+    "fullText": "Пълен текст",
+    "exactArticle": "Точен член",
+    "responsible": "Отговорен",
+    "frequencyAndDeadline": "Честота и краен срок",
+    "associatedPenalties": "Свързани санкции",
+    "requiredEvidence": "Необходими доказателства",
+    "notes": "Бележки",
+    "assignedAt": "Присвоено на",
+    "acknowledgedAt": "Потвърдено на",
+    "compliantAt": "Съответстващо на"
+  },
+  "dataImport": {
+    "title": "Импорт на данни",
+    "subtitle": "Импортирайте служители, обучения, медицински записи или оборудване от CSV/Excel файлове",
+    "fields": {
+      "fullName": "Пълно име",
+      "phone": "Телефон",
+      "jobTitle": "Длъжност",
+      "department": "Отдел",
+      "hireDate": "Дата на назначаване",
+      "corCode": "COR код",
+      "employeeName": "Име на служител",
+      "trainingType": "Тип обучение",
+      "trainingDate": "Дата на обучение",
+      "expiryDate": "Дата на изтичане",
+      "instructor": "Инструктор",
+      "notes": "Бележки",
+      "examinationType": "Тип преглед",
+      "examinationDate": "Дата на преглед",
+      "result": "Резултат",
+      "doctor": "Лекар",
+      "clinic": "Клиника",
+      "restrictions": "Ограничения",
+      "equipmentType": "Тип оборудване",
+      "description": "Описание",
+      "location": "Местоположение",
+      "serialNumber": "Сериен номер",
+      "lastInspection": "Последна проверка",
+      "nextInspection": "Следваща проверка",
+      "inspector": "Инспектор"
+    },
+    "errors": {
+      "emptyFile": "Файлът е празен",
+      "readError": "Грешка при четене на файла",
+      "selectOrg": "Изберете организация"
+    },
+    "step1": {
+      "organizationLabel": "Организация",
+      "importTypeLabel": "Тип импорт",
+      "uploadLabel": "Качи файл",
+      "selectFile": "Изберете файл",
+      "downloadTemplate": "Изтегли шаблон",
+      "downloadTemplateHint": "Изтеглете CSV шаблон, за да видите правилния формат",
+      "downloadTemplateFile": "Шаблон {importType}"
+    },
+    "types": {
+      "employees": "Служители",
+      "trainings": "Обучения",
+      "medical": "Медицински записи",
+      "equipment": "Оборудване"
+    },
+    "step2": {
+      "mappingTitle": "Съпоставяне на колони",
+      "autoDetect": "Автоматично",
+      "notSet": "Не е зададено"
+    },
+    "step3": {
+      "valid": "Валиден",
+      "warnings": "Предупреждения",
+      "errors": "Грешки",
+      "row": "Ред",
+      "status": "Статус",
+      "data": "Данни",
+      "issues": "Проблеми"
+    },
+    "step4": {
+      "readyTitle": "Готов за импорт",
+      "importing": "Импортиране...",
+      "confirmImport": "Потвърди импорт",
+      "doneTitle": "Импортът завършен",
+      "backToDashboard": "Към таблото"
+    },
+    "steps": {
+      "upload": "Качване",
+      "mapping": "Съпоставяне",
+      "preview": "Преглед",
+      "import": "Импорт"
+    },
+    "nav": {
+      "back": "Назад",
+      "continue": "Продължи"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Съветник за импорт на служители",
+      "organization": "Организация",
+      "dashboard": "Табло"
+    },
+    "fields": {
+      "firstName": "Име",
+      "lastName": "Фамилия",
+      "jobTitle": "Длъжност",
+      "department": "Отдел",
+      "hireDate": "Дата на назначаване",
+      "contractEndDate": "Дата на край на договор",
+      "phone": "Телефон",
+      "corCode": "COR код",
+      "corTitle": "COR заглавие",
+      "contractNumber": "Номер на договор",
+      "contractType": "Тип договор",
+      "status": "Статус"
+    },
+    "validation": {
+      "firstNameRequired": "Името е задължително",
+      "lastNameRequired": "Фамилията е задължителна",
+      "cnpInvalid": "Невалиден CNP",
+      "cnpDuplicate": "Дублиран CNP във файла",
+      "cnpExistsInOrg": "CNP вече съществува в организацията",
+      "emailInvalid": "Невалиден имейл",
+      "hireDateInvalid": "Невалидна дата на назначаване",
+      "corCodeFormat": "Невалиден формат на COR код"
+    },
+    "errors": {
+      "emptyFile": "Файлът е празен",
+      "readError": "Грешка при четене на файла"
+    },
+    "step1": {
+      "title": "Качи файл",
+      "description": "Качете CSV или Excel файл с данни за служители",
+      "dropZoneTitle": "Пуснете файл тук",
+      "dropZoneFormats": "Приети формати: CSV, XLSX, XLS",
+      "selectFile": "Изберете файл",
+      "rowsDetected": "{count} реда открити",
+      "headerOnRow": "Заглавие на ред {row}",
+      "previewTitle": "Преглед на данни"
+    },
+    "step2": {
+      "title": "Избор на профил",
+      "description": "Изберете профил за импорт или създайте нов",
+      "regesNote": "Можете да импортирате от REGES",
+      "regesSalariatiTitle": "REGES — Регистър на служители",
+      "regesSalariatiDesc": "Импорт от стандартен отчет",
+      "regesContracteTitle": "REGES — Регистър на договори",
+      "regesContracteDesc": "Импорт от стандартен отчет за договори",
+      "manualTitle": "Ръчно съпоставяне",
+      "manualDesc": "Ръчно изберете съответствието между колони"
+    },
+    "step3": {
+      "title": "Съпоставяне на колони",
+      "description": "Прегледайте и коригирайте",
+      "ignoreOption": "Игнорирай колона",
+      "previewLabel": "Преглед",
+      "previewDesc": "Проверете данните преди импорт",
+      "validateButton": "Валидирай"
+    },
+    "step4": {
+      "title": "Валидиране и импорт",
+      "statsDetected": "Открити",
+      "statsValid": "Валидни",
+      "statsWarnings": "Предупреждения",
+      "statsErrors": "Грешки",
+      "autoMapping": "Автоматично",
+      "mappingCount": "{mapped} от {total} колони",
+      "previewTitle": "Преглед",
+      "validationList": "{count} проблема",
+      "deselectAll": "Премахни всички",
+      "selectAll": "Избери всички",
+      "colFullName": "Пълно име",
+      "importButton": "Импортирай {count} служители"
+    },
+    "step5": {
+      "importing": "Импортиране...",
+      "done": "Импортът завършен!",
+      "progressLabel": "{success} от {total} импортирани",
+      "successCount": "{count} успешно импортирани",
+      "failedCount": "{count} неуспешни",
+      "profileUsed": "Използван профил",
+      "viewEmployees": "Виж служители"
+    },
+    "nav": {
+      "back": "Назад",
+      "newImport": "Нов импорт"
+    }
+  },
+  "iscir": {
+    "equipmentType": {
+      "cazan": "Котел",
+      "recipientPresiune": "Съд под налягане",
+      "lift": "Асансьор",
+      "macara": "Кран",
+      "stivuitor": "Мотокар",
+      "instalatieGpl": "Газова инсталация",
+      "compresor": "Компресор",
+      "autoclave": "Автоклав",
+      "altul": "Друго"
+    },
+    "status": {
+      "activ": "Активен",
+      "expirat": "Изтекъл",
+      "inVerificare": "В проверка",
+      "oprit": "Спрян",
+      "casat": "Бракуван"
+    },
+    "verificationType": {
+      "periodica": "Периодична",
+      "accidentala": "Аварийна",
+      "punereInFunctiune": "Въвеждане в експлоатация",
+      "reparatie": "Ремонт",
+      "modernizare": "Модернизация"
+    },
+    "result": {
+      "admis": "Одобрен",
+      "respins": "Отхвърлен",
+      "admisConditionat": "Условно одобрен"
+    },
+    "title": "ISCIR — Оборудване под надзор",
+    "subtitle": "Управление на оборудване ISCIR, периодични проверки и известия",
+    "filter": {
+      "allOrgs": "Всички организации",
+      "searchPlaceholder": "Търсене на оборудване...",
+      "allTypes": "Всички типове",
+      "allStatuses": "Всички статуси"
+    },
+    "tabs": {
+      "dashboard": "Табло",
+      "equipment": "Оборудване",
+      "verifications": "Проверки",
+      "alerts": "Известия"
+    },
+    "stats": {
+      "total": "Общо оборудване",
+      "active": "Активни",
+      "expired": "Изтекли",
+      "stopped": "Спрени"
+    },
+    "recentEquipment": "Скорошно оборудване",
+    "addEquipment": "Добави оборудване",
+    "table": {
+      "type": "Тип",
+      "identifier": "Идентификатор",
+      "iscirNr": "ISCIR №",
+      "location": "Местоположение",
+      "verification": "Проверка",
+      "status": "Статус",
+      "actions": "Действия"
+    },
+    "alert": {
+      "expired": "Изтекъл",
+      "urgent": "Спешен",
+      "warning": "Предупреждение",
+      "ok": "ОК"
+    },
+    "empty": {
+      "noEquipment": "Няма оборудване",
+      "noVerifications": "Няма проверки",
+      "noAlerts": "Няма известия"
+    },
+    "verifications": {
+      "title": "История на проверки",
+      "colDate": "Дата",
+      "colEquipment": "Оборудване",
+      "colType": "Тип",
+      "colInspector": "Инспектор",
+      "colResult": "Резултат",
+      "colBulletin": "Бюлетин"
+    },
+    "alertsTab": {
+      "title": "Известия за оборудване",
+      "colVerifDate": "Дата на проверка",
+      "colDaysLeft": "Оставащи дни",
+      "colAlertLevel": "Ниво",
+      "verify": "Провери"
+    },
+    "form": {
+      "titleEdit": "Редактиране",
+      "titleAdd": "Добавяне на оборудване",
+      "equipmentType": "Тип",
+      "identifier": "Идентификатор",
+      "registrationNumber": "Регистрационен номер",
+      "manufacturer": "Производител",
+      "model": "Модел",
+      "serialNumber": "Сериен номер",
+      "manufactureYear": "Година на производство",
+      "location": "Местоположение",
+      "capacity": "Капацитет",
+      "rsvtiResponsible": "Отговорен RSVTI",
+      "nextVerifDate": "Дата на следваща проверка",
+      "verifInterval": "Интервал (месеци)",
+      "authorizationNumber": "Номер на разрешение",
+      "authorizationExpiry": "Изтичане",
+      "status": "Статус",
+      "observations": "Забележки",
+      "cancel": "Отказ",
+      "saving": "Запазване...",
+      "save": "Запази"
+    },
+    "verifForm": {
+      "title": "Запис на проверка",
+      "equipment": "Оборудване",
+      "verifDate": "Дата",
+      "verifType": "Тип проверка",
+      "inspectorName": "Име на инспектор",
+      "inspectorId": "ID на инспектор",
+      "result": "Резултат",
+      "bulletinNumber": "Номер на бюлетин",
+      "nextVerifDate": "Следваща проверка",
+      "prescriptionsDeadline": "Срок на предписания",
+      "prescriptions": "Предписания",
+      "saveVerification": "Запази проверката"
+    },
+    "deleteDialog": {
+      "title": "Потвърждение за изтриване",
+      "message": "Сигурни ли сте, че искате да изтриете {identifier}?",
+      "deleting": "Изтриване...",
+      "delete": "Изтрий"
+    },
+    "errors": {
+      "saveEquipment": "Грешка при запазване",
+      "deleteEquipment": "Грешка при изтриване",
+      "saveVerification": "Грешка при запазване на проверка"
+    },
+    "detail": {
+      "backToIscir": "Назад към ISCIR",
+      "qrCode": "QR код",
+      "qrError": "Грешка при генериране",
+      "close": "Затвори"
+    }
+  },
+  "iscirDaily": {
+    "checkItems": {
+      "macara": {
+        "cabluTractiune": "Теглещ кабел",
+        "franeFunctionale": "Работещи спирачки",
+        "dispozitiveSiguranta": "Предпазни устройства",
+        "sistemUngere": "Система за смазване",
+        "carligPrindere": "Кука",
+        "limitatoareCursa": "Ограничители на хода",
+        "avertizareSonora": "Звукова сигнализация",
+        "structuraVizual": "Структура - визуална проверка"
+      },
+      "stivuitor": {
+        "franaServiciu": "Работна спирачка",
+        "franaMana": "Ръчна спирачка",
+        "hidraulicFaraScurgeri": "Хидравлика - без течове",
+        "furciOk": "Вилици - добро състояние",
+        "pneuriRoti": "Гуми/колела",
+        "iluminat": "Осветление",
+        "avertizareSonora": "Звукова сигнализация",
+        "centuraSiguranta": "Предпазен колан",
+        "dispozitiveSiguranta": "Предпазни устройства",
+        "nivelCombustibil": "Ниво гориво/заряд на батерия"
+      },
+      "lift": {
+        "usiSiguranta": "Предпазни врати",
+        "limitatoareViteza": "Ограничители на скоростта",
+        "iluminat": "Осветление",
+        "avertizareSonora": "Звукова сигнализация",
+        "cabluTractiune": "Теглещ кабел",
+        "frane": "Спирачки"
+      },
+      "default": {
+        "echipamentFunctional": "Оборудване функционално",
+        "faraScurgeri": "Без течове",
+        "dispozitiveSiguranta": "Предпазни устройства",
+        "zonaLibera": "Свободна зона"
+      }
+    },
+    "title": "Ежедневни проверки ISCIR",
+    "stats": {
+      "total": "Общо оборудване",
+      "checkedToday": "Проверени днес",
+      "unchecked": "Непроверени"
+    },
+    "progressLabel": "Напредък на дневна проверка",
+    "allCompleted": "Цялото оборудване е проверено днес!",
+    "empty": {
+      "title": "Няма оборудване за дневна проверка",
+      "description": "Няма ISCIR оборудване, изискващо дневна проверка.",
+      "hint": "Добавете кран, мотокар или асансьор за активиране на дневни проверки."
+    },
+    "checkedBy": "Проверено от",
+    "issuesReported": "Докладвани проблеми",
+    "update": "Актуализирай",
+    "verify": "Провери",
+    "modal": {
+      "title": "Дневна проверка",
+      "operatorName": "Име на оператор",
+      "checkPoints": "Точки за проверка",
+      "checkAllOk": "Всичко ОК",
+      "issuesOptional": "Проблеми (по избор)",
+      "issuesPlaceholder": "Опишете намерените проблеми...",
+      "signatureTitle": "Подпис",
+      "signatureConfirm": "Потвърждавам, че съм проверил оборудването",
+      "confirm": "Потвърди проверката"
+    },
+    "qr": {
+      "scanInstruction": "Сканирайте QR код за бърза проверка"
+    },
+    "errors": {
+      "saveDailyCheck": "Грешка при запазване на дневна проверка"
+    }
   }
 }

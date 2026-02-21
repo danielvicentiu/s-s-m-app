@@ -1667,5 +1667,518 @@
       "saveAssessment": "Save assessment",
       "cancel": "Cancel"
     }
+  },
+  "profile": {
+    "title": "Profile",
+    "selectImageFile": "Select an image file",
+    "imageTooLarge": "Image is too large. Maximum size: 2MB",
+    "avatarUpdated": "Avatar updated successfully",
+    "avatarError": "Error updating avatar",
+    "profilePhoto": "Profile photo",
+    "uploading": "Uploading...",
+    "uploadImage": "Upload image",
+    "personalInfo": "Personal information",
+    "fullName": "Full name",
+    "emailReadOnly": "Email (read-only)",
+    "phone": "Phone",
+    "preferences": "Preferences",
+    "preferredLanguage": "Preferred language",
+    "timezone": "Timezone",
+    "tzBucharest": "Bucharest (EET)",
+    "tzSofia": "Sofia (EET)",
+    "tzBudapest": "Budapest (CET)",
+    "tzBerlin": "Berlin (CET)",
+    "tzWarsaw": "Warsaw (CET)",
+    "notifications": "Notifications",
+    "emailNotifications": "Email notifications",
+    "emailNotificationsDesc": "Receive email notifications",
+    "pushNotifications": "Push notifications",
+    "pushNotificationsDesc": "Receive push notifications in browser",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "profileUpdated": "Profile updated successfully",
+    "saveError": "Error saving profile",
+    "passwordsMismatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordChanged": "Password changed successfully",
+    "changePasswordError": "Error changing password",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "changingPassword": "Changing password..."
+  },
+  "modules": {
+    "status": {
+      "active": "Active",
+      "trial": "Trial",
+      "suspended": "Suspended",
+      "inactive": "Inactive"
+    },
+    "category": {
+      "core": "Core",
+      "standalone": "Standalone",
+      "premium": "Premium"
+    },
+    "breadcrumb": "Modules",
+    "title": "Organization Modules",
+    "subtitle": "Modules available for {orgName}",
+    "stats": {
+      "active": "Active",
+      "trial": "Trial",
+      "available": "Available"
+    },
+    "info": {
+      "title": "Module Information",
+      "message": "Modules can be activated or deactivated by the administrator."
+    },
+    "section": {
+      "core": "Core Modules",
+      "standalone": "Standalone Modules",
+      "premium": "Premium Modules"
+    },
+    "card": {
+      "trialExpires": "Trial expires",
+      "activeSince": "Active since",
+      "contactAdmin": "Contact administrator"
+    },
+    "footer": {
+      "title": "Need more modules?",
+      "message": "Contact our team to activate additional modules.",
+      "contactButton": "Contact us"
+    }
+  },
+  "obligations": {
+    "yourOrganization": "Your organization",
+    "severityCritical": "Critical",
+    "severityMajor": "Major",
+    "severityMinor": "Minor",
+    "statusPending": "Pending",
+    "statusAcknowledged": "Acknowledged",
+    "statusCompliant": "Compliant",
+    "statusNonCompliant": "Non-compliant",
+    "noObligationsTitle": "No obligations found",
+    "noObligationsDesc": "No obligations match the selected filters.",
+    "title": "Legal Obligations",
+    "totalObligations": "Total Obligations",
+    "criticalSeverity": "Critical Severity",
+    "newLastMonth": "New last month",
+    "domain": "Domain",
+    "severity": "Severity",
+    "all": "All",
+    "fiscal": "Fiscal",
+    "others": "Others",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search obligations...",
+    "loading": "Loading...",
+    "noResultsTitle": "No results",
+    "noResultsDesc": "No obligations match the search criteria.",
+    "legalReference": "Legal reference",
+    "frequency": "Frequency",
+    "deadline": "Deadline",
+    "published": "Published",
+    "obligationDetails": "Obligation details",
+    "fullText": "Full text",
+    "exactArticle": "Exact article",
+    "responsible": "Responsible",
+    "frequencyAndDeadline": "Frequency and deadline",
+    "associatedPenalties": "Associated penalties",
+    "requiredEvidence": "Required evidence",
+    "notes": "Notes",
+    "assignedAt": "Assigned at",
+    "acknowledgedAt": "Acknowledged at",
+    "compliantAt": "Compliant at"
+  },
+  "dataImport": {
+    "title": "Data Import",
+    "subtitle": "Import employees, trainings, medical records or equipment from CSV/Excel files",
+    "fields": {
+      "fullName": "Full name",
+      "phone": "Phone",
+      "jobTitle": "Job title",
+      "department": "Department",
+      "hireDate": "Hire date",
+      "corCode": "COR code",
+      "employeeName": "Employee name",
+      "trainingType": "Training type",
+      "trainingDate": "Training date",
+      "expiryDate": "Expiry date",
+      "instructor": "Instructor",
+      "notes": "Notes",
+      "examinationType": "Examination type",
+      "examinationDate": "Examination date",
+      "result": "Result",
+      "doctor": "Doctor",
+      "clinic": "Clinic",
+      "restrictions": "Restrictions",
+      "equipmentType": "Equipment type",
+      "description": "Description",
+      "location": "Location",
+      "serialNumber": "Serial number",
+      "lastInspection": "Last inspection",
+      "nextInspection": "Next inspection",
+      "inspector": "Inspector"
+    },
+    "errors": {
+      "emptyFile": "File is empty",
+      "readError": "Error reading file",
+      "selectOrg": "Select an organization"
+    },
+    "step1": {
+      "organizationLabel": "Organization",
+      "importTypeLabel": "Import type",
+      "uploadLabel": "Upload file",
+      "selectFile": "Select file",
+      "downloadTemplate": "Download template",
+      "downloadTemplateHint": "Download a CSV template to see the correct format",
+      "downloadTemplateFile": "{importType} template"
+    },
+    "types": {
+      "employees": "Employees",
+      "trainings": "Trainings",
+      "medical": "Medical records",
+      "equipment": "Equipment"
+    },
+    "step2": {
+      "mappingTitle": "Column mapping",
+      "autoDetect": "Auto-detect",
+      "notSet": "Not set"
+    },
+    "step3": {
+      "valid": "Valid",
+      "warnings": "Warnings",
+      "errors": "Errors",
+      "row": "Row",
+      "status": "Status",
+      "data": "Data",
+      "issues": "Issues"
+    },
+    "step4": {
+      "readyTitle": "Ready to import",
+      "importing": "Importing...",
+      "confirmImport": "Confirm import",
+      "doneTitle": "Import completed",
+      "backToDashboard": "Back to Dashboard"
+    },
+    "steps": {
+      "upload": "Upload",
+      "mapping": "Mapping",
+      "preview": "Preview",
+      "import": "Import"
+    },
+    "nav": {
+      "back": "Back",
+      "continue": "Continue"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Employee Import Wizard",
+      "organization": "Organization",
+      "dashboard": "Dashboard"
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "jobTitle": "Job title",
+      "department": "Department",
+      "hireDate": "Hire date",
+      "contractEndDate": "Contract end date",
+      "phone": "Phone",
+      "corCode": "COR code",
+      "corTitle": "COR title",
+      "contractNumber": "Contract number",
+      "contractType": "Contract type",
+      "status": "Status"
+    },
+    "validation": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "cnpInvalid": "Invalid CNP",
+      "cnpDuplicate": "Duplicate CNP in file",
+      "cnpExistsInOrg": "CNP already exists in organization",
+      "emailInvalid": "Invalid email",
+      "hireDateInvalid": "Invalid hire date",
+      "corCodeFormat": "Invalid COR code format"
+    },
+    "errors": {
+      "emptyFile": "File is empty",
+      "readError": "Error reading file"
+    },
+    "step1": {
+      "title": "Upload file",
+      "description": "Upload a CSV or Excel file with employee data",
+      "dropZoneTitle": "Drop file here",
+      "dropZoneFormats": "Accepted formats: CSV, XLSX, XLS",
+      "selectFile": "Select file",
+      "rowsDetected": "{count} rows detected",
+      "headerOnRow": "Header on row {row}",
+      "previewTitle": "Data preview"
+    },
+    "step2": {
+      "title": "Select profile",
+      "description": "Select an import profile or create a new one",
+      "regesNote": "You can import from REGES (Employee Registry or Contract Registry)",
+      "regesSalariatiTitle": "REGES — Employee Registry",
+      "regesSalariatiDesc": "Import from standard Employee Registry report",
+      "regesContracteTitle": "REGES — Contract Registry",
+      "regesContracteDesc": "Import from standard Contract Registry report",
+      "manualTitle": "Manual mapping",
+      "manualDesc": "Manually select column correspondence"
+    },
+    "step3": {
+      "title": "Column mapping",
+      "description": "Review and adjust column mapping",
+      "ignoreOption": "Ignore column",
+      "previewLabel": "Preview",
+      "previewDesc": "Verify data before import",
+      "validateButton": "Validate"
+    },
+    "step4": {
+      "title": "Validation and import",
+      "statsDetected": "Detected",
+      "statsValid": "Valid",
+      "statsWarnings": "Warnings",
+      "statsErrors": "Errors",
+      "autoMapping": "Auto-mapping",
+      "mappingCount": "{mapped} of {total} columns mapped",
+      "previewTitle": "Data preview",
+      "validationList": "{count} validation issues",
+      "deselectAll": "Deselect all",
+      "selectAll": "Select all",
+      "colFullName": "Full name",
+      "importButton": "Import {count} employees"
+    },
+    "step5": {
+      "importing": "Importing...",
+      "done": "Import completed!",
+      "progressLabel": "{success} of {total} imported",
+      "successCount": "{count} imported successfully",
+      "failedCount": "{count} failed",
+      "profileUsed": "Profile used",
+      "viewEmployees": "View employees"
+    },
+    "nav": {
+      "back": "Back",
+      "newImport": "New import"
+    }
+  },
+  "iscir": {
+    "equipmentType": {
+      "cazan": "Boiler",
+      "recipientPresiune": "Pressure vessel",
+      "lift": "Elevator/Lift",
+      "macara": "Crane",
+      "stivuitor": "Forklift",
+      "instalatieGpl": "LPG installation",
+      "compresor": "Compressor",
+      "autoclave": "Autoclave",
+      "altul": "Other"
+    },
+    "status": {
+      "activ": "Active",
+      "expirat": "Expired",
+      "inVerificare": "Under inspection",
+      "oprit": "Stopped",
+      "casat": "Decommissioned"
+    },
+    "verificationType": {
+      "periodica": "Periodic",
+      "accidentala": "Accidental",
+      "punereInFunctiune": "Commissioning",
+      "reparatie": "Repair",
+      "modernizare": "Modernization"
+    },
+    "result": {
+      "admis": "Approved",
+      "respins": "Rejected",
+      "admisConditionat": "Conditionally approved"
+    },
+    "title": "ISCIR — Supervised Equipment",
+    "subtitle": "ISCIR equipment management, periodic inspections and alerts",
+    "filter": {
+      "allOrgs": "All organizations",
+      "searchPlaceholder": "Search equipment...",
+      "allTypes": "All types",
+      "allStatuses": "All statuses"
+    },
+    "tabs": {
+      "dashboard": "Dashboard",
+      "equipment": "Equipment",
+      "verifications": "Inspections",
+      "alerts": "Alerts"
+    },
+    "stats": {
+      "total": "Total equipment",
+      "active": "Active",
+      "expired": "Expired",
+      "stopped": "Stopped"
+    },
+    "recentEquipment": "Recent equipment",
+    "addEquipment": "Add equipment",
+    "table": {
+      "type": "Type",
+      "identifier": "Identifier",
+      "iscirNr": "ISCIR No.",
+      "location": "Location",
+      "verification": "Inspection",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "alert": {
+      "expired": "Expired",
+      "urgent": "Urgent",
+      "warning": "Warning",
+      "ok": "OK"
+    },
+    "empty": {
+      "noEquipment": "No equipment",
+      "noVerifications": "No inspections",
+      "noAlerts": "No alerts"
+    },
+    "verifications": {
+      "title": "Inspection history",
+      "colDate": "Date",
+      "colEquipment": "Equipment",
+      "colType": "Type",
+      "colInspector": "Inspector",
+      "colResult": "Result",
+      "colBulletin": "Bulletin"
+    },
+    "alertsTab": {
+      "title": "Equipment alerts",
+      "colVerifDate": "Inspection date",
+      "colDaysLeft": "Days left",
+      "colAlertLevel": "Alert level",
+      "verify": "Inspect"
+    },
+    "form": {
+      "titleEdit": "Edit equipment",
+      "titleAdd": "Add equipment",
+      "equipmentType": "Equipment type",
+      "identifier": "Identifier",
+      "registrationNumber": "Registration number",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "serialNumber": "Serial number",
+      "manufactureYear": "Manufacture year",
+      "location": "Location",
+      "capacity": "Capacity",
+      "rsvtiResponsible": "RSVTI responsible",
+      "nextVerifDate": "Next inspection date",
+      "verifInterval": "Inspection interval (months)",
+      "authorizationNumber": "Authorization number",
+      "authorizationExpiry": "Authorization expiry",
+      "status": "Status",
+      "observations": "Observations",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save"
+    },
+    "verifForm": {
+      "title": "Record inspection",
+      "equipment": "Equipment",
+      "verifDate": "Inspection date",
+      "verifType": "Inspection type",
+      "inspectorName": "Inspector name",
+      "inspectorId": "Inspector ID",
+      "result": "Result",
+      "bulletinNumber": "Bulletin number",
+      "nextVerifDate": "Next inspection date",
+      "prescriptionsDeadline": "Prescriptions deadline",
+      "prescriptions": "Prescriptions",
+      "saveVerification": "Save inspection"
+    },
+    "deleteDialog": {
+      "title": "Confirm deletion",
+      "message": "Are you sure you want to delete equipment {identifier}?",
+      "deleting": "Deleting...",
+      "delete": "Delete"
+    },
+    "errors": {
+      "saveEquipment": "Error saving equipment",
+      "deleteEquipment": "Error deleting equipment",
+      "saveVerification": "Error saving inspection"
+    },
+    "detail": {
+      "backToIscir": "Back to ISCIR",
+      "qrCode": "QR Code",
+      "qrError": "QR generation error",
+      "close": "Close"
+    }
+  },
+  "iscirDaily": {
+    "checkItems": {
+      "macara": {
+        "cabluTractiune": "Traction cable",
+        "franeFunctionale": "Functional brakes",
+        "dispozitiveSiguranta": "Safety devices",
+        "sistemUngere": "Lubrication system",
+        "carligPrindere": "Hook",
+        "limitatoareCursa": "Travel limiters",
+        "avertizareSonora": "Audible warning",
+        "structuraVizual": "Structure - visual check"
+      },
+      "stivuitor": {
+        "franaServiciu": "Service brake",
+        "franaMana": "Parking brake",
+        "hidraulicFaraScurgeri": "Hydraulic system - no leaks",
+        "furciOk": "Forks - good condition",
+        "pneuriRoti": "Tires/wheels",
+        "iluminat": "Lighting",
+        "avertizareSonora": "Audible warning",
+        "centuraSiguranta": "Seat belt",
+        "dispozitiveSiguranta": "Safety devices",
+        "nivelCombustibil": "Fuel level/battery charge"
+      },
+      "lift": {
+        "usiSiguranta": "Safety doors",
+        "limitatoareViteza": "Speed limiters",
+        "iluminat": "Lighting",
+        "avertizareSonora": "Audible warning",
+        "cabluTractiune": "Traction cable",
+        "frane": "Brakes"
+      },
+      "default": {
+        "echipamentFunctional": "Equipment functional",
+        "faraScurgeri": "No leaks",
+        "dispozitiveSiguranta": "Safety devices",
+        "zonaLibera": "Clear zone"
+      }
+    },
+    "title": "ISCIR Daily Checks",
+    "stats": {
+      "total": "Total equipment",
+      "checkedToday": "Checked today",
+      "unchecked": "Unchecked"
+    },
+    "progressLabel": "Daily check progress",
+    "allCompleted": "All equipment has been checked today!",
+    "empty": {
+      "title": "No equipment for daily check",
+      "description": "No ISCIR equipment requires daily checking.",
+      "hint": "Add crane, forklift or elevator equipment to enable daily checks."
+    },
+    "checkedBy": "Checked by",
+    "issuesReported": "Issues reported",
+    "update": "Update",
+    "verify": "Verify",
+    "modal": {
+      "title": "Daily Check",
+      "operatorName": "Operator name",
+      "checkPoints": "Check points",
+      "checkAllOk": "All OK",
+      "issuesOptional": "Issues (optional)",
+      "issuesPlaceholder": "Describe issues found...",
+      "signatureTitle": "Signature",
+      "signatureConfirm": "I confirm that I have checked the equipment",
+      "confirm": "Confirm check"
+    },
+    "qr": {
+      "scanInstruction": "Scan QR code for quick verification"
+    },
+    "errors": {
+      "saveDailyCheck": "Error saving daily check"
+    }
   }
 }

@@ -1667,5 +1667,518 @@
       "saveAssessment": "Salvează evaluare",
       "cancel": "Anulează"
     }
+  },
+  "profile": {
+    "title": "Profil",
+    "selectImageFile": "Selectați un fișier imagine",
+    "imageTooLarge": "Imaginea este prea mare. Dimensiune maximă: 2MB",
+    "avatarUpdated": "Avatar actualizat cu succes",
+    "avatarError": "Eroare la actualizarea avatarului",
+    "profilePhoto": "Foto profil",
+    "uploading": "Se încarcă...",
+    "uploadImage": "Încarcă imagine",
+    "personalInfo": "Informații personale",
+    "fullName": "Nume complet",
+    "emailReadOnly": "Email (nu poate fi modificat)",
+    "phone": "Telefon",
+    "preferences": "Preferințe",
+    "preferredLanguage": "Limba preferată",
+    "timezone": "Fus orar",
+    "tzBucharest": "București (EET)",
+    "tzSofia": "Sofia (EET)",
+    "tzBudapest": "Budapesta (CET)",
+    "tzBerlin": "Berlin (CET)",
+    "tzWarsaw": "Varșovia (CET)",
+    "notifications": "Notificări",
+    "emailNotifications": "Notificări email",
+    "emailNotificationsDesc": "Primește notificări pe email",
+    "pushNotifications": "Notificări push",
+    "pushNotificationsDesc": "Primește notificări push în browser",
+    "saving": "Se salvează...",
+    "saveChanges": "Salvează modificările",
+    "profileUpdated": "Profil actualizat cu succes",
+    "saveError": "Eroare la salvarea profilului",
+    "passwordsMismatch": "Parolele nu se potrivesc",
+    "passwordTooShort": "Parola trebuie să aibă minim 6 caractere",
+    "passwordChanged": "Parola a fost schimbată cu succes",
+    "changePasswordError": "Eroare la schimbarea parolei",
+    "changePassword": "Schimbă parola",
+    "currentPassword": "Parola curentă",
+    "newPassword": "Parola nouă",
+    "confirmNewPassword": "Confirmă parola nouă",
+    "changingPassword": "Se schimbă parola..."
+  },
+  "modules": {
+    "status": {
+      "active": "Activ",
+      "trial": "Trial",
+      "suspended": "Suspendat",
+      "inactive": "Inactiv"
+    },
+    "category": {
+      "core": "Core",
+      "standalone": "Standalone",
+      "premium": "Premium"
+    },
+    "breadcrumb": "Module",
+    "title": "Module Organizație",
+    "subtitle": "Module disponibile pentru {orgName}",
+    "stats": {
+      "active": "Active",
+      "trial": "Trial",
+      "available": "Disponibile"
+    },
+    "info": {
+      "title": "Informații Module",
+      "message": "Modulele pot fi activate sau dezactivate de către administrator."
+    },
+    "section": {
+      "core": "Module Core",
+      "standalone": "Module Standalone",
+      "premium": "Module Premium"
+    },
+    "card": {
+      "trialExpires": "Trial expiră",
+      "activeSince": "Activ din",
+      "contactAdmin": "Contactează administratorul"
+    },
+    "footer": {
+      "title": "Ai nevoie de mai multe module?",
+      "message": "Contactează echipa noastră pentru a activa module suplimentare.",
+      "contactButton": "Contactează-ne"
+    }
+  },
+  "obligations": {
+    "yourOrganization": "Organizația ta",
+    "severityCritical": "Critică",
+    "severityMajor": "Majoră",
+    "severityMinor": "Minoră",
+    "statusPending": "În așteptare",
+    "statusAcknowledged": "Confirmat",
+    "statusCompliant": "Conform",
+    "statusNonCompliant": "Neconform",
+    "noObligationsTitle": "Nicio obligație găsită",
+    "noObligationsDesc": "Nu există obligații pentru filtrele selectate.",
+    "title": "Obligații Legale",
+    "totalObligations": "Total Obligații",
+    "criticalSeverity": "Severitate Critică",
+    "newLastMonth": "Noi luna trecută",
+    "domain": "Domeniu",
+    "severity": "Severitate",
+    "all": "Toate",
+    "fiscal": "Fiscal",
+    "others": "Altele",
+    "searchLabel": "Caută",
+    "searchPlaceholder": "Caută obligații...",
+    "loading": "Se încarcă...",
+    "noResultsTitle": "Niciun rezultat",
+    "noResultsDesc": "Nicio obligație nu corespunde criteriilor de căutare.",
+    "legalReference": "Referință legală",
+    "frequency": "Frecvență",
+    "deadline": "Termen limită",
+    "published": "Publicat",
+    "obligationDetails": "Detalii obligație",
+    "fullText": "Text complet",
+    "exactArticle": "Articol exact",
+    "responsible": "Responsabil",
+    "frequencyAndDeadline": "Frecvență și termen",
+    "associatedPenalties": "Sancțiuni asociate",
+    "requiredEvidence": "Dovezi necesare",
+    "notes": "Observații",
+    "assignedAt": "Atribuit la",
+    "acknowledgedAt": "Confirmat la",
+    "compliantAt": "Conform la"
+  },
+  "dataImport": {
+    "title": "Import Date",
+    "subtitle": "Importă angajați, instruiri, fișe medicale sau echipamente din fișiere CSV/Excel",
+    "fields": {
+      "fullName": "Nume complet",
+      "phone": "Telefon",
+      "jobTitle": "Funcție",
+      "department": "Departament",
+      "hireDate": "Data angajării",
+      "corCode": "Cod COR",
+      "employeeName": "Nume angajat",
+      "trainingType": "Tip instruire",
+      "trainingDate": "Data instruirii",
+      "expiryDate": "Data expirării",
+      "instructor": "Instructor",
+      "notes": "Observații",
+      "examinationType": "Tip examinare",
+      "examinationDate": "Data examinării",
+      "result": "Rezultat",
+      "doctor": "Doctor",
+      "clinic": "Clinică",
+      "restrictions": "Restricții",
+      "equipmentType": "Tip echipament",
+      "description": "Descriere",
+      "location": "Locație",
+      "serialNumber": "Număr serie",
+      "lastInspection": "Ultima inspecție",
+      "nextInspection": "Următoarea inspecție",
+      "inspector": "Inspector"
+    },
+    "errors": {
+      "emptyFile": "Fișierul este gol",
+      "readError": "Eroare la citirea fișierului",
+      "selectOrg": "Selectați o organizație"
+    },
+    "step1": {
+      "organizationLabel": "Organizație",
+      "importTypeLabel": "Tip import",
+      "uploadLabel": "Încarcă fișier",
+      "selectFile": "Selectați fișier",
+      "downloadTemplate": "Descarcă template",
+      "downloadTemplateHint": "Descarcă un template CSV pentru a vedea formatul corect",
+      "downloadTemplateFile": "Template {importType}"
+    },
+    "types": {
+      "employees": "Angajați",
+      "trainings": "Instruiri",
+      "medical": "Fișe medicale",
+      "equipment": "Echipamente"
+    },
+    "step2": {
+      "mappingTitle": "Mapare coloane",
+      "autoDetect": "Detectare automată",
+      "notSet": "Nesetat"
+    },
+    "step3": {
+      "valid": "Valid",
+      "warnings": "Avertismente",
+      "errors": "Erori",
+      "row": "Rând",
+      "status": "Status",
+      "data": "Date",
+      "issues": "Probleme"
+    },
+    "step4": {
+      "readyTitle": "Gata de import",
+      "importing": "Se importă...",
+      "confirmImport": "Confirmă importul",
+      "doneTitle": "Import finalizat",
+      "backToDashboard": "Înapoi la Dashboard"
+    },
+    "steps": {
+      "upload": "Încărcare",
+      "mapping": "Mapare",
+      "preview": "Previzualizare",
+      "import": "Import"
+    },
+    "nav": {
+      "back": "Înapoi",
+      "continue": "Continuă"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Wizard Import Angajați",
+      "organization": "Organizație",
+      "dashboard": "Dashboard"
+    },
+    "fields": {
+      "firstName": "Prenume",
+      "lastName": "Nume",
+      "jobTitle": "Funcție",
+      "department": "Departament",
+      "hireDate": "Data angajării",
+      "contractEndDate": "Data sfârșit contract",
+      "phone": "Telefon",
+      "corCode": "Cod COR",
+      "corTitle": "Titlu COR",
+      "contractNumber": "Număr contract",
+      "contractType": "Tip contract",
+      "status": "Status"
+    },
+    "validation": {
+      "firstNameRequired": "Prenumele este obligatoriu",
+      "lastNameRequired": "Numele este obligatoriu",
+      "cnpInvalid": "CNP invalid",
+      "cnpDuplicate": "CNP duplicat în fișier",
+      "cnpExistsInOrg": "CNP deja existent în organizație",
+      "emailInvalid": "Email invalid",
+      "hireDateInvalid": "Data angajării invalidă",
+      "corCodeFormat": "Format cod COR invalid"
+    },
+    "errors": {
+      "emptyFile": "Fișierul este gol",
+      "readError": "Eroare la citirea fișierului"
+    },
+    "step1": {
+      "title": "Încarcă fișier",
+      "description": "Încarcă un fișier CSV sau Excel cu datele angajaților",
+      "dropZoneTitle": "Trage fișierul aici",
+      "dropZoneFormats": "Formate acceptate: CSV, XLSX, XLS",
+      "selectFile": "Selectează fișier",
+      "rowsDetected": "{count} rânduri detectate",
+      "headerOnRow": "Antet pe rândul {row}",
+      "previewTitle": "Previzualizare date"
+    },
+    "step2": {
+      "title": "Selectare profil",
+      "description": "Selectează profilul de import sau creează unul nou",
+      "regesNote": "Poți importa din REGES (Registru Salariați sau Registru Contracte)",
+      "regesSalariatiTitle": "REGES — Registru Salariați",
+      "regesSalariatiDesc": "Import din raportul standard Registru Salariați",
+      "regesContracteTitle": "REGES — Registru Contracte",
+      "regesContracteDesc": "Import din raportul standard Registru Contracte",
+      "manualTitle": "Mapare manuală",
+      "manualDesc": "Selectează manual corespondența între coloane"
+    },
+    "step3": {
+      "title": "Mapare coloane",
+      "description": "Verifică și ajustează maparea coloanelor",
+      "ignoreOption": "Ignoră coloana",
+      "previewLabel": "Previzualizare",
+      "previewDesc": "Verifică datele înainte de import",
+      "validateButton": "Validează"
+    },
+    "step4": {
+      "title": "Validare și import",
+      "statsDetected": "Detectate",
+      "statsValid": "Valide",
+      "statsWarnings": "Avertismente",
+      "statsErrors": "Erori",
+      "autoMapping": "Mapare automată",
+      "mappingCount": "{mapped} din {total} coloane mapate",
+      "previewTitle": "Previzualizare date",
+      "validationList": "{count} probleme de validare",
+      "deselectAll": "Deselectează tot",
+      "selectAll": "Selectează tot",
+      "colFullName": "Nume complet",
+      "importButton": "Importă {count} angajați"
+    },
+    "step5": {
+      "importing": "Se importă...",
+      "done": "Import finalizat!",
+      "progressLabel": "{success} din {total} importate",
+      "successCount": "{count} importate cu succes",
+      "failedCount": "{count} eșuate",
+      "profileUsed": "Profil utilizat",
+      "viewEmployees": "Vezi angajați"
+    },
+    "nav": {
+      "back": "Înapoi",
+      "newImport": "Import nou"
+    }
+  },
+  "iscir": {
+    "equipmentType": {
+      "cazan": "Cazan",
+      "recipientPresiune": "Recipient sub presiune",
+      "lift": "Lift/Ascensor",
+      "macara": "Macara",
+      "stivuitor": "Stivuitor",
+      "instalatieGpl": "Instalație GPL",
+      "compresor": "Compresor",
+      "autoclave": "Autoclavă",
+      "altul": "Altul"
+    },
+    "status": {
+      "activ": "Activ",
+      "expirat": "Expirat",
+      "inVerificare": "În verificare",
+      "oprit": "Oprit",
+      "casat": "Casat"
+    },
+    "verificationType": {
+      "periodica": "Periodică",
+      "accidentala": "Accidentală",
+      "punereInFunctiune": "Punere în funcțiune",
+      "reparatie": "Reparație",
+      "modernizare": "Modernizare"
+    },
+    "result": {
+      "admis": "Admis",
+      "respins": "Respins",
+      "admisConditionat": "Admis condiționat"
+    },
+    "title": "ISCIR — Echipamente sub Supraveghere",
+    "subtitle": "Gestiune echipamente ISCIR, verificări periodice și alerte",
+    "filter": {
+      "allOrgs": "Toate organizațiile",
+      "searchPlaceholder": "Caută echipament...",
+      "allTypes": "Toate tipurile",
+      "allStatuses": "Toate statusurile"
+    },
+    "tabs": {
+      "dashboard": "Dashboard",
+      "equipment": "Echipamente",
+      "verifications": "Verificări",
+      "alerts": "Alerte"
+    },
+    "stats": {
+      "total": "Total echipamente",
+      "active": "Active",
+      "expired": "Expirate",
+      "stopped": "Oprite"
+    },
+    "recentEquipment": "Echipamente recente",
+    "addEquipment": "Adaugă echipament",
+    "table": {
+      "type": "Tip",
+      "identifier": "Identificator",
+      "iscirNr": "Nr. ISCIR",
+      "location": "Locație",
+      "verification": "Verificare",
+      "status": "Status",
+      "actions": "Acțiuni"
+    },
+    "alert": {
+      "expired": "Expirat",
+      "urgent": "Urgent",
+      "warning": "Avertisment",
+      "ok": "OK"
+    },
+    "empty": {
+      "noEquipment": "Niciun echipament",
+      "noVerifications": "Nicio verificare",
+      "noAlerts": "Nicio alertă"
+    },
+    "verifications": {
+      "title": "Istoric verificări",
+      "colDate": "Data",
+      "colEquipment": "Echipament",
+      "colType": "Tip",
+      "colInspector": "Inspector",
+      "colResult": "Rezultat",
+      "colBulletin": "Buletin"
+    },
+    "alertsTab": {
+      "title": "Alerte echipamente",
+      "colVerifDate": "Data verificare",
+      "colDaysLeft": "Zile rămase",
+      "colAlertLevel": "Nivel alertă",
+      "verify": "Verifică"
+    },
+    "form": {
+      "titleEdit": "Editează echipament",
+      "titleAdd": "Adaugă echipament",
+      "equipmentType": "Tip echipament",
+      "identifier": "Identificator",
+      "registrationNumber": "Număr înregistrare",
+      "manufacturer": "Producător",
+      "model": "Model",
+      "serialNumber": "Serie",
+      "manufactureYear": "An fabricație",
+      "location": "Locație",
+      "capacity": "Capacitate",
+      "rsvtiResponsible": "Responsabil RSVTI",
+      "nextVerifDate": "Data următoarei verificări",
+      "verifInterval": "Interval verificare (luni)",
+      "authorizationNumber": "Număr autorizație",
+      "authorizationExpiry": "Expirare autorizație",
+      "status": "Status",
+      "observations": "Observații",
+      "cancel": "Anulează",
+      "saving": "Se salvează...",
+      "save": "Salvează"
+    },
+    "verifForm": {
+      "title": "Înregistrare verificare",
+      "equipment": "Echipament",
+      "verifDate": "Data verificării",
+      "verifType": "Tip verificare",
+      "inspectorName": "Nume inspector",
+      "inspectorId": "ID inspector",
+      "result": "Rezultat",
+      "bulletinNumber": "Număr buletin",
+      "nextVerifDate": "Data următoarei verificări",
+      "prescriptionsDeadline": "Termen prescripții",
+      "prescriptions": "Prescripții",
+      "saveVerification": "Salvează verificarea"
+    },
+    "deleteDialog": {
+      "title": "Confirmare ștergere",
+      "message": "Sigur doriți să ștergeți echipamentul {identifier}?",
+      "deleting": "Se șterge...",
+      "delete": "Șterge"
+    },
+    "errors": {
+      "saveEquipment": "Eroare la salvarea echipamentului",
+      "deleteEquipment": "Eroare la ștergerea echipamentului",
+      "saveVerification": "Eroare la salvarea verificării"
+    },
+    "detail": {
+      "backToIscir": "Înapoi la ISCIR",
+      "qrCode": "Cod QR",
+      "qrError": "Eroare generare QR",
+      "close": "Închide"
+    }
+  },
+  "iscirDaily": {
+    "checkItems": {
+      "macara": {
+        "cabluTractiune": "Cablu de tracțiune",
+        "franeFunctionale": "Frâne funcționale",
+        "dispozitiveSiguranta": "Dispozitive de siguranță",
+        "sistemUngere": "Sistem de ungere",
+        "carligPrindere": "Cârlig de prindere",
+        "limitatoareCursa": "Limitatoare de cursă",
+        "avertizareSonora": "Avertizare sonoră",
+        "structuraVizual": "Structură - verificare vizuală"
+      },
+      "stivuitor": {
+        "franaServiciu": "Frână de serviciu",
+        "franaMana": "Frână de mână",
+        "hidraulicFaraScurgeri": "Sistem hidraulic - fără scurgeri",
+        "furciOk": "Furci - stare bună",
+        "pneuriRoti": "Pneuri/roți",
+        "iluminat": "Iluminat",
+        "avertizareSonora": "Avertizare sonoră",
+        "centuraSiguranta": "Centură de siguranță",
+        "dispozitiveSiguranta": "Dispozitive de siguranță",
+        "nivelCombustibil": "Nivel combustibil/încărcare baterie"
+      },
+      "lift": {
+        "usiSiguranta": "Uși de siguranță",
+        "limitatoareViteza": "Limitatoare de viteză",
+        "iluminat": "Iluminat",
+        "avertizareSonora": "Avertizare sonoră",
+        "cabluTractiune": "Cablu de tracțiune",
+        "frane": "Frâne"
+      },
+      "default": {
+        "echipamentFunctional": "Echipament funcțional",
+        "faraScurgeri": "Fără scurgeri",
+        "dispozitiveSiguranta": "Dispozitive de siguranță",
+        "zonaLibera": "Zonă liberă"
+      }
+    },
+    "title": "Verificări Zilnice ISCIR",
+    "stats": {
+      "total": "Total echipamente",
+      "checkedToday": "Verificate azi",
+      "unchecked": "Neverificate"
+    },
+    "progressLabel": "Progres verificare zilnică",
+    "allCompleted": "Toate echipamentele au fost verificate azi!",
+    "empty": {
+      "title": "Niciun echipament pentru verificare zilnică",
+      "description": "Nu există echipamente ISCIR care necesită verificare zilnică.",
+      "hint": "Adăugați echipamente de tip macara, stivuitor sau lift pentru a activa verificările zilnice."
+    },
+    "checkedBy": "Verificat de",
+    "issuesReported": "Probleme raportate",
+    "update": "Actualizează",
+    "verify": "Verifică",
+    "modal": {
+      "title": "Verificare Zilnică",
+      "operatorName": "Nume operator",
+      "checkPoints": "Puncte de verificare",
+      "checkAllOk": "Toate OK",
+      "issuesOptional": "Probleme (opțional)",
+      "issuesPlaceholder": "Descrieți problemele găsite...",
+      "signatureTitle": "Semnătură",
+      "signatureConfirm": "Confirm că am verificat echipamentul",
+      "confirm": "Confirmă verificarea"
+    },
+    "qr": {
+      "scanInstruction": "Scanează codul QR pentru verificare rapidă"
+    },
+    "errors": {
+      "saveDailyCheck": "Eroare la salvarea verificării zilnice"
+    }
   }
 }

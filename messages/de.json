@@ -1667,5 +1667,518 @@
       "saveAssessment": "Bewertung speichern",
       "cancel": "Abbrechen"
     }
+  },
+  "profile": {
+    "title": "Profil",
+    "selectImageFile": "Bilddatei auswählen",
+    "imageTooLarge": "Das Bild ist zu groß. Maximale Größe: 2MB",
+    "avatarUpdated": "Avatar erfolgreich aktualisiert",
+    "avatarError": "Fehler beim Aktualisieren des Avatars",
+    "profilePhoto": "Profilfoto",
+    "uploading": "Hochladen...",
+    "uploadImage": "Bild hochladen",
+    "personalInfo": "Persönliche Informationen",
+    "fullName": "Vollständiger Name",
+    "emailReadOnly": "E-Mail (schreibgeschützt)",
+    "phone": "Telefon",
+    "preferences": "Einstellungen",
+    "preferredLanguage": "Bevorzugte Sprache",
+    "timezone": "Zeitzone",
+    "tzBucharest": "Bukarest (OEZ)",
+    "tzSofia": "Sofia (OEZ)",
+    "tzBudapest": "Budapest (MEZ)",
+    "tzBerlin": "Berlin (MEZ)",
+    "tzWarsaw": "Warschau (MEZ)",
+    "notifications": "Benachrichtigungen",
+    "emailNotifications": "E-Mail-Benachrichtigungen",
+    "emailNotificationsDesc": "E-Mail-Benachrichtigungen erhalten",
+    "pushNotifications": "Push-Benachrichtigungen",
+    "pushNotificationsDesc": "Push-Benachrichtigungen im Browser erhalten",
+    "saving": "Speichern...",
+    "saveChanges": "Änderungen speichern",
+    "profileUpdated": "Profil erfolgreich aktualisiert",
+    "saveError": "Fehler beim Speichern des Profils",
+    "passwordsMismatch": "Passwörter stimmen nicht überein",
+    "passwordTooShort": "Passwort muss mindestens 6 Zeichen lang sein",
+    "passwordChanged": "Passwort erfolgreich geändert",
+    "changePasswordError": "Fehler beim Ändern des Passworts",
+    "changePassword": "Passwort ändern",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "confirmNewPassword": "Neues Passwort bestätigen",
+    "changingPassword": "Passwort wird geändert..."
+  },
+  "modules": {
+    "status": {
+      "active": "Aktiv",
+      "trial": "Testversion",
+      "suspended": "Gesperrt",
+      "inactive": "Inaktiv"
+    },
+    "category": {
+      "core": "Kern",
+      "standalone": "Eigenständig",
+      "premium": "Premium"
+    },
+    "breadcrumb": "Module",
+    "title": "Organisationsmodule",
+    "subtitle": "Verfügbare Module für {orgName}",
+    "stats": {
+      "active": "Aktiv",
+      "trial": "Testversion",
+      "available": "Verfügbar"
+    },
+    "info": {
+      "title": "Modulinformationen",
+      "message": "Module können vom Administrator aktiviert oder deaktiviert werden."
+    },
+    "section": {
+      "core": "Kernmodule",
+      "standalone": "Eigenständige Module",
+      "premium": "Premium-Module"
+    },
+    "card": {
+      "trialExpires": "Testversion läuft ab",
+      "activeSince": "Aktiv seit",
+      "contactAdmin": "Administrator kontaktieren"
+    },
+    "footer": {
+      "title": "Benötigen Sie weitere Module?",
+      "message": "Kontaktieren Sie unser Team, um zusätzliche Module zu aktivieren.",
+      "contactButton": "Kontaktieren Sie uns"
+    }
+  },
+  "obligations": {
+    "yourOrganization": "Ihre Organisation",
+    "severityCritical": "Kritisch",
+    "severityMajor": "Schwerwiegend",
+    "severityMinor": "Geringfügig",
+    "statusPending": "Ausstehend",
+    "statusAcknowledged": "Bestätigt",
+    "statusCompliant": "Konform",
+    "statusNonCompliant": "Nicht konform",
+    "noObligationsTitle": "Keine Pflichten gefunden",
+    "noObligationsDesc": "Keine Pflichten entsprechen den ausgewählten Filtern.",
+    "title": "Gesetzliche Pflichten",
+    "totalObligations": "Pflichten gesamt",
+    "criticalSeverity": "Kritische Schwere",
+    "newLastMonth": "Neu im letzten Monat",
+    "domain": "Bereich",
+    "severity": "Schwere",
+    "all": "Alle",
+    "fiscal": "Steuerlich",
+    "others": "Sonstige",
+    "searchLabel": "Suche",
+    "searchPlaceholder": "Pflichten suchen...",
+    "loading": "Laden...",
+    "noResultsTitle": "Keine Ergebnisse",
+    "noResultsDesc": "Keine Pflichten entsprechen den Suchkriterien.",
+    "legalReference": "Rechtsgrundlage",
+    "frequency": "Häufigkeit",
+    "deadline": "Frist",
+    "published": "Veröffentlicht",
+    "obligationDetails": "Pflichtdetails",
+    "fullText": "Volltext",
+    "exactArticle": "Genauer Artikel",
+    "responsible": "Verantwortlich",
+    "frequencyAndDeadline": "Häufigkeit und Frist",
+    "associatedPenalties": "Zugehörige Strafen",
+    "requiredEvidence": "Erforderliche Nachweise",
+    "notes": "Anmerkungen",
+    "assignedAt": "Zugewiesen am",
+    "acknowledgedAt": "Bestätigt am",
+    "compliantAt": "Konform am"
+  },
+  "dataImport": {
+    "title": "Datenimport",
+    "subtitle": "Importieren Sie Mitarbeiter, Schulungen, Gesundheitsakten oder Ausrüstung aus CSV/Excel-Dateien",
+    "fields": {
+      "fullName": "Vollständiger Name",
+      "phone": "Telefon",
+      "jobTitle": "Stellenbezeichnung",
+      "department": "Abteilung",
+      "hireDate": "Einstellungsdatum",
+      "corCode": "COR-Code",
+      "employeeName": "Mitarbeitername",
+      "trainingType": "Schulungsart",
+      "trainingDate": "Schulungsdatum",
+      "expiryDate": "Ablaufdatum",
+      "instructor": "Ausbilder",
+      "notes": "Anmerkungen",
+      "examinationType": "Untersuchungsart",
+      "examinationDate": "Untersuchungsdatum",
+      "result": "Ergebnis",
+      "doctor": "Arzt",
+      "clinic": "Klinik",
+      "restrictions": "Einschränkungen",
+      "equipmentType": "Ausrüstungstyp",
+      "description": "Beschreibung",
+      "location": "Standort",
+      "serialNumber": "Seriennummer",
+      "lastInspection": "Letzte Inspektion",
+      "nextInspection": "Nächste Inspektion",
+      "inspector": "Prüfer"
+    },
+    "errors": {
+      "emptyFile": "Die Datei ist leer",
+      "readError": "Fehler beim Lesen der Datei",
+      "selectOrg": "Wählen Sie eine Organisation"
+    },
+    "step1": {
+      "organizationLabel": "Organisation",
+      "importTypeLabel": "Importtyp",
+      "uploadLabel": "Datei hochladen",
+      "selectFile": "Datei auswählen",
+      "downloadTemplate": "Vorlage herunterladen",
+      "downloadTemplateHint": "Laden Sie eine CSV-Vorlage herunter, um das richtige Format zu sehen",
+      "downloadTemplateFile": "{importType}-Vorlage"
+    },
+    "types": {
+      "employees": "Mitarbeiter",
+      "trainings": "Schulungen",
+      "medical": "Gesundheitsakten",
+      "equipment": "Ausrüstung"
+    },
+    "step2": {
+      "mappingTitle": "Spaltenzuordnung",
+      "autoDetect": "Automatische Erkennung",
+      "notSet": "Nicht gesetzt"
+    },
+    "step3": {
+      "valid": "Gültig",
+      "warnings": "Warnungen",
+      "errors": "Fehler",
+      "row": "Zeile",
+      "status": "Status",
+      "data": "Daten",
+      "issues": "Probleme"
+    },
+    "step4": {
+      "readyTitle": "Importbereit",
+      "importing": "Importiere...",
+      "confirmImport": "Import bestätigen",
+      "doneTitle": "Import abgeschlossen",
+      "backToDashboard": "Zurück zum Dashboard"
+    },
+    "steps": {
+      "upload": "Hochladen",
+      "mapping": "Zuordnung",
+      "preview": "Vorschau",
+      "import": "Import"
+    },
+    "nav": {
+      "back": "Zurück",
+      "continue": "Weiter"
+    }
+  },
+  "importWizard": {
+    "header": {
+      "title": "Mitarbeiter-Importassistent",
+      "organization": "Organisation",
+      "dashboard": "Dashboard"
+    },
+    "fields": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "jobTitle": "Stellenbezeichnung",
+      "department": "Abteilung",
+      "hireDate": "Einstellungsdatum",
+      "contractEndDate": "Vertragsende",
+      "phone": "Telefon",
+      "corCode": "COR-Code",
+      "corTitle": "COR-Bezeichnung",
+      "contractNumber": "Vertragsnummer",
+      "contractType": "Vertragsart",
+      "status": "Status"
+    },
+    "validation": {
+      "firstNameRequired": "Vorname ist erforderlich",
+      "lastNameRequired": "Nachname ist erforderlich",
+      "cnpInvalid": "Ungültige CNP",
+      "cnpDuplicate": "Doppelte CNP in der Datei",
+      "cnpExistsInOrg": "CNP existiert bereits in der Organisation",
+      "emailInvalid": "Ungültige E-Mail",
+      "hireDateInvalid": "Ungültiges Einstellungsdatum",
+      "corCodeFormat": "Ungültiges COR-Code-Format"
+    },
+    "errors": {
+      "emptyFile": "Die Datei ist leer",
+      "readError": "Fehler beim Lesen der Datei"
+    },
+    "step1": {
+      "title": "Datei hochladen",
+      "description": "Laden Sie eine CSV- oder Excel-Datei hoch",
+      "dropZoneTitle": "Datei hierher ziehen",
+      "dropZoneFormats": "Akzeptierte Formate: CSV, XLSX, XLS",
+      "selectFile": "Datei auswählen",
+      "rowsDetected": "{count} Zeilen erkannt",
+      "headerOnRow": "Kopfzeile in Zeile {row}",
+      "previewTitle": "Datenvorschau"
+    },
+    "step2": {
+      "title": "Profil auswählen",
+      "description": "Wählen Sie ein Importprofil oder erstellen Sie ein neues",
+      "regesNote": "Sie können aus REGES importieren",
+      "regesSalariatiTitle": "REGES — Mitarbeiterregister",
+      "regesSalariatiDesc": "Import aus Standard-Mitarbeiterbericht",
+      "regesContracteTitle": "REGES — Vertragsregister",
+      "regesContracteDesc": "Import aus Standard-Vertragsbericht",
+      "manualTitle": "Manuelle Zuordnung",
+      "manualDesc": "Spalten manuell zuordnen"
+    },
+    "step3": {
+      "title": "Spaltenzuordnung",
+      "description": "Überprüfen und anpassen",
+      "ignoreOption": "Spalte ignorieren",
+      "previewLabel": "Vorschau",
+      "previewDesc": "Daten vor dem Import überprüfen",
+      "validateButton": "Validieren"
+    },
+    "step4": {
+      "title": "Validierung und Import",
+      "statsDetected": "Erkannt",
+      "statsValid": "Gültig",
+      "statsWarnings": "Warnungen",
+      "statsErrors": "Fehler",
+      "autoMapping": "Automatisch",
+      "mappingCount": "{mapped} von {total} Spalten",
+      "previewTitle": "Vorschau",
+      "validationList": "{count} Probleme",
+      "deselectAll": "Alle abwählen",
+      "selectAll": "Alle auswählen",
+      "colFullName": "Vollständiger Name",
+      "importButton": "{count} Mitarbeiter importieren"
+    },
+    "step5": {
+      "importing": "Importiere...",
+      "done": "Import abgeschlossen!",
+      "progressLabel": "{success} von {total} importiert",
+      "successCount": "{count} erfolgreich importiert",
+      "failedCount": "{count} fehlgeschlagen",
+      "profileUsed": "Verwendetes Profil",
+      "viewEmployees": "Mitarbeiter anzeigen"
+    },
+    "nav": {
+      "back": "Zurück",
+      "newImport": "Neuer Import"
+    }
+  },
+  "iscir": {
+    "equipmentType": {
+      "cazan": "Kessel",
+      "recipientPresiune": "Druckbehälter",
+      "lift": "Aufzug",
+      "macara": "Kran",
+      "stivuitor": "Gabelstapler",
+      "instalatieGpl": "Flüssiggasanlage",
+      "compresor": "Kompressor",
+      "autoclave": "Autoklav",
+      "altul": "Sonstiges"
+    },
+    "status": {
+      "activ": "Aktiv",
+      "expirat": "Abgelaufen",
+      "inVerificare": "In Prüfung",
+      "oprit": "Gestoppt",
+      "casat": "Ausgemustert"
+    },
+    "verificationType": {
+      "periodica": "Periodisch",
+      "accidentala": "Unfall",
+      "punereInFunctiune": "Inbetriebnahme",
+      "reparatie": "Reparatur",
+      "modernizare": "Modernisierung"
+    },
+    "result": {
+      "admis": "Bestanden",
+      "respins": "Nicht bestanden",
+      "admisConditionat": "Bedingt bestanden"
+    },
+    "title": "ISCIR — Überwachte Anlagen",
+    "subtitle": "ISCIR-Anlagenverwaltung, periodische Prüfungen und Warnungen",
+    "filter": {
+      "allOrgs": "Alle Organisationen",
+      "searchPlaceholder": "Anlage suchen...",
+      "allTypes": "Alle Typen",
+      "allStatuses": "Alle Status"
+    },
+    "tabs": {
+      "dashboard": "Dashboard",
+      "equipment": "Anlagen",
+      "verifications": "Prüfungen",
+      "alerts": "Warnungen"
+    },
+    "stats": {
+      "total": "Anlagen gesamt",
+      "active": "Aktiv",
+      "expired": "Abgelaufen",
+      "stopped": "Gestoppt"
+    },
+    "recentEquipment": "Neueste Anlagen",
+    "addEquipment": "Anlage hinzufügen",
+    "table": {
+      "type": "Typ",
+      "identifier": "Kennung",
+      "iscirNr": "ISCIR-Nr.",
+      "location": "Standort",
+      "verification": "Prüfung",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "alert": {
+      "expired": "Abgelaufen",
+      "urgent": "Dringend",
+      "warning": "Warnung",
+      "ok": "OK"
+    },
+    "empty": {
+      "noEquipment": "Keine Anlagen",
+      "noVerifications": "Keine Prüfungen",
+      "noAlerts": "Keine Warnungen"
+    },
+    "verifications": {
+      "title": "Prüfverlauf",
+      "colDate": "Datum",
+      "colEquipment": "Anlage",
+      "colType": "Typ",
+      "colInspector": "Prüfer",
+      "colResult": "Ergebnis",
+      "colBulletin": "Prüfbericht"
+    },
+    "alertsTab": {
+      "title": "Anlagenwarnungen",
+      "colVerifDate": "Prüfdatum",
+      "colDaysLeft": "Tage übrig",
+      "colAlertLevel": "Stufe",
+      "verify": "Prüfen"
+    },
+    "form": {
+      "titleEdit": "Anlage bearbeiten",
+      "titleAdd": "Anlage hinzufügen",
+      "equipmentType": "Typ",
+      "identifier": "Kennung",
+      "registrationNumber": "Registriernummer",
+      "manufacturer": "Hersteller",
+      "model": "Modell",
+      "serialNumber": "Seriennummer",
+      "manufactureYear": "Baujahr",
+      "location": "Standort",
+      "capacity": "Kapazität",
+      "rsvtiResponsible": "RSVTI-Verantwortlicher",
+      "nextVerifDate": "Nächste Prüfung",
+      "verifInterval": "Prüfintervall (Monate)",
+      "authorizationNumber": "Genehmigungsnummer",
+      "authorizationExpiry": "Genehmigung läuft ab",
+      "status": "Status",
+      "observations": "Bemerkungen",
+      "cancel": "Abbrechen",
+      "saving": "Speichern...",
+      "save": "Speichern"
+    },
+    "verifForm": {
+      "title": "Prüfung erfassen",
+      "equipment": "Anlage",
+      "verifDate": "Datum",
+      "verifType": "Prüfart",
+      "inspectorName": "Prüfername",
+      "inspectorId": "Prüfer-ID",
+      "result": "Ergebnis",
+      "bulletinNumber": "Berichtnummer",
+      "nextVerifDate": "Nächste Prüfung",
+      "prescriptionsDeadline": "Frist für Auflagen",
+      "prescriptions": "Auflagen",
+      "saveVerification": "Prüfung speichern"
+    },
+    "deleteDialog": {
+      "title": "Löschen bestätigen",
+      "message": "Möchten Sie die Anlage {identifier} wirklich löschen?",
+      "deleting": "Löschen...",
+      "delete": "Löschen"
+    },
+    "errors": {
+      "saveEquipment": "Fehler beim Speichern",
+      "deleteEquipment": "Fehler beim Löschen",
+      "saveVerification": "Fehler beim Speichern der Prüfung"
+    },
+    "detail": {
+      "backToIscir": "Zurück zu ISCIR",
+      "qrCode": "QR-Code",
+      "qrError": "QR-Fehler",
+      "close": "Schließen"
+    }
+  },
+  "iscirDaily": {
+    "checkItems": {
+      "macara": {
+        "cabluTractiune": "Zugseil",
+        "franeFunctionale": "Funktionsfähige Bremsen",
+        "dispozitiveSiguranta": "Sicherheitseinrichtungen",
+        "sistemUngere": "Schmiersystem",
+        "carligPrindere": "Haken",
+        "limitatoareCursa": "Fahrbegrenzer",
+        "avertizareSonora": "Akustische Warnung",
+        "structuraVizual": "Struktur - Sichtprüfung"
+      },
+      "stivuitor": {
+        "franaServiciu": "Betriebsbremse",
+        "franaMana": "Handbremse",
+        "hidraulicFaraScurgeri": "Hydraulik - keine Lecks",
+        "furciOk": "Gabeln - guter Zustand",
+        "pneuriRoti": "Reifen/Räder",
+        "iluminat": "Beleuchtung",
+        "avertizareSonora": "Akustische Warnung",
+        "centuraSiguranta": "Sicherheitsgurt",
+        "dispozitiveSiguranta": "Sicherheitseinrichtungen",
+        "nivelCombustibil": "Kraftstoffstand/Batterieladung"
+      },
+      "lift": {
+        "usiSiguranta": "Sicherheitstüren",
+        "limitatoareViteza": "Geschwindigkeitsbegrenzer",
+        "iluminat": "Beleuchtung",
+        "avertizareSonora": "Akustische Warnung",
+        "cabluTractiune": "Zugseil",
+        "frane": "Bremsen"
+      },
+      "default": {
+        "echipamentFunctional": "Anlage funktionsfähig",
+        "faraScurgeri": "Keine Lecks",
+        "dispozitiveSiguranta": "Sicherheitseinrichtungen",
+        "zonaLibera": "Freier Bereich"
+      }
+    },
+    "title": "ISCIR Tägliche Prüfungen",
+    "stats": {
+      "total": "Anlagen gesamt",
+      "checkedToday": "Heute geprüft",
+      "unchecked": "Ungeprüft"
+    },
+    "progressLabel": "Täglicher Prüffortschritt",
+    "allCompleted": "Alle Anlagen wurden heute geprüft!",
+    "empty": {
+      "title": "Keine Anlagen für tägliche Prüfung",
+      "description": "Keine ISCIR-Anlagen erfordern eine tägliche Prüfung.",
+      "hint": "Fügen Sie Kran, Gabelstapler oder Aufzug hinzu."
+    },
+    "checkedBy": "Geprüft von",
+    "issuesReported": "Gemeldete Probleme",
+    "update": "Aktualisieren",
+    "verify": "Prüfen",
+    "modal": {
+      "title": "Tägliche Prüfung",
+      "operatorName": "Bedienername",
+      "checkPoints": "Prüfpunkte",
+      "checkAllOk": "Alles OK",
+      "issuesOptional": "Probleme (optional)",
+      "issuesPlaceholder": "Beschreiben Sie gefundene Probleme...",
+      "signatureTitle": "Unterschrift",
+      "signatureConfirm": "Ich bestätige, dass ich die Anlage geprüft habe",
+      "confirm": "Prüfung bestätigen"
+    },
+    "qr": {
+      "scanInstruction": "QR-Code für Schnellprüfung scannen"
+    },
+    "errors": {
+      "saveDailyCheck": "Fehler beim Speichern der täglichen Prüfung"
+    }
   }
 }
