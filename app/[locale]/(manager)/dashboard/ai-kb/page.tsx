@@ -2,6 +2,7 @@
 // AI Knowledge Base — Server Component
 
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
+import { isSuperAdmin } from '@/lib/rbac'
 import { redirect } from 'next/navigation'
 import AIKBClient from './AIKBClient'
 
@@ -23,6 +24,9 @@ export default async function AIKBPage({ params, searchParams }: AIKBPageProps) 
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
+
+  const admin = await isSuperAdmin()
+  if (!admin) redirect('/dashboard')
 
   const { orgs } = await getCurrentUserOrgs()
   const organizations = (orgs || [])

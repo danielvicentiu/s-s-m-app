@@ -37,6 +37,7 @@ interface SidebarProps {
   onToggle: () => void
   mobileOpen: boolean
   onMobileClose: () => void
+  isSuperAdmin?: boolean
 }
 
 function SidebarNav({
@@ -105,7 +106,7 @@ function SidebarNav({
   )
 }
 
-export default function Sidebar({ user, expanded, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
+export default function Sidebar({ user, expanded, onToggle, mobileOpen, onMobileClose, isSuperAdmin = false }: SidebarProps) {
   const t = useTranslations('sidebar')
   const pathname = usePathname()
   const { currentOrg } = useOrg()
@@ -181,6 +182,7 @@ export default function Sidebar({ user, expanded, onToggle, mobileOpen, onMobile
     .map(group => ({
       ...group,
       links: group.links.filter(link => {
+        if (link.href === '/dashboard/ai-kb' && !isSuperAdmin) return false
         if (link.moduleKey === null || link.moduleKey === undefined) return true
         if (isLoading || currentOrg === 'all') return true
         return hasModule(link.moduleKey as ModuleKey)

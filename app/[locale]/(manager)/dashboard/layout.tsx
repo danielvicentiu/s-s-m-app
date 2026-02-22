@@ -2,6 +2,7 @@
 // Dashboard layout v2 — v0 sidebar + topbar design
 // Responsive: collapsible sidebar (desktop) + mobile drawer
 import { createSupabaseServer, getCurrentUserOrgs } from '@/lib/supabase/server'
+import { isSuperAdmin } from '@/lib/rbac'
 import { redirect } from 'next/navigation'
 import DashboardLayoutClient from '@/components/dashboard-v0/DashboardLayoutClient'
 
@@ -18,7 +19,10 @@ export default async function DashboardLayout({
   }
 
   // Fetch orgs for OrgProvider (needed by Sidebar's useOrg hook)
-  const { orgs } = await getCurrentUserOrgs()
+  const [{ orgs }, superAdmin] = await Promise.all([
+    getCurrentUserOrgs(),
+    isSuperAdmin(),
+  ])
   const organizations = (orgs || [])
     .map((m: any) => ({
       id: m.organization?.id,
@@ -28,7 +32,7 @@ export default async function DashboardLayout({
     .filter((o: any) => o.id)
 
   return (
-    <DashboardLayoutClient user={user} organizations={organizations}>
+    <DashboardLayoutClient user={user} organizations={organizations} isSuperAdmin={superAdmin}>
       {children}
     </DashboardLayoutClient>
   )

@@ -13,12 +13,14 @@ interface DashboardLayoutClientProps {
   user: User
   organizations: Array<{ id: string; name: string; cui: string | null }>
   children: React.ReactNode
+  isSuperAdmin?: boolean
 }
 
 export default function DashboardLayoutClient({
   user,
   organizations,
   children,
+  isSuperAdmin = false,
 }: DashboardLayoutClientProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -33,6 +35,7 @@ export default function DashboardLayoutClient({
           onToggle={() => setSidebarExpanded(!sidebarExpanded)}
           mobileOpen={mobileOpen}
           onMobileClose={() => setMobileOpen(false)}
+          isSuperAdmin={isSuperAdmin}
         />
 
         {/* Main content - shifts right based on sidebar width */}

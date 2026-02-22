@@ -2,6 +2,7 @@
 // AI Knowledge Base — Conversation detail (Server Component)
 
 import { createSupabaseServer } from '@/lib/supabase/server'
+import { isSuperAdmin } from '@/lib/rbac'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Brain, Code2, MessageSquare } from 'lucide-react'
@@ -44,6 +45,9 @@ export default async function AIKBConversationPage({ params }: PageProps) {
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
+
+  const admin = await isSuperAdmin()
+  if (!admin) redirect('/dashboard')
 
   const { data: conversation, error } = await supabase
     .from('ai_conversations')
