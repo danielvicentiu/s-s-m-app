@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single()
 
-    const allowedRoles = ['consultant', 'super_admin', 'consultant_ssm']
+    const allowedRoles = ['consultant', 'super_admin', 'consultant_ssm', 'owner']
     if (!profile || !allowedRoles.includes(profile.role ?? '')) {
       return NextResponse.json({ error: 'Forbidden — rol insuficient' }, { status: 403 })
     }
