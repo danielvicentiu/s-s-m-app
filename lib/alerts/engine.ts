@@ -139,7 +139,7 @@ export async function generateAlertsForOrg(organizationId: string): Promise<Gene
   const countryCode = org.country_code ?? 'RO'
   const { data: categories } = await supabase
     .from('alert_categories')
-    .select('id, slug, name_local, name, notify_email')
+    .select('id, slug, notify_email')
     .eq('country_code', countryCode)
     .eq('is_active', true)
     .in('slug', SPRINT1_SLUGS)
