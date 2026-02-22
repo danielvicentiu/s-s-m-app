@@ -21,6 +21,22 @@ const SPRINT1_SLUGS = [
 
 const DEFAULT_ALERT_DAYS = [30, 14, 7, 3, 1, 0]
 
+// Mapare slug detaliat → alert_type acceptat de DB constraint
+const SLUG_TO_ALERT_TYPE: Record<string, string> = {
+  medical_expiry:              'medical',
+  medical_missing:             'medical',
+  osh_training_expiry:         'training',
+  osh_training_missing:        'training',
+  fire_training_expiry:        'training',
+  fire_training_missing:       'training',
+  iscir_verification_expiry:   'equipment',
+  iscir_authorization_expiry:  'equipment',
+}
+
+function toAlertType(slug: string): string {
+  return SLUG_TO_ALERT_TYPE[slug] ?? 'other'
+}
+
 function getSupabase() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,7 +81,7 @@ function isDuplicate(existing: any[], item: AlertSourceItem): boolean {
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
   return existing.some((e) => {
-    if (e.alert_type !== item.alertType) return false
+    if (e.alert_type !== toAlertType(item.alertType)) return false
 
     // Potrivire angajat (pt alerte per-persoană)
     if (item.employeeName !== undefined && e.employee_name !== item.employeeName) return false
@@ -173,7 +189,7 @@ export async function generateAlertsForOrg(organizationId: string): Promise<Gene
         // INSERT în alerts
         const { error: insertError } = await supabase.from('alerts').insert({
           organization_id: organizationId,
-          alert_type: category.slug,
+          alert_type: toAlertType(category.slug),
           title: item.title,
           description: item.description ?? null,
           expiry_date: item.expiryDate ?? null,
@@ -193,7 +209,7 @@ export async function generateAlertsForOrg(organizationId: string): Promise<Gene
 
         // Adaugă în existing (pt dedup intrasesiune)
         existing.push({
-          alert_type: category.slug,
+          alert_type: toAlertType(category.slug),
           employee_name: item.employeeName ?? null,
           item_name: item.itemName ?? null,
           expiry_date: item.expiryDate ?? null,
