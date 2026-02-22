@@ -11,13 +11,12 @@ const supabaseAdmin = createClient(
 
 export type SubscriptionStatus = 'trial' | 'active' | 'past_due' | 'canceled' | 'expired'
 
-// Mapare status abonament → status module
 function moduleStatusFromSubscription(
   subStatus: SubscriptionStatus
 ): 'active' | 'suspended' | 'inactive' | 'expired' {
   switch (subStatus) {
-    case 'active': return 'active'
-    case 'trial':  return 'active'
+    case 'active':   return 'active'
+    case 'trial':    return 'active'
     case 'past_due': return 'suspended'
     case 'canceled': return 'inactive'
     case 'expired':  return 'expired'
@@ -26,7 +25,6 @@ function moduleStatusFromSubscription(
 
 /**
  * Sincronizează toate modulele unei organizații cu statusul abonamentului.
- * Apelat din webhook-uri Stripe.
  */
 export async function syncOrganizationModules(
   organizationId: string,
@@ -64,6 +62,8 @@ export async function upsertSubscription(
     stripe_price_id?: string
     plan_type?: string
     billing_owner?: 'patron' | 'sepp'
+    billing_entity_id?: string
+    billing_entity_cui?: string
     status: SubscriptionStatus
     current_period_start?: Date
     current_period_end?: Date
@@ -83,6 +83,8 @@ export async function upsertSubscription(
   if (data.stripe_price_id !== undefined) payload.stripe_price_id = data.stripe_price_id
   if (data.plan_type !== undefined) payload.plan_type = data.plan_type
   if (data.billing_owner !== undefined) payload.billing_owner = data.billing_owner
+  if (data.billing_entity_id !== undefined) payload.billing_entity_id = data.billing_entity_id
+  if (data.billing_entity_cui !== undefined) payload.billing_entity_cui = data.billing_entity_cui
   if (data.amount_ron !== undefined) payload.amount_ron = data.amount_ron
   if (data.current_period_start !== undefined) payload.current_period_start = data.current_period_start.toISOString()
   if (data.current_period_end !== undefined) payload.current_period_end = data.current_period_end.toISOString()

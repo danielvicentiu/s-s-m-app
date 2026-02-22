@@ -1,9 +1,10 @@
 // app/api/billing/portal/route.ts
-// Stripe Customer Portal — self-service (upgrade/downgrade/anulare)
+// Stripe Customer Portal pe connected account-ul corect
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServer } from '@/lib/supabase/server'
-import { stripe } from '@/lib/stripe'
+import { getStripeForEntity } from '@/lib/stripe'
+import { getEntityById, type BillingEntityId } from '@/lib/billing/entities'
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,17 +28,19 @@ export async function POST(req: NextRequest) {
 
     const { data: sub } = await supabase
       .from('subscriptions')
-      .select('stripe_customer_id')
+      .select('stripe_customer_id, billing_entity_id')
       .eq('organization_id', membership.organization_id)
       .single()
 
-    if (!sub?.stripe_customer_id) {
+    if (!sub?.stripe_customer_id || !sub?.billing_entity_id) {
       return NextResponse.json({ error: 'Niciun abonament activ' }, { status: 404 })
     }
 
+    const entity = getEntityById(sub.billing_entity_id as BillingEntityId)
+    const stripeClient = getStripeForEntity(entity)
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
-    const session = await stripe.billingPortal.sessions.create({
+    const session = await stripeClient.billingPortal.sessions.create({
       customer: sub.stripe_customer_id,
       return_url: `${appUrl}/ro/dashboard`,
     })

@@ -1,62 +1,56 @@
 // scripts/create-stripe-products.ts
-// Script one-time: creare produse și prețuri Stripe pentru s-s-m.ro
-// Rulează: npx ts-node scripts/create-stripe-products.ts
+// Script one-time: creare produse și prețuri Stripe pe FIECARE connected account
+// Rulează: npx tsx scripts/create-stripe-products.ts
 // Copiază output-ul în .env.local și Vercel Dashboard
 
 import Stripe from 'stripe'
+import { getBillingEntities } from '../lib/billing/entities'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-01-28.clover' as any,
-  typescript: true,
-})
+const PLANS = [
+  { key: 'direct',      name: 'Direct',           priceRon: 9900,  interval: 'month' as const },
+  { key: 'partner',     name: 'Partner Founding',  priceRon: 9900,  interval: 'month' as const },
+  { key: 'selfservice', name: 'Self-Service',       priceRon: 7900,  interval: 'month' as const },
+]
 
 async function createProducts() {
-  console.log('Creare produse Stripe pentru s-s-m.ro...\n')
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2026-01-28.clover' as any,
+  })
 
-  // ── Direct — 99 RON/lună ──
-  const directProduct = await stripe.products.create({
-    name: 's-s-m.ro Direct',
-    description: 'Patron vine singur. Toate modulele SSM+PSI.',
-    metadata: { plan_type: 'direct' },
-  })
-  const directPrice = await stripe.prices.create({
-    product: directProduct.id,
-    unit_amount: 9900, // 99 RON în bani
-    currency: 'ron',
-    recurring: { interval: 'month' },
-  })
-  console.log(`STRIPE_PRICE_DIRECT_99=${directPrice.id}`)
+  console.log('Creare produse Stripe pe connected accounts s-s-m.ro...\n')
 
-  // ── Partner-Billed — 99 RON/lună ──
-  const partnerProduct = await stripe.products.create({
-    name: 's-s-m.ro Partner-Billed',
-    description: 'Wholesale pentru consultanți SSM/SEPP.',
-    metadata: { plan_type: 'partner_billed' },
-  })
-  const partnerPrice = await stripe.prices.create({
-    product: partnerProduct.id,
-    unit_amount: 9900,
-    currency: 'ron',
-    recurring: { interval: 'month' },
-  })
-  console.log(`STRIPE_PRICE_PARTNER_99=${partnerPrice.id}`)
+  for (const entity of getBillingEntities()) {
+    console.log(`=== ${entity.name} (${entity.id}) — ${entity.stripeAccountId} ===`)
 
-  // ── Self-Service — 79 RON/lună ──
-  const selfProduct = await stripe.products.create({
-    name: 's-s-m.ro Self-Service',
-    description: 'Firme ≤9 angajați cu patron desemnat SSM.',
-    metadata: { plan_type: 'self_service' },
-  })
-  const selfPrice = await stripe.prices.create({
-    product: selfProduct.id,
-    unit_amount: 7900, // 79 RON în bani
-    currency: 'ron',
-    recurring: { interval: 'month' },
-  })
-  console.log(`STRIPE_PRICE_SELFSERVICE_79=${selfPrice.id}`)
+    for (const plan of PLANS) {
+      const product = await stripe.products.create(
+        {
+          name: `s-s-m.ro ${plan.name}`,
+          description: `Abonament ${plan.name} — ${entity.name}`,
+          metadata: { plan_key: plan.key, entity_id: entity.id },
+        },
+        { stripeAccount: entity.stripeAccountId }
+      )
 
-  console.log('\n✅ Copiază valorile de mai sus în .env.local și Vercel Dashboard!')
-  console.log('📌 Înlocuiește STRIPE_PRICE_DIRECT_99, STRIPE_PRICE_PARTNER_99, STRIPE_PRICE_SELFSERVICE_79')
+      const price = await stripe.prices.create(
+        {
+          product: product.id,
+          unit_amount: plan.priceRon,
+          currency: 'ron',
+          recurring: { interval: plan.interval },
+        },
+        { stripeAccount: entity.stripeAccountId }
+      )
+
+      const envKey = `STRIPE_PRICE_${entity.id}_${plan.key.toUpperCase()}`
+      console.log(`  ${envKey}=${price.id}`)
+    }
+
+    console.log()
+  }
+
+  console.log('✅ Copiază valorile de mai sus în .env.local și Vercel Dashboard!')
+  console.log('📌 Înlocuiește STRIPE_PRICE_{ENTITY}_{PLAN} cu valorile reale\n')
 }
 
 createProducts().catch((err) => {

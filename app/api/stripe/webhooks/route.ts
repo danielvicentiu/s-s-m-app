@@ -1,10 +1,12 @@
 // app/api/stripe/webhooks/route.ts
-// Handler webhook-uri Stripe — 5 events
-// IMPORTANT: body raw (text) pentru verificare semnătură
+// Handler webhook-uri Stripe Connect — rutare per connected account (3 entități)
+// Body raw (text) obligatoriu pentru verificare semnătură
 
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { upsertSubscription, syncOrganizationModules } from '@/lib/billing/sync-modules'
+import { detectEntityFromWebhook } from '@/lib/billing/entities'
+import { emitFgoInvoice } from '@/lib/billing/fgo'
 import type Stripe from 'stripe'
 
 function mapStripeStatus(
@@ -29,20 +31,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Lipsă semnătură Stripe' }, { status: 400 })
   }
 
-  let event: Stripe.Event
-
-  try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
-  } catch (err) {
-    console.error('[webhook] Verificare semnătură eșuată:', err)
+  // Determină care connected account a trimis webhook-ul
+  const entity = detectEntityFromWebhook(stripe, body, signature)
+  if (!entity) {
+    console.error('[webhook] Nicio entitate nu se potrivește cu semnătura')
     return NextResponse.json({ error: 'Semnătură invalidă' }, { status: 400 })
   }
 
-  console.log(`[webhook] Event primit: ${event.type}`)
+  // Construim event-ul verificat cu secretul entității identificate
+  let event: Stripe.Event
+  try {
+    event = stripe.webhooks.constructEvent(body, signature, entity.webhookSecret)
+  } catch (err) {
+    console.error('[webhook] constructEvent eșuat:', err)
+    return NextResponse.json({ error: 'Semnătură invalidă' }, { status: 400 })
+  }
+
+  console.log(`[webhook] Event=${event.type} entity=${entity.id}`)
 
   try {
     switch (event.type) {
@@ -58,8 +63,10 @@ export async function POST(req: NextRequest) {
           stripe_customer_id: sub.customer as string,
           stripe_subscription_id: sub.id,
           stripe_price_id: sub.items.data[0]?.price.id,
-          plan_type: sub.metadata?.plan_type || 'direct',
-          billing_owner: (sub.metadata?.billing_owner as 'patron' | 'sepp') || 'patron',
+          plan_type: sub.metadata?.plan_type ?? 'direct',
+          billing_owner: (sub.metadata?.billing_owner as 'patron' | 'sepp') ?? 'patron',
+          billing_entity_id: entity.id,
+          billing_entity_cui: entity.cui,
           status,
           current_period_start: new Date((sub as any).current_period_start * 1000),
           current_period_end: new Date((sub as any).current_period_end * 1000),
@@ -69,7 +76,7 @@ export async function POST(req: NextRequest) {
         break
       }
 
-      // 🔄 SUBSCRIPȚIE ACTUALIZATĂ (upgrade/downgrade/reactivare)
+      // 🔄 SUBSCRIPȚIE ACTUALIZATĂ
       case 'customer.subscription.updated': {
         const sub = event.data.object as Stripe.Subscription
         const orgId = sub.metadata?.organization_id
@@ -80,8 +87,10 @@ export async function POST(req: NextRequest) {
           stripe_customer_id: sub.customer as string,
           stripe_subscription_id: sub.id,
           stripe_price_id: sub.items.data[0]?.price.id,
-          plan_type: sub.metadata?.plan_type || 'direct',
-          billing_owner: (sub.metadata?.billing_owner as 'patron' | 'sepp') || 'patron',
+          plan_type: sub.metadata?.plan_type ?? 'direct',
+          billing_owner: (sub.metadata?.billing_owner as 'patron' | 'sepp') ?? 'patron',
+          billing_entity_id: entity.id,
+          billing_entity_cui: entity.cui,
           status,
           current_period_start: new Date((sub as any).current_period_start * 1000),
           current_period_end: new Date((sub as any).current_period_end * 1000),
@@ -92,7 +101,7 @@ export async function POST(req: NextRequest) {
         break
       }
 
-      // ❌ SUBSCRIPȚIE ȘTEARSĂ / ANULATĂ
+      // ❌ SUBSCRIPȚIE ANULATĂ
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription
         const orgId = sub.metadata?.organization_id
@@ -106,42 +115,53 @@ export async function POST(req: NextRequest) {
         break
       }
 
-      // ✅ FACTURĂ PLĂTITĂ — activare / reactivare
+      // ✅ FACTURĂ PLĂTITĂ — activare + FGO
       case 'invoice.paid': {
         const invoice = event.data.object as Stripe.Invoice
         const subId = (invoice as any).subscription as string | null
         if (!subId) break
 
-        const sub = await stripe.subscriptions.retrieve(subId)
+        // Obținem subscription de pe connected account (nu de pe platformă)
+        const stripeForEntity = (await import('@/lib/stripe')).getStripeForEntity(entity)
+        const sub = await stripeForEntity.subscriptions.retrieve(subId)
         const orgId = sub.metadata?.organization_id
         if (!orgId) break
 
         await upsertSubscription(orgId, {
           status: 'active',
+          amount_ron: (invoice.amount_paid ?? 0),
           current_period_start: new Date((sub as any).current_period_start * 1000),
           current_period_end: new Date((sub as any).current_period_end * 1000),
         })
         await syncOrganizationModules(orgId, 'active')
 
-        // TODO Sprint 1.2: trigger FGO e-factură API
+        // Emitere e-factură FGO (Task 1.2)
+        try {
+          await emitFgoInvoice({ entity, invoice })
+        } catch (fgoErr) {
+          // FGO eșuează → log + continuă (nu bloca webhook-ul)
+          console.error('[webhook] FGO emitere eșuată:', fgoErr)
+          // TODO Sprint 1.2+: notificare Daniel via Resend
+        }
         break
       }
 
-      // ⚠️ PLATĂ EȘUATĂ — dunning
+      // ⚠️ PLATĂ EȘUATĂ
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice
         const subId = (invoice as any).subscription as string | null
         if (!subId) break
 
-        const sub = await stripe.subscriptions.retrieve(subId)
+        const stripeForEntity = (await import('@/lib/stripe')).getStripeForEntity(entity)
+        const sub = await stripeForEntity.subscriptions.retrieve(subId)
         const orgId = sub.metadata?.organization_id
         if (!orgId) break
 
         await upsertSubscription(orgId, { status: 'past_due' })
         await syncOrganizationModules(orgId, 'past_due')
 
-        // TODO Sprint 1.2: trimite email via Resend la billing owner
-        console.log(`[webhook] Plată eșuată pentru org=${orgId}`)
+        // TODO Sprint 1.2+: email via Resend la billing owner
+        console.log(`[webhook] Plată eșuată org=${orgId} entity=${entity.id}`)
         break
       }
 
@@ -150,7 +170,7 @@ export async function POST(req: NextRequest) {
     }
   } catch (err) {
     console.error(`[webhook] Eroare procesare ${event.type}:`, err)
-    // Returnează 200 ca să nu retriggere Stripe — loghează manual
+    // 200 ca să nu retriggere Stripe
     return NextResponse.json({ error: 'Eroare internă procesare' }, { status: 200 })
   }
 
