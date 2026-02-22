@@ -195,8 +195,7 @@ export async function generateAlertsForOrg(organizationId: string): Promise<Gene
           expiry_date: item.expiryDate ?? null,
           employee_name: item.employeeName ?? null,
           item_name: item.itemName ?? null,
-          status: 'pending',
-          created_at: new Date().toISOString(),
+          status: 'active',
         })
 
         if (insertError) {

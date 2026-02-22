@@ -76,7 +76,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     total: allAlerts.length,
-    pending: allAlerts.filter((a) => a.status === 'pending').length,
+    active: allAlerts.filter((a) => a.status === 'active').length,
     acknowledged: allAlerts.filter((a) => a.status === 'acknowledged').length,
     expired,
     urgent,

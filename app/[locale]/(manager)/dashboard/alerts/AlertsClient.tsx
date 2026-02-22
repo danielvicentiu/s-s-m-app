@@ -70,7 +70,7 @@ interface PendingAlert {
   employee_name: string | null
   item_name: string | null
   organization_id: string
-  status: 'pending' | 'acknowledged' | 'resolved' | 'dismissed'
+  status: 'active' | 'acknowledged' | 'resolved' | 'dismissed'
   created_at: string
 }
 
@@ -339,7 +339,7 @@ export default function AlertsClient({
               {
                 key: 'dashboard',
                 label: 'Urgențe',
-                badge: pendingAlerts.filter((a) => a.status === 'pending').length || null,
+                badge: pendingAlerts.filter((a) => a.status === 'active').length || null,
               },
               { key: 'history', label: t('tabHistory'), badge: null },
               { key: 'config', label: t('tabConfig'), badge: null },
@@ -442,7 +442,7 @@ export default function AlertsClient({
 
                 {/* Alert cards — ordonate: expirate → urgente → atenție → lipsă */}
                 {[...expiredAlerts, ...urgentAlerts, ...warningAlerts, ...missingAlerts]
-                  .filter((a) => a.status === 'pending')
+                  .filter((a) => a.status === 'active')
                   .map((alert) => {
                     const isExpired = alert.expiry_date && alert.expiry_date < today
                     const daysLeft = alert.expiry_date

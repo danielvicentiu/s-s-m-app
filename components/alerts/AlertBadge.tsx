@@ -32,7 +32,7 @@ export default function AlertBadge() {
         .from('alerts')
         .select('*', { count: 'exact', head: true })
         .eq('organization_id', currentOrg as string)
-        .eq('status', 'pending')
+        .eq('status', 'active')
 
       setCount(n ?? 0)
       setLoading(false)
@@ -88,7 +88,7 @@ export default function AlertBadge() {
       className={`relative flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
         isActive ? 'bg-accent text-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'
       }`}
-      title={`${count} alertă${count !== 1 ? 'e' : ''} pending`}
+      title={`${count} alertă${count !== 1 ? 'e' : ''} active`}
     >
       <Bell className="h-5 w-5" />
       <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground leading-none">
