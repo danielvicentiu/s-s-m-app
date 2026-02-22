@@ -22,15 +22,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Verifică rol: consultant, super_admin sau consultant_ssm
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    // Verifică rol via user_roles JOIN roles
+    const { data: userRoles } = await supabase
+      .from('user_roles')
+      .select('roles(role_key)')
+      .eq('user_id', user.id)
+      .eq('is_active', true)
 
-    const allowedRoles = ['consultant', 'super_admin', 'consultant_ssm', 'owner']
-    if (!profile || !allowedRoles.includes(profile.role ?? '')) {
+    const roleKeys = (userRoles ?? [])
+      .map((r: any) => r.roles?.role_key)
+      .filter(Boolean)
+
+    const allowedRoles = ['super_admin', 'firma_admin', 'consultant_ssm']
+    if (!roleKeys.some((k: string) => allowedRoles.includes(k))) {
       return NextResponse.json({ error: 'Forbidden — rol insuficient' }, { status: 403 })
     }
   }
