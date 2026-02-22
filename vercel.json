@@ -43,6 +43,10 @@
     {
       "path": "/api/cron/escalate-alerts",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/alerts/generate",
+      "schedule": "0 6 * * *"
     }
   ],
   "functions": {
@@ -77,6 +81,9 @@
       "maxDuration": 120
     },
     "app/api/cron/escalate-alerts/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/alerts/generate/route.ts": {
       "maxDuration": 300
     }
   }

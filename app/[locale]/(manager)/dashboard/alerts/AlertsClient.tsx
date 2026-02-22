@@ -1,7 +1,7 @@
 'use client'
 
 // app/[locale]/dashboard/alerts/AlertsClient.tsx
-// Dashboard Alerte & Notificări — 3 tab-uri: Istoric, Configurare, Consum
+// Dashboard Alerte & Notificări — 4 tab-uri: Dashboard, Istoric, Configurare, Consum
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
@@ -60,6 +60,20 @@ interface Organization {
   contact_email: string
 }
 
+// Alertele generate de M4 engine (tabelul `alerts`)
+interface PendingAlert {
+  id: string
+  alert_type: string
+  title: string
+  description: string | null
+  expiry_date: string | null
+  employee_name: string | null
+  item_name: string | null
+  organization_id: string
+  status: 'pending' | 'acknowledged' | 'resolved' | 'dismissed'
+  created_at: string
+}
+
 interface Props {
   user: { id: string; email: string }
   organizations: Organization[]
@@ -67,6 +81,7 @@ interface Props {
   alertLogs: AlertLog[]
   alertConfig: AlertConfig | null
   alertUsage: AlertUsage[]
+  pendingAlerts?: PendingAlert[]
   isTwilioConfigured: boolean
 }
 
@@ -126,6 +141,7 @@ export default function AlertsClient({
   alertLogs,
   alertConfig: initialConfig,
   alertUsage,
+  pendingAlerts: initialPendingAlerts = [],
   isTwilioConfigured,
 }: Props) {
   const t = useTranslations('alerts')
@@ -150,15 +166,77 @@ export default function AlertsClient({
     undelivered: { label: t('statusUndelivered'), className: 'bg-orange-100 text-orange-700' },
   }
 
-  const [activeTab, setActiveTab] = useState<'history' | 'config' | 'usage'>('history')
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'history' | 'config' | 'usage'>('dashboard')
   const [filterType, setFilterType] = useState('')
   const [filterChannel, setFilterChannel] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
   const [config, setConfig] = useState<AlertConfig>(initialConfig || DEFAULT_CONFIG)
   const [saving, setSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [pendingAlerts, setPendingAlerts] = useState<PendingAlert[]>(initialPendingAlerts)
+  const [acknowledging, setAcknowledging] = useState<string | null>(null)
 
   const org = organizations.find((o) => o.id === selectedOrgId) || organizations[0]
+
+  // ─── Acknowledge alertă ─────────────────────────────────────────────────────
+  const handleAcknowledge = async (alertId: string) => {
+    setAcknowledging(alertId)
+    try {
+      const res = await fetch(`/api/alerts/${alertId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'acknowledge' }),
+      })
+      if (res.ok) {
+        setPendingAlerts((prev) =>
+          prev.map((a) => (a.id === alertId ? { ...a, status: 'acknowledged' } : a))
+        )
+      }
+    } catch (err) {
+      console.error('Acknowledge error:', err)
+    } finally {
+      setAcknowledging(null)
+    }
+  }
+
+  const handleDismiss = async (alertId: string) => {
+    setAcknowledging(alertId)
+    try {
+      const res = await fetch(`/api/alerts/${alertId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'dismiss' }),
+      })
+      if (res.ok) {
+        setPendingAlerts((prev) => prev.filter((a) => a.id !== alertId))
+      }
+    } catch (err) {
+      console.error('Dismiss error:', err)
+    } finally {
+      setAcknowledging(null)
+    }
+  }
+
+  // ─── Calcule urgențe pentru dashboard ──────────────────────────────────────
+  const today = new Date().toISOString().split('T')[0]
+  const expiredAlerts = pendingAlerts.filter(
+    (a) => a.expiry_date && a.expiry_date < today
+  )
+  const urgentAlerts = pendingAlerts.filter((a) => {
+    if (!a.expiry_date || a.expiry_date < today) return false
+    const days = Math.ceil(
+      (new Date(a.expiry_date).getTime() - new Date(today).getTime()) / 86400000
+    )
+    return days <= 7
+  })
+  const warningAlerts = pendingAlerts.filter((a) => {
+    if (!a.expiry_date || a.expiry_date < today) return false
+    const days = Math.ceil(
+      (new Date(a.expiry_date).getTime() - new Date(today).getTime()) / 86400000
+    )
+    return days > 7 && days <= 30
+  })
+  const missingAlerts = pendingAlerts.filter((a) => !a.expiry_date)
 
   // ─── Filtrare loguri ────────────────────────────────────────────────────────
 
@@ -258,20 +336,30 @@ export default function AlertsClient({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-1 border-b border-gray-200">
             {[
-              { key: 'history', label: t('tabHistory') },
-              { key: 'config', label: t('tabConfig') },
-              { key: 'usage', label: t('tabUsage') },
+              {
+                key: 'dashboard',
+                label: 'Urgențe',
+                badge: pendingAlerts.filter((a) => a.status === 'pending').length || null,
+              },
+              { key: 'history', label: t('tabHistory'), badge: null },
+              { key: 'config', label: t('tabConfig'), badge: null },
+              { key: 'usage', label: t('tabUsage'), badge: null },
             ].map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as typeof activeTab)}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === tab.key
                     ? 'border-blue-600 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
                 {tab.label}
+                {tab.badge ? (
+                  <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">
+                    {tab.badge > 99 ? '99+' : tab.badge}
+                  </span>
+                ) : null}
               </button>
             ))}
           </div>
@@ -279,6 +367,172 @@ export default function AlertsClient({
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+
+        {/* ─── Tab: Dashboard (Urgențe) ──────────────────────────────────────── */}
+        {activeTab === 'dashboard' && (
+          <div className="space-y-6">
+            {/* Summary cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
+                <div className="text-2xl font-bold text-red-700">{expiredAlerts.length}</div>
+                <div className="text-sm text-red-600 font-medium mt-1">Expirate</div>
+                <div className="text-xs text-red-400 mt-0.5">necesită acțiune imediată</div>
+              </div>
+              <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
+                <div className="text-2xl font-bold text-orange-700">{urgentAlerts.length}</div>
+                <div className="text-sm text-orange-600 font-medium mt-1">Urgente (&le;7 zile)</div>
+                <div className="text-xs text-orange-400 mt-0.5">expiră în curând</div>
+              </div>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4">
+                <div className="text-2xl font-bold text-yellow-700">{warningAlerts.length}</div>
+                <div className="text-sm text-yellow-600 font-medium mt-1">Atenție (8-30 zile)</div>
+                <div className="text-xs text-yellow-400 mt-0.5">de monitorizat</div>
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+                <div className="text-2xl font-bold text-blue-700">{missingAlerts.length}</div>
+                <div className="text-sm text-blue-600 font-medium mt-1">Lipsă</div>
+                <div className="text-xs text-blue-400 mt-0.5">documente/instruiri</div>
+              </div>
+            </div>
+
+            {/* Lista alerte */}
+            {pendingAlerts.length === 0 ? (
+              <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+                <svg className="mx-auto w-12 h-12 text-green-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-gray-500 font-medium">Nicio alertă activă</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Generați alerte manual sau așteptați rularea zilnică a motorului.
+                </p>
+                <button
+                  onClick={async () => {
+                    if (!selectedOrgId) return
+                    const res = await fetch('/api/alerts/generate', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ organizationId: selectedOrgId }),
+                    })
+                    if (res.ok) window.location.reload()
+                  }}
+                  className="mt-4 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Generează alerte acum
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {/* Buton generare manuală */}
+                <div className="flex justify-end">
+                  <button
+                    onClick={async () => {
+                      if (!selectedOrgId) return
+                      const res = await fetch('/api/alerts/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ organizationId: selectedOrgId }),
+                      })
+                      if (res.ok) window.location.reload()
+                    }}
+                    className="px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    Actualizează alerte
+                  </button>
+                </div>
+
+                {/* Alert cards — ordonate: expirate → urgente → atenție → lipsă */}
+                {[...expiredAlerts, ...urgentAlerts, ...warningAlerts, ...missingAlerts]
+                  .filter((a) => a.status === 'pending')
+                  .map((alert) => {
+                    const isExpired = alert.expiry_date && alert.expiry_date < today
+                    const daysLeft = alert.expiry_date
+                      ? Math.ceil(
+                          (new Date(alert.expiry_date).getTime() - new Date(today).getTime()) /
+                            86400000
+                        )
+                      : null
+
+                    const severityConfig = isExpired
+                      ? { bg: 'bg-red-50', border: 'border-red-200', dot: 'bg-red-500', text: 'text-red-700', badge: 'EXPIRAT', badgeCls: 'bg-red-100 text-red-700' }
+                      : daysLeft !== null && daysLeft <= 7
+                      ? { bg: 'bg-orange-50', border: 'border-orange-200', dot: 'bg-orange-400', text: 'text-orange-700', badge: `${daysLeft}z`, badgeCls: 'bg-orange-100 text-orange-700' }
+                      : daysLeft !== null
+                      ? { bg: 'bg-yellow-50', border: 'border-yellow-200', dot: 'bg-yellow-400', text: 'text-yellow-700', badge: `${daysLeft}z`, badgeCls: 'bg-yellow-100 text-yellow-700' }
+                      : { bg: 'bg-blue-50', border: 'border-blue-200', dot: 'bg-blue-400', text: 'text-blue-700', badge: 'LIPSĂ', badgeCls: 'bg-blue-100 text-blue-700' }
+
+                    return (
+                      <div
+                        key={alert.id}
+                        className={`${severityConfig.bg} ${severityConfig.border} border rounded-2xl p-4 flex items-start gap-4`}
+                      >
+                        <span className={`mt-1.5 w-2.5 h-2.5 rounded-full flex-shrink-0 ${severityConfig.dot}`} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start gap-2 flex-wrap">
+                            <p className={`font-medium text-sm ${severityConfig.text} flex-1`}>
+                              {alert.title}
+                            </p>
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${severityConfig.badgeCls} flex-shrink-0`}>
+                              {severityConfig.badge}
+                            </span>
+                          </div>
+                          {alert.description && (
+                            <p className="text-xs text-gray-500 mt-0.5">{alert.description}</p>
+                          )}
+                          {alert.expiry_date && (
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              Expiră: {new Date(alert.expiry_date).toLocaleDateString('ro-RO')}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex gap-2 flex-shrink-0">
+                          <button
+                            onClick={() => handleAcknowledge(alert.id)}
+                            disabled={acknowledging === alert.id}
+                            className="px-3 py-1.5 text-xs font-medium rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                          >
+                            {acknowledging === alert.id ? '...' : 'Luat la cunoștință'}
+                          </button>
+                          <button
+                            onClick={() => handleDismiss(alert.id)}
+                            disabled={acknowledging === alert.id}
+                            className="px-3 py-1.5 text-xs font-medium rounded-lg text-gray-400 hover:text-gray-600 disabled:opacity-50 transition-colors"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                {/* Alertele deja acknowledged */}
+                {pendingAlerts.filter((a) => a.status === 'acknowledged').length > 0 && (
+                  <details className="mt-4">
+                    <summary className="text-sm text-gray-400 cursor-pointer hover:text-gray-600">
+                      {pendingAlerts.filter((a) => a.status === 'acknowledged').length} alerte luate la cunoștință
+                    </summary>
+                    <div className="mt-2 space-y-2">
+                      {pendingAlerts
+                        .filter((a) => a.status === 'acknowledged')
+                        .map((alert) => (
+                          <div
+                            key={alert.id}
+                            className="bg-gray-50 border border-gray-200 rounded-xl p-3 flex items-center gap-3 opacity-60"
+                          >
+                            <span className="w-2 h-2 rounded-full bg-gray-300 flex-shrink-0" />
+                            <p className="text-sm text-gray-500 flex-1">{alert.title}</p>
+                            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                              Acknowledged
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </details>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* ─── Tab: Istoric ─────────────────────────────────────────────────── */}
         {activeTab === 'history' && (
           <div className="space-y-4">

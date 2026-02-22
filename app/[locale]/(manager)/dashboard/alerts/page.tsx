@@ -78,6 +78,17 @@ export default async function AlertsPage({ params }: AlertsPageProps) {
         .order('month', { ascending: false })
     : { data: [] }
 
+  // Fetch alerte pending din tabelul `alerts` (motor M4)
+  const { data: pendingAlerts } = selectedOrgId
+    ? await admin
+        .from('alerts')
+        .select('*')
+        .in('organization_id', orgIds)
+        .not('status', 'in', '("resolved","dismissed")')
+        .order('created_at', { ascending: false })
+        .limit(50)
+    : { data: [] }
+
   const isTwilioConfigured = !!(
     process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN
   )
@@ -90,6 +101,7 @@ export default async function AlertsPage({ params }: AlertsPageProps) {
       alertLogs={alertLogs || []}
       alertConfig={alertConfig}
       alertUsage={alertUsage || []}
+      pendingAlerts={pendingAlerts || []}
       isTwilioConfigured={isTwilioConfigured}
     />
   )

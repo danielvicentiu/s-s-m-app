@@ -10,6 +10,7 @@ import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Search, User, Settings, LogOut, ChevronDown, Menu } from 'lucide-react'
 import NotificationBell from '@/components/notifications/NotificationBell'
+import AlertBadge from '@/components/alerts/AlertBadge'
 
 interface TopbarProps {
   userEmail: string
@@ -66,6 +67,9 @@ export default function Topbar({ userEmail, userId, onMobileMenuOpen }: TopbarPr
 
       {/* Right side */}
       <div className="flex items-center gap-1">
+        {/* Alert Badge */}
+        <AlertBadge />
+
         {/* NotificationBell */}
         <div className="flex h-9 w-9 items-center justify-center rounded-lg">
           <NotificationBell userId={userId} />
